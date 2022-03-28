@@ -1,0 +1,88 @@
+<?php
+
+namespace App\Models\SuperAdmin;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Classes\BindsDynamically;
+use Illuminate\Database\Eloquent\Model;
+
+class Course extends Model
+{
+    use HasFactory;
+
+    protected $table = 'courses_en';
+    protected $casts = [
+        'under_age' => 'array',
+        'program_type' => 'array',
+        'branch' => 'array',
+        'study_mode' => 'array',
+        'study_time' => 'array',
+        'start_date' => 'array',
+        'classes_day' => 'array',
+        'age_range' => 'array',
+        'language' => 'array',
+        'classes_day' => 'array'
+    ];
+
+    protected $guarded = [];
+
+    public function accomodations()
+    {
+        return $this->hasMany('App\Models\SuperAdmin\Accommodation', 'course_unique_id', 'unique_id');
+    }
+
+    public function accomodation()
+    {
+        return $this->hasOne('App\Models\SuperAdmin\Accommodation', 'course_unique_id', 'unique_id');
+    }
+
+    public function courseProgram()
+    {
+        return $this->hasOne('App\Models\SuperAdmin\CourseProgram', 'course_unique_id', 'unique_id');
+    }
+
+    public function coursePrograms()
+    {
+        return $this->hasMany(CourseProgram::class, 'course_unique_id', 'unique_id');
+    }
+
+    public function airport()
+    {
+        return $this->hasOne('App\Models\SuperAdmin\CourseAirport', 'course_unique_id', 'unique_id');
+    }
+
+    public function airports()
+    {
+        return $this->hasMany('App\Models\SuperAdmin\CourseAirport', 'course_unique_id', 'unique_id');
+    }
+
+    public function medical()
+    {
+        return $this->hasOne('App\Models\SuperAdmin\CourseMedical', 'course_unique_id', 'unique_id');
+    }
+
+    public function medicals()
+    {
+        return $this->hasMany('App\Models\SuperAdmin\CourseMedical', 'course_unique_id', 'unique_id');
+    }
+
+    public function getMedicalInsuranceFees($value)
+    {
+        return $this->medicals->where('medical_start_date', '<=', $value)->where('medical_end_date', '>=', $value)->first()['medical_fees_per_week'];
+    }
+
+    public function school()
+    {
+        return $this->belongsTo(School::class, 'school_id', 'id');
+    }
+
+    public function getCurrency()
+    {
+        return $this->belongsTo(CurrencyExchangeRate::class, 'currency');
+    }
+
+    public function schoolForBranchAdmin()
+    {
+        return $this->belongsTo(School::class, 'school_id', 'id')->whereIn("branch_name", getBranchesForBranchAdmin());
+    }
+}

@@ -1,0 +1,277 @@
+#loader {
+    display: none;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    background-size: cover;
+    background: url('../images/gif.gif') 50% 50% no-repeat gray;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    opacity: .7;
+}
+
+#form2 {
+    display: none;
+}
+
+.multiselect-container {
+    overflow: auto;
+    max-height: 200px;
+}
+
+#menu ul li.selected {
+    background: #daf2f7;
+    color: #000 !important;
+    padding: 10px 10px;
+    font-weight: 600;
+}
+
+#menu a:hover {
+    text-decoration: underline;
+    background: #daf2f7;
+    color: #FFFFFF;
+    padding: 10px 10px;
+}
+
+#menu a:active {
+    background: #daf2f7;
+    color: black;
+    padding: 10px 10px;
+}
+
+ul.lang li a {
+    font-weight: 600;
+}
+
+.lang li {
+    display: inline;
+    padding: 0px 10px;
+}
+
+ul.lang.text-right li a:hover {
+    color: #000 !important;
+}
+
+.active li a.active {
+    color: #000 !important;
+}
+
+/* Course Item */
+.course-item {
+    width: 100%;
+}
+
+.course-item img {
+    height: 230px;
+}
+
+/* Multi Select */
+ul.multiselect-container.dropdown-menu.show {
+    width: 100%;
+}
+
+.multiselect-native-select .btn-group {
+    width: 100%;
+}
+
+button.multiselect.dropdown-toggle.btn.btn-default {
+    outline: 1px solid #ebedf2;
+    color: #c9c8c8;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+}
+
+span.multiselect-selected-text {
+    font-size: 12px;
+    font-family: sans-serif;
+}
+
+/* Date Picker */
+.ui-state-busy:not(.ui-datepicker-other-month) .ui-state-default {
+    border: 1px solid #003eff;
+    background: #007fff;
+    font-weight: normal;
+    color: #ffffff;
+}
+.ui-datepicker-other-month {
+    pointer-events: none;
+}
+
+.pl-3:hover {
+    cursor: pointer;
+}
+
+.pull-right {
+    margin-left: 300px !important;
+}
+
+.fa {
+    font-family: FontAwesome;
+    cursor: pointer;
+}
+
+.tox .tox-notification--warn, .tox .tox-notification--warning {
+    display: none !important;
+}
+
+#ms-list-1, #ms-list-2, #ms-list-3, #ms-list-4, #ms-list-5, #ms-list-6, #ms-list-7, #ms-list-8, #ms-list-9, #ms-list-11, #ms-list-10 {
+    padding: 10px 8px;
+    border: 1px solid #ebedf2;
+}
+
+.ms-options-wrap > .ms-options {
+    left: 21px;
+    width: 87%;
+}
+
+button {
+    border: none !important;
+}
+
+i.fa.fa-plus-circle {
+    background: linear-gradient(to right, #da8cff, #9a55ff) !important;
+    padding: 15px 15px;
+    color: #fff;
+    border-radius: 10px;
+    font-size: 15px;
+}
+
+i.fa.fa-minus {
+    background: linear-gradient(to right, #da8cff, #9a55ff) !important;
+    padding: 15px 15px;
+    color: #fff;
+    border-radius: 10px;
+    font-size: 15px;
+}
+
+i.fa.fa-plus {
+    background: linear-gradient(to right, #da8cff, #9a55ff) !important;
+    padding: 10px 15px 10px 0px;
+    color: #fff;
+    border-radius: 10px;
+    font-size: 15px;
+    margin-left: 5px;
+}
+
+i.fa.fa-trash {
+    background: linear-gradient(to right, #da8cff, #9a55ff) !important;
+    padding: 10px 15px 10px 0px;
+    color: #fff;
+    border-radius: 10px;
+    font-size: 15px;
+    margin-left: 5px;
+}
+
+.btn i.fa {
+    padding: 0;
+}
+
+.dynamic_starli {
+    display: inline-block;
+    color: #F0F0F0;
+    text-shadow: 0 0 1px #666666;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.highlight,
+.selected {
+    color: #F4B30A;
+    text-shadow: 0 0 1px #F48F0A;
+}
+
+.carousel-inner img {
+    width: 100%;
+    height: 600px;
+}
+
+.bxs-star {
+    cursor: pointer;
+}
+
+.lang li {
+    display: inline;
+    padding: 0px 10px;
+}
+
+.img-hover-zoom img {
+    transition: transform .5s ease;
+}
+.img-hover-zoom:hover img {
+    transform: scale(1.5);
+}
+
+.img-hover-zoom {
+    overflow: hidden;
+}
+
+.form-group label {
+    color: #000;
+}
+
+.agree {
+    text-align: center;
+}
+
+.dynamic_starli {
+    display: inline-block;
+    color: #F0F0F0;
+    text-shadow: 0 0 1px #666666;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.highlight,
+.selected {
+    color: #F4B30A;
+    text-shadow: 0 0 1px #F48F0A;
+}
+
+#accommodation {
+    display: none;
+}
+
+#accommodation_fees,
+#other_services {
+    display: none;
+}
+
+#insurance_duration_hide1 {
+    display: none;
+}
+
+#insurance_duration_hide {
+    display: none;
+}
+
+/* Add Read More */
+.addReadMore.showlesscontent .SecSec,
+.addReadMore.showlesscontent .readLess {
+    display: none;
+}
+
+.addReadMore.showmorecontent .readMore {
+    display: none;
+}
+
+.addReadMore .readMore,
+.addReadMore .readLess {
+    font-weight: bold;
+    margin-left: 2px;
+    color: blue;
+    cursor: pointer;
+}
+
+.addReadMoreWrapTxt.showmorecontent .SecSec,
+.addReadMoreWrapTxt.showmorecontent .readLess {
+    display: block;
+}
+
+.w-100 {
+    width: 100% !important;
+    height: 270px;
+}

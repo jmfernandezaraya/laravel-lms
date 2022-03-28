@@ -1,0 +1,45 @@
+@import url(https://fonts.googleapis.com/css?family=Nunito);
+/**
+ * Signature
+ */
+
+[data-toggle=signature] {
+  border: 1px solid #dee2e6 !important;
+  border-radius: 0.25rem !important;
+  position: relative !important;
+  max-width: 100% !important;
+}
+
+[data-toggle=signature] canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  cursor: crosshair;
+}
+
+[data-toggle=signature] input[disabled] ~ canvas {
+  cursor: default;
+  background-color: #e9ecef;
+}
+
+[data-toggle=signature] input {
+  display: none;
+}
+
+[data-toggle=signature] .__pad__eraser {
+  padding: 0.5rem;
+  position: absolute;
+  color: #F783AC;
+  opacity: 0.75;
+  top: 0;
+  right: 0;
+  transition: opacity 0.15s linear;
+  cursor: pointer;
+  font-size: 1.5em;
+}
+
+[data-toggle=signature] .__pad__eraser:hover {
+  opacity: 1;
+}
+
+
