@@ -116,6 +116,10 @@ return [
     'duration_end' => 'Duration End',
     'details' => 'Details',
 
+    'custodianship_need' => 'Do you need CustodianShip letter?',
+    'custodianship' => 'CustodianShip',
+    'custodianship_help' => 'About CustodianShip',
+
     'express_mail' => 'Express Mail',
     'express_mail_fee' => 'Express Mail Fee',
     'discount' => 'Discount',
@@ -160,8 +164,9 @@ return [
 
     'airport_pickup' => 'Aiport Pickup',
     'airport_service' => 'Airport Service',
-    'service_fee' => 'Airport Service Fee',
+    'airport_service_fee' => 'Airport Service Fee',
     'airport_service_name' => 'Airport Service Name',
+    'airport_pickup_note' => 'Aiport Pickup Note',
 
     'transport' => 'Transport',
     'service_provider' => 'Service Provider',
@@ -174,7 +179,7 @@ return [
     'company_name' => 'Company Name',
     'deductible_up_to' => 'Deductible (up to)',
     'duration' => 'Duration',
-    'total_cost' => 'Total',
+    'total_cost' => 'Total Cost',
 
     'insurance_duration' => 'Insurance Duration',
     
@@ -203,5 +208,25 @@ return [
     'school_will_close_christmas' => 'The School / Institute will close for the Christmas Holiday',
     'from' => 'from',
     'to' => 'to',
+
+    'first_name' => 'First Name',
+    'middle_name' => 'Middle Name',
+    'last_name' => 'Last Name',
+    'date_of_birth' => 'Date Of Birth',
+    'place_of_birth' => 'Place of Birth',
+    'city' => 'City',
+    'country' => 'Country',
+    'gender' => 'Gender',
+    'male' => 'Male',
+    'female' => 'Female',
+    'nationality' => 'Nationality',
+    'passport_no' => 'Passport No.',
+    'passport_date_of_issue' => 'Passport Date of Issue',
+    'passport_date_of_expiry' => 'Passport Date of Expiry',
+    'upload_passport_details' => 'Upload Passport Copy Page of the details',
+    'study_finance' => 'Study Finance',
+    'personal' => 'Personal',
+    'scholarship' => 'Scholarship',
+    'upload_financial_gurantee' => 'Upload Financial Guarantee',    
 ];
 

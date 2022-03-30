@@ -131,15 +131,23 @@
                     <h6 class="p-3 mb-0 text-center">See all notifications</h6>
                 </div>
             </li>
-            <li class="nav-item nav-logout d-none d-lg-block">
-                <a class="nav-link" href="{{url('set_language/' . (app()->getLocale() == 'ar' ? 'en' :'ar'))}}">
-                <i class="fa fa-exchange"></i>
+            <li class="nav-item nav-language dropdown">
+                <a class="nav-link dropdown-toggle" id="languageDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+                    @if (app()->getLocale() == 'en')
+                        <img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}
+                    @else
+                        <img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}
+                    @endif
                 </a>
-            </li>
-            <li class="nav-item nav-settings d-none d-lg-block">
-                <a class="nav-link" href="#">
-                <i class="mdi mdi-format-line-spacing"></i>
-                </a>
+                <div class="dropdown-menu navbar-dropdown" aria-labelledby="languageDropdown">
+                    <a href="{{url('set_language/en')}}" class="dropdown-item">
+                        <img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="{{url('set_language/ar')}}" class="dropdown-item">
+                        <img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}
+                    </a>
+                </div>
             </li>
         </ul>
         <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">

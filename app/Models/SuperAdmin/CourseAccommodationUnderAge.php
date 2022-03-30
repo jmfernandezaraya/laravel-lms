@@ -10,6 +10,7 @@ class CourseAccommodationUnderAge extends Model
     use HasFactory;
 
     protected $guarded = [];
-    protected $casts  = ['under_age' => 'array'];
-    protected $table = 'course_accommodation_under_age';
+    protected $casts = ['under_age' => 'array'];
+
+    protected $table = 'course_accommodation_under_ages';
 }

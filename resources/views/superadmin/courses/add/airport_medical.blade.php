@@ -1,6 +1,8 @@
 @extends('superadmin.layouts.app')
+
 @section('content')
     @include('superadmin.courses.scripts')
+    
     <div class="col-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
@@ -19,16 +21,12 @@
                 @include('superadmin.include.alert')
 
                 <div id="menu">
-                    <ul class="lang text-right current_page_itemm">
-                        <li class="current_page_item selected">
-                            <a class="" href="#" onclick="changeLanguage('english', 'arabic')">
-                                <img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}
-                            </a>
+                    <ul class="lang text-right">
+                        <li class="{{app()->getLocale() == 'en' ? 'current_page_item selected' : ''}}">
+                            <a onclick="changeLanguage('english', 'arabic')"><img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}</a>
                         </li>
-                        <li>
-                            <a href="#" onclick="changeLanguage('arabic', 'english')"; fillForm('form1', 'form2')">
-                                <img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}
-                            </a>
+                        <li class="{{app()->getLocale() == 'ar' ? 'current_page_item selected' : ''}}">
+                            <a onclick="changeLanguage('arabic', 'english')"><img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}</a>
                         </li>
                     </ul>
                 </div>
@@ -69,8 +67,8 @@
                                     <input class="form-control" type="text" name="airport_service_name[0][]" placeholder="{{__('SuperAdmin/backend.type_of_service')}}">
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label>{{__('SuperAdmin/backend.service_fee')}}:</label>
-                                    <input class="form-control" type="number" name="airport_service_fee[0][]" placeholder="{{__('SuperAdmin/backend.service_fee')}}">
+                                    <label>{{__('SuperAdmin/backend.airport_service_fee')}}:</label>
+                                    <input class="form-control" type="number" name="airport_service_fee[0][]" placeholder="{{__('SuperAdmin/backend.airport_service_fee')}}">
                                 </div>
                                 <div class="form-group col-md-3 mt-4">
                                     <i class="fa fa-plus-circle" aria-hidden="true" onclick="addAirportFeeForm($(this))"></i>
@@ -81,7 +79,12 @@
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label>{{__('SuperAdmin/backend.airport_insurance_note')}}:</label>
-                                    <textarea class="form-control" name="airport_note[]" id="airport_note0" placeholder="{{__('SuperAdmin/backend.airport_insurance_note')}}"></textarea>
+                                    <div class="english">
+                                        <textarea class="form-control" name="airport_note[]" placeholder="{{__('SuperAdmin/backend.airport_insurance_note')}}" id="airport_note0"></textarea>
+                                    </div>
+                                    <div class="arabic">
+                                        <textarea class="form-control" name="airport_note_ar[]" placeholder="{{__('SuperAdmin/backend.airport_insurance_note')}}" id="airport_note_ar0"></textarea>
+                                    </div>
                                 </div>
                             </div>
                         
@@ -141,7 +144,12 @@
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label>{{__('SuperAdmin/backend.medical_insurance_note')}}:</label>
-                                    <textarea class="form-control" name="medical_note[]" id="medical_note0" placeholder="{{__('SuperAdmin/backend.medical_insurance_note')}}"></textarea>
+                                    <div class="english">
+                                        <textarea class="form-control" name="medical_note[]" placeholder="{{__('SuperAdmin/backend.medical_insurance_note')}}" id="medical_note0"></textarea>
+                                    </div>
+                                    <div class="arabic">
+                                        <textarea class="form-control" name="medical_note_ar[]" placeholder="{{__('SuperAdmin/backend.medical_insurance_note')}}" id="medical_note_ar0"></textarea>
+                                    </div>
                                 </div>
                             </div>
                         
@@ -157,7 +165,7 @@
 
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <button type="button" onclick="getAirpotMedicalContents(); addAirportMedical($(this))" class="btn btn-primary">{{__('SuperAdmin/backend.submit')}}</button>
+                                <button type="button" onclick="getAirpotMedicalContents(); submitAirportMedicalForm($(this))" class="btn btn-primary">{{__('SuperAdmin/backend.submit')}}</button>
                             </div>
                             <div class="form-group col-md-6">
                                 <a href="{{route('superadmin.course.index')}}" class="btn btn-primary pull-right" type="button" name="####">{{__('SuperAdmin/backend.back')}}</a>

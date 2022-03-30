@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\SuperAdmin\Accommodation;
+use App\Models\SuperAdmin\CourseAccommodation;
 use App\Models\SuperAdmin\CourseAirport;
 use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\CourseProgram;
@@ -93,7 +93,7 @@ class UserCourseBookedDetails extends Model
      */
     public function accomodation()
     {
-        return $this->belongsTo(Accommodation::class, 'accommodation_id', 'unique_id');
+        return $this->belongsTo(CourseAccommodation::class, 'accommodation_id', 'unique_id');
     }
 
     /**

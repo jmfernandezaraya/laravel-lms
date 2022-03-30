@@ -275,3 +275,11 @@ i.fa.fa-trash {
     width: 100% !important;
     height: 270px;
 }
+
+.ui-datepicker-group .ui-datepicker-header .ui-datepicker-title {
+    cursor: pointer;
+}
+
+.lang li {
+    cursor: pointer;
+}

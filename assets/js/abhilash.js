@@ -1,17 +1,14 @@
 /*
 * Multiselect option initialisation starts here
-*
-* */
-//id = program_under_age_add
+*/
 
 /*
 * function for removing element program under age
-*
-* */
+*/
 
-/*Init tinymce
-*
-* */
+/*
+* Init tinymce
+*/
 function initCkeditor(editor_id = 'textarea_en') {
     var option = {
         removePlugins: 'toolbar',
@@ -44,7 +41,7 @@ function tinymceInit(id = null) {
     }
 }
 
-function removeEditor() {
+function reloadTinymceEditor() {
     if (typeof (tinymce) != "undefined") {
         tinymce.remove('textarea');
         tinymceInit();
@@ -53,6 +50,10 @@ function removeEditor() {
 
 var datepicker_available_days = [];
 var datepicker_format = 'dd-mm-yy';
+
+var yeardatepicker_days = [];
+var yeardatepicker_months = [];
+
 $(document).ready(function () {
     var remove_program_button = 0;
     var formnum = 0;
@@ -68,8 +69,8 @@ $(document).ready(function () {
             $('#clone_program_text_book_fee').find('#increment').attr('value', rowNum);
         }
     });
-    var airportincrement = typeof (airportincrements) != 'undefined' ? airportincrements : 0;
 
+    var airportincrement = typeof (airportincrements) != 'undefined' ? airportincrements : 0;
     $('#accom_program_duration_clone').find('.fa-plus-circle').click(function () {
         airportincrement++;
         $(this).parents().find('#airportincrement').attr('value', airportincrement);
@@ -112,18 +113,22 @@ $(document).ready(function () {
     });
 
     $('.available_date').change(function (e) {
-        if ($(this).val() == 'start_day_every') {
-            $(this).parent().parent().find('.select_day_week').show();
-            $(this).parent().parent().find('.available_days').hide();
-        } else {            
-            $(this).parent().parent().find('.select_day_week').hide();
+        if ($(this).val() == 'selected_dates') {
             $(this).parent().parent().find('.available_days').show();
+            $(this).parent().parent().find('.select_day').hide();
+            $(this).parent().parent().find('.start_date').hide();
+            $(this).parent().parent().find('.end_date').hide();
+        } else {
+            $(this).parent().parent().find('.available_days').hide();
+            $(this).parent().parent().find('.select_day').show();
+            $(this).parent().parent().find('.start_date').show();
+            $(this).parent().parent().find('.end_date').show();
         }
     });
 
     $('.yeardatepicker').each(function() {
+        var datepicker_index = $(this).data('index');
         var todayDate = new Date();
-        var datepicker_days = [];
         $(this).datepicker({
             dateFormat: 'mm/dd/yy',
             showCurrentAtPos: todayDate.getMonth(),
@@ -135,15 +140,15 @@ $(document).ready(function () {
             selectMultiple: true,
             showButtonPanel: true,
             onSelect: function(d) {
-                var i = $.inArray(d, datepicker_days);
+                var i = $.inArray(d, yeardatepicker_days[datepicker_index]);
                 if (i == -1) {
-                    datepicker_days.push(d);
+                    yeardatepicker_days[datepicker_index].push(d);
                 } else {
-                    datepicker_days.splice(i, 1);
+                    yeardatepicker_days[datepicker_index].splice(i, 1);
                 }
                 $(this).data('datepicker').inline = true;
                 $(this).data('datepicker').settings.showCurrentAtPos = 0;
-                datepicker_days.sort(function (first, second) {
+                yeardatepicker_days[datepicker_index].sort(function (first, second) {
                     var firstDates = first.split('/');
                     var secondDates = second.split('/');
                     if (parseInt(firstDates[2]) > parseInt(secondDates[2])) {
@@ -165,19 +170,87 @@ $(document).ready(function () {
                     }
                     return 0;
                 });
-                $(this).val(datepicker_days.join(","));
+                $(this).val(yeardatepicker_days[datepicker_index].join(","));
+                $($(this).data('datepicker').dpDiv).addClass('ui-datepicker-selected');
             },
             onClose: function() {
                 $(this).data('datepicker').inline = false;
                 $(this).data('datepicker').settings.showCurrentAtPos = todayDate.getMonth();
             },
+            beforeShow: function() {
+                var datepickerEl = this;
+                setTimeout(function() {
+                    detectDatePickerMonthClick(datepickerEl);
+                }, 300);
+            },
             beforeShowDay: function(d) {
+                var datepickerEl = this;
+                var datepickerObj = $($(datepickerEl).data('datepicker').dpDiv);
+                if (datepickerObj.hasClass('ui-datepicker-selected')) {
+                    datepickerObj.removeClass('ui-datepicker-selected');
+                    setTimeout(function() {
+                        detectDatePickerMonthClick(datepickerEl);
+                    }, 300);
+                }
+                
                 var dateavailable = true;
                 if ($.datepicker.formatDate('yymmdd', d) < $.datepicker.formatDate('yymmdd', todayDate)) dateavailable = false;
-                return ([dateavailable, $.inArray($.datepicker.formatDate('mm/dd/yy', d), datepicker_days) == -1 ? 'ui-state-free' : 'ui-state-busy']);
+                return ([dateavailable, $.inArray($.datepicker.formatDate('mm/dd/yy', d), yeardatepicker_days[datepicker_index]) == -1 ? 'ui-state-free' : 'ui-state-busy']);
             }
         });
     });
+    function detectDatePickerMonthClick(datepickerEl) {
+        var datepicker_index = $(datepickerEl).data('index');
+        var datepickerObj = $($(datepickerEl).data('datepicker').dpDiv);
+        datepickerObj.find('.ui-datepicker-group .ui-datepicker-header .ui-datepicker-title').click(function() {
+            var click_year = $(this).find('.ui-datepicker-year').html();
+            var click_month_str = $(this).find('.ui-datepicker-month').html();
+            var click_month = 1;
+            if (click_month_str == 'January') click_month = '01';
+            else if (click_month_str == 'February') click_month = '02';
+            else if (click_month_str == 'March') click_month = '03';
+            else if (click_month_str == 'April') click_month = '04';
+            else if (click_month_str == 'May') click_month = '05';
+            else if (click_month_str == 'June') click_month = '06';
+            else if (click_month_str == 'July') click_month = '07';
+            else if (click_month_str == 'August') click_month = '08';
+            else if (click_month_str == 'September') click_month = '09';
+            else if (click_month_str == 'October') click_month = '10';
+            else if (click_month_str == 'November') click_month = '11';
+            else if (click_month_str == 'December') click_month = '12';
+            var month_days = $(this).parent().parent().find('.ui-datepicker-calendar td');
+            var month_index = $.inArray(click_month + "/" + click_year, yeardatepicker_months[datepicker_index]);
+            if (month_index == -1) {
+                yeardatepicker_months[datepicker_index].push(click_month + "/" + click_year);
+            } else {
+                yeardatepicker_months[datepicker_index].splice(month_index, 1);
+            }
+            for (var month_day_index = 0; month_day_index < month_days.length; month_day_index++) {
+                if (!$(month_days[month_day_index]).hasClass('ui-datepicker-other-month')) {
+                    var click_day = $(month_days[month_day_index]).find('a').html();
+                    if (parseInt(click_day) < 10) click_day = '0' + click_day;
+                    var click_date = click_month + "/" + click_day + "/" + click_year;
+                    if (month_index == -1) {
+                        var date_index = $.inArray(click_date, yeardatepicker_days[datepicker_index]);
+                        if (date_index == -1) {
+                            yeardatepicker_days[datepicker_index].push(click_date);
+                        }
+                    } else {
+                        var date_index = $.inArray(click_date, yeardatepicker_days[datepicker_index]);
+                        if (date_index != -1) {
+                            yeardatepicker_days[datepicker_index].splice(date_index, 1);
+                        }
+                    }
+                }
+            }
+            
+            $(datepickerEl).val(yeardatepicker_days[datepicker_index].join(","));
+            datepickerObj.find('.ui-datepicker-today').click();            
+            setTimeout(function() {
+                datepickerObj.find('.ui-datepicker-today').click();
+            }, 300);
+        });
+    }
     
     var todayDate = new Date();
     if ($("#datepick").length) {
@@ -487,7 +560,6 @@ function copyForms2(form1, form2) {
 function changeLanguage(form_to_show, form_to_hide) {
     $("." + form_to_hide).hide();
     $("." + form_to_show).show();
-    removeEditor();
 }
 
 /* First airport pickup function for getting airport service option  */
@@ -522,7 +594,7 @@ function calculatorForCourier(type, value) {
     });
 }
 
-function calculatorCourse(type, value) {
+function calculateCourse(type, value) {
     if (value != '') {
         $('#loader').show();
         $.post(calculate_url, {
@@ -554,9 +626,14 @@ function calculatorCourse(type, value) {
 
                 if (data.courier_fee != undefined) {
                     if (data.courier_fee) {
-                        $("#courier_fee").hide();
-                    } else {
                         $("#courier_fee").show();
+                        if (data.courier_fee_note != undefined) {
+                            $("#expressMailingModal .modal-body").html(data.courier_fee_note);
+                        } else {
+                            $("#expressMailingModal .modal-body").html('');
+                        }
+                    } else {
+                        $("#courier_fee").hide();
                     }
                 }
 
@@ -643,7 +720,7 @@ function calculatorCourse(type, value) {
                         if (default_program_duration != $($("#program_duration option")[0]).attr('value')) {
                             $("#program_duration").val($($("#program_duration option")[0]).attr('value')).change();
                         }
-                        calculatorCourse('duration', $("#program_duration").val());
+                        calculateCourse('duration', $("#program_duration").val());
                     }
                 }
             }, 1000);
@@ -655,38 +732,39 @@ function reloadCourseCalclulator() {
     $.get(reload_calculate_url, function (data) {
         if (data.total != undefined) {
             $("#program_fees_table #program_cost .cost_value").html(data.program_cost.value);
-            $("#program_fees_table #program_cost .converted_value").html(data.program_cost.converted_value.toFixed(2));
+            $("#program_fees_table #program_cost .converted_value").html(parseFloat(data.program_cost.converted_value).toFixed(2));
             $("#program_fees_table #registration_fee .cost_value").html(data.registration_fee.value);
-            $("#program_fees_table #registration_fee .converted_value").html(data.registration_fee.converted_value.toFixed(2));
+            $("#program_fees_table #registration_fee .converted_value").html(parseFloat(data.registration_fee.converted_value).toFixed(2));
             $("#program_fees_table #text_book_fee .cost_value").html(data.text_book_fee.value);
-            $("#program_fees_table #text_book_fee .converted_value").html(data.text_book_fee.converted_value.toFixed(2));
+            $("#program_fees_table #text_book_fee .converted_value").html(parseFloat(data.text_book_fee.converted_value).toFixed(2));
             $("#program_fees_table #summer_fees .cost_value").html(data.summer_fees.value);
-            $("#program_fees_table #summer_fees .converted_value").html(data.summer_fees.converted_value.toFixed(2));
+            $("#program_fees_table #summer_fees .converted_value").html(parseFloat(data.summer_fees.converted_value).toFixed(2));
             if (parseFloat(data.summer_fees.value)) $("#program_fees_table #summer_fees").show(); else $("#program_fees_table #summer_fees").hide();
             $("#program_fees_table #peak_time_fees .cost_value").html(data.peak_time_fees.value);
-            $("#program_fees_table #peak_time_fees .converted_value").html(data.peak_time_fees.converted_value.toFixed(2));
+            $("#program_fees_table #peak_time_fees .converted_value").html(parseFloat(data.peak_time_fees.converted_value).toFixed(2));
             if (parseFloat(data.peak_time_fees.value)) $("#program_fees_table #peak_time_fees").show(); else $("#program_fees_table #peak_time_fees").hide();
             $("#program_fees_table #under_age_fees .cost_value").html(data.under_age_fees.value);
-            $("#program_fees_table #under_age_fees .converted_value").html(data.under_age_fees.converted_value.toFixed(2));
+            $("#program_fees_table #under_age_fees .converted_value").html(parseFloat(data.under_age_fees.converted_value).toFixed(2));
             if (parseFloat(data.under_age_fees.value)) $("#program_fees_table #under_age_fees").show(); else $("#program_fees_table #under_age_fees").hide();
             $("#program_fees_table #express_mail_fee .cost_value").html(data.express_mail_fee.value);
-            $("#program_fees_table #express_mail_fee .converted_value").html(data.express_mail_fee.converted_value.toFixed(2));
+            $("#program_fees_table #express_mail_fee .converted_value").html(parseFloat(data.express_mail_fee.converted_value).toFixed(2));
             if (parseFloat(data.express_mail_fee.value)) $("#program_fees_table #express_mail_fee").show(); else $("#program_fees_table #express_mail_fee").hide();
             $("#program_fees_table #discount_fee .cost_value").html("-" + data.discount_fee.value);
-            $("#program_fees_table #discount_fee .converted_value").html("-" + data.discount_fee.converted_value.toFixed(2));
+            $("#program_fees_table #discount_fee .converted_value").html("-" + parseFloat(data.discount_fee.converted_value).toFixed(2));
             $("#program_fees_table #program_total .cost_value").html(data.total.value);
-            $("#program_fees_table #program_total .converted_value").html(data.total.converted_value.toFixed(2));
+            $("#program_fees_table #program_total .converted_value").html(parseFloat(data.total.converted_value).toFixed(2));
 
             $("#program_fees_table .cost_currency").html(data.currency.cost);
             $("#program_fees_table .converted_currency").html(data.currency.converted);
 
-            $("#total_table .total_cost").html(data.overall_total.value.toFixed(2));
-            $("#total_table .total_converted").html(data.overall_total.converted_value.toFixed(2));
+            $("#total_table .total_cost").html(parseFloat(data.overall_total.value).toFixed(2));
+            $("#total_table .total_converted").html(parseFloat(data.overall_total.converted_value).toFixed(2));
             $("#total_table .total_cost_currency").html(data.currency.cost);
             $("#total_table .total_converted_currency").html(data.currency.converted);
 
+            $("#total_fees").val(data.overall_total.value);
             $("#total_fees_to_save_to_db").val(data.overall_total.value + " " + data.currency.cost);
-            $("#other_currency_to_save_to_db").val(data.overall_total.converted_value.toFixed(2) + " " + data.currency.converted)
+            $("#other_currency_to_save_to_db").val(parseFloat(data.overall_total.converted_value).toFixed(2) + " " + data.currency.converted)
         }
     }).done(function () {
         $('#loader').hide();
@@ -746,71 +824,90 @@ function resetAirportMedical(init = false) {
     })
 }
 
-function fetchAccommodationDuration(urlname, accom_type, set_session = false, duration = false, age = false, program_duration = null) {
+function calcuateAccommodation() {
     meal_type = jQuery.trim($("#meal_type option:selected").text())
     if (meal_type != '') {
-        var date_set = $("#datepick").val();
         $('#loader').show();
-        $.post(urlname, {
+        $.post(calculate_accommodation_url, {
             _token: $('meta[name="csrf-token"]').attr('content'),
-            id: accom_type,
-            date_set: date_set,
+            date_set: $("#datepick").val(),
+            program_duration: $("#program_duration").val(),
+            age: $("#under_age").val(),
+            accom_id: $("#accom_type").val(),
+            accom_type: jQuery.trim($("#accom_type option:selected").text()),
             room_type: jQuery.trim($("#room_type option:selected").text()),
             meal_type: meal_type,
-            duration: duration,
-            set_session: set_session,
-            program_duration: program_duration,
-            age: age
+            duration: $("#accom_duration").val(),
+            special_diet: $("#special_diet_check").is(':checked'),
+            custodianship: $("#custodianship_check").is(':checked')
         }, function (data) {
             reloadCourseCalclulator();
             resetAirportMedical(true);
 
-            if (set_session != true) {
-                $("#accommodation_fees #accommodation_fee .cost_value").html(data.accom_fee.value);
-                $("#accommodation_fees #accommodation_fee .converted_value").html(data.accom_fee.converted_value.toFixed(2));
-                $("#accommodation_fees #accommodation_placement_fee .cost_value").html(data.placement_fee.value);
-                $("#accommodation_fees #accommodation_placement_fee .converted_value").html(data.placement_fee.converted_value.toFixed(2));
-                $("#accommodation_fees #accommodation_special_diet_fee .cost_value").html(data.special_diet_fee.value);
-                $("#accommodation_fees #accommodation_special_diet_fee .converted_value").html(data.special_diet_fee.converted_value.toFixed(2));
-                if (parseFloat(data.special_diet_fee.value)) $("#accommodation_fees #accommodation_special_diet_fee").show(); else $("#accommodation_fees #accommodation_special_diet_fee").hide();
-                $("#accommodation_fees #accommodation_deposit_fee .cost_value").html(data.deposit_fee.value);
-                $("#accommodation_fees #accommodation_deposit_fee .converted_value").html(data.deposit_fee.converted_value.toFixed(2));
-                if (parseFloat(data.deposit_fee.value)) $("#accommodation_fees #accommodation_deposit_fee").show(); else $("#accommodation_fees #accommodation_deposit_fee").hide();
-                $("#accommodation_fees #accommodation_custodian_fee .cost_value").html(data.custodian_fee.value);
-                $("#accommodation_fees #accommodation_custodian_fee .converted_value").html(data.custodian_fee.converted_value.toFixed(2));
-                if (parseFloat(data.custodian_fee.value)) $("#accommodation_fees #accommodation_custodian_fee").show(); else $("#accommodation_fees #accommodation_custodian_fee").hide();
-                $("#accommodation_fees #accommodation_summer_fees .cost_value").html(data.summer_fee.value);
-                $("#accommodation_fees #accommodation_summer_fees .converted_value").html(data.summer_fee.converted_value.toFixed(2));
-                if (parseFloat(data.summer_fee.value)) $("#accommodation_fees #accommodation_summer_fees").show(); else $("#accommodation_fees #accommodation_summer_fees").hide();
-                $("#accommodation_fees #accommodation_peak_fees .cost_value").html(data.peak_fee.value);
-                $("#accommodation_fees #accommodation_peak_fees .converted_value").html(data.peak_fee.converted_value.toFixed(2));
-                if (parseFloat(data.peak_fee.value)) $("#accommodation_fees #accommodation_peak_fees").show(); else $("#accommodation_fees #accommodation_peak_fees").hide();
-                $("#accommodation_fees #accommodation_christmas_fees .cost_value").html(data.christmas_fee.value);
-                $("#accommodation_fees #accommodation_christmas_fees .converted_value").html(data.christmas_fee.converted_value.toFixed(2));
-                if (parseFloat(data.christmas_fee.value)) $("#accommodation_fees #accommodation_christmas_fees").show(); else $("#accommodation_fees #accommodation_christmas_fees").hide();
-                $("#accommodation_fees #accommodation_under_age_fees .cost_value").html(data.under_age_fee.value);
-                $("#accommodation_fees #accommodation_under_age_fees .converted_value").html(data.under_age_fee.converted_value.toFixed(2));
-                if (parseFloat(data.under_age_fee.value)) $("#accommodation_fees #accommodation_under_age_fees").show(); else $("#accommodation_fees #accommodation_under_age_fees").hide();
-                $("#accommodation_fees #accommodation_discount_fee .cost_value").html("-" + data.discount_fee.value);
-                $("#accommodation_fees #accommodation_discount_fee .converted_value").html("-" + data.discount_fee.converted_value.toFixed(2));
+            $("#accommodation_fees #accommodation_fee .cost_value").html(data.accom_fee.value);
+            $("#accommodation_fees #accommodation_fee .converted_value").html(parseFloat(data.accom_fee.converted_value).toFixed(2));
+            $("#accommodation_fees #accommodation_placement_fee .cost_value").html(data.placement_fee.value);
+            $("#accommodation_fees #accommodation_placement_fee .converted_value").html(parseFloat(data.placement_fee.converted_value).toFixed(2));
+            $("#accommodation_fees #accommodation_special_diet_fee .cost_value").html(data.special_diet_fee.value);
+            $("#accommodation_fees #accommodation_special_diet_fee .converted_value").html(parseFloat(data.special_diet_fee.converted_value).toFixed(2));
+            if (parseFloat(data.special_diet_fee.value)) $("#accommodation_fees #accommodation_special_diet_fee").show(); else $("#accommodation_fees #accommodation_special_diet_fee").hide();
+            $("#accommodation_fees #accommodation_deposit_fee .cost_value").html(data.deposit_fee.value);
+            $("#accommodation_fees #accommodation_deposit_fee .converted_value").html(parseFloat(data.deposit_fee.converted_value).toFixed(2));
+            if (parseFloat(data.deposit_fee.value)) $("#accommodation_fees #accommodation_deposit_fee").show(); else $("#accommodation_fees #accommodation_deposit_fee").hide();
+            $("#accommodation_fees #accommodation_custodian_fee .cost_value").html(data.custodian_fee.value);
+            $("#accommodation_fees #accommodation_custodian_fee .converted_value").html(parseFloat(data.custodian_fee.converted_value).toFixed(2));
+            if (parseFloat(data.custodian_fee.value)) $("#accommodation_fees #accommodation_custodian_fee").show(); else $("#accommodation_fees #accommodation_custodian_fee").hide();
+            $("#accommodation_fees #accommodation_summer_fees .cost_value").html(data.summer_fee.value);
+            $("#accommodation_fees #accommodation_summer_fees .converted_value").html(parseFloat(data.summer_fee.converted_value).toFixed(2));
+            if (parseFloat(data.summer_fee.value)) $("#accommodation_fees #accommodation_summer_fees").show(); else $("#accommodation_fees #accommodation_summer_fees").hide();
+            $("#accommodation_fees #accommodation_peak_fees .cost_value").html(data.peak_fee.value);
+            $("#accommodation_fees #accommodation_peak_fees .converted_value").html(parseFloat(data.peak_fee.converted_value).toFixed(2));
+            if (parseFloat(data.peak_fee.value)) $("#accommodation_fees #accommodation_peak_fees").show(); else $("#accommodation_fees #accommodation_peak_fees").hide();
+            $("#accommodation_fees #accommodation_christmas_fees .cost_value").html(data.christmas_fee.value);
+            $("#accommodation_fees #accommodation_christmas_fees .converted_value").html(parseFloat(data.christmas_fee.converted_value).toFixed(2));
+            if (parseFloat(data.christmas_fee.value)) $("#accommodation_fees #accommodation_christmas_fees").show(); else $("#accommodation_fees #accommodation_christmas_fees").hide();
+            $("#accommodation_fees #accommodation_under_age_fees .cost_value").html(data.under_age_fee.value);
+            $("#accommodation_fees #accommodation_under_age_fees .converted_value").html(parseFloat(data.under_age_fee.converted_value).toFixed(2));
+            if (parseFloat(data.under_age_fee.value)) $("#accommodation_fees #accommodation_under_age_fees").show(); else $("#accommodation_fees #accommodation_under_age_fees").hide();
+            $("#accommodation_fees #accommodation_discount_fee .cost_value").html("-" + data.discount_fee.value);
+            $("#accommodation_fees #accommodation_discount_fee .converted_value").html("-" + parseFloat(data.discount_fee.converted_value).toFixed(2));
 
-                $("#accommodation_fees #accommodation_total .cost_value").html(data.total.value.toFixed(2));
-                $("#accommodation_fees #accommodation_total .converted_value").html(data.total.converted_value.toFixed(2));
-                
-                $("#accommodation_fees .cost_currency").html(data.currency.cost);
-                $("#accommodation_fees .converted_currency").html(data.currency.converted);
-                
-                $("#total_table .total_cost").html(data.overall_total.value.toFixed(2));
-                $("#total_table .total_converted").html(data.overall_total.converted_value.toFixed(2));
-                $("#total_table .total_cost_currency").html(data.currency.cost);
-                $("#total_table .total_converted_currency").html(data.currency.converted);
+            $("#accommodation_fees #accommodation_total .cost_value").html(parseFloat(data.total.value).toFixed(2));
+            $("#accommodation_fees #accommodation_total .converted_value").html(parseFloat(data.total.converted_value).toFixed(2));
+            
+            $("#accommodation_fees .cost_currency").html(data.currency.cost);
+            $("#accommodation_fees .converted_currency").html(data.currency.converted);
+            
+            $("#total_table .total_cost").html(parseFloat(data.overall_total.value).toFixed(2));
+            $("#total_table .total_converted").html(parseFloat(data.overall_total.converted_value).toFixed(2));
+            $("#total_table .total_cost_currency").html(data.currency.cost);
+            $("#total_table .total_converted_currency").html(data.currency.converted);
 
-                $("#total_fees_to_save_to_db").val(data.overall_total.value + " " + data.currency.cost);
-                $("#other_currency_to_save_to_db").val(data.overall_total.converted_value.toFixed(2) + " " + data.currency.converted);
+            $("#total_fees").val(data.overall_total.value);
+            $("#total_fees_to_save_to_db").val(data.overall_total.value + " " + data.currency.cost);
+            $("#other_currency_to_save_to_db").val(parseFloat(data.overall_total.converted_value).toFixed(2) + " " + data.currency.converted);
 
-                $("#accommodation_fees_table").show();
-            } else {
-                $('#accom_duration').html(data.duration_value);
+            $("#accommodation_fees_table").show();
+            
+            if (data.special_diet_fee != undefined) {
+                if (data.special_diet_fee) {
+                    $("#special_diet").show();
+                    if (data.special_diet_note != undefined) {
+                        $("#specialDietModal .modal-body").html(data.special_diet_note);
+                    } else {
+                        $("#specialDietModal .modal-body").html('');
+                    }
+                } else {
+                    $("#special_diet").hide();
+                }
+            }
+
+            if (data.custodianship != undefined) {
+                if (data.custodianship) {
+                    $("#custodianship").show();
+                } else {
+                    $("#custodianship").hide();
+                }
             }
         }).done(function () {
             $("#loader").hide();
@@ -818,7 +915,7 @@ function fetchAccommodationDuration(urlname, accom_type, set_session = false, du
     }
 }
 
-function fetchAirportMedicalFee() {
+function calculateAirportMedical() {
     var program_duration = $('#program_duration').val();
 
     var airport_service_provider = $('#airport_service_provider option:selected').val() ? jQuery.trim($('#airport_service_provider option:selected').text()) : '';
@@ -840,24 +937,28 @@ function fetchAirportMedicalFee() {
         'medical_duration': medical_duration
     }, function (data) {
         $("#airport_medical_fees_table #airport_pickup .cost_value").html(data.airport_fee.value);
-        $("#airport_medical_fees_table #airport_pickup .converted_value").html(data.airport_fee.converted_value.toFixed(2));
+        $("#airport_medical_fees_table #airport_pickup .converted_value").html(parseFloat(data.airport_fee.converted_value).toFixed(2));
         $("#airport_medical_fees_table #medical_insurance .cost_value").html(data.medical_fee.value);
-        $("#airport_medical_fees_table #medical_insurance .converted_value").html(data.medical_fee.converted_value.toFixed(2));
+        $("#airport_medical_fees_table #medical_insurance .converted_value").html(parseFloat(data.medical_fee.converted_value).toFixed(2));
         $("#airport_medical_fees_table #airport_medical_total .cost_value").html(data.total.value);
-        $("#airport_medical_fees_table #airport_medical_total .converted_value").html(data.total.converted_value.toFixed(2));
+        $("#airport_medical_fees_table #airport_medical_total .converted_value").html(parseFloat(data.total.converted_value).toFixed(2));
         
         $("#airport_medical_fees_table .cost_currency").html(data.currency.cost);
         $("#airport_medical_fees_table .converted_currency").html(data.currency.converted);
         
-        $("#total_table .total_cost").html(data.overall_total.value.toFixed(2));
-        $("#total_table .total_converted").html(data.overall_total.converted_value.toFixed(2));
+        $("#total_table .total_cost").html(parseFloat(data.overall_total.value).toFixed(2));
+        $("#total_table .total_converted").html(parseFloat(data.overall_total.converted_value).toFixed(2));
         $("#total_table .total_cost_currency").html(data.currency.cost);
         $("#total_table .total_converted_currency").html(data.currency.converted);
 
         $("#airport_medical_fees_table").show();
 
+        $("#total_fees").val(data.overall_total.value);
         $("#total_fees_to_save_to_db").val(data.overall_total.value + " " + data.currency.cost);
-        $("#other_currency_to_save_to_db").val(data.overall_total.converted_value.toFixed(2) + " " + data.currency.converted);
+        $("#other_currency_to_save_to_db").val(parseFloat(data.overall_total.converted_value).toFixed(2) + " " + data.currency.converted);
+
+        $("#AirportPickupModal .modal-body").html(data.airport_note);
+        $("#MedicalInsuranceModal .modal-body").html(data.medical_note);
     });
 }
 
@@ -899,7 +1000,7 @@ $(document).ready(function() {
     });
 
     $('#airport_type_of_service').change(function () {
-        fetchAirportMedicalFee();
+        calculateAirportMedical();
     });
 
     $('#medical_company_name').change(function () {
@@ -913,19 +1014,21 @@ $(document).ready(function() {
     });
 
     $('#medical_deductible_up_to').change(function () {
+        var program_duration = $('#program_duration').val();
         var medical_company_name = $('#medical_company_name option:selected').val() ? jQuery.trim($('#medical_company_name option:selected').text()) : '';
         var medical_deductible = $('#medical_deductible_up_to option:selected').val() ? jQuery.trim($('#medical_deductible_up_to option:selected').text()) : '';
         $.post(medical_durations_url, {
             _token: $('meta[name="csrf-token"]').attr('content'),
+            'program_duration': program_duration,
             'company_name': medical_company_name,
-            'deductible': medical_deductible
+            'deductible': medical_deductible,
         }, function (data) {
             $('#medical_duration').html(data);
         });
     });
 
     $('#medical_duration').change(function () {
-        fetchAirportMedicalFee();
+        calculateAirportMedical();
     });
 
     $('#accom_type').change(function () {
@@ -940,36 +1043,25 @@ $(document).ready(function() {
         });
     });
 
+    $('#meal_type').change(function () {
+        $.post(accomm_durations_url, {
+            _token: $('meta[name="csrf-token"]').attr('content'),
+            accom_type: jQuery.trim($("#accom_type option:selected").text()),
+            room_type: jQuery.trim($("#room_type option:selected").text()),
+            meal_type: jQuery.trim($("#meal_type option:selected").text()),
+            program_duration: $("#program_duration").val()
+        }, function (data) {
+            $('#accom_duration').html(data.duration);
+        });
+    });
+
     if ($("#program_duration option").length) {
         $("#program_duration").val($($("#program_duration option")[0]).attr('value')).change();
-        calculatorCourse('duration', $("#program_duration").val());
+        calculateCourse('duration', $("#program_duration").val());
     }
 });
 
-function specialDietCheck(urlname, checked, week) {
-    //if medical_insurance_checked is true then yes or no
-    $.post(urlname, {
-        _token: token,
-        checked: checked,
-        week: week,
-        special_diet: true,
-        room_type: jQuery.trim($("#room_type option:selected").text()),
-        meal_type: jQuery.trim($("#meal_type option:selected").text()),
-    }, function (data) {
-        if (data.total_value != undefined) {
-            $('#total_fee').html(data.total_fee + " " + data.currency_name + " / " + data.currency_price + " " + " SAR");
-            $("#total_fees_to_save_to_db").val(data.total_value + " " + data.currency_name);
-            $("#other_currency_to_save_to_db").val(data.currency_price + " " + " SAR")
-
-            $("#total_fees").val(data.total_fee);
-        }
-        $('#special_diet_fee').html(data.special_diet_fee);
-    }).done(function () {
-        $("#loader").hide();
-    });
-}
-
-function addAccommodation(object) {
+function submitAccommodationForm(object) {
     var urlfor = $(object).parents().find('#courseform').attr('action');
     var accommodationForm = $(object).parents().find('#courseform');
 
@@ -988,9 +1080,6 @@ function addAccommodation(object) {
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
                 document.documentElement.scrollTop = 0;
-                setTimeout(function () {
-                    window.location.replace(accomm_under_age_url);
-                }, 2000)
             } else if (data.errors) {
                 document.documentElement.scrollTop = 0;
                 $("#loader").hide();
@@ -1010,9 +1099,11 @@ function addAccommodation(object) {
     });
 }
 
-function addAirportMedical(object, reload = false) {
-    var urlname = $(object).parents().find("#courseform").attr('action');
-    var formData = new FormData($(object).parents().find('#courseform')[0]);
+function submitAirportMedicalForm(object, reload = false) {
+    var urlname = $(object).parents().find('#courseform').attr('action');
+    var accommodationForm = $(object).parents().find('#courseform');
+
+    var formData = new FormData($(accommodationForm)[0]);
 
     $("#loader").show();
     $.ajax({
@@ -1028,8 +1119,9 @@ function addAirportMedical(object, reload = false) {
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
                 document.documentElement.scrollTop = 0;
-                if (reload)
+                if (reload) {
                     window.location.reload();
+                }
             } else if (data.errors) {
                 document.documentElement.scrollTop = 0;
                 $("#loader").hide();
@@ -1049,16 +1141,16 @@ function addAirportMedical(object, reload = false) {
     });
 }
 
-function addAccommodationUnderAge(object, reload = false) {
-    var urlname = (object.parents().find('#courseform').attr('action'));
-    var form1 = $(object).parents().find('#courseform');
-    var form = new FormData($(form1)[0]);
+function submitAccommodationUnderAgeForm(object, reload = false) {
+    var urlname = (object.parents().find('#accommodation_under_age_form').attr('action'));
+    var form = $(object).parents().find('#accommodation_under_age_form');
+    var formData = new FormData($(form)[0]);
 
     $('#loader').show();
     $.ajax({
         type: 'POST',
         url: urlname,
-        data: form,
+        data: formData,
         cache: false,
         contentType: false,
         processData: false,
@@ -1067,7 +1159,6 @@ function addAccommodationUnderAge(object, reload = false) {
 
             if (data.errors) {
                 document.documentElement.scrollTop = 0;
-
                 $('.alert-danger').show();
                 $('.alert-danger ul').html('');
                 for (var error in data.errors) {
@@ -1111,7 +1202,6 @@ function submitCourseProgramForm(this_object) {
                 document.documentElement.scrollTop = 0;
             } else if (data.errors) {
                 document.documentElement.scrollTop = 0;
-
                 $('.alert-danger').show();
                 $('.alert-danger ul').html('');
                 for (var error in data.errors) {
@@ -1206,7 +1296,7 @@ function deleteLanguage() {
     if (ids != '') {
         if (confirm(delete_on_confirm)) {
             $("#loader").show();
-            $.post(delete_language_url, {_token: token, ids: ids}, function (data) {
+            $.post(delete_language_url, {_method: 'DELETE', _token: token, ids: ids}, function (data) {
                 $("#language_choose").html(data.result);
                 document.documentElement.scrollTop = 0;
                 $("#language_choose").multiselect('rebuild');
@@ -1222,6 +1312,7 @@ function deleteLanguage() {
         alert('Please select any option to delete');
     }
 }
+
 
 //////
 function addStudyMode(english_val, arabic_val) {
@@ -1256,7 +1347,7 @@ function deleteStudyMode() {
     if (ids != '') {
         if (confirm(delete_on_confirm)) {
             $("#loader").show();
-            $.post(delete_study_mode_url, {_token: token, ids: ids}, function (data) {
+            $.post(delete_study_mode_url, {_method: 'DELETE', _token: token, ids: ids}, function (data) {
                 $("#study_mode_choose").html(data.result);
                 document.documentElement.scrollTop = 0;
                 $("#study_mode_choose").multiselect('rebuild');
@@ -1271,6 +1362,7 @@ function deleteStudyMode() {
         alert('Please select any option to delete');
     }
 }
+
 
 //////
 function addProgramType(english_val, arabic_val) {
@@ -1310,7 +1402,7 @@ function deleteProgramType() {
     if (ids != '') {
         if (confirm(delete_on_confirm)) {
             $("#loader").show();
-            $.post(delete_program_type_url, {_token: token, ids: ids}, function (data) {
+            $.post(delete_program_type_url, {_method: 'DELETE', _token: token, ids: ids}, function (data) {
                 $("#program_type_choose").html(data.result);
                 document.documentElement.scrollTop = 0;
                 $("#program_type_choose").multiselect('rebuild');
@@ -1325,6 +1417,7 @@ function deleteProgramType() {
         alert('Please select any option to delete');
     }
 }
+
 
 //////
 function addBranch(english_name, arabic_name) {
@@ -1356,7 +1449,7 @@ function deleteBranch() {
     if (ids != '') {
         if (confirm(delete_on_confirm)) {
             $("#loader").show();
-            $.post(delete_branch_url, {_token: token, ids: ids}, function (data) {
+            $.post(delete_branch_url, {_method: 'DELETE', _token: token, ids: ids}, function (data) {
                 $("#branch_choose").html(data.result);
                 document.documentElement.scrollTop = 0;
                 $("#branch_choose").multiselect('rebuild');
@@ -1372,6 +1465,7 @@ function deleteBranch() {
         alert('Please select any option to delete');
     }
 }
+
 
 //////
 function addStudyTime(english_val, arabic_val) {
@@ -1407,7 +1501,7 @@ function deleteStudyTime() {
     if (ids != '') {
         if (confirm(delete_on_confirm)) {
             $("#loader").show();
-            $.post(delete_study_time_url, {_token: token, ids: ids}, function (data) {
+            $.post(delete_study_time_url, {_method: 'DELETE', _token: token, ids: ids}, function (data) {
                 $("#study_time_choose").html(data.result);
                 document.documentElement.scrollTop = 0;
                 $("#study_time_choose").multiselect('rebuild');
@@ -1457,7 +1551,7 @@ function deleteClassesDay() {
     if (ids != '') {
         if (confirm(delete_on_confirm)) {
             $("#loader").show();
-            $.post(delete_classes_day_url, {_token: token, ids: ids}, function (data) {
+            $.post(delete_classes_day_url, {_method: 'DELETE', _token: token, ids: ids}, function (data) {
                 $("#classes_day_choose").html(data.result);
                 document.documentElement.scrollTop = 0;
                 $("#classes_day_choose").multiselect('rebuild');
@@ -1472,6 +1566,7 @@ function deleteClassesDay() {
         alert('Please select any option to delete');
     }
 }
+
 
 //////
 function addStartDate(english_val, arabic_val) {
@@ -1507,7 +1602,7 @@ function deleteStartDate() {
     if (ids != '') {
         if (confirm(delete_on_confirm)) {
             $("#loader").show();
-            $.post(delete_start_day_url, {_token: token, ids: ids}, function (data) {
+            $.post(delete_start_day_url, {_method: 'DELETE', _token: token, ids: ids}, function (data) {
                 $("#start_date_choose").html(data.result);
                 document.documentElement.scrollTop = 0;
                 $("#start_date_choose").multiselect('rebuild');
@@ -1522,6 +1617,7 @@ function deleteStartDate() {
         alert('Please select any option to delete');
     }
 }
+
 
 //////
 function addProgramAgeRange(english_val, arabic_val) {
@@ -1560,7 +1656,7 @@ function deleteProgramAgeRange() {
     if (ids != '') {
         if (confirm(delete_on_confirm)) {
             $("#loader").show();
-            $.post(delete_program_age_range_url, {type : 'DELETE', _token: token, ids: ids}, function (data) {
+            $.post(delete_program_age_range_url, {_method: 'DELETE', _token: token, ids: ids}, function (data) {
                 $("#program_age_range_choose" + program_age_range).html(data.result);
                 document.documentElement.scrollTop = 0;
                 $("#program_age_range_choose" + program_age_range).multiselect('rebuild');
@@ -1575,6 +1671,7 @@ function deleteProgramAgeRange() {
         alert('Please select any option to delete');
     }
 }
+
 
 //////
 function addProgramUnderAgeRange(english_val, arabic_val) {
@@ -1613,7 +1710,7 @@ function deleteProgramUnderAgeRange() {
     if (ids != '') {
         if (confirm(delete_on_confirm)) {
             $("#loader").show();
-            $.post(delete_program_under_age_range_url, {_token: token, ids: ids}, function (data) {
+            $.post(delete_program_under_age_range_url, {_method: 'DELETE', _token: token, ids: ids}, function (data) {
                 $("#program_under_age_range_choose").html(data.result);
                 $("#program_under_age_range_choose").multiselect('rebuild');
             }).done(function (data) {
@@ -1626,6 +1723,7 @@ function deleteProgramUnderAgeRange() {
         alert('Please select any option to delete');
     }
 }
+
 
 //////
 function addAccommAgeRange(english_val, arabic_val) {
@@ -1665,7 +1763,7 @@ function deleteAccommAgeRange(object) {
     if (ids != '') {
         if (confirm(delete_on_confirm)) {
             $("#loader").show();
-            $.post(delete_accomm_age_range_url, {_token: token, ids: ids}, function (data) {
+            $.post(delete_accomm_age_range_url, {_method: 'DELETE', _token: token, ids: ids}, function (data) {
                 var accomm_age_range_index = 0;
                 while(true) {
                     var models_dropdown = $("#accom_age_choose" + accomm_age_range_index);
@@ -1689,6 +1787,7 @@ function deleteAccommAgeRange(object) {
         alert('Please select any option to delete');
     }
 }
+
 
 //////
 function addAccommCustodianAgeRange(english_val, arabic_val) {
@@ -1734,7 +1833,7 @@ function deleteAccommCustodianAgeRange(object) {
         if (confirm(delete_on_confirm)) {
             $("#loader").show();
             $.post(delete_accomm_custodian_range_url, {
-                _token: token, ids: ids
+                _method: 'DELETE', _token: token, ids: ids
             }, function (data) {
                 var custodian_age_range_index = 0;
                 while(true) {
@@ -1758,6 +1857,7 @@ function deleteAccommCustodianAgeRange(object) {
         alert('Please select any option to delete');
     }
 }
+
 
 //////
 function addAccommUnderAgeRange(english_val, arabic_val) {
@@ -1799,7 +1899,7 @@ function deleteAccommUnderAgeRange(object) {
     if (ids != '') {
         if (confirm(delete_on_confirm)) {
             $("#loader").show();
-            $.post(delete_accomm_under_range_url, {_token: token, ids: ids}, function (data) {
+            $.post(delete_accomm_under_range_url, {_method: 'DELETE', _token: token, ids: ids}, function (data) {
                 var custodian_age_range_index = 0;
                 while(true) {
                     var models_dropdown = $("#accommodation_under_age_choose" + custodian_age_range_index);
@@ -1822,6 +1922,7 @@ function deleteAccommUnderAgeRange(object) {
         alert('Please select any option to delete');
     }
 }
+
 
 function addApplyFrom(object) {
     $("#loader").show();
@@ -2295,8 +2396,7 @@ function deleteTypeOfVisa(object) {
 
 /*
 *
-* Visa Form ADd Field function
-* ends
+* Visa Form ADd Field function ends
 *
 * */
 
@@ -2304,7 +2404,6 @@ function deleteTypeOfVisa(object) {
 * Visa Form clone field function starts
 * */
 changing_attr_clone = 0;
-
 function cloneAnotherVisa(object) {
     changing_attr_clone++;
     var cloned = $(object).parents().find('.clone_visa0');
@@ -2323,7 +2422,6 @@ function removeAnotherVisa(object) {
 }
 
 changing_attr_clone_service = 0;
-
 function cloneAnotherVisaService(object) {
     changing_attr_clone_service++;
     var cloned = $(object).parents().find('.clone_visa_service0');
@@ -2342,10 +2440,7 @@ function removeAnotherVisaService(object) {
 }
 
 /*
-* function for getting contents of
-*
-* tinymce
-*
+* function for getting contents of tinymce
 * */
 function getContent(texteditorId, inputId) {
     if (typeof (tinymce) !== 'undefined') {

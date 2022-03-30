@@ -2,6 +2,7 @@
 
 @section('content')
     @include('superadmin.courses.scripts')
+
     <div class="col-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
@@ -20,16 +21,12 @@
                 @include('superadmin.include.alert')
 
                 <div id="menu">
-                    <ul class="lang text-right current_page_itemm">
-                        <li class="current_page_item selected">
-                            <a class="" href="#" onclick="changeLanguage('english', 'arabic')">
-                                <img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}
-                            </a>
+                    <ul class="lang text-right">
+                        <li class="{{app()->getLocale() == 'en' ? 'current_page_item selected' : ''}}">
+                            <a onclick="changeLanguage('english', 'arabic')"><img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}</a>
                         </li>
-                        <li>
-                            <a href="#" onclick="changeLanguage('arabic', 'english')"; fillForm('form1', 'form2')">
-                                <img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}
-                            </a>
+                        <li class="{{app()->getLocale() == 'ar' ? 'current_page_item selected' : ''}}">
+                            <a onclick="changeLanguage('arabic', 'english')"><img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}</a>
                         </li>
                     </ul>
                 </div>
@@ -49,7 +46,7 @@
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label>{{__('SuperAdmin/backend.accommodation_id')}}:</label>
-                                    <input readonly class="form-control" value="{{time() . rand(00,99)}}" type="text" id="accommodation_id0" name="accommodation_id[]">
+                                    <input readonly class="form-control" value="{{time() . rand(000, 999)}}" type="text" id="accommodation_id0" name="accommodation_id[]">
                                 </div>
                             </div>
 
@@ -119,12 +116,16 @@
                                     <label>{{__('SuperAdmin/backend.custodian_condition')}}:</label>
                                     <div class="row">
                                         <div class="form-group col-md-6">
-                                            <input type="radio" name="custodian_condition[]">&nbsp;
+                                            <input type="radio" value="required" name="custodian_condition[]">&nbsp;
                                             <label>{{__('SuperAdmin/backend.required')}}</label>
                                         </div>
                                         <div class="form-group col-md-6">
-                                            <input type="radio" name="custodian_condition[]">&nbsp;
+                                            <input type="radio" value="optional" name="custodian_condition[]">&nbsp;
                                             <label>{{__('SuperAdmin/backend.optional')}}</label>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <input type="radio" value="invisible" name="custodian_condition[]" checked>&nbsp;
+                                            <label>{{__('SuperAdmin/backend.invisible')}}</label>
                                         </div>
                                     </div>
                                 </div>
@@ -140,7 +141,12 @@
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label>{{__('SuperAdmin/backend.special_diet_note')}}:</label>
-                                    <textarea class="form-control" name="special_diet_note[]" id="special_diet_note0" placeholder="{{__('SuperAdmin/backend.special_diet_note')}}"></textarea>
+                                    <div class="english">
+                                        <textarea class="form-control" name="special_diet_note[]" placeholder="{{__('SuperAdmin/backend.special_diet_note')}}" id="special_diet_note0"></textarea>
+                                    </div>
+                                    <div class="arabic">
+                                        <textarea class="form-control" name="special_diet_note_ar[]" placeholder="{{__('SuperAdmin/backend.special_diet_note')}}" id="special_diet_note_ar0"></textarea>
+                                    </div>
                                 </div>
                             </div>
 
@@ -161,14 +167,24 @@
 
                             <div class="row">
                                 <div class="form-group col-md-4">
+                                    <label>{{__('SuperAdmin/backend.available_dates')}}:</label>
+                                    <select class="form-control available_date" name="available_date[]">
+                                        <option value="all_year_round" selected>{{__('SuperAdmin/backend.all_year_round')}}</option>
+                                        <option value="selected_dates">{{__('SuperAdmin/backend.selected_dates')}}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4 available_days" style="display: none">
+                                    <label>{{__('SuperAdmin/backend.available_days')}}:</label>
+                                    <input class="form-control available_days yeardatepicker" data-index="0" name="available_days[]">
+                                </div>
+                                <div class="form-group col-md-4 start_date">
                                     <label>{{__('SuperAdmin/backend.start_date')}}:</label>
                                     <input class="form-control" type="date" name="start_date[]">
                                 </div>
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-4 end_date">
                                     <label>{{__('SuperAdmin/backend.end_date')}}:</label>
                                     <input class="form-control" type="date" name="end_date[]">
                                 </div>
-                                <div class="form-group col-md-4"></div>
                             </div>
 
                             <div class="row">
@@ -177,10 +193,10 @@
                                     <input class="form-control" type="number" name="discount_per_week[]" placeholder="{{__('SuperAdmin/backend.discount_per_week')}} ">
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label>Accommodation-symbol:</label>
+                                    <label>{{__('SuperAdmin/backend.discount_symbol')}}:</label>
                                     <select class="form-control" name="discount_per_week_symbol[]">
-                                        <option>%</option>
-                                        <option>-</option>
+                                        <option value="%" selected>%</option>
+                                        <option value="-">-</option>
                                     </select>
                                 </div>
                                 <div class="form-group col-md-3">
@@ -238,20 +254,27 @@
                                     <input class="form-control" type="date" name="christmas_fee_end_date[]">
                                 </div>
                             </div>
-                        
+
+                            <script>
+                                window.addEventListener('load', function() {
+                                    yeardatepicker_days.push([]);
+                                    yeardatepicker_months.push([]);
+                                }, false );
+                            </script>
+
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <button class="btn btn-primary fa fa-plus" type="button" onclick="addAccommodationForm($(this))"></button>
+                                    <button class="btn btn-primary fa fa-plus" type="button" onclick="submitAccommodationFormForm($(this))"></button>
                                 </div>
                                 <div class="pull-rights">
                                     <button class="btn btn-danger fa fa-minus" type="button" onclick="deleteAccommodationForm($(this))"></button>
                                 </div>
                             </div>
                         </div>
-
+                        
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <a class="btn btn-primary" type="button" onclick="getAccommodationContents(); addAccommodation($(this))">{{__('SuperAdmin/backend.submit')}}</a>
+                                <a class="btn btn-primary" type="button" onclick="getAccommodationContents(); submitAccommodationForm($(this))">{{__('SuperAdmin/backend.submit')}}</a>
                             </div>
                         </div>
                     </div>
@@ -259,5 +282,6 @@
             </div>
         </div>
     </div>
+    
     @include('superadmin.courses.modals')
 @endsection

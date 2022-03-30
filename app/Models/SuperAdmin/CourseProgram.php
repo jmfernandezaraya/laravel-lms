@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models\SuperAdmin;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -8,40 +9,27 @@ class CourseProgram extends Model
 {
     use HasFactory;
 
-    protected $casts = ['program_age_range' => 'array'];
-
     protected $guarded = [];
 
-    protected $table = 'courses_program_en';
+    protected $primaryKey = 'unique_id';
 
-    public function save_model($db1, $db2, $input1, $input2)
-    {
-        $db = \DB::transaction(function () use ($db1, $db2, $input1, $input2) {
-            $db1->fill($input1)->save();
-            $save1 = $db2->fill($input2)->save();
-            if ($save1)
-                return true;
-        });
+    protected $table = 'course_programs';
 
-        if ($db) {
-            \Session::forget(['input1', 'input2', 'db1', 'db2']);
-            return true;
-        }
-    }
+    protected $casts = ['program_age_range' => 'array'];
 
     public function course()
     {
-        return $this->belongsTo('App\Models\SuperAdmin\Course', 'course_unique_id', 'unique_id');
+        return $this->belongsTo('App\Models\SuperAdmin\Course', 'course_unique_id');
     }
 
     public function courseUnderAge()
     {
-        return $this->hasOne('App\Models\SuperAdmin\CourseProgramUnderAgeFee', 'course_program_id', 'unique_id');
+        return $this->hasOne('App\Models\SuperAdmin\CourseProgramUnderAgeFee', 'course_program_id');
     }
 
     public function courseUnderAges()
     {
-        return $this->hasMany('App\Models\SuperAdmin\CourseProgramUnderAgeFee', 'course_program_id', 'unique_id');
+        return $this->hasMany('App\Models\SuperAdmin\CourseProgramUnderAgeFee', 'course_program_id');
     }
 
     public function getUnderAge()
@@ -66,12 +54,12 @@ class CourseProgram extends Model
 
     public function courseTextBookFee()
     {
-        return $this->hasOne('App\Models\CourseProgramTextBook', 'program_id', 'unique_id');
+        return $this->hasOne('App\Models\SuperAdmin\CourseProgramTextBook', 'program_id');
     }
 
     public function courseTextBookFees()
     {
-        return $this->hasMany('App\Models\CourseProgramTextBook', 'program_id', 'unique_id');
+        return $this->hasMany('App\Models\SuperAdmin\CourseProgramTextBook', 'program_id');
     }
 
     public function TextBookFee($value)

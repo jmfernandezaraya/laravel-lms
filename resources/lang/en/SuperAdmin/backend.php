@@ -174,6 +174,7 @@ return [
     'add_another_accommodation_cost' => 'add another Accommodation Cost',
     'add_another_accommodation_type' => 'add another Accommodation Type',
     'airport_fee' => 'Airport Fee',
+    'airport_service_fee' => 'Airport Service Fee',
 
     'week_selected_fee' => 'Week Selected Fee',
     'company_name' => 'Company Name',
@@ -181,6 +182,8 @@ return [
     'insurance_fee' => 'Insurance Fee',
     'start_date' => 'Start Date',
     'end_date' => 'End Date',
+    'all_year_round' => 'All Year Round',
+    'available_days' => 'Available Days',
     'note' => 'Note',
     'fee' => 'Fee',
     
@@ -282,7 +285,8 @@ return [
 
     'required' => 'Required',
     'optional' => 'Optional',
-
+    'invisible' => 'Invisible',
+    
     'airport_pickup' => 'Aiport Pickup',
     'name' => 'Name',
     "add_airport_fee" => 'Add Aiport Fee',

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
-use App\Models\SuperAdmin\Accommodation;
+use App\Models\SuperAdmin\CourseAccommodation;
 use App\Models\SuperAdmin\CourseAirport;
 use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\CourseAccommodationUnderAge;
@@ -24,7 +24,7 @@ class CourseDetailsController extends Controller
 
     public function accomodationDetails($course_unique_id)
     {
-        $accomodations = Accommodation::whereCourseUniqueId($course_unique_id)->get();
+        $accomodations = CourseAccommodation::whereCourseUniqueId($course_unique_id)->get();
         return view("superadmin.courses.course_details.accommodation", compact('accomodations'));
     }
 
@@ -221,7 +221,7 @@ class CourseDetailsController extends Controller
             "christmas_fee_start_date" => $request->christmas_fee_start_date,
             "christmas_fee_end_date" => $request->christmas_fee_end_date,
         ];
-        Accommodation::where('unique_id', $request->id)->update($array);
+        CourseAccommodation::where('unique_id', $request->id)->update($array);
         toastr()->success(__('SuperAdmin/backend.data_removed_successfully'));
         return back();
     }

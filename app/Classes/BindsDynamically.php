@@ -20,8 +20,6 @@ trait BindsDynamically
      */
     public function newInstance($attributes = [], $exists = false)
     {
-        // Overridden in order to allow for late table binding.
-
         $model = parent::newInstance($attributes, $exists);
         $model->setTable($this->table);
 

@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Classes\AccommodationCalculator;
+
 use App\Http\Controllers\Controller;
 
 use App\Models\Calculator;
-use App\Models\SuperAdmin\Accommodation;
+use App\Models\SuperAdmin\CourseAccommodation;
 use App\Models\SuperAdmin\CourseAirport;
 use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\CourseProgram;
@@ -156,7 +157,7 @@ class CourseController extends Controller
 
         $schools = DB::table("schools_en")->whereUniqueId($course->school_id)->first();
 
-        $accomodations = new Accommodation;
+        $accomodations = new CourseAccommodation;
         $accomodations->setTable('course_accommodations_en');
         $accomodations = $accomodations->whereCourseUniqueId($course->unique_id)->get();
 
@@ -380,7 +381,7 @@ class CourseController extends Controller
             return $this->calculateSpecialDiet($request);
         }
 
-        $accomodation = new Accommodation;
+        $accomodation = new CourseAccommodation;
 
         $request->session_set == true || $request->set_session == 'true' ? Session::put('accom_unique_id', $request->id) : '';
 

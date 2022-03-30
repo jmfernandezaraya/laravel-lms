@@ -1,6 +1,8 @@
 @extends('superadmin.layouts.app')
+
 @section('content')
     @include('superadmin.courses.scripts')
+
     <div class="col-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
@@ -22,16 +24,12 @@
                 @include('superadmin.include.alert')
 
                 <div id="menu">
-                    <ul class="lang text-right current_page_itemm">
-                        <li class="current_page_item selected">
-                            <a class="" href="#" onclick="changeLanguage('english', 'arabic')">
-                                <img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}
-                            </a>
+                    <ul class="lang text-right">
+                        <li class="{{app()->getLocale() == 'en' ? 'current_page_item selected' : ''}}">
+                            <a onclick="changeLanguage('english', 'arabic')"><img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}</a>
                         </li>
-                        <li>
-                            <a href="#" onclick="changeLanguage('arabic', 'english')"; fillForm('form1', 'form2')">
-                                <img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}
-                            </a>
+                        <li class="{{app()->getLocale() == 'ar' ? 'current_page_item selected' : ''}}">
+                            <a onclick="changeLanguage('arabic', 'english')"><img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}</a>
                         </li>
                     </ul>
                 </div>
@@ -43,7 +41,13 @@
                         {{csrf_field()}}
                         @method('PUT')
 
-                        <input hidden id="airportincrement" name="airportincrement" value="{{$airports ? $airports->count() - 1 : 0}}">
+                        <script>
+                            window.addEventListener('load', function() {
+                                airport_clone = {{$airports && $airports->count() ? $airports->count() - 1 : 0}};
+                            }, false );
+                        </script>
+
+                        <input hidden id="airportincrement" name="airportincrement" value="{{$airports && $airports->count() ? $airports->count() - 1 : 0}}">
                         @forelse ($airports as $airport)
                             <div id="airport_clone{{$loop->iteration - 1}}" class="airport-clone clone">
                                 <input hidden value="{{$airport->unique_id}}" name="airport_id[]">
@@ -78,8 +82,8 @@
                                                 <input class="form-control" type="text" value="{{$airport_fee->service_name}}" name="airport_service_name[{{$loop->parent->iteration - 1}}][]" placeholder="{{__('SuperAdmin/backend.type_of_service')}}">
                                             </div>
                                             <div class="form-group col-md-3">
-                                                <label>{{__('SuperAdmin/backend.service_fee')}}:</label>
-                                                <input class="form-control" type="number" value="{{$airport_fee->service_fee}}" name="airport_service_fee[{{$loop->parent->iteration - 1}}][]" placeholder="{{__('SuperAdmin/backend.service_fee')}}">
+                                                <label>{{__('SuperAdmin/backend.airport_service_fee')}}:</label>
+                                                <input class="form-control" type="number" value="{{$airport_fee->service_fee}}" name="airport_service_fee[{{$loop->parent->iteration - 1}}][]" placeholder="{{__('SuperAdmin/backend.if_program_duration_airport_fee')}}">
                                             </div>
                                             <div class="form-group col-md-3 mt-4">
                                                 <i class="fa fa-plus-circle" aria-hidden="true" onclick="addAirportFeeForm($(this))"></i>
@@ -91,15 +95,15 @@
                                     <div class="row airport-fee-clone clone" id="airport{{$loop->iteration - 1}}_fee_clone0">
                                         <div class="form-group col-md-3">
                                             <label>{{__('SuperAdmin/backend.airport_name')}}:</label>
-                                            <input class="form-control" type="text" name="airport_name[{{$loop->iteration - 1}}][]" placeholder="{{__('SuperAdmin/backend.airport_name')}}">
+                                            <input class="form-control" type="text" name="airport_name[{{$loop->iteration - 1}}][]" placeholder="{{__('SuperAdmin/backend.airport_name')}}" placeholder="{{__('SuperAdmin/backend.airport_name')}}">
                                         </div>
                                         <div class="form-group col-md-3">
                                             <label>{{__('SuperAdmin/backend.type_of_service')}}:</label>
-                                            <input class="form-control" type="text" name="airport_service_name[{{$loop->iteration - 1}}][]" placeholder="{{__('SuperAdmin/backend.type_of_service')}}">
+                                            <input class="form-control" type="text" name="airport_service_name[{{$loop->iteration - 1}}][]" placeholder="{{__('SuperAdmin/backend.type_of_service')}}" placeholder="{{__('SuperAdmin/backend.type_of_service')}}">
                                         </div>
                                         <div class="form-group col-md-3">
-                                            <label>{{__('SuperAdmin/backend.service_fee')}}:</label>
-                                            <input class="form-control" type="number" name="airport_service_fee[{{$loop->iteration - 1}}][]" placeholder="{{__('SuperAdmin/backend.service_fee')}}">
+                                            <label>{{__('SuperAdmin/backend.airport_service_fee')}}:</label>
+                                            <input class="form-control" type="number" name="airport_service_fee[{{$loop->iteration - 1}}][]" placeholder="{{__('SuperAdmin/backend.airport_service_fee')}}" placeholder="{{__('SuperAdmin/backend.if_program_duration_airport_fee')}}">
                                         </div>
                                         <div class="form-group col-md-3 mt-4">
                                             <i class="fa fa-plus-circle" aria-hidden="true" onclick="addAirportFeeForm($(this))"></i>
@@ -111,7 +115,12 @@
                                 <div class="row">
                                     <div class="form-group col-md-12">
                                         <label>{{__('SuperAdmin/backend.airport_insurance_note')}}:</label>
-                                        <textarea class="form-control" name="airport_note[]" id="airport_note{{$loop->iteration - 1}}" placeholder="{{__('SuperAdmin/backend.airport_insurance_note')}}">{!! $airport->note !!}</textarea>
+                                        <div class="english">
+                                            <textarea class="form-control" name="airport_note[]" placeholder="{{__('SuperAdmin/backend.airport_insurance_note')}}" id="airport_note{{$loop->iteration - 1}}">{!! $airport->note !!}</textarea>
+                                        </div>
+                                        <div class="arabic">
+                                            <textarea class="form-control" name="airport_note_ar[]" placeholder="{{__('SuperAdmin/backend.airport_insurance_note')}}" id="airport_note_ar{{$loop->iteration - 1}}">{!! $airport->note_ar !!}</textarea>
+                                        </div>
                                     </div>
                                 </div>
                             
@@ -154,8 +163,8 @@
                                         <input class="form-control" type="text" name="airport_service_name[0][]" placeholder="{{__('SuperAdmin/backend.type_of_service')}}">
                                     </div>
                                     <div class="form-group col-md-3">
-                                        <label>{{__('SuperAdmin/backend.service_fee')}}:</label>
-                                        <input class="form-control" type="number" name="airport_service_fee[0][]" placeholder="{{__('SuperAdmin/backend.service_fee')}}">
+                                        <label>{{__('SuperAdmin/backend.airport_service_fee')}}:</label>
+                                        <input class="form-control" type="number" name="airport_service_fee[0][]" placeholder="{{__('SuperAdmin/backend.airport_service_fee')}}">
                                     </div>
                                     <div class="form-group col-md-3 mt-4">
                                         <i class="fa fa-plus-circle" aria-hidden="true" onclick="addAirportFeeForm($(this))"></i>
@@ -166,7 +175,12 @@
                                 <div class="row">
                                     <div class="form-group col-md-12">
                                         <label>{{__('SuperAdmin/backend.airport_insurance_note')}}:</label>
-                                        <textarea class="form-control" name="airport_note[]" id="airport_note0" placeholder="{{__('SuperAdmin/backend.airport_insurance_note')}}"></textarea>
+                                        <div class="english">
+                                            <textarea class="form-control" name="airport_note[]" placeholder="{{__('SuperAdmin/backend.airport_insurance_note')}}" id="airport_note0"></textarea>
+                                        </div>
+                                        <div class="arabic">
+                                            <textarea class="form-control" name="airport_note_ar[]" placeholder="{{__('SuperAdmin/backend.airport_insurance_note')}}" id="airport_note_ar0"></textarea>
+                                        </div>
                                     </div>
                                 </div>
                             
@@ -181,7 +195,13 @@
                             </div>
                         @endforelse
 
-                        <input hidden id="medicalincrement" name="medicalincrement" value="{{$medicals ? $medicals->count() - 1 : 0}}">
+                        <script>
+                            window.addEventListener('load', function() {
+                                medical_clone = {{$medicals && $medicals->count() ? $medicals->count() - 1 : 0}};
+                            }, false );
+                        </script>
+
+                        <input hidden id="medicalincrement" name="medicalincrement" value="{{$medicals && $medicals->count() ? $medicals->count() - 1 : 0}}">
                         @forelse ($medicals as $medical)
                             <div id="medical_clone{{$loop->iteration - 1}}" class="medical-clone clone">
                                 <input hidden value="{{$medical->unique_id}}" name="medical_id[]">
@@ -253,7 +273,12 @@
                                 <div class="row">
                                     <div class="form-group col-md-12">
                                         <label>{{__('SuperAdmin/backend.medical_insurance_note')}}:</label>
-                                        <textarea class="form-control" name="medical_note[]" id="medical_note{{$loop->iteration - 1}}" placeholder="{{__('SuperAdmin/backend.medical_insurance_note')}}">{!! $medical->note !!}</textarea>
+                                        <div class="english">
+                                            <textarea class="form-control" name="medical_note[]" placeholder="{{__('SuperAdmin/backend.medical_insurance_note')}}" id="medical_note{{$loop->iteration - 1}}">{!! $medical->note !!}</textarea>
+                                        </div>
+                                        <div class="arabic">
+                                            <textarea class="form-control" name="medical_note_ar[]" placeholder="{{__('SuperAdmin/backend.medical_insurance_note')}}" id="medical_note_ar{{$loop->iteration - 1}}">{!! $medical->note_ar !!}</textarea>
+                                        </div>
                                     </div>
                                 </div>
                             
@@ -312,7 +337,12 @@
                                 <div class="row">
                                     <div class="form-group col-md-12">
                                         <label>{{__('SuperAdmin/backend.medical_insurance_note')}}:</label>
-                                        <textarea class="form-control" name="medical_note[]" id="medical_note0" placeholder="{{__('SuperAdmin/backend.medical_insurance_note')}}"></textarea>
+                                        <div class="english">
+                                            <textarea class="form-control" name="medical_note[]" placeholder="{{__('SuperAdmin/backend.medical_insurance_note')}}" id="medical_note0"></textarea>
+                                        </div>
+                                        <div class="arabic">
+                                            <textarea class="form-control" name="medical_note_ar[]" placeholder="{{__('SuperAdmin/backend.medical_insurance_note')}}" id="medical_note_ar0"></textarea>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -329,7 +359,7 @@
 
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <button type="button" onclick="getAirpotMedicalContents(); addAirportMedical($(this))" class="btn btn-primary">{{__('SuperAdmin/backend.submit')}}</button>
+                                <button type="button" onclick="getAirpotMedicalContents(); submitAirportMedicalForm($(this))" class="btn btn-primary">{{__('SuperAdmin/backend.submit')}}</button>
                             </div>
                             <div class="form-group col-md-6">
                                 <a href="{{route('superadmin.course.index')}}" class="btn btn-primary pull-right" type="button" name="####">{{__('SuperAdmin/backend.back')}}</a>
@@ -340,5 +370,6 @@
             </div>
         </div>
     </div>
+    
     @include('superadmin.courses.modals')
 @endsection

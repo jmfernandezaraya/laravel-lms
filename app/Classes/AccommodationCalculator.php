@@ -2,9 +2,9 @@
 
 namespace App\Classes;
 
+use Carbon\Carbon;
 
 use App\Models\SuperAdmin\Course;
-use Carbon\Carbon;
 
 class AccommodationCalculator extends FrontendCalculator
 {

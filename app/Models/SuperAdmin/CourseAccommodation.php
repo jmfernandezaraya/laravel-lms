@@ -1,42 +1,43 @@
 <?php
 
-namespace App\Models\SuperAdmin\CourseUpdate;
+namespace App\Models\SuperAdmin;
 
-use App\Classes\BindsDynamically;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Accommodation extends Model
+class CourseAccommodation extends Model
 {
     use HasFactory;
-    use BindsDynamically;
+    
+    protected $guarded = [];
 
-    protected $primaryKey = 'unique_id';
     protected $casts = [
         'age_range' => 'array',
         'accommodation_under_age' => 'array',
         'custodian_age_range' => 'array'
     ];
 
-    protected $guarded = [];
+    protected $primaryKey = 'unique_id';
 
-    public function __construct()
-    {
-        $this->setTable('course_accommodations_' . get_language());
-    }
+    protected $table = 'course_accommodations';
 
     public function save_model($db1, $db2, $input1, $input2) {
         $db = \DB::transaction(function() use ($db1, $db2, $input1, $input2) {
             $db1->fill($input1)->save();
-            $save1 =$db2->fill($input2)->save();
-            if($save1)
+            $save1 = $db2->fill($input2)->save();
+            if ($save1)
                 return true;
         });
 
-        if($db){
+        if ($db) {
             \Session::forget(['input1', 'input2', 'db1', 'db2']);
             return true;
         }
+    }
+
+    public function course()
+    {
+        return $this->belongsTo('App\Models\SuperAdmin\Course', 'course_unique_id', 'unique_id');
     }
 
     public function AccommodationUnderAge()

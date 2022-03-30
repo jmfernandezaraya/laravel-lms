@@ -1,5 +1,5 @@
 @section('js')
-    <script>
+    <script>        
         var course_list_page = "{{route('superadmin.course.index')}}";
         var course_url_store = "{{route('superadmin.course.store')}}";
 
@@ -98,14 +98,18 @@
             $(new_clone_form).find('[name="program_registration_fee[]"]').val('');
             $(new_clone_form).find('[name="program_duration[]"]').val('');
             $(new_clone_form).find('[name="deposit[]"]').val('');
-            $(new_clone_form).find('[name="age_range[' + course_program_index + ']"]').attr('name', "age_range[" + course_program_clone + "]");
-            var age_range_html = $(new_clone_form).find('[name="age_range[' + course_program_clone + ']"]').html();
-            $(new_clone_form).find('[name="age_range[' + course_program_clone + ']"]').parent().remove();
+            var age_range_html = $(new_clone_form).find('[name="age_range[' + course_program_index + '][]"]').html();
+            age_range_html = '<select name="age_range[' + course_program_clone + '][]" id="program_age_range_choose' + course_program_clone + '" multiple="multiple" class="3col active">' + age_range_html + '</select>';
+            $(new_clone_form).find('[name="age_range[' + course_program_index + '][]"]').parent().remove();
             $(new_clone_form).find('.age_range').append(age_range_html);
-            $(new_clone_form).find('[name="age_range[' + course_program_clone + ']"]').multiselect({ includeSelectAllOption: true });
+            $(new_clone_form).find('[name="age_range[' + course_program_clone + '][]"]').multiselect({ includeSelectAllOption: true });
             $(new_clone_form).find('[name="courier_fee[]"]').val('');
+            $(new_clone_form).find('#about_courier' + course_program_index).attr('id', 'about_courier' + course_program_clone);
+            $(new_clone_form).find('#about_courier' + course_program_clone).text('');
             $(new_clone_form).find('[name="about_courier[]"]').attr('id', 'about_courier' + course_program_clone);
             $(new_clone_form).find('[name="about_courier[]"]').text('');
+            $(new_clone_form).find('[name="about_courier_ar[]"]').attr('id', 'about_courier_ar' + course_program_clone);
+            $(new_clone_form).find('[name="about_courier_ar[]"]').text('');
             $(new_clone_form).find('.tox.tox-tinymce').remove();
             $(new_clone_form).find('[name="program_cost[]"]').val('');
             $(new_clone_form).find('[name="program_duration_start[]"]').val('');
@@ -115,6 +119,9 @@
             $(new_clone_form).find('[name="available_date[]"]').val('');
             $(new_clone_form).find('[name="select_day_week[]"]').val('Monday');
             $(new_clone_form).find('[name="available_days[]"]').val('');
+            $(new_clone_form).find('[name="available_days[]"]').data('index', course_program_clone);
+            yeardatepicker_days.push([]);
+            yeardatepicker_months.push([]);
             $(new_clone_form).find('[name="discount_per_week[]"]').val('');
             $(new_clone_form).find('[name="discount_symbol[]"]').val('%');
             $(new_clone_form).find('[name="discount_start_date[]"]').val('');
@@ -138,6 +145,8 @@
 
             tinymce.init({ selector: '#about_courier' + course_program_clone });
             tinymce.get('about_courier' + course_program_clone).show();
+            tinymce.init({ selector: '#about_courier_ar' + course_program_clone });
+            tinymce.get('about_courier_ar' + course_program_clone).show();
         }
 
         /*
@@ -152,8 +161,12 @@
                 if (clone_course_program_index >= course_program_clone) {
                     $(clone_course_program_forms[clone_course_program_index]).attr('id', 'course_program_clone' + clone_course_program_index - 1);
                     $(clone_course_program_forms[clone_course_program_index]).find('[name="age_range[' + clone_course_program_index + '][]"]').attr('name', 'age_range[' + (clone_course_program_index - 1) + '][]');
-                    
-                    $(clone_course_program_forms[clone_course_program_index]).find('[name="about_courier[]]').attr('id', 'about_courier' + (clone_course_program_index - 1));
+                    $(clone_course_program_forms[clone_course_program_index]).find('[name="available_days[]"]').data('index', clone_course_program_index - 1);
+                    yeardatepicker_days.splice(clone_course_program_index, 1);
+                    yeardatepicker_months.splice(clone_course_program_index, 1);
+
+                    $(clone_course_program_forms[clone_course_program_index]).find$(new_clone_form).find('[name="about_courier[]"]').attr('id', 'about_courier' + (clone_course_program_index - 1));
+                    $(clone_course_program_forms[clone_course_program_index]).find$(new_clone_form).find('[name="about_courier_ar[]"]').attr('id', 'about_courier_ar' + (clone_course_program_index - 1));
                 }
             }
             course_program_clone--;
@@ -167,12 +180,134 @@
                     var program_information_content = tinymce.get('program_information').getContent();
                     program_information.text(program_information_content);
                 }
+                var program_information = $('[name="program_information_ar"]');
+                if (tinymce.get('program_information_ar')) {
+                    var program_information_content = tinymce.get('program_information_ar').getContent();
+                    program_information.text(program_information_content);
+                }
                 var about_couriers = $('[name="about_courier[]"]');
                 for (var about_courier_index = 0; about_courier_index < about_couriers.length; about_courier_index++) {
                     var about_courier_id = $(about_couriers[about_courier_index]).attr('id');
                     if (tinymce.get(about_courier_id)) {
                         var about_courier_content = tinymce.get(about_courier_id).getContent();
                         $(about_couriers[about_courier_index]).text(about_courier_content);
+                    }
+                }
+                var about_couriers = $('[name="about_courier_ar[]"]');
+                for (var about_courier_index = 0; about_courier_index < about_couriers.length; about_courier_index++) {
+                    var about_courier_id = $(about_couriers[about_courier_index]).attr('id');
+                    if (tinymce.get(about_courier_id)) {
+                        var about_courier_content = tinymce.get(about_courier_id).getContent();
+                        $(about_couriers[about_courier_index]).text(about_courier_content);
+                    }
+                }
+            }
+        }
+
+        /*
+        * function for Accommodation
+        * */
+        var accommodation_clone = 0;
+        function submitAccommodationFormForm(object) {
+            accommodation_clone++;
+            var clone_accommodation_form = object.closest(".clone");
+            var accommodation_index = $(clone_accommodation_form).attr('id').replace("accommodation_clone", "");
+
+            var new_clone_form = $(clone_accommodation_form).clone(true);
+            new_clone_form.attr('id', 'accommodation_clone' + accommodation_clone);
+
+            var accommodation_id = ((new Date()).getTime()).toString();
+            $(new_clone_form).find('[name="accommodation_id[]"]').val(accommodation_id);
+            $(new_clone_form).find('[name="type[]"]').val('');
+            $(new_clone_form).find('[name="room_type[]"]').val('');
+            $(new_clone_form).find('[name="meal[]"]').val('');
+            var age_range_html = $(new_clone_form).find('[name="age_range[' + accommodation_index + '][]"]').html();
+            age_range_html = '<select name="age_range[' + accommodation_clone + '][]" id="accom_age_choose' + accommodation_clone + '" multiple="multiple" class="3col active">' + age_range_html + '</select>';
+            $(new_clone_form).find('[name="age_range[' + accommodation_index + '][]"]').parent().remove();
+            $(new_clone_form).find('.age_range').append(age_range_html);
+            $(new_clone_form).find('[name="age_range[' + accommodation_clone + '][]"]').multiselect({ includeSelectAllOption: true });
+            $(new_clone_form).find('[name="placement_fee[]"]').val('');
+            $(new_clone_form).find('[name="program_duration[]"]').val('');
+            $(new_clone_form).find('[name="deposit_fee[]"]').val('');
+            $(new_clone_form).find('[name="custodian_fee[][]"]').val('');
+            var age_range_for_custodian_html = $(new_clone_form).find('[name="age_range_for_custodian[' + accommodation_index + '][]"]').html();
+            age_range_for_custodian_html = '<select name="age_range_for_custodian[' + accommodation_clone + '][]" id="custodian_age_range_choose' + accommodation_clone + '" multiple="multiple" class="3col active">' + age_range_for_custodian_html + '</select>';
+            $(new_clone_form).find('[name="age_range_for_custodian[' + accommodation_index + '][]"]').parent().remove();
+            $(new_clone_form).find('.age_range_for_custodian').append(age_range_for_custodian_html);
+            $(new_clone_form).find('[name="age_range_for_custodian[' + accommodation_clone + '][]"]').multiselect({ includeSelectAllOption: true });
+            $(new_clone_form).find('[name="special_diet_note[]"]').attr('id', 'special_diet_note' + accommodation_clone);
+            $(new_clone_form).find('[name="special_diet_note[]"]').text('');
+            $(new_clone_form).find('[name="special_diet_note_ar[]"]').attr('id', 'special_diet_note_ar' + accommodation_clone);
+            $(new_clone_form).find('[name="special_diet_note_ar[]"]').text('');
+            $(new_clone_form).find('.tox.tox-tinymce').remove();
+            $(new_clone_form).find('[name="fee_per_week[]"]').val('');
+            $(new_clone_form).find('[name="start_week[]"]').val('');
+            $(new_clone_form).find('[name="end_week[]"]').val('');
+            $(new_clone_form).find('[name="start_date[]"]').val('');
+            $(new_clone_form).find('[name="end_date[]"]').val('');
+            $(new_clone_form).find('[name="available_days[]"]').val('');
+            $(new_clone_form).find('[name="available_days[]"]').data('index', accommodation_clone);
+            yeardatepicker_days.push([]);
+            yeardatepicker_months.push([]);
+            $(new_clone_form).find('[name="discount_per_week[]"]').val('');
+            $(new_clone_form).find('[name="discount_per_week_symbol[]"]').val('');
+            $(new_clone_form).find('[name="discount_start_date[]"]').val('');
+            $(new_clone_form).find('[name="discount_end_date[]"]').val('');
+            $(new_clone_form).find('[name="summer_fee_per_week[]"]').val('');
+            $(new_clone_form).find('[name="summer_fee_start_date[]"]').val('');
+            $(new_clone_form).find('[name="summer_fee_end_date[]"]').val('');
+            $(new_clone_form).find('[name="accommodation_peak_time_fee_per_week[]"]').val('');
+            $(new_clone_form).find('[name="accommodation_fee_start_date[]"]').val('');
+            $(new_clone_form).find('[name="accommodation_fee_end_date[]"]').val('');
+            $(new_clone_form).find('[name="christmas_fee_per_week[]"]').val('');
+            $(new_clone_form).find('[name="christmas_fee_start_date[]"]').val('');
+            $(new_clone_form).find('[name="christmas_fee_end_date[]"]').val('');
+
+            new_clone_form.insertAfter($(clone_accommodation_form));
+
+            tinymce.init({ selector: '#special_diet_note' + accommodation_clone });
+            tinymce.get('special_diet_note' + accommodation_clone).show();
+            tinymce.init({ selector: '#special_diet_note_ar' + accommodation_clone });
+            tinymce.get('special_diet_note_ar' + accommodation_clone).show();
+        }
+
+        function deleteAccommodationForm(object) {
+            var clone_accommodation_form = object.closest(".clone");
+            $(clone_accommodation_form).remove();
+            var clone_accommodation_forms = $(".accommodation-clone");
+            for (var accommodation_index = 0; accommodation_index < clone_accommodation_forms.length; accommodation_index++) {
+                var clone_accommodation_index = parseInt($(clone_accommodation_forms[accommodation_index]).attr('id').replace("accommodation_clone", ""));
+                if (clone_accommodation_index >= accommodation_clone) {
+                    $(clone_accommodation_forms[accommodation_index]).attr('id', 'accommodation_clone' + clone_accommodation_index - 1);
+                    $(clone_accommodation_forms[accommodation_index]).find('[name="age_range[' + clone_accommodation_index + '][]"]').attr('name', 'age_range[' + (clone_accommodation_index - 1) + '][]');
+                    $(clone_accommodation_forms[accommodation_index]).find('[name="age_range_for_custodian[' + clone_accommodation_index + '][]"]').attr('name', 'age_range_for_custodian[' + (clone_accommodation_index - 1) + '][]');
+                    $(clone_accommodation_forms[accommodation_index]).find('[name="available_days[]"]').data('index', clone_accommodation_index - 1);
+                    yeardatepicker_days.splice(clone_accommodation_index, 1);
+                    yeardatepicker_months.splice(clone_accommodation_index, 1);
+
+                    $(clone_accommodation_forms[accommodation_index]).find('[name="special_diet_note[]]').attr('id', 'special_diet_note' + (clone_accommodation_index - 1));
+                    $(clone_accommodation_forms[accommodation_index]).find('[name="special_diet_note_ar[]]').attr('id', 'special_diet_note_ar' + (clone_accommodation_index - 1));
+                }
+            }
+            accommodation_clone--;
+        }
+
+        function getAccommodationContents() {
+            if (typeof (tinymce) !== 'undefined') {
+                var special_diet_notes = $('[name="special_diet_note[]"]');
+                for (var special_diet_note_index = 0; special_diet_note_index < special_diet_notes.length; special_diet_note_index++) {
+                    var special_diet_note_id = $(special_diet_notes[special_diet_note_index]).attr('id');
+                    if (tinymce.get(special_diet_note_id)) {
+                        var special_diet_note_content = tinymce.get(special_diet_note_index).getContent();
+                        $(special_diet_notes[special_diet_note_index]).text(special_diet_note_content);
+                    }
+                }
+                var special_diet_notes = $('[name="special_diet_note_ar[]"]');
+                for (var special_diet_note_index = 0; special_diet_note_index < special_diet_notes.length; special_diet_note_index++) {
+                    var special_diet_note_id = $(special_diet_notes[special_diet_note_index]).attr('id');
+                    if (tinymce.get(special_diet_note_id)) {
+                        var special_diet_note_content = tinymce.get(special_diet_note_index).getContent();
+                        $(special_diet_notes[special_diet_note_index]).text(special_diet_note_content);
                     }
                 }
             }
@@ -204,16 +339,17 @@
 
             $(new_clone_form).find('[name="airport_service_provider[]"]').val('');
             $(new_clone_form).find('[name="airport_week_selected_fee[]"]').val('');
-            $(new_clone_form).find('[name="airport_note[]"]').attr('id', 'airport_note_value' + airport_clone).val('');
-            $(new_clone_form).find('[name="airport_note[]"]').val('');
-            $(new_clone_form).find('textarea').attr('id', 'airport_note' + airport_clone);
+            $(new_clone_form).find('[name="airport_note[]"]').attr('id', 'airport_note' + airport_clone);
+            $(new_clone_form).find('[name="airport_note[]"]').text('');
+            $(new_clone_form).find('[name="airport_note_ar[]"]').attr('id', 'airport_note_ar' + airport_clone);
+            $(new_clone_form).find('[name="airport_note_ar[]"]').text('');
             $(new_clone_form).find('.tox.tox-tinymce').remove();
             new_clone_form.insertAfter($(clone_airport_form));
 
-            tinymce.init({
-                selector: '#airport_note' + airport_clone
-            });
+            tinymce.init({ selector: '#airport_note' + airport_clone });
             tinymce.get('airport_note' + airport_clone).show();
+            tinymce.init({ selector: '#airport_note_ar' + airport_clone });
+            tinymce.get('airport_note_ar' + airport_clone).show();
         }
         
         function deleteAirportForm(object) {
@@ -228,8 +364,10 @@
                     $(clone_airport_forms[airport_index]).find('[name="airport_service_name[' + clone_airport_index + '][]"]').attr('name', 'airport_service_name[' + (clone_airport_index - 1) + '][]');
                     $(clone_airport_forms[airport_index]).find('[name="airport_service_fee[' + clone_airport_index + '][]"]').attr('name', 'airport_service_fee[' + (clone_airport_index - 1) + '][]');
                     
-                    $(clone_airport_forms[airport_index]).find('[name="airport_note[]]').attr('id', 'airport_note_value' + (clone_airport_index - 1));
+                    $(clone_airport_forms[airport_index]).find('[name="airport_note[]]').attr('id', 'airport_note' + (clone_airport_index - 1));
                     $(clone_airport_forms[airport_index]).find('textarea').attr('id', 'airport_note' + (clone_airport_index - 1));
+                    $(clone_airport_forms[airport_index]).find('[name="airport_note_ar[]]').attr('id', 'airport_note_ar' + (clone_airport_index - 1));
+                    $(clone_airport_forms[airport_index]).find('textarea').attr('id', 'airport_note_ar' + (clone_airport_index - 1));
                 }
             }
             airport_clone--;
@@ -300,15 +438,18 @@
             $(new_clone_form).find('[name="medical_company_name[]"]').val('');
             $(new_clone_form).find('[name="medical_deductible[]"]').val('');
             $(new_clone_form).find('[name="medical_week_selected_fee[]"]').val('');
-            $(new_clone_form).find('[name="medical_note[]"]').attr('id', 'medical_note_value' + medical_clone);
-            $(new_clone_form).find('[name="medical_note[]"]').val('');
-            $(new_clone_form).find('textarea').attr('id', 'medical_note' + medical_clone);
+            $(new_clone_form).find('[name="medical_note[]"]').attr('id', 'medical_note' + medical_clone);
+            $(new_clone_form).find('[name="medical_note[]"]').text('');
+            $(new_clone_form).find('[name="medical_note_ar[]"]').attr('id', 'medical_note_ar' + medical_clone);
+            $(new_clone_form).find('[name="medical_note_ar[]"]').text('');
             $(new_clone_form).find('.tox.tox-tinymce').remove();
 
             new_clone_form.insertAfter($(clone_medical_form));
 
             tinymce.init({ selector: '#medical_note' + medical_clone });
             tinymce.get('medical_note' + medical_clone).show();
+            tinymce.init({ selector: '#medical_note_ar' + medical_clone });
+            tinymce.get('medical_note_ar' + medical_clone).show();
         }
         
         function deleteMedicalForm(object) {
@@ -323,8 +464,10 @@
                     $(clone_medical_forms[medical_index]).find('[name="medical_start_date[' + clone_medical_index + '][]"]').attr('name', 'medical_start_date[' + (clone_medical_index - 1) + '][]');
                     $(clone_medical_forms[medical_index]).find('[name="medical_end_date[' + clone_medical_index + '][]"]').attr('name', 'medical_end_date[' + (clone_medical_index - 1) + '][]');
                     
-                    $(clone_medical_forms[medical_index]).find('[name="medical_note[]]').attr('id', 'medical_note_value' + (clone_medical_index - 1));
+                    $(clone_medical_forms[medical_index]).find('[name="medical_note[]]').attr('id', 'medical_note' + (clone_medical_index - 1));
                     $(clone_medical_forms[medical_index]).find('textarea').attr('id', 'medical_note' + (clone_medical_index - 1));
+                    $(clone_medical_forms[medical_index]).find('[name="medical_note_ar[]]').attr('id', 'medical_note_ar' + (clone_medical_index - 1));
+                    $(clone_medical_forms[medical_index]).find('textarea').attr('id', 'medical_note_ar' + (clone_medical_index - 1));
                 }
             }
             medical_clone--;
@@ -378,7 +521,23 @@
                         $(airport_notes[airport_note_index]).text(airport_note_content);
                     }
                 }
+                var airport_notes = $('[name="airport_note_ar[]"]');
+                for (var airport_note_index = 0; airport_note_index < airport_notes.length; airport_note_index++) {
+                    var airport_note_id = $(airport_notes[airport_note_index]).attr('id');
+                    if (tinymce.get(airport_note_id)) {
+                        var airport_note_content = tinymce.get(airport_note_id).getContent();
+                        $(airport_notes[airport_note_index]).text(airport_note_content);
+                    }
+                }
                 var medical_notes = $('[name="medical_note[]"]');
+                for (var mecial_note_index = 0; mecial_note_index < medical_notes.length; mecial_note_index++) {
+                    var medical_note_id = $(medical_notes[mecial_note_index]).attr('id');
+                    if (tinymce.get(medical_note_id)) {
+                        var medical_note_content = tinymce.get(medical_note_id).getContent();
+                        $(medical_notes[mecial_note_index]).text(medical_note_content);
+                    }
+                }
+                var medical_notes = $('[name="medical_note_ar[]"]');
                 for (var mecial_note_index = 0; mecial_note_index < medical_notes.length; mecial_note_index++) {
                     var medical_note_id = $(medical_notes[mecial_note_index]).attr('id');
                     if (tinymce.get(medical_note_id)) {
@@ -393,16 +552,16 @@
         function addProgramUnderAgeFee(object) {
             program_under_age_clone++;
             var clone_program_under_age_form = object.closest(".clone");
-            var program_under_age_index = $(clone_program_under_age_form).attr('id').replace("program_under_age_clone", "");
-            $('#underageincrement').val(program_under_age_clone);
+            var program_under_age_index = $(clone_program_under_age_form).attr('id').replace("under_age_fee_clone", "");
+            $('#underagefeeincrement').val(program_under_age_clone);
             var new_clone_form = $(clone_program_under_age_form).clone(true);
-            new_clone_form.attr('id', 'program_under_age_clone' + medical_clone);
+            new_clone_form.attr('id', 'under_age_fee_clone' + program_under_age_clone);
 
-            $(new_clone_form).find('[name="under_age[' + program_under_age_index + ']"]').attr('name', "under_age[" + program_under_age_clone + "]");
-            var age_range_html = $(new_clone_form).find('[name="under_age[' + program_under_age_clone + ']"]').html();
-            $(new_clone_form).find('[name="under_age[' + program_under_age_clone + ']"]').parent().remove();
-            $(new_clone_form).find('.under_age').append(age_range_html);
-            $(new_clone_form).find('[name="under_age[' + program_under_age_clone + ']"]').multiselect({ includeSelectAllOption: true });
+            var under_age_html = $(new_clone_form).find('[name="under_age[' + program_under_age_index + '][]"]').html();
+            under_age_html = '<select name="under_age[' + program_under_age_clone + '][]" id="program_under_age_range_choose' + program_under_age_clone + '" multiple="multiple" class="3col active">' + under_age_html + '</select>';
+            $(new_clone_form).find('[name="under_age[' + program_under_age_index + '][]"]').parent().remove();
+            $(new_clone_form).find('.under_age').append(under_age_html);
+            $(new_clone_form).find('[name="under_age[' + program_under_age_clone + '][]"]').multiselect({ includeSelectAllOption: true });
             $(new_clone_form).find('[name="underage_fee_per_week[]"]').val('');
 
             new_clone_form.insertAfter($(clone_program_under_age_form));
@@ -411,59 +570,73 @@
         function removeProgramUnderAgeFee(object) {
             var clone_course_program_under_age_form = object.closest(".clone");
             $(clone_course_program_under_age_form).remove();
-            var clone_course_program_under_age_forms = $(".program-under-age-clone");
+            var clone_course_program_under_age_forms = $(".under-age-fee-clone");
             for (var course_program_under_age_index = 0; course_program_under_age_index < clone_course_program_under_age_forms.length; course_program_under_age_index++) {
-                var clone_course_program_under_age_index = parseInt($(clone_course_program_under_age_forms[course_program_index]).attr('id').replace("program_under_age_clone", ""));
+                var clone_course_program_under_age_index = parseInt($(clone_course_program_under_age_forms[course_program_index]).attr('id').replace("under_age_fee_clone", ""));
                 if (clone_course_program_under_age_index >= program_under_age_clone) {
-                    $(clone_course_program_under_age_forms[course_program_under_age_index]).attr('id', 'program_under_age_clone' + clone_course_program_under_age_index - 1);
-                    $(clone_course_program_under_age_forms[course_program_under_age_index]).find('[name="under_age[' + clone_course_program_under_age_index + '][]"]').attr('name', 'under_age[' + (clone_course_program_under_age_index - 1) + '][]');
+                    $(clone_course_program_under_age_forms[course_program_under_age_index]).attr('id', 'under_age_fee_clone' + clone_course_program_under_age_index - 1);
+                    $(clone_course_program_under_age_forms[course_program_under_age_index]).find('[name="under_age[' + clone_course_program_under_age_index + '][]"]')
+                        .attr('id', 'program_under_age_range_choose' + (clone_course_program_under_age_index - 1))
+                        .attr('name', 'under_age[' + (clone_course_program_under_age_index - 1) + '][]');
                 }
             }
             program_under_age_clone--;
-            $('#underageincrement').val(program_under_age_clone);
+            $('#underagefeeincrement').val(program_under_age_clone);
         }
         
         var program_text_book_clone = 0;
         function addTextBookFee(object) {
             program_text_book_clone++;
             var clone_program_text_book_form = object.closest(".clone");
-            var program_text_book_index = $(clone_program_text_book_form).attr('id').replace("program_text_book_clone", "");
-            $('#underageincrement').val(program_text_book_clone);
+            var program_text_book_index = $(clone_program_text_book_form).attr('id').replace("text_book_fee_clone", "");
+            $('#textbookfeeincrement').val(program_text_book_clone);
             var new_clone_form = $(clone_program_text_book_form).clone(true);
-            new_clone_form.attr('id', 'program_text_book_clone' + medical_clone);
+            new_clone_form.attr('id', 'text_book_fee_clone' + medical_clone);
 
             $(new_clone_form).find('[name="text_book_fee[]"]').val('');
             $(new_clone_form).find('[name="text_book_fee_start_date[]"]').val('');
             $(new_clone_form).find('[name="text_book_fee_end_date[]"]').val('');
             $(new_clone_form).find('[name="text_book_note[]"]').attr('id', 'text_book_note' + program_text_book_clone);
             $(new_clone_form).find('[name="text_book_note[]"]').text('');
+            $(new_clone_form).find('[name="text_book_note_ar[]"]').attr('id', 'text_book_note_ar' + program_text_book_clone);
+            $(new_clone_form).find('[name="text_book_note_ar[]"]').text('');
             $(new_clone_form).find('.tox.tox-tinymce').remove();
-            
 
             new_clone_form.insertAfter($(clone_program_text_book_form));
 
             tinymce.init({ selector: '#text_book_note' + program_text_book_clone });
             tinymce.get('text_book_note' + program_text_book_clone).show();
+            tinymce.init({ selector: '#text_book_note_ar' + program_text_book_clone });
+            tinymce.get('text_book_note_ar' + program_text_book_clone).show();
         }
 
         function removeTextBookFee(object) {
             var clone_course_program_text_book_form = object.closest(".clone");
             $(clone_course_program_text_book_form).remove();
-            var clone_course_program_text_book_forms = $(".program-text-book-clone");
+            var clone_course_program_text_book_forms = $(".text-book-fee-clone");
             for (var course_program_text_book_index = 0; course_program_text_book_index < clone_course_program_text_book_forms.length; course_program_text_book_index++) {
-                var clone_course_program_text_book_index = parseInt($(clone_course_program_text_book_forms[course_program_index]).attr('id').replace("program_text_book_clone", ""));
+                var clone_course_program_text_book_index = parseInt($(clone_course_program_text_book_forms[course_program_index]).attr('id').replace("text_book_fee_clone", ""));
                 if (clone_course_program_text_book_index >= program_text_book_clone) {
-                    $(clone_course_program_text_book_forms[course_program_text_book_index]).attr('id', 'program_text_book_clone' + clone_course_program_text_book_index - 1);
+                    $(clone_course_program_text_book_forms[course_program_text_book_index]).attr('id', 'text_book_fee_clone' + clone_course_program_text_book_index - 1);
                     $(clone_course_program_text_book_forms[course_program_text_book_index]).find('[name="text_book_note[]"]').attr('id', 'text_book_note' + (clone_course_program_text_book_index - 1));
+                    $(clone_course_program_text_book_forms[course_program_text_book_index]).find('[name="text_book_note_ar[]"]').attr('id', 'text_book_note_ar' + (clone_course_program_text_book_index - 1));
                 }
             }
             program_text_book_clone--;
-            $('#underageincrement').val(program_text_book_clone);
+            $('#textbookfeeincrement').val(program_text_book_clone);
         }
 
         function getProgramTextBookContents() {
             if (typeof (tinymce) !== 'undefined') {
-                var program_text_book_notes = $('[name="program_text_book_clone[]"]');
+                var program_text_book_notes = $('[name="text_book_note[]"]');
+                for (var program_text_book_note_index = 0; program_text_book_note_index < program_text_book_notes.length; program_text_book_note_index++) {
+                    var program_text_book_note_id = $(program_text_book_notes[program_text_book_note_index]).attr('id');
+                    if (tinymce.get(program_text_book_note_id)) {
+                        var program_text_book_note_content = tinymce.get(program_text_book_note_id).getContent();
+                        $(program_text_book_notes[program_text_book_note_index]).text(program_text_book_note_content);
+                    }
+                }
+                var program_text_book_notes = $('[name="text_book_note_ar[]"]');
                 for (var program_text_book_note_index = 0; program_text_book_note_index < program_text_book_notes.length; program_text_book_note_index++) {
                     var program_text_book_note_id = $(program_text_book_notes[program_text_book_note_index]).attr('id');
                     if (tinymce.get(program_text_book_note_id)) {
@@ -474,93 +647,40 @@
             }
         }
 
-        /*
-        * function for Accommodation
-        * */
-        var accommodation_clone = 0;
-        function addAccommodationForm(object) {
-            accommodation_clone++;
-            var clone_accommodation_form = object.closest(".clone");
-            var accommodation_index = $(clone_accommodation_form).attr('id').replace("accommodation_clone", "");
+        var accommodation_under_age_clone = 0;
+        function addAccommodationFormUnderAge(object) {
+            accommodation_under_age_clone++;
+            var clone_accommodation_under_age_form = object.closest(".clone");
+            var accommodation_under_age_index = $(clone_accommodation_under_age_form).attr('id').replace("accommodation_under_age_clone", "");
+            $('#accomunderageincrement').val(accommodation_under_age_clone);
+            var new_clone_form = $(clone_accommodation_under_age_form).clone(true);
+            new_clone_form.attr('id', 'accommodation_under_age_clone' + accommodation_under_age_clone);
 
-            var new_clone_form = $(clone_accommodation_form).clone(true);
-            new_clone_form.attr('id', 'accommodation_clone' + accommodation_clone);
+            var under_age_html = $(new_clone_form).find('[name="under_age[' + accommodation_under_age_index + '][]"]').html();
+            under_age_html = '<select name="under_age[' + accommodation_under_age_clone + '][]" id="under_age_choose' + accommodation_under_age_clone + '" multiple="multiple" class="3col active">' + under_age_html + '</select>';
+            $(new_clone_form).find('[name="under_age[' + accommodation_under_age_index + '][]"]').parent().remove();
+            $(new_clone_form).find('.under_age').append(under_age_html);
+            $(new_clone_form).find('[name="under_age[' + accommodation_under_age_clone + '][]"]').multiselect({ includeSelectAllOption: true });
+            $(new_clone_form).find('[name="under_age_fee_per_week[]"]').val('');
 
-            var accommodation_id = ((new Date()).getTime() / 1000).toString() + Math.floor((Math.random() * 100)).toString();
-            $(new_clone_form).find('[name="accommodation_id[]"]').val(accommodation_id);
-            $(new_clone_form).find('[name="type[]"]').val('');
-            $(new_clone_form).find('[name="room_type[]"]').val('');
-            $(new_clone_form).find('[name="meal[]"]').val('');
-            $(new_clone_form).find('[name="age_range[' + accommodation_index + ']"]').attr('name', "age_range[" + accommodation_clone + "]");
-            var age_range_html = $(new_clone_form).find('[name="age_range[' + accommodation_clone + ']"]').html();
-            $(new_clone_form).find('[name="age_range[' + accommodation_clone + ']"]').parent().remove();
-            $(new_clone_form).find('.age_range').append(age_range_html);
-            $(new_clone_form).find('[name="age_range[' + accommodation_clone + ']"]').multiselect({ includeSelectAllOption: true });
-            $(new_clone_form).find('[name="placement_fee[]"]').val('');
-            $(new_clone_form).find('[name="program_duration[]"]').val('');
-            $(new_clone_form).find('[name="deposit_fee[]"]').val('');
-            $(new_clone_form).find('[name="custodian_fee[][]"]').val('');
-            $(new_clone_form).find('[name="age_range_for_custodian[' + accommodation_index + ']"]').attr('name', "age_range_for_custodian[" + accommodation_clone + "]");
-            var age_range_for_custodian_html = $(new_clone_form).find('[name="age_range_for_custodian[' + accommodation_clone + ']"]').html();
-            $(new_clone_form).find('[name="age_range_for_custodian[' + accommodation_clone + ']"]').parent().remove();
-            $(new_clone_form).find('.age_range_for_custodian').append(age_range_html);
-            $(new_clone_form).find('[name="age_range_for_custodian[' + accommodation_clone + ']"]').multiselect({ includeSelectAllOption: true });
-            $(new_clone_form).find('[name="special_diet_note[]"]').attr('id', 'special_diet_note' + accommodation_clone);
-            $(new_clone_form).find('[name="special_diet_note[]"]').text('');
-            $(new_clone_form).find('.tox.tox-tinymce').remove();
-            $(new_clone_form).find('[name="fee_per_week[]"]').val('');
-            $(new_clone_form).find('[name="start_week[]"]').val('');
-            $(new_clone_form).find('[name="end_week[]"]').val('');
-            $(new_clone_form).find('[name="start_date[]"]').val('');
-            $(new_clone_form).find('[name="end_date[]"]').val('');
-            $(new_clone_form).find('[name="discount_per_week[]"]').val('');
-            $(new_clone_form).find('[name="discount_per_week_symbol[]"]').val('');
-            $(new_clone_form).find('[name="discount_start_date[]"]').val('');
-            $(new_clone_form).find('[name="discount_end_date[]"]').val('');
-            $(new_clone_form).find('[name="summer_fee_per_week[]"]').val('');
-            $(new_clone_form).find('[name="summer_fee_start_date[]"]').val('');
-            $(new_clone_form).find('[name="summer_fee_end_date[]"]').val('');
-            $(new_clone_form).find('[name="accommodation_peak_time_fee_per_week[]"]').val('');
-            $(new_clone_form).find('[name="accommodation_fee_start_date[]"]').val('');
-            $(new_clone_form).find('[name="accommodation_fee_end_date[]"]').val('');
-            $(new_clone_form).find('[name="christmas_fee_per_week[]"]').val('');
-            $(new_clone_form).find('[name="christmas_fee_start_date[]"]').val('');
-            $(new_clone_form).find('[name="christmas_fee_end_date[]"]').val('');
-
-            new_clone_form.insertAfter($(clone_accommodation_form));
-
-            tinymce.init({ selector: '#special_diet_note' + accommodation_clone });
-            tinymce.get('special_diet_note' + accommodation_clone).show();
+            new_clone_form.insertAfter($(clone_accommodation_under_age_form));
         }
 
-        function deleteAccommodationForm(object) {
-            var clone_accommodation_form = object.closest(".clone");
-            $(clone_accommodation_form).remove();
-            var clone_accommodation_forms = $(".accommodation-clone");
-            for (var accommodation_index = 0; accommodation_index < clone_accommodation_forms.length; accommodation_index++) {
-                var clone_accommodation_index = parseInt($(clone_accommodation_forms[accommodation_index]).attr('id').replace("accommodation_clone", ""));
-                if (clone_accommodation_index >= accommodation_clone) {
-                    $(clone_accommodation_forms[accommodation_index]).attr('id', 'accommodation_clone' + clone_accommodation_index - 1);
-                    $(clone_accommodation_forms[accommodation_index]).find('[name="age_range[' + clone_accommodation_index + '][]"]').attr('name', 'age_range[' + (clone_accommodation_index - 1) + '][]');
-                    $(clone_accommodation_forms[accommodation_index]).find('[name="age_range_for_custodian[' + clone_accommodation_index + '][]"]').attr('name', 'age_range_for_custodian[' + (clone_accommodation_index - 1) + '][]');
-                    
-                    $(clone_accommodation_forms[accommodation_index]).find('[name="medical_note[]]').attr('id', 'medical_note' + (clone_accommodation_index - 1));
+        function deleteAccommodationUnderAge(object) {
+            var clone_accommodation_under_age_form = object.closest(".clone");
+            $(clone_accommodation_under_age_form).remove();
+            var clone_accommodation_under_age_forms = $(".accommodation-under-age-clone");
+            for (var accommodation_under_age_index = 0; accommodation_under_age_index < clone_accommodation_under_age_forms.length; accommodation_under_age_index++) {
+                var clone_accommodation_under_age_index = parseInt($(clone_accommodation_under_age_forms[accommodation_index]).attr('id').replace("accommodation_under_age_clone", ""));
+                if (clone_accommodation_under_age_index >= accommodation_under_age_clone) {
+                    $(clone_accommodation_under_age_forms[accommodation_under_age_index]).attr('id', 'accommodation_under_age_clone' + clone_accommodation_under_age_index - 1);
+                    $(clone_accommodation_under_age_forms[accommodation_under_age_index]).find('[name="under_age[' + clone_accommodation_under_age_index + '][]"]')
+                        .attr('id', 'under_age_choose' + (clone_accommodation_under_age_index - 1))
+                        .attr('name', 'under_age[' + (clone_accommodation_under_age_index - 1) + '][]');
                 }
             }
-            accommodation_clone--;
-        }
-
-        function getAccommodationContents() {
-            if (typeof (tinymce) !== 'undefined') {
-                var special_diet_notes = $('[name="special_diet_note[]"]');
-                for (var special_diet_note_index = 0; special_diet_note_index < special_diet_notes.length; special_diet_note_index++) {
-                    var special_diet_note_id = $(special_diet_notes[special_diet_note_index]).attr('id');
-                    if (tinymce.get(special_diet_note_id)) {
-                        var special_diet_note_content = tinymce.get(special_diet_note_index).getContent();
-                        $(special_diet_notes[special_diet_note_index]).text(special_diet_note_content);
-                    }
-                }
-            }
+            accommodation_under_age_clone--;
+            $('#accomunderageincrement').val(accommodation_under_age_clone);
         }
 
         $(document).ready(function () {
@@ -587,6 +707,12 @@
             * */
             $("#clone_program_form" + formnum).find('.btn-primary').click(function () {
             });
+
+            @if (app()->getLocale() == 'en')
+                $('.arabic').hide();
+            @else
+                $('.english').hide();
+            @endif
         });
 
         var addschoolurl = "{{route('superadmin.schools.store')}}";
@@ -595,45 +721,8 @@
     </script>
 
     <script>
-        function getFormValue(varaa) {
-        }
-
-        var accom_button =  typeof(accom_buttons) != 'undefined' ? accom_buttons :  0;
-        var accom = 0;
-        var accom_button1 = 0;
-        var accomunderagecloneselect = typeof(accomunderagecloneselects) != 'undefined' ? accomunderagecloneselects :  1;
-        function addAccommodationUnderAgeWeek(value) {
-            accom_button1++;
-            var id = $(value).attr('data-id');
-            var inondhu = typeof(inondhu) != 'undefined' ? indondhu : 0;
-            var t = $(value).parents().find('.accomoe' + inondhu).append('<div class="row" id="accom_under_age_clone' + (accom_button1) + '"></div>');
-
-            $('#accom_under_age_clone' + (accom_button1)).html($('#accom_under_age_clone' + id).html());
-            $('#accom_under_age_clone'  + (accom_button1) + " .multiselect-native-select").remove();
-            $("input[name='accom_increment']").attr('value', accom_button1 + 1);
-            var select_form = $('#accom_under_age_clone0 #accommodation_under_age_choose0').html();
-            select_form_full = '<select name="under_age[age]['+ accom_button1 + '][]" id="under_age_choose' +(accom_button1) + '" multiple="multiple" class="3col active">' + select_form + '</select>';
-            var inserted = $('#accom_under_age_clone' + accom_button1);
-
-            $(select_form_full).insertAfter(inserted);
-            $("#accommodation_under_age_choose" + (accom_button1)).multiselect({
-                includeSelectAllOption: true
-            });
-            $('#accom_under_age_clone' +  (accom_button1)).find('#accom_plus_button').attr('data-id', (accom_button1));
-        }
-
-        function deleteAccommodationUnderAgeWeek(this_object) {
-            if (!(accomunderagecloneselect == 0)) {
-                $(this_object).parent().parent().remove();
-                $(this_object).parent().parent().parent().find('#accomincreement').attr('value', accomunderagecloneselect);
-
-                accomunderagecloneselect--;
-            }
-        }        
-
         /*
-        * Add and remove editor
-        * on click event
+        * Add and remove editor on click event
         *
         * */
         if (typeof (tinymce) !== "undefined") {

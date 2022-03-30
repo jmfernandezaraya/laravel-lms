@@ -10,7 +10,12 @@ class Course extends Model
 {
     use HasFactory;
 
-    protected $table = 'courses_en';
+    protected $guarded = [];
+
+    protected $table = 'courses';
+
+    protected $primaryKey = 'unique_id';
+    
     protected $casts = [
         'under_age' => 'array',
         'program_type' => 'array',
@@ -24,46 +29,44 @@ class Course extends Model
         'classes_day' => 'array'
     ];
 
-    protected $guarded = [];
+    public function accomodation()
+    {
+        return $this->hasOne('App\Models\SuperAdmin\CourseAccommodation', 'course_unique_id');
+    }
 
     public function accomodations()
     {
-        return $this->hasMany('App\Models\SuperAdmin\Accommodation', 'course_unique_id', 'unique_id');
-    }
-
-    public function accomodation()
-    {
-        return $this->hasOne('App\Models\SuperAdmin\Accommodation', 'course_unique_id', 'unique_id');
+        return $this->hasMany('App\Models\SuperAdmin\CourseAccommodation', 'course_unique_id');
     }
 
     public function courseProgram()
     {
-        return $this->hasOne('App\Models\SuperAdmin\CourseProgram', 'course_unique_id', 'unique_id');
+        return $this->hasOne('App\Models\SuperAdmin\CourseProgram', 'course_unique_id');
     }
 
     public function coursePrograms()
     {
-        return $this->hasMany(CourseProgram::class, 'course_unique_id', 'unique_id');
+        return $this->hasMany('App\Models\SuperAdmin\CourseProgram', 'course_unique_id');
     }
 
     public function airport()
     {
-        return $this->hasOne('App\Models\SuperAdmin\CourseAirport', 'course_unique_id', 'unique_id');
+        return $this->hasOne('App\Models\SuperAdmin\CourseAirport', 'course_unique_id');
     }
 
     public function airports()
     {
-        return $this->hasMany('App\Models\SuperAdmin\CourseAirport', 'course_unique_id', 'unique_id');
+        return $this->hasMany('App\Models\SuperAdmin\CourseAirport', 'course_unique_id');
     }
 
     public function medical()
     {
-        return $this->hasOne('App\Models\SuperAdmin\CourseMedical', 'course_unique_id', 'unique_id');
+        return $this->hasOne('App\Models\SuperAdmin\CourseMedical', 'course_unique_id');
     }
 
     public function medicals()
     {
-        return $this->hasMany('App\Models\SuperAdmin\CourseMedical', 'course_unique_id', 'unique_id');
+        return $this->hasMany('App\Models\SuperAdmin\CourseMedical', 'course_unique_id');
     }
 
     public function getMedicalInsuranceFees($value)

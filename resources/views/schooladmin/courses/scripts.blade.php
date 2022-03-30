@@ -283,8 +283,7 @@
         var accom_button = 0;
         var accom = 0;
         var accom_button1 = 0;
-
-        function addAccommodationUnderAgeWeek(value) {
+        function addAccommodationFormUnderAge(value) {
             accom_button1++;
             var id = $(value).attr('data-id');
             var t = $(value).parents().find('.accomoe0').append('<div class="row" id="accom_under_age_clone' + (accom_button1) + '"></div>');

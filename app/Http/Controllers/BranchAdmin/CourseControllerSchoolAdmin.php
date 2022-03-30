@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\BranchAdmin;
 use App\Http\Controllers\Controller;
-use App\Models\SuperAdmin\Accommodation;
+use App\Models\SuperAdmin\CourseAccommodation;
 use App\Models\SuperAdmin\Choose_Language;
 use App\Models\SuperAdmin\CourseAirport;
 use App\Models\SuperAdmin\CourseProgram;
@@ -168,7 +168,7 @@ class CourseControllerSchoolAdmin extends Controller
         $courses->about_courier = $about_courier;
         $accom_unique_id = $unique_id + 1;
 
-        $accommodation = new Accommodation;
+        $accommodation = new CourseAccommodation;
         $accommodation->setTable('course_accommodations_en');
         $accommodation->unique_id = $accom_unique_id;
         $accommodation->course_unique_id = $unique_id;

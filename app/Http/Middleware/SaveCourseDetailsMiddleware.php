@@ -16,9 +16,8 @@ class SaveCourseDetailsMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        session()->put('request', $request->all());
-        if(!auth()->check()){
-
+        \Session::put('request', $request->all());
+        if (!auth()->check()) {
             return redirect()->route('login');
         }
 

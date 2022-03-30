@@ -3,13 +3,15 @@
 namespace App\Services;
 
 use App\Classes\AccommodationCalculator;
+
 use App\Models\Calculator;
-use App\Models\SuperAdmin\Accommodation;
+use App\Models\SuperAdmin\CourseAccommodation;
 use App\Models\SuperAdmin\CourseAirport;
 use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\CourseProgram;
 use App\Models\UserCourseBookedDetails;
 use App\Models\UserCourseBookedFee;
+
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -166,7 +168,7 @@ class SuperAdminEditUserCourse
             $under_age = !is_array($r->under_age) ? array($r->under_age) : $under_age;
             $data['value'] = in_array($under_age, $program_get->getUnderAge()) ? insertCalculationIntoDB('underage_fee', $program_get->getUnderAgeFees($r->under_age) * $r->value) : insertCalculationIntoDB('underage_fee', 0);
 
-            $accoms = Accommodation::where('course_unique_id', \Session::get('course_unique_id'))
+            $accoms = CourseAccommodation::where('course_unique_id', \Session::get('course_unique_id'))
                 ->where('age_range', 'LIKE', '%' . $r->under_age . '%')
                 ->get()->collect()->unique('type')->values()->all();
 

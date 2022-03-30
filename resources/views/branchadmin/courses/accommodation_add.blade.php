@@ -357,7 +357,7 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <button class="btn btn-primary" type="button" onclick="addAccommodation($(this))" name="####">{{__('SuperAdmin/backend.submit')}}</button>
+                            <button class="btn btn-primary" type="button" onclick="submitAccommodationForm($(this))" name="####">{{__('SuperAdmin/backend.submit')}}</button>
                         </div>
                         <div class="col-md-6">
                             <a href="{{route('accom_under_age_page')}}" class="btn btn-primary pull-right" type="button" name="####">{{__('SuperAdmin/backend.next')}}</a>

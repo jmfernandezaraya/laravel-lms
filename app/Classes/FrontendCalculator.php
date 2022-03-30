@@ -2,9 +2,10 @@
 
 namespace App\Classes;
 
-use Carbon\Carbon;
 use DB;
 use Exception;
+
+use Carbon\Carbon;
 
 use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\CurrencyExchangeRate;
@@ -358,14 +359,10 @@ class FrontendCalculator
             //calculating by program cost * week  - free_week
             $divide = $this->divideProgramDurationByWeekSelect($this->program_duration, $this->discount_week_get);
 
-            $data['total'] =  $this->fixed_program_cost * $divide;
-            // $this->how_many_week_free; // 700 assume program week result is 1400 i.e. 700 *2
-            /*
-            * this will be the program cost after discount, this is for how many week should be reduced
-            */
+            $data['total'] =  $this->fixed_program_cost * $divide * $this->how_many_week_free;
 
             //Calculating discount fee here and inserting into db
-            insertCalculationIntoDB('discount_fee', $divide * $this->fixed_program_cost);
+            insertCalculationIntoDB('discount_fee', $this->fixed_program_cost * $divide * $this->how_many_week_free);
 
             $firstdiscount = $discounted_total = $this->program_cost - $data['total'];
 
@@ -464,10 +461,8 @@ class FrontendCalculator
 
     protected function divideProgramDurationByWeekSelect($program_duration, $week_selected): int
     {
-        $program = (int)$program_duration;
-        $week = (int)$week_selected;
-
-        return (int)$program / (int)$week;
+        if (!(int)$week_selected) return 0;
+        return (int)((int)$program_duration / (int)$week_selected);
     }
 
     public function totalPrice()

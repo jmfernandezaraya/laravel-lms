@@ -263,15 +263,6 @@
 
     <script>
         function get_content()
-        {
-            {{--var about_program = tinymce.get('about_program').getContent();
-            var about_courier = tinymce.get('about_courier').getContent();
-
-            var text_book_note = tinymce.get('text_book_note').getContent();
-
-            var medical_insurance_note = tinymce.get('medical_insurance_note').getContent();
-            var special_diet_note = tinymce.get('special_diet_note').getContent();--}}
-
             $("#about_program_value").val(about_program);
             $("#about_courier_value").val(about_courier);
             $("#text_book_note_value").val(text_book_note);
@@ -279,14 +270,7 @@
             $("#special_diet_note_value").val(special_diet_note);
         }
 
-        function getFormValue(varaa) {
-        }
-
-        var accom_button = 0;
-        var accom = 0;
-        var accom_button1 = 0;
-
-        function addAccommodationUnderAgeWeek(value) {
+        function addAccommodationFormUnderAge(value) {
             accom_button1++;
             var id = $(value).attr('data-id');
             var t = $(value).parents().find('.accomoe0').append('<div class="row" id="accom_under_age_clone' + (accom_button1) + '"></div>');

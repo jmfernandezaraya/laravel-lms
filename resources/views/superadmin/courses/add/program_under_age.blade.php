@@ -19,16 +19,12 @@
                 @include('superadmin.include.alert')
 
                 <div id="menu">
-                    <ul class="lang text-right current_page_itemm">
-                        <li class="current_page_item selected">
-                            <a class="" href="#" onclick="changeLanguage('english', 'arabic')">
-                                <img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}
-                            </a>
+                    <ul class="lang text-right">
+                        <li class="{{app()->getLocale() == 'en' ? 'current_page_item selected' : ''}}">
+                            <a onclick="changeLanguage('english', 'arabic')"><img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}</a>
                         </li>
-                        <li>
-                            <a href="#" onclick="changeLanguage('arabic', 'english')"; fillForm('form1', 'form2')">
-                                <img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}
-                            </a>
+                        <li class="{{app()->getLocale() == 'ar' ? 'current_page_item selected' : ''}}">
+                            <a onclick="changeLanguage('arabic', 'english')"><img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}</a>
                         </li>
                     </ul>
                 </div>
@@ -61,7 +57,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-4 under_age">
                                     <label for="">{{__('SuperAdmin/backend.age_range')}}: 
                                         <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#ProgramUnderAgeModal" aria-hidden="true"></i>
                                         <i class="fa fa-trash pl-3" onclick="deleteProgramUnderAgeRange()" aria-hidden="true"></i>
@@ -110,8 +106,13 @@
 
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <label>{{__('SuperAdmin/backend.note')}}: </label>
-                                    <textarea class="form-control" id="text_book_fee_note0" name="text_book_note[]" placeholder="{{__('SuperAdmin/backend.note')}}"></textarea>
+                                    <label>{{__('SuperAdmin/backend.note')}}:</label>
+                                    <div class="english">
+                                        <textarea class="form-control" name="text_book_note[]" placeholder="{{__('SuperAdmin/backend.note')}}" id="text_book_note0"></textarea>
+                                    </div>
+                                    <div class="arabic">
+                                        <textarea class="form-control" name="text_book_note_ar[]" placeholder="{{__('SuperAdmin/backend.note')}}" id="text_book_note_ar0"></textarea>
+                                    </div>
                                 </div>
                             </div>
 
@@ -127,7 +128,11 @@
                     </div>
 
                     @if($has_accommodation)
-                        <a type="button" href="{{route('superadmin.course.accommodation')}}" class="btn btn-primary pull-right">{{__('SuperAdmin/backend.next')}}</a>
+                        @if($course_id)
+                            <a type="button" href="{{route('superadmin.course.accommodation.edit')}}" class="btn btn-primary pull-right">{{__('SuperAdmin/backend.next')}}</a>
+                        @else
+                            <a type="button" href="{{route('superadmin.course.accommodation')}}" class="btn btn-primary pull-right">{{__('SuperAdmin/backend.next')}}</a>
+                        @endif
                     @endif
                     <button type="button" onclick="getProgramTextBookContents(); submitCourseProgramForm($(this))" class="btn btn-primary pull-left">{{__('SuperAdmin/backend.submit')}}</button>
                 </form>

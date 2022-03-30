@@ -1,6 +1,8 @@
 @extends('superadmin.layouts.app')
+
 @section('content')
     @include('superadmin.courses.scripts')
+    
     <div class="col-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
@@ -19,16 +21,12 @@
                 @include('superadmin.include.alert')
 
                 <div id="menu">
-                    <ul class="lang text-right current_page_itemm">
-                        <li class="current_page_item selected">
-                            <a class="" href="#" onclick="changeLanguage('english', 'arabic')">
-                                <img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}
-                            </a>
+                    <ul class="lang text-right">
+                        <li class="{{app()->getLocale() == 'en' ? 'current_page_item selected' : ''}}">
+                            <a onclick="changeLanguage('english', 'arabic')"><img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}</a>
                         </li>
-                        <li>
-                            <a href="#" onclick="changeLanguage('arabic', 'english')"; fillForm('form1', 'form2')">
-                                <img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}
-                            </a>
+                        <li class="{{app()->getLocale() == 'ar' ? 'current_page_item selected' : ''}}">
+                            <a onclick="changeLanguage('arabic', 'english')"><img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}</a>
                         </li>
                     </ul>
                 </div>
@@ -51,10 +49,16 @@
                             <div class="form-group col-md-4"></div>
                             <div class="form-group col-md-4"></div>
                         </div>
-                        
-                        <input name="underagefeeincrement" id="underagefeeincrement" value="{{$under_age_fees ? $under_age_fees->count() - 1 : 0}}" hidden>
+
+                        <script>
+                            window.addEventListener('load', function() {
+                                program_under_age_clone = {{$under_age_fees && $under_age_fees->count() ? $under_age_fees->count() - 1 : 0}};
+                            }, false );
+                        </script>
+
+                        <input name="underagefeeincrement" id="underagefeeincrement" value="{{$under_age_fees && $under_age_fees->count() ? $under_age_fees->count() - 1 : 0}}" hidden>
                         @forelse ($under_age_fees as $under_age_fee)
-                            <div id="under_age_fee_clone0" class="under-age-fee-clone clone">
+                            <div id="under_age_fee_clone{{ $loop->iteration - 1 }}" class="under-age-fee-clone clone">
                                 <input type="hidden" value="{{$under_age_fee->id}}" name="age_id[]">
                                 <div class="row">
                                     <div class="form-group col-md-4">
@@ -63,7 +67,7 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-4 under_age">
                                         <label for="">{{__('SuperAdmin/backend.age_range')}}: 
                                             <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#ProgramUnderAgeModal" aria-hidden="true"></i>
                                             <i class="fa fa-trash pl-3" onclick="deleteProgramUnderAgeRange()" aria-hidden="true"></i>
@@ -95,7 +99,7 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-4 under_age">
                                         <label for="">{{__('SuperAdmin/backend.age_range')}}: 
                                             <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#ProgramUnderAgeModal" aria-hidden="true"></i>
                                             <i class="fa fa-trash pl-3" onclick="deleteProgramUnderAgeRange()" aria-hidden="true"></i>
@@ -123,7 +127,7 @@
 
                         <input name="textbookfeeincrement" id="textbookfeeincrement" value="{{$text_book_fees ? $text_book_fees->count() - 1 : 0}}" hidden>
                         @forelse ($text_book_fees as $text_book_fee)
-                            <div id="text_book_fee_clone0" class="text-book-fee-clone clone">
+                            <div id="text_book_fee_clone{{ $loop->iteration - 1 }}" class="text-book-fee-clone clone">
                                 <input type="hidden" name="textbook_id[]" value="{{$text_book_fee->id}}">
                                 <div class="row">
                                     <div class="form-group col-md-4">
@@ -149,7 +153,12 @@
                                 <div class="row">
                                     <div class="form-group col-md-12">
                                         <label>{{__('SuperAdmin/backend.note')}}: </label>
-                                        <textarea class="form-control" id="text_book_fee_note0" name="text_book_note[]" placeholder="{{__('SuperAdmin/backend.note')}}">{!! get_language() == 'en' ?  $text_book_fee->text_book_note_en :  $text_book_fee->text_book_note_ar !!}</textarea>
+                                        <div class="english">
+                                            <textarea class="form-control" name="text_book_note[]" placeholder="{{__('SuperAdmin/backend.note')}}" id="text_book_note{{ $loop->iteration - 1 }}">{!! $text_book_fee->text_book_note_en !!}</textarea>
+                                        </div>
+                                        <div class="arabic">
+                                            <textarea class="form-control" name="text_book_note_ar[]" placeholder="{{__('SuperAdmin/backend.note')}}" id="text_book_note_ar{{ $loop->iteration - 1 }}">{!! $text_book_fee->text_book_note_ar !!}</textarea>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -188,7 +197,12 @@
                                 <div class="row">
                                     <div class="form-group col-md-12">
                                         <label>{{__('SuperAdmin/backend.note')}}: </label>
-                                        <textarea class="form-control" id="text_book_fee_note0" name="text_book_note[]" placeholder="{{__('SuperAdmin/backend.note')}}"></textarea>
+                                        <div class="english">
+                                            <textarea class="form-control" name="text_book_note[]" placeholder="{{__('SuperAdmin/backend.note')}}" id="text_book_note0"></textarea>
+                                        </div>
+                                        <div class="arabic">
+                                            <textarea class="form-control" name="text_book_note_ar[]" placeholder="{{__('SuperAdmin/backend.note')}}" id="text_book_note_ar0"></textarea>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -214,6 +228,7 @@
     </div>
 
     @include('superadmin.courses.modals')
+
     <script>
         function fetchProgramUnderAge(value) {
             $.post("{{route('superadmin.course.program_under_age.fetch')}}", {_token:"{{csrf_token()}}", value:value}, function (data) {

@@ -162,8 +162,8 @@
                                     <input class="form-control" type="text" name="under_age_fee_per_week[]" placeholder="@lang('SuperAdmin/backend.add_week')">
                                 </div>
                                 <div class="col-md-4 mt-4 pt-3">
-                                    <i class="fa fa-plus-circle" aria-hidden="true" id="accom_plus_button" data-id="0" onclick="addAccommodationUnderAgeWeek($(this))"></i>
-                                    <i class="fa fa-minus" aria-hidden="true"></i>
+                                    <i class="fa fa-plus-circle" aria-hidden="true" id="accom_plus_button" data-id="0" onclick="addAccommodationFormUnderAge($(this))"></i>
+                                    <i class="fa fa-minus" onclick="deleteAccommodationFormUnderAge($(this))" aria-hidden="true"></i>
                                 </div>
                                 <br>
                             </div>
@@ -171,7 +171,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <button class="btn btn-primary" type="button" onclick="addAccommodationUnderAge($(this))" name="####">{{__('SuperAdmin/backend.submit')}}</button>
+                            <button class="btn btn-primary" type="button" onclick="submitAccommodationUnderAgeForm($(this))" name="####">{{__('SuperAdmin/backend.submit')}}</button>
                         </div>
                         <div class="col-md-6">
                             <a href="{{route('airport_medical')}}" class="btn btn-primary pull-right" type="button" name="####">{{__('SuperAdmin/backend.next')}}</a>

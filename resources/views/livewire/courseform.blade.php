@@ -656,8 +656,8 @@
                         <input class="form-control" type="text" name="airport_service_name" placeholder="{{__('SuperAdmin/backend.service_name')}}">
                     </div>
                     <div class="col-md-3">
-                        <label>@lang('SuperAdmin/backend.service_fee'):</label>
-                        <input class="form-control" type="text" name="service_fee" placeholder="{{__('SuperAdmin/backend.service_fee')}}">
+                        <label>@lang('SuperAdmin/backend.airport_service_fee'):</label>
+                        <input class="form-control" type="text" name="service_fee" placeholder="{{__('SuperAdmin/backend.airport_service_fee')}}">
                     </div>
                 </div>
             </div>

@@ -194,7 +194,7 @@
                     </div>
                     <div class="form-group col-md-4">
                         <label for="under_age">{{__('Frontend.your_age')}}:</label>
-                        <select name="age_selected" class="form-control" onchange="calculatorCourse('requested_for_under_age', $(this).val())" id="under_age">
+                        <select name="age_selected" class="form-control" onchange="calculateCourse('requested_for_under_age', $(this).val())" id="under_age">
                             <option value="">{{__('Frontend.select_age')}}</option>
                             @foreach ($ages as $age)
                                 <option value="{{$age->unique_id}}">{{$age->age}}</option>
@@ -208,33 +208,33 @@
                 <h3 class="section-title">{{__('Frontend.program_fees')}}</h3>
                 <div class="row">
                     <div class="form-group col-md-4">
-                        <label for="inputEmail4">{{__('Frontend.program_name')}}:</label>                        
+                        <label for="program_name">{{__('Frontend.program_name')}}:</label>                        
                         <input hidden name="program_unique_id" id="program_unique_id">
 
-                        <select class="form-control" id="get_program_name" onchange="set_program_unique_id($(this).children('option:selected').data('id')); calculatorCourse('select_program', $(this).val());" name="program_id">
+                        <select class="form-control" id="get_program_name" onchange="set_program_unique_id($(this).children('option:selected').data('id')); calculateCourse('select_program', $(this).val());" name="program_id">
                             <option value="" selected>{{__('Frontend.select_option')}}</option>
                         </select>
                     </div>
 
                     <div class="form-group col-md-4">
                         <label for="program_start_date">{{__('Frontend.program_start_date')}}:</label>
-                        <input class="form-control datepicker" id="datepick" type="text" name="date_selected" autocomplete="off" onchange="calculatorCourse('date_selected', $(this).val())">
+                        <input class="form-control datepicker" id="datepick" type="text" name="date_selected" autocomplete="off" onchange="calculateCourse('date_selected', $(this).val())">
                     </div>
 
                     <div class="form-group col-md-4">
                         <label for="program_duration">{{__('Frontend.program_duration')}}:</label>
-                        <select class="form-control" id="program_duration" name="program_duration" onchange="calculatorCourse('duration', $(this).val()); discountPrice($(this).val(), '{{csrf_token()}}');">
+                        <select class="form-control" id="program_duration" name="program_duration" onchange="calculateCourse('duration', $(this).val()); discountPrice($(this).val(), '{{csrf_token()}}');">
                             <option value="" selected>{{__('Frontend.select_option')}}</option>
                         </select>
                     </div>
                 </div>
 
-                <div class="row" id="courier_fee">
+                <div class="row" id="courier_fee" style="display: none">
                     <div class="form-group col-md-12">
                         <div class="form-check">
                             <input name="courier_fee" type="checkbox" class="form-check-input" id="checked_courier_fee" onchange="calculatorForCourier('courier_fee', this.checked)">
-                            <label class="form-check-label mb-2" for="exampleCheck1">{{__('Frontend.express_mailing')}}
-                                <i class="fa fa-question-circle pl-2" data-toggle="modal" data-target="#expressMailingModal" aria-hidden="true"></i>
+                            <label class="form-check-label mb-2" for="expressMailingCheck">
+                                {{__('Frontend.express_mailing')}}<i class="fa fa-question-circle pl-2" data-toggle="modal" data-target="#expressMailingModal" aria-hidden="true"></i>
                             </label>
                         </div>
                     </div>
@@ -246,9 +246,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="expressMailingModalLabel">{{__('Frontend.express_mailing')}}</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             </div>
 
                             <div class="modal-body">{{__('Frontend.express_mailing_description')}}</div>
@@ -326,7 +324,7 @@
                 <div class="accommodation-fees">
                     <h3 class="section-title">{{__('Frontend.accommodation_fees')}}</h3>
                     <div class="mt-3">
-                        <div class="form-row">
+                        <div class="row">
                             <div class="form-group col-md-3">
                                 <label for="input">{{__("Frontend.accommodation_type")}}:</label>
                                 <select id="accom_type" class="form-control" name="accommodation_id">
@@ -343,23 +341,38 @@
 
                             <div class="form-group col-md-3">
                                 <label for="input">{{__('Frontend.meal_type')}}:</label>
-                                <select name="meal_type" class="form-control" id="meal_type" onchange="fetchAccommodationDuration(calculate_accommodation_url, $('#accom_type').val(), true, false, false, $('#program_duration').val())">
+                                <select name="meal_type" class="form-control" id="meal_type">
                                     <option value="">{{__('Frontend.select_option')}}</option>
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="input">{{__('Frontend.accommodation_duration')}}:</label>
-                                <select name="accommodation_duration" class="form-control" id="accom_duration" onchange="fetchAccommodationDuration(calculate_accommodation_url, $(this).val(), false, 1, $('#under_age').val(), $('#program_duration').val())">
+                                <select name="accommodation_duration" class="form-control" id="accom_duration" onchange="calcuateAccommodation()">
                                     <option value="">{{__('Frontend.select')}}</option>
                                 </select>
                             </div>
                         </div>
 
-                        <div class="form-check">
-                            <input type="checkbox" name="special_diet" class="form-check-input" id="special_diet_check" onchange="specialDietCheck(calculate_accommodation_url, $(this).is(':checked'), $('#accom_duration').val());">
-                            <label class="form-check-label mb-2" for="exampleCheck1">{{__('Frontend.special_diet_fee')}}
-                                <i class="fa fa-question-circle" data-toggle="modal" data-target="#specialDietModal" aria-hidden="true"></i>
-                            </label>
+                        <div class="row" id="special_diet" style="display: none">
+                            <div class="form-group col-md-12">
+                                <div class="form-check">
+                                    <input name="special_diet" type="checkbox" class="form-check-input" id="special_diet_check" onchange="calcuateAccommodation()">
+                                    <label class="form-check-label mb-2" for="expressMailingCheck">
+                                        {{__('Frontend.special_diet_fee')}}<i class="fa fa-question-circle pl-2" data-toggle="modal" data-target="#specialDietModal" aria-hidden="true"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" id="custodianship" style="display: none">
+                            <div class="form-group col-md-12">
+                                <div class="form-check">
+                                    <input name="custodianship" type="checkbox" class="form-check-input" id="custodianship_check" onchange="calcuateAccommodation()">
+                                    <label class="form-check-label mb-2" for="custodianshipCheck">
+                                        {{__('Frontend.custodianship_need')}}<i class="fa fa-question-circle pl-2" data-toggle="modal" data-target="#custodianshipModal" aria-hidden="true"></i>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Special Diet Modal -->
@@ -373,12 +386,23 @@
                                         </button>
                                     </div>
 
-                                    <div class="modal-body">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec elementum
-                                        dolor
-                                        elementum dolor consectetur tincidunt. Duis a est consectetur dui egestas
-                                        placerat. Suspendisse auctor erat sed ipsum dapibus consequat.
+                                    <div class="modal-body"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Custodianship Modal -->
+                        <div class="modal fade" id="custodianshipModal" tabindex="-1" role="dialog" aria-labelledby="custodianshipModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="custodianshipModalLabel">{{__('Frontend.custodianship')}}</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
                                     </div>
+
+                                    <div class="modal-body">{{__('Frontend.custodianship_help')}}</div>
                                 </div>
                             </div>
                         </div>
@@ -539,13 +563,15 @@
                             </thead>
                             <tbody>
                                 <tr id="airport_pickup">
-                                    <td>{{__('Frontend.airport_pickup')}}</td>
+                                    <td>{{__('Frontend.airport_pickup')}}<i class="fa fa-question-circle pl-2" data-toggle="modal" data-target="#AirportPickupModal" aria-hidden="true"></i>
+                                    </td>
                                     <td class="cost_value">0</td>
                                     <td class="converted_value">0</td>
                                 </tr>
 
                                 <tr id="medical_insurance">
-                                    <td>{{__('Frontend.medical_insurance')}}</td>
+                                    <td>{{__('Frontend.medical_insurance')}}<i class="fa fa-question-circle pl-2" data-toggle="modal" data-target="#MedicalInsuranceModal" aria-hidden="true"></i>
+                                    </td>
                                     <td class="cost_value">0</td>
                                     <td class="converted_value">0</td>
                                 </tr>
@@ -559,8 +585,37 @@
                         </table>
                     </div>
                 </div>
+            </div>            
+
+            <!-- Special Diet Modal -->
+            <div class="modal fade" id="AirportPickupModal" tabindex="-1" role="dialog" aria-labelledby="AirportPickupModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="AirportPickupModalLabel">{{__('Frontend.airport_pickup_note')}}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body"></div>
+                    </div>
+                </div>
             </div>
-            
+
+            <!-- Special Diet Modal -->
+            <div class="modal fade" id="MedicalInsuranceModal" tabindex="-1" role="dialog" aria-labelledby="MedicalInsuranceModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="MedicalInsuranceModalLabel">{{__('Frontend.medical_insurance_note')}}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body"></div>
+                    </div>
+                </div>
+            </div>
             <div class="total mt-3">
                 <div class="row">
                     <div class="col-md-6"></div>
@@ -592,6 +647,7 @@
         var token = "{{csrf_token()}}";
 
         var rooms_meals_url = "{{route('course.rooms_meals')}}";
+        var accomm_durations_url = "{{route('course.accomm_durations')}}";
         
         var calculate_url = "{{route('course.calculate')}}";
         var calculate_accommodation_url = "{{route('course.calculate.accommodation')}}";

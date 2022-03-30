@@ -12,7 +12,7 @@
                             <th>#</th>
                             <th> @lang('SuperAdmin/backend.airport_name') </th>
                             <th> @lang('SuperAdmin/backend.airport_service_name') </th>
-                            <th> @lang('SuperAdmin/backend.service_fee') </th>
+                            <th> @lang('SuperAdmin/backend.airport_service_fee') </th>
                             <th> {{ucwords( __('SuperAdmin/backend.x_week_selected')) }} </th>
                             <th> @lang("SuperAdmin/backend.created_on") </th>
                             <th> @lang("SuperAdmin/backend.action") </th>
@@ -70,7 +70,7 @@
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label>@lang('SuperAdmin/backend.service_fee')</label>
+                                                    <label>@lang('SuperAdmin/backend.airport_service_fee')</label>
                                                     <input type="text" value="{{$airport->service_fee}}" name="service_fee" class="form-control">
                                                 </div>
 

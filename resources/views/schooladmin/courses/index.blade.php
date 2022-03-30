@@ -45,27 +45,26 @@
                     <tbody>
                         @foreach($schools->courses as  $course)
                             <tr>
-                                <td>{{$loop->iteration}}  </td>
-                                <td>{{is_array($course->language) ? implode(', ', $course->language) : $course->language}}</td>
+                                <td>{{ $loop->iteration }}  </td>
+                                <td>{{ is_array($course->language) ? implode(', ', $course->language) : $course->language }}</td>
 
-                                <td>{{ is_null($course->program_type) ? '-' : implode(", ", $course->program_type)}}</td>
-                                <td>{{is_null($course->study_mode) ? '-' : implode(", ", $course->study_mode)}}</td>
-                                <td>{{get_language()== 'en'  ?  $course->school->name ?? '-' :  $course->school->name_ar  ?? '-'}}</td>
-                                <td>{{is_null($course->branch) ? '-' : implode(", ", $course->branch)}}</td>
-                                <td>{{$course->currency}}</td>
+                                <td>{{ is_null($course->program_type) ? '-' : implode(", ", $course->program_type) }}</td>
+                                <td>{{ is_null($course->study_mode) ? '-' : implode(", ", $course->study_mode) }}</td>
+                                <td>{{ get_language()== 'en'  ?  $course->school->name ?? '-' :  $course->school->name_ar  ?? '-' }}</td>
+                                <td>{{ is_null($course->branch) ? '-' : implode(", ", $course->branch )}}</td>
+                                <td>{{ $course->currency }}</td>
 
-                                <td>{{$course->program_name}}</td>
-                                <td>{{$course->program_level}}</td>
-                                <td>{{$course->lessons_per_week}}</td>
-                                <td>{{$course->hours_per_week}}</td>
-                                <td>{{is_null($course->study_time) ? '-' : implode(", ", $course->study_time)}}</td>
-                                <td>{{is_null($course->every_day) ? '-' : implode(", ", $course->every_day)}}</td>
+                                <td>{{ $course->program_name }}</td>
+                                <td>{{ $course->program_level }}</td>
+                                <td>{{ $course->lessons_per_week }}</td>
+                                <td>{{ $course->hours_per_week }}</td>
+                                <td>{{ is_null($course->study_time) ? '-' : implode(", ", $course->study_time) }}</td>
+                                <td>{{ is_null($course->every_day) ? '-' : implode(", ", $course->every_day) }}</td>
 
-                                <td>{!!  $course->about_program !!}</td>
+                                <td>{!! get_language()== 'en' ? $course->about_program :  $course->about_program-ar !!}</td>
                                 <td>
                                     @if(!($course->coursePrograms()->get()->isEmpty()))
-                                        <a type="button"
-                                        href="{{route('schooladmin.course_program_details', $course->unique_id)}}" class="btn btn-sm btn-primary">@lang('SuperAdmin/backend.click_here')</a>
+                                        <a type="button" href="{{route('schooladmin.course_program_details', $course->unique_id)}}" class="btn btn-sm btn-primary">@lang('SuperAdmin/backend.click_here')</a>
                                     @else
                                         @lang('SuperAdmin/backend.no_details_available')
                                     @endif

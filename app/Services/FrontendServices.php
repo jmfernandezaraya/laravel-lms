@@ -19,13 +19,13 @@ class FrontendServices {
 
         $output_html = '';
         foreach($courses as $course) {
-            $course_programs = CourseProgram::where('course_unique_id', $course->unique_id)->count();
+            $course_programs = CourseProgram::where('course_unique_id', '' . $course->unique_id)->count();
             // where(function($q) {
             //     $q->whereNotNull('courier_fee')->where('courier_fee', '<>', '');
             // })->
             if ($course_programs) {
                 $program_name = ucwords($course->program_name);
-                $agevalues = getCourseMinMaxAgeRange($course->unique_id);
+                $agevalues = getCourseMinMaxAgeRange('' . $course->unique_id);
                 $minagevalue = $agevalues['min'];
                 $maxagevalue = $agevalues['max'];
                 $age = $minagevalue . " - " . $maxagevalue;

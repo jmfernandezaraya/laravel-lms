@@ -13,9 +13,9 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     public function my_unique_id($forget=null) {
-        if($forget == null) {
+        if ($forget == null) {
             if (!Session::has('unique_id_time')) {
-                Session::put('unique_id_time', time(). rand(00, 99));
+                Session::put('unique_id_time', time() . rand(00, 99));
             }
             return Session::get('unique_id_time');
         }

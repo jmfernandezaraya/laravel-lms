@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('test_school', function(){
+Route::get('test_school', function() {
     $school =  \App\Models\SuperAdmin\School::find(21);
 
     return $school->getCityCountryStatewithCommas()->branch;
@@ -70,6 +70,7 @@ Route::group(['prefix' => 'course', 'as' => 'course.'], function () {
     Route::get('{program_id}/{school_id}', [CourseControllerFrontend::class, 'index'])->name('single');
 
     Route::post('rooms_meals', [CourseControllerFrontend::class, 'getRoomTypeAndMealType'])->name('rooms_meals');
+    Route::post('accomm_durations', [CourseControllerFrontend::class, 'getAccommodationDuration'])->name('accomm_durations');    
     Route::post('calculate', [CourseControllerFrontend::class, 'calculate'])->name('calculate');
     Route::group(['prefix' => 'calculate', 'as' => 'calculate.'], function () {
         Route::post('accommodation', [CourseControllerFrontend::class, 'calculateAccommodation'])->name('accommodation');
@@ -92,7 +93,7 @@ Route::group(['prefix' => 'course', 'as' => 'course.'], function () {
     Route::post('airport_medical/fee', [CourseControllerFrontend::class, 'setAirportMedicalFee'])->name('airport_medical.fee');
 });
 
-Route::get('db_migrate', function(){
+Route::get('db_migrate', function() {
     return Artisan::call('migrate');
 });
 
@@ -272,7 +273,7 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => '
     Route::get('course/accommodation/edit', 'CourseController@editAccommodation')->name('course.accommodation.edit');
     Route::get('course/accommodation/{course_unique_id}', 'CourseController@detailsAccommodation')->name('course.accommodation.details');
     Route::get('course/accommodation', 'CourseController@accommodation')->name('course.accommodation');
-    Route::delete('course/accomm_under_age/{id}', 'CourseDetailsController@deleteAccommodation')->name('course.accommodation.delete');
+    Route::delete('course/accommodation/{id}', 'CourseDetailsController@deleteAccommodation')->name('course.accommodation.delete');
 
     Route::post('course/accomm_under_age/fetch', 'CourseController@fetchAccommodationUnderAgePage')->name('course.accomm_under_age.fetch');
     Route::get('course/accomm_under_age/edit', 'CourseController@editAccommodationUnderAge')->name('course.accomm_under_age.edit');

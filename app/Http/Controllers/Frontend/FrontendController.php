@@ -15,10 +15,11 @@ use App\Mail\EnquiryMail;
 use App\Models\Calculator;
 use App\Models\Frontend\AppliedForVisa;
 use App\Models\Frontend\Enquiry;
-use App\Models\SuperAdmin\Accommodation;
+use App\Models\SuperAdmin\CourseAccommodation;
 use App\Models\SuperAdmin\CourseAirport;
 use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\CourseProgram;
+use App\Models\SuperAdmin\Choose_Program_Age_Range;
 use App\Models\SuperAdmin\School;
 use App\Models\SuperAdmin\Choose_Study_Mode;
 use App\Models\UserCourseBookedDetails;
@@ -177,8 +178,8 @@ class FrontendController extends Controller
             $to_be_saved['airport_name'] = CourseAirport::where('unique_id', $request->airport_id)->first()['name_en'] ?? null;
             $to_be_saved['airport_service_name'] = CourseAirport::where('unique_id', $request->airport_service)->first()['service_name_en'] ?? null;
             $to_be_saved['courier_fee'] = $request->courier_fee ?? 0;
-            $to_be_saved['room_type'] = Accommodation::where('unique_id', $request->room_type)->first()['room_type'] ?? null;
-            $to_be_saved['meal_type'] = Accommodation::where('unique_id', $request->meal_type)->first()['meal'] ?? null;
+            $to_be_saved['room_type'] = CourseAccommodation::where('unique_id', $request->room_type)->first()['room_type'] ?? null;
+            $to_be_saved['meal_type'] = CourseAccommodation::where('unique_id', $request->meal_type)->first()['meal'] ?? null;
             $to_be_saved['total_fees'] = $request->total_fees;
             $to_be_saved['other_currency'] = $request->other_currency;
             $to_be_saved['legal_guardian_name'] = $request->legal_guardian_name;
@@ -281,7 +282,7 @@ class FrontendController extends Controller
      */
     public function TelrResponse()
     {
-        if (session()->has('visa_form')) {
+        if (\Session::has('visa_form')) {
             return $this->VisaTelrResponse();
         }
 
@@ -306,7 +307,7 @@ class FrontendController extends Controller
         $telr = $telrManager->handleTransactionResponse(request());
         $cart_id = $_GET['cart_id'];
 
-        $save_visa = AppliedForVisa::find(session()->get('applied_form_id'));
+        $save_visa = AppliedForVisa::find(\Session::get('applied_form_id'));
         $save_visa->payment_status = 1;
         $save_visa->order_id = $cart_id;
         $save_visa->paid_amount = Session::get('paid_amount');
@@ -344,7 +345,7 @@ class FrontendController extends Controller
      */
     public function reservationDetail(Request $request)
     {
-        $requests = (object)session()->get('request') ?? $request;
+        $requests = (object)\Session::get('request') ?? $request;
 
         if (!isset($requests->date_selected)) {
             return redirect()->route('land_page');
@@ -353,60 +354,93 @@ class FrontendController extends Controller
         $data['program_end_date'] = programEndDateExcludingLastWeekend(Carbon::create($requests->date_selected), $requests->program_duration);
         $data['accommodation_start_date'] = Carbon::create($requests->date_selected)->subDay()->format('d-m-Y');
         $data['accommodation_end_date'] = Carbon::create($data['accommodation_start_date'])->addWeeks($requests->accommodation_duration)->subDay()->format('d-m-Y');
-        $data['request'] = !empty($request->all()) ? (object)$request->all() : (object)session()->get('request');
-        $request = !empty($request->all()) ? (object)$request : (object)session()->get('request');
+        $data['request'] = !empty($request->all()) ? (object)$request->all() : (object)\Session::get('request');
+        $request = !empty($request->all()) ? (object)$request : (object)\Session::get('request');
         $data['schools'] = School::find($request->school_id);
-        $data['accomodation'] = isset($request->accommodation_id) ? Accommodation::whereUniqueId($request->accommodation_id)->first() : '';
-        $data['course'] = isset($request->course_id) ? Course::with('medicalFee')->where('unique_id', $request->course_id)->first() : '';
+        $data['accomodation'] = isset($request->accommodation_id) ? CourseAccommodation::whereUniqueId($request->accommodation_id)->first() : '';
+        $data['course'] = isset($request->program_id) ? Course::where('unique_id', $request->program_id)->first() : '';
         $data['airport'] = isset($request->airport_id) ? CourseAirport::whereUniqueId($request->airport_id)->first() : '';
         $data['program'] = isset($request->program_unique_id) ? CourseProgram::where('unique_id', $request->program_unique_id)->first() : null;
 
+        $special_diet_fee = 0;
         if (isset($request->special_diet)) {
-            $data['special_diet_fee'] = $request->special_diet == "on" ? Accommodation::whereMeal($request->meal_type)->whereUniqueId($request->accommodation_id)->whereRoomType($request->room_type)->first() : '';
+            $special_diet_fee = $request->special_diet == "on" ? CourseAccommodation::whereMeal($request->meal_type)->whereUniqueId($request->accommodation_id)->whereRoomType($request->room_type)->first() : '';
         }
 
-        $courses = Course::where('school_id', $request->school_id)->get();
+        $courses = Course::with('courseProgram')->where('school_id', $request->school_id)->get();
 
         /* We Are Making weekdays available in date picker available in frontend */
-        $age_range = [];
+        $age_ranges = [];
         foreach ($courses as $course) {
             $every_day[] = $course->every_day;
-            $age_range[] = $course->courseProgram->program_age_range;
+            $age_ranges[] = $course->courseProgram->program_age_range;
         }
-        $age_range = call_user_func_array('array_merge', $age_range);
+        $age_ranges = call_user_func_array('array_merge', $age_ranges);
 
-        $data['min_age'] = min($age_range);
-        $data['max_age'] = max($age_range);
+        $data['min_age'] = '';
+        $data['max_age'] = '';
+        $program_age_ranges = Choose_Program_Age_Range::whereIn('unique_id', $age_ranges)->orderBy('age', 'asc')->pluck('age')->toArray();
+        if (!empty($program_age_ranges) && count($program_age_ranges)) {
+            $data['min_age'] = $program_age_ranges[0];
+            $data['max_age'] = $program_age_ranges[count($program_age_ranges) - 1];
+        }
 
+        $data['accom_min_age'] = '';
+        $data['accom_max_age'] = '';
         if ($data['accomodation']) {
             $data['accom_min_age'] = is_array($data['accomodation']->age_range) ? min($data['accomodation']->age_range) : $data['accomodation']->age_range;
             $data['accom_max_age'] = is_array($data['accomodation']->age_range) ? max($data['accomodation']->age_range) : $data['accomodation']->age_range;
-        } else {
-            $data['accom_min_age'] = 0;
-            $data['accom_max_age'] = 0;
         }
 
-        $currency = (new FrontendCalculator())->CurrencyConverted($request->program_id, $request->total_fees);
-        $data['currency_name'] = $currency['currency'];
-        $data['currency_price'] = $currency['price'];
-
-        $program_registration_fee = $data['program']->program_registration_fee ?? 0;
+        $deposit_price = $program_registration_fee = $data['program']->program_registration_fee ?? 0;
         if ($data['program']->program_registration_fee) {
             if ($data['program']->deposit) {
                 $program_deposits = explode(" ", $data['program']->deposit);
                 if (count($program_deposits) >= 2) {
                     if ($program_deposits[1] == '%') {
-                        $program_registration_fee = $data['program']->program_cost * (int)$program_deposits[0] / 100;
+                        $deposit_price = $data['program']->program_cost * (int)$program_deposits[0] / 100;
                     } else {
-                        $program_registration_fee = (int)$program_deposits[0];
+                        $deposit_price = (int)$program_deposits[0];
                     }
                 }
             }
         }
-        $data['deposit_price'] = $program_registration_fee;
-        $data['deposit'] = (new FrontendCalculator())->CurrencyConverted($request->program_id, $data['deposit_price']);
+        $courier_fee = readCalculationFromDB('courier_fee') == 0.00 ? 0 : (new FrontendCalculator())->CurrencyConverted($request->program_id, readCalculationFromDB('courier_fee'))['price'];
 
-        $data['courier_price'] = readCalculationFromDB('courier_fee') == 0.00 ? 0 : (new FrontendCalculator())->CurrencyConverted($request->program_id, readCalculationFromDB('courier_fee'))['price'];
+        $default_currency = getDefaultCurrency();
+        $calculator_values = getCurrencyConvertedValues($request->program_id,
+            [
+                $courier_fee,
+                $special_diet_fee,
+                $deposit_price,
+                $program_registration_fee,
+                $request->total_fees,
+            ]
+        );
+        $data['courier_fee'] = [
+            'value' => $courier_fee,
+            'converted_value' => $calculator_values['values'][0]
+        ];
+        $data['special_diet_fee'] = [
+            'value' => $special_diet_fee,
+            'converted_value' => $calculator_values['values'][1]
+        ];
+        $data['deposit_price'] = [
+            'value' => $deposit_price,
+            'converted_value' => $calculator_values['values'][2]
+        ];
+        $data['program_registration_fee'] = [
+            'value' => $program_registration_fee,
+            'converted_value' => $calculator_values['values'][3]
+        ];
+        $data['total_fees'] = [
+            'value' => $request->total_fees,
+            'converted_value' => $calculator_values['values'][4]
+        ];
+        $data['currency'] = [
+            'cost' => $calculator_values['currency'],
+            'converted' => $default_currency['currency'],
+        ];
 
         return view('frontend.reservation-detail', $data, compact('request'));
     }

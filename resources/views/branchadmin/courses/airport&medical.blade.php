@@ -143,8 +143,8 @@
                                     <input class="form-control" type="text" name="service_name_en[]" placeholder="{{__('SuperAdmin/backend.service_name')}}">
                                 </div>
                                 <div class="col-md-3">
-                                    <label>@lang('SuperAdmin/backend.service_fee'):</label>
-                                    <input class="form-control" type="number" name="service_fee[]" placeholder="{{__('SuperAdmin/backend.service_fee')}}">
+                                    <label>@lang('SuperAdmin/backend.airport_service_fee'):</label>
+                                    <input class="form-control" type="number" name="service_fee[]" placeholder="{{__('SuperAdmin/backend.airport_service_fee')}}">
                                 </div>
                             </div>
                         </div>
@@ -200,7 +200,7 @@
                         </div>
                     </div>
                     
-                    <button type="button" onclick="getContent('medical_insurance_note', 'medical_insurance_note_value'); addAirportMedical($(this))" class="btn btn-primary">@lang('SuperAdmin/backend.submit')</button>
+                    <button type="button" onclick="getContent('medical_insurance_note', 'medical_insurance_note_value'); submitAirportMedicalForm($(this))" class="btn btn-primary">@lang('SuperAdmin/backend.submit')</button>
                 </form>
             </div>
         </div>
