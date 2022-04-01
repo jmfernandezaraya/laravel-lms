@@ -23,6 +23,6 @@ class CourseProgramUnderAgeFee extends Model
 
     public function cousreTextBooks()
     {
-        return $this->hasMany('App\Models\SuperAdmin\CourseProgramTextBook', 'program_id', 'course_program_id');
+        return $this->hasMany('App\Models\SuperAdmin\CourseProgramTextBookFee', 'course_program_id', 'course_program_id')->orderBy('id', 'asc');
     }
 }

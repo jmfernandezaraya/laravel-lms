@@ -16,7 +16,7 @@ class AccommodationCalculator extends FrontendCalculator
         $accommodation_custodian_fee = 0,
         $accommodation_summer_fee = 0,
         $accommodation_christmas_fee = 0,
-        $accommodation_underage_fee = 0,
+        $accommodation_under_age_fee = 0,
         $accommodation_discount,
         $accommodation_peak_fee = 0,
 
@@ -147,15 +147,15 @@ class AccommodationCalculator extends FrontendCalculator
      */
     public function getAccommodationUnderageFee()
     {
-        return $this->accommodation_underage_fee;
+        return $this->accommodation_under_age_fee;
     }
 
     /**
-     * @param mixed $underage_fee
+     * @param mixed $under_age_fee
      */
-    public function setAccommodationUnderageFee($underage_fee)
+    public function setAccommodationUnderageFee($under_age_fee)
     {
-        $this->accommodation_underage_fee = $underage_fee;
+        $this->accommodation_under_age_fee = $under_age_fee;
     }
 
     /**
@@ -226,7 +226,7 @@ class AccommodationCalculator extends FrontendCalculator
             $this->accommodation_placement_fee +
             $this->accommodation_deposit +
             $this->accommodation_summer_fee +
-            $this->accommodation_underage_fee +
+            $this->accommodation_under_age_fee +
             $this->accommodation_christmas_fee +
             $this->accommodation_special_diet_fee +
             $this->accommodation_custodian_fee +
@@ -277,7 +277,7 @@ class AccommodationCalculator extends FrontendCalculator
     public function resultAccommodationDiscount()
     {
         $discount_total = 0;
-        if ($this->check_for_date($this->accommodation_discount_start_date, $this->accommodation_discount_end_date, $this->getProgramStartDateFromFrontend())) {
+        if ($this->checkBetweenDate($this->accommodation_discount_start_date, $this->accommodation_discount_end_date, Carbon::now()->format('Y-m-d'))) {
             $get_symbol = explode(" ", $this->accommodation_discount);
 
             //We are calculating discount based on % or - here

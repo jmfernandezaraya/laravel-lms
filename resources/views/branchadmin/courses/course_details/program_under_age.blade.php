@@ -20,7 +20,7 @@
                         <tr>
                             <th>#</th>
                             <th> @lang('SuperAdmin/backend.program_under_age_fee') </th>
-                            <th> {{ucwords(__('SuperAdmin/backend.underage_fee_per_week'))}} </th>
+                            <th> {{ucwords(__('SuperAdmin/backend.under_age_fee_per_week'))}} </th>
                             <th> @lang("SuperAdmin/backend.created_on") </th>
                             <th> @lang("SuperAdmin/backend.action") </th>
                         </tr>
@@ -30,7 +30,7 @@
                             <tr>
                                 <td>{{$loop->iteration}}  </td>
                                 <td>{{is_array($program->under_age) && $program->under_age != null ? implode(', ', $program->under_age) : '-'}}</td>
-                                <td>{{$program->underage_fee_per_week}}</td>
+                                <td>{{$program->under_age_fee_per_week}}</td>
                                 <td>{{$program->created_at->diffForHumans()}}</td>
                                 <td>
                                     <div class="btn-group">
@@ -64,8 +64,8 @@
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label class="">{{ucwords(__('SuperAdmin/backend.underage_fee_per_week'))}}</label>
-                                                    <input type="number" class="form-control" name="under_age_fee_per_week" value="{{$program->underage_fee_per_week}}">
+                                                    <label class="">{{ucwords(__('SuperAdmin/backend.under_age_fee_per_week'))}}</label>
+                                                    <input type="number" class="form-control" name="under_age_fee_per_week" value="{{$program->under_age_fee_per_week}}">
                                                 </div>
                                             </div>
                                             <div class="modal-footer">

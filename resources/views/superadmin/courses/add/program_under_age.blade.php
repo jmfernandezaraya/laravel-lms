@@ -38,7 +38,7 @@
                         <div class="row">
                             <div class="form-group col-md-4">
                                 <label>{{__('SuperAdmin/backend.select_program_id')}}</label>
-                                <select class="3col active" name="program_id[]" style="width:100%" multiple="multiple">
+                                <select class="3col active" name="program_id[]" multiple="multiple">
                                     @foreach ($course_programs as $course_program)
                                         <option value="{{$course_program->unique_id}}">{{$course_program->unique_id}}</option>
                                     @endforeach
@@ -48,7 +48,7 @@
                             <div class="form-group col-md-4"></div>
                         </div>
 
-                        <input name="underagefeeincrement" id="underagefeeincrement" value='0' hidden>
+                        <input name="underagefeeincrement" id="underagefeeincrement" value="0" hidden>
                         <div id="under_age_fee_clone0" class="under-age-fee-clone clone">
                             <div class="row">
                                 <div class="form-group col-md-4">
@@ -63,8 +63,8 @@
                                         <i class="fa fa-trash pl-3" onclick="deleteProgramUnderAgeRange()" aria-hidden="true"></i>
                                     </label>
                                     <select name="under_age[0][]" id="program_under_age_range_choose0" multiple="multiple" class="3col active">
-                                        @foreach($program_under_ages as $program_under_age)
-                                            <option value="{{$program_under_age->unique_id}}">{{$program_under_age->age}}</option>
+                                        @foreach($choose_program_under_ages as $choose_program_under_age)
+                                            <option value="{{$choose_program_under_age->unique_id}}">{{$choose_program_under_age->age}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -81,7 +81,7 @@
                             </div>
                         </div>
 
-                        <input name="textbookfeeincrement" id="textbookfeeincrement" value='0' hidden>
+                        <input name="textbookfeeincrement" id="textbookfeeincrement" value="0" hidden>
                         <div id="text_book_fee_clone0" class="text-book-fee-clone clone">
                             <div class="row">
                                 <div class="form-group col-md-4">

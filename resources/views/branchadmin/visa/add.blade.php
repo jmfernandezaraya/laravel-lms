@@ -482,7 +482,7 @@
                                 <div class="row">
                                     <input name="clone_under_age_increment[]" id="increment" value='1' hidden>
                                     <div class="col-md-4">
-                                        <label for="">{{__('SuperAdmin/backend.underage_fee_per_week')}}:
+                                        <label for="">{{__('SuperAdmin/backend.under_age_fee_per_week')}}:
                                             <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#ProgramUnderAgeModal" aria-hidden="true"></i>
                                             <i class="fa fa-trash pl-3" onclick="deleteProgramUnderAgeRange()" aria-hidden="true"></i>
                                         </label>
@@ -775,7 +775,7 @@
                             <input id="increment" name="accom_increment" hidden value='1'>
 
                             <div class="col-md-4 mt-3">
-                                <label for="underage_fee">{{__('SuperAdmin/backend.underage_fee_per_week')}}:
+                                <label for="under_age_fee">{{__('SuperAdmin/backend.under_age_fee_per_week')}}:
                                     <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#AccomUnderAgeModal" aria-hidden="true"></i><i onclick="DeleteAccomUnderAgeRange()" class="fa fa-trash pl-3" aria-hidden="true"></i></label>
                                 <select name="under_age[]" id="under_age_choose0" multiple="multiple" class="3col active">
                                     @foreach(\App\Models\SuperAdmin\Choose_Accommodation_Under_Age::all() as $option)

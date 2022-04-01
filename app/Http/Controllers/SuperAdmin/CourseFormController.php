@@ -53,7 +53,8 @@ class CourseFormController extends Controller
     public function deleteLanguage(Request $request)
     {
         \DB::transaction(function () use ($request) {
-            Choose_Language::whereIn('unique_id', $request->ids)->delete();
+            Choose_Language::setTable('choose_languages_en')->whereIn('unique_id', $request->ids)->delete();
+            Choose_Language::setTable('choose_languages_ar')->whereIn('unique_id', $request->ids)->delete();
         });
 
         $data['result'] = '';
@@ -101,7 +102,8 @@ class CourseFormController extends Controller
     public function deleteStudyMode(Request $request)
     {
         \DB::transaction(function () use ($request) {
-            Choose_Study_Mode::whereIn('unique_id', $request->ids)->delete();
+            Choose_Study_Mode::setTable('choose_study_modes_en')->whereIn('unique_id', $request->ids)->delete();
+            Choose_Study_Mode::setTable('choose_study_modes_ar')->whereIn('unique_id', $request->ids)->delete();
         });
 
         $data['result'] = '';
@@ -149,7 +151,8 @@ class CourseFormController extends Controller
     public function deleteProgramType(Request $request)
     {
         \DB::transaction(function () use ($request) {
-            Choose_Program_Type::whereIn('unique_id', $request->ids)->delete();
+            Choose_Program_Type::setTable('choose_program_types_en')->whereIn('unique_id', $request->ids)->delete();
+            Choose_Program_Type::setTable('choose_program_types_ar')->whereIn('unique_id', $request->ids)->delete();
         });
 
         $data['result'] = '';
@@ -197,7 +200,8 @@ class CourseFormController extends Controller
     public function deleteBranch(Request $request)
     {
         \DB::transaction(function () use ($request) {
-            Choose_Branch::whereIn('unique_id', $request->ids)->delete();
+            Choose_Branch::setTable('choose_branches_en')->whereIn('unique_id', $request->ids)->delete();
+            Choose_Branch::setTable('choose_branches_ar')->whereIn('unique_id', $request->ids)->delete();
         });
 
         $data['result'] = '';
@@ -245,7 +249,8 @@ class CourseFormController extends Controller
     public function deleteStudyTime(Request $request)
     {
         \DB::transaction(function () use ($request) {
-            Choose_Study_Time::whereIn('unique_id', $request->ids)->delete();
+            Choose_Study_Time::setTable('choose_study_times_en')->whereIn('unique_id', $request->ids)->delete();
+            Choose_Study_Time::setTable('choose_study_times_ar')->whereIn('unique_id', $request->ids)->delete();
         });
 
         $data['result'] = '';
@@ -271,7 +276,7 @@ class CourseFormController extends Controller
             $ClassesDayEnTable->save();
 
             $ClassesDayArTable = new Choose_Classes_Day;
-            $ClassesDayArTable->setTable('choose_start_days_ar');
+            $ClassesDayArTable->setTable('choose_classes_days_ar');
             $ClassesDayArTable->unique_id = $unique_id;
             $ClassesDayArTable->name = $request->arabic_val;
             $ClassesDayArTable->save();
@@ -294,7 +299,8 @@ class CourseFormController extends Controller
     public function deleteClassesDay(Request $request)
     {
         \DB::transaction(function () use ($request) {
-            Choose_Classes_Day::whereIn('unique_id', $request->ids)->delete();
+            Choose_Classes_Day::setTable('choose_classes_days_en')->whereIn('unique_id', $request->ids)->delete();
+            Choose_Classes_Day::setTable('choose_classes_days_ar')->whereIn('unique_id', $request->ids)->delete();
         });
 
         $data['result'] = '';
@@ -342,7 +348,8 @@ class CourseFormController extends Controller
     public function deleteStartDay(Request $request)
     {
         \DB::transaction(function () use ($request) {
-            Choose_Start_Day::whereIn('unique_id', $request->ids)->delete();
+            Choose_Start_Day::setTable('choose_start_days_en')->whereIn('unique_id', $request->ids)->delete();
+            Choose_Start_Day::setTable('choose_start_days_ar')->whereIn('unique_id', $request->ids)->delete();
         });
 
         $data['result'] = '';
@@ -390,7 +397,8 @@ class CourseFormController extends Controller
     public function deleteProgramAgeRange(Request $request)
     {
         \DB::transaction(function () use ($request) {
-            Choose_Program_Age_Range::whereIn('unique_id', $request->ids)->delete();
+            Choose_Program_Age_Range::setTable('choose_program_age_ranges_en')->whereIn('unique_id', $request->ids)->delete();
+            Choose_Program_Age_Range::setTable('choose_program_age_ranges_ar')->whereIn('unique_id', $request->ids)->delete();
         });
 
         $data['result'] = '';
@@ -438,7 +446,8 @@ class CourseFormController extends Controller
     public function deleteProgramUnderAge(Request $request)
     {
         \DB::transaction(function () use ($request) {
-            Choose_Program_Under_Age::whereIn('unique_id', $request->ids)->delete();
+            Choose_Program_Under_Age::setTable('choose_program_under_ages_en')->whereIn('unique_id', $request->ids)->delete();
+            Choose_Program_Under_Age::setTable('choose_program_under_ages_ar')->whereIn('unique_id', $request->ids)->delete();
         });
 
         $data['result'] = '';
@@ -486,7 +495,8 @@ class CourseFormController extends Controller
     public function deleteAccommodationAgeRange(Request $request)
     {
         \DB::transaction(function () use ($request) {
-            Choose_Accommodation_Age_Range::whereIn('unique_id', $request->ids)->delete();
+            Choose_Accommodation_Age_Range::setTable('choose_accommodation_age_ranges_en')->whereIn('unique_id', $request->ids)->delete();
+            Choose_Accommodation_Age_Range::setTable('choose_accommodation_age_ranges_ar')->whereIn('unique_id', $request->ids)->delete();
         });
 
         $data['result'] = '';
@@ -582,7 +592,8 @@ class CourseFormController extends Controller
     public function deleteAccommodationUnderAge(Request $request)
     {
         \DB::transaction(function () use ($request) {
-            Choose_Accommodation_Under_Age::whereIn('unique_id', $request->ids)->delete();
+            Choose_Accommodation_Under_Age::setTable('choose_accommodation_under_ages_en')->whereIn('unique_id', $request->ids)->delete();
+            Choose_Accommodation_Under_Age::setTable('choose_accommodation_under_ages_ar')->whereIn('unique_id', $request->ids)->delete();
         });
 
         $data['result'] = '';

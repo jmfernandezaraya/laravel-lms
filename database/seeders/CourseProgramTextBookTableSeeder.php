@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 
-class CourseProgramTextBookTableSeeder extends Seeder
+class CourseProgramTextBookFeeTableSeeder extends Seeder
 {
 
     /**

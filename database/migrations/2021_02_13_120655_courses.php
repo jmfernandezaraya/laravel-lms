@@ -43,7 +43,7 @@ class Courses extends Migration
 			$table->string('summer_fee_per_week')->nullable();
 			$table->string('peak_time_fee_per_week')->nullable();
 			$table->string('under_age')->nullable();
-			$table->string('underage_fee_per_week')->nullable();
+			$table->string('under_age_fee_per_week')->nullable();
 			$table->string('text_book_fee')->nullable();
 			$table->string('text_fee_start_date')->nullable();
 			$table->string('text_fee_end_date')->nullable();

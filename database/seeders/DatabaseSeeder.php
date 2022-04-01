@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CoursesProgramEnTableSeeder::class);
         $this->call(CourseAccommodationUnderAgeTableSeeder::class);
 
-        $this->call(CourseProgramTextBookTableSeeder::class);
+        $this->call(CourseProgramTextBookFeeTableSeeder::class);
         $this->call(SchoolsEnTableSeeder::class);
         $this->call(CourseProgramUnderAgeFeesTableSeeder::class);
         $this->call(UsersTableSeeder::class);

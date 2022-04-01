@@ -15,12 +15,12 @@ class SetNullableTable extends Migration
     {
         Schema::table('course_accommodation_under_age', function (Blueprint $table) {
             $table->longText('under_age')->nullable()->change();
-            $table->bigInteger('under_age_fees')->nullable()->change();
+            $table->bigInteger('under_age_fee_per_week')->nullable()->change();
         });
 
         Schema::table('course_program_under_age_fees', function (Blueprint $table) {
             $table->longText('under_age')->nullable()->change();
-            $table->bigInteger('underage_fee_per_week')->nullable()->change();
+            $table->bigInteger('under_age_fee_per_week')->nullable()->change();
         });
     }
 

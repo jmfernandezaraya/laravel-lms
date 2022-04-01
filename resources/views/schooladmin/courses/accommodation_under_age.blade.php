@@ -143,7 +143,7 @@
                         <div class='accomoe0'>
                             <div class="row" id="accom_under_age_clone0">
                                 <div class="col-md-4 mt-3">
-                                    <label for="accommodation_underage_fee">{{__('SuperAdmin/backend.underage_fee_per_week')}}:
+                                    <label for="accommodation_under_age_fee">{{__('SuperAdmin/backend.under_age_fee_per_week')}}:
                                         <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#AccomUnderAgeModal" aria-hidden="true"></i><i onclick="DeleteAccomUnderAgeRange()" class="fa fa-trash pl-3" aria-hidden="true"></i></label>
                                     <select name="under_age[age][0][]" id="under_age_choose0" multiple="multiple" class="3col active">
                                         @foreach(\App\Models\SuperAdmin\Choose_Accommodation_Under_Age::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all() as $option)

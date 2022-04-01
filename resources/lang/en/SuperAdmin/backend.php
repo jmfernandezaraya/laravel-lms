@@ -142,7 +142,7 @@ return [
     'peak_time_start_date' => 'Peak Time Start Date',
     'peak_time_end_date' => 'Peak Time End Date',
     
-    'underage_fee_per_week' => 'Underage Fee Per Week',
+    'under_age_fee_per_week' => 'Underage Fee Per Week',
     
     'add_the_age' => 'Add the age',
     'add_another_age' => 'Add another age',
@@ -386,6 +386,7 @@ return [
     ],
     'add_under_age_fee_text_book_fee' => 'Add Under Age Fee and Text Book Fee',
     'under_age_fee' => 'Under Age Fee',
+    'under_age_fee_per_week' => 'Under Age Fee Per Week',
     'text_book_fee' => 'Text Book Fee',
     'select_program_id' => 'Select Program ID',
     'accommodation_id' => 'Accommodation ID',

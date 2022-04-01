@@ -60,7 +60,7 @@ class SuperAdminEditUserCourse
             $inpu['program_registration_fee'] = 0;
             $inpu['text_book_fee'] = 0;
             $inpu['summer_fee'] = 0;
-            $inpu['underage_fee'] = 0;
+            $inpu['under_age_fee'] = 0;
             $inpu['peak_time_fee'] = 0;
             $inpu['courier_fee'] = 0;
             $inpu['discount_fee'] = 0;
@@ -71,7 +71,7 @@ class SuperAdminEditUserCourse
             $inpu['accommodation_custodian_fee'] = 0;
             $inpu['accommodation_summer_fee'] = 0;
             $inpu['accommodation_christmas_fee'] = 0;
-            $inpu['accommodation_underage_fee'] = 0;
+            $inpu['accommodation_under_age_fee'] = 0;
             $inpu['accommodation_discount'] = 0;
             $inpu['accommodation_peak_time_fee'] = 0;
             $inpu['accommodation_total'] = 0;
@@ -166,7 +166,7 @@ class SuperAdminEditUserCourse
 
             $under_age = $r->under_age == null ? [] : $r->under_age;
             $under_age = !is_array($r->under_age) ? array($r->under_age) : $under_age;
-            $data['value'] = in_array($under_age, $program_get->getUnderAge()) ? insertCalculationIntoDB('underage_fee', $program_get->getUnderAgeFees($r->under_age) * $r->value) : insertCalculationIntoDB('underage_fee', 0);
+            $data['value'] = in_array($under_age, $program_get->getUnderAge()) ? insertCalculationIntoDB('under_age_fee', $program_get->getUnderAgeFees($r->under_age) * $r->value) : insertCalculationIntoDB('under_age_fee', 0);
 
             $accoms = CourseAccommodation::where('course_unique_id', \Session::get('course_unique_id'))
                 ->where('age_range', 'LIKE', '%' . $r->under_age . '%')

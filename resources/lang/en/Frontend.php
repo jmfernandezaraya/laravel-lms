@@ -152,9 +152,9 @@ return [
     'summer_fee_start_date' => 'Summer Fee Start Date',
     'summer_fee_end_date' => 'Summer Fee End Date',
 
-    'underage_fee' => 'Underage Fee',
-    'underage_fees' => 'Underage Fees',
-    'underage_fee_per_week' => 'Underage Fee Per Week',
+    'under_age_fee' => 'Underage Fee',
+    'under_age_fees' => 'Underage Fees',
+    'under_age_fee_per_week' => 'Underage Fee Per Week',
 
     'christmas_fee' => 'Christmas Fee',
     'christmas_fees' => 'Christmas Fees',

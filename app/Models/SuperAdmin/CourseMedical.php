@@ -36,6 +36,6 @@ class CourseMedical extends Model
 
     public function fees()
     {
-        return $this->hasMany('App\Models\SuperAdmin\CourseMedicalFee', 'course_medical_unique_id', 'unique_id');
+        return $this->hasMany('App\Models\SuperAdmin\CourseMedicalFee', 'course_medical_unique_id', 'unique_id')->orderBy('unique_id', 'asc');
     }
 }

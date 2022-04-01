@@ -5,10 +5,9 @@ namespace App\Models\SuperAdmin;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CourseProgramTextBook extends Model
+class CourseProgramTextBookFee extends Model
 {
     use HasFactory;
 
-
-    protected $table = 'course_program_text_books';
+    protected $table = 'course_program_text_book_fees';
 }

@@ -29,7 +29,7 @@ class CourseProgram extends Model
 
     public function courseUnderAges()
     {
-        return $this->hasMany('App\Models\SuperAdmin\CourseProgramUnderAgeFee', 'course_program_id');
+        return $this->hasMany('App\Models\SuperAdmin\CourseProgramUnderAgeFee', 'course_program_id')->orderBy('id', 'asc');
     }
 
     public function getUnderAge()
@@ -47,19 +47,19 @@ class CourseProgram extends Model
 
     public function getUnderAgeFees($array)
     {
-      $under_age_fees = $this->courseUnderAges()->where('under_age', 'LIKE', '%'.  $array. '%')->first();
+      $under_age_fees = $this->courseUnderAges()->where('under_age', 'LIKE', '%' .  $array . '%')->first();
 
-        return $under_age_fees->underage_fee_per_week;
+        return $under_age_fees->under_age_fee_per_week;
     }
 
     public function courseTextBookFee()
     {
-        return $this->hasOne('App\Models\SuperAdmin\CourseProgramTextBook', 'program_id');
+        return $this->hasOne('App\Models\SuperAdmin\CourseProgramTextBookFee', 'course_program_id');
     }
 
     public function courseTextBookFees()
     {
-        return $this->hasMany('App\Models\SuperAdmin\CourseProgramTextBook', 'program_id');
+        return $this->hasMany('App\Models\SuperAdmin\CourseProgramTextBookFee', 'course_program_id')->orderBy('id', 'asc');
     }
 
     public function TextBookFee($value)

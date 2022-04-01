@@ -47,7 +47,7 @@ class CourseAccommodation extends Model
 
     public function AccommodationUnderAges()
     {
-        return $this->hasMany('App\Models\SuperAdmin\CourseAccommodationUnderAge', 'accom_id', 'unique_id');
+        return $this->hasMany('App\Models\SuperAdmin\CourseAccommodationUnderAge', 'accom_id', 'unique_id')->orderBy('id', 'asc');
     }
 
     public function getUnderAge()
@@ -68,6 +68,6 @@ class CourseAccommodation extends Model
     {
         $underagefees = $this->AccommodationUnderAges()->where('under_age', 'LIKE', '%'.  $array. '%')->first();
 
-        return $underagefees->under_age_fees;
+        return $underagefees->under_age_fee_per_week;
     }
 }

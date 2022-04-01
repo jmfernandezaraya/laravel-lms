@@ -5,7 +5,7 @@ namespace App\Http\Controllers\SuperAdmin;
 use App\Http\Controllers\Controller;
 
 use App\Models\User;
-use App\Models\SuperAdmin\CourseProgramTextBook;
+use App\Models\SuperAdmin\CourseProgramTextBookFee;
 
 use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\School;
@@ -259,7 +259,7 @@ class CourseController extends Controller
             if ($r->has('accommodation')) {
                 Session::put('has_accommodation', $r->accommodation);
             }
-        } else if ($r->has('fees_under_age')) {
+        } else if ($r->has('underagefeeincrement')) {
             $coursecreate->createProgramUnderAgeAndTextBook($r);
         } elseif ($r->has('type')) {
             $coursecreate->createAccommodation($r);
@@ -288,12 +288,12 @@ class CourseController extends Controller
     function delete($course_id)
     {
         $db = \DB::transaction(function() use ($course_id) {
-            $course = \App\Models\SuperAdmin\CourseUpdate\Course::where('unique_id', $course_id)->first();
+            $course = Course::where('unique_id', $course_id)->first();
             $course->deleted = true;
             $course->save();
             return true;
         });
-        if($db){
+        if ($db) {
             toastr()->success(__('SuperAdmin/backend.data_removed_successfully'));
         }
         return back();
@@ -343,7 +343,7 @@ class CourseController extends Controller
         $coursecreate = new CourseCreateService();
         if ($r->has('language')) {
             $coursecreate->updateCourseAndProgram($r, $id);
-        } elseif ($r->has('fees_under_age')) {
+        } elseif ($r->has('underagefeeincrement')) {
             $coursecreate->updateProgramUnderAgeAndTextBook($r);
         } elseif ($r->has('type')) {
             $coursecreate->updateAccommodation($r, $id);
@@ -415,7 +415,7 @@ class CourseController extends Controller
     public function clone($course_id)
     {
         $coursecreate = new CourseCreateService();
-        if($coursecreate->cloneCourse($course_id)) {
+        if ($coursecreate->cloneCourse($course_id)) {
             toastr()->success(__('SuperAdmin/backend.data_removed_successfully'));
         }
         return back();
@@ -428,14 +428,14 @@ class CourseController extends Controller
     public function pause($course_id)
     {
         $db = \DB::transaction(function() use ($course_id) {
-            $course = \App\Models\SuperAdmin\CourseUpdate\Course::where('unique_id', $course_id)->first();
+            $course = Course::where('unique_id', $course_id)->first();
             if ($course) {
                 $course->display = false;
                 $course->save();
                 return true;
             }
         });
-        if($db){
+        if ($db) {
             toastr()->success(__('SuperAdmin/backend.data_removed_successfully'));
         }
         return back();
@@ -448,14 +448,14 @@ class CourseController extends Controller
     public function play($course_id)
     {
         $db = \DB::transaction(function() use ($course_id) {
-            $course = \App\Models\SuperAdmin\CourseUpdate\Course::where('unique_id', $course_id)->first();
+            $course = Course::where('unique_id', $course_id)->first();
             if ($course) {
                 $course->display = true;
                 $course->save();
                 return true;
             }
         });
-        if($db){
+        if ($db) {
             toastr()->success(__('SuperAdmin/backend.data_removed_successfully'));
         }
         return back();
@@ -468,14 +468,14 @@ class CourseController extends Controller
     public function restore($course_id)
     {
         $db = \DB::transaction(function() use ($course_id) {
-            $course = \App\Models\SuperAdmin\CourseUpdate\Course::where('unique_id', $course_id)->first();
+            $course = Course::where('unique_id', $course_id)->first();
             if ($course) {
                 $course->deleted = false;
                 $course->save();
                 return true;
             }
         });
-        if($db){
+        if ($db) {
             toastr()->success(__('SuperAdmin/backend.data_removed_successfully'));
         }
         return back();
@@ -498,7 +498,7 @@ class CourseController extends Controller
                 return true;
             }
         });
-        if($db){
+        if ($db) {
             toastr()->success(__('SuperAdmin/backend.data_removed_successfully'));
         }
         return back();
@@ -509,10 +509,10 @@ class CourseController extends Controller
         $course_id = \Session::get('course_id');
         $course_programs = [];
         $course_programs = CourseProgram::whereIn('unique_id', is_array(\Session::get('program_ids')) ? \Session::get('program_ids') : [])->get();
-        $program_under_ages = Choose_Program_Under_Age::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
+        $choose_program_under_ages = Choose_Program_Under_Age::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
         $has_accommodation = !\Session::has('has_accommodation') || (\Session::has('has_accommodation') && \Session::get('has_accommodation') == 'yes');
 
-        return view('superadmin.courses.add.program_under_age', compact('course_id','course_programs','program_under_ages','has_accommodation'));
+        return view('superadmin.courses.add.program_under_age', compact('course_id','course_programs','choose_program_under_ages','has_accommodation'));
     }
 
     /**
@@ -520,18 +520,44 @@ class CourseController extends Controller
      */
     public function editProgramUnderAge()
     {
+        if (!\Session::has('program_ids') && !\Session::has("program_id")) {
+            return back();
+        }
+
         if (\Session::get('course_id')) {
             $course_id = \Session::get('course_id');
 
-            $program_under_age_fees_with_text_books = CourseProgramUnderAgeFee::whereIn('course_program_id', is_array(\Session::get('program_ids')) ? \Session::get('program_ids') : [])->with('cousreTextBooks')->get()->collect()->unique('course_program_id')->values()->all();
-            $program_under_age_fee_with_text_book_first = CourseProgramUnderAgeFee::whereIn('course_program_id', is_array(\Session::get('program_ids')) ? \Session::get('program_ids') : [])->with('cousreTextBooks')->get()->collect()->unique('course_program_id')->values()->first();
+            $program_under_age_fee = null;
+            $program_under_age_fees = [];
+            $program_text_book_fee = null;
+            $program_text_book_fees = [];
+            $course_program_id = \Session::has('program_id');
+            if (\Session::has('program_ids')) {
+                $course_programs = CourseProgram::whereIn('unique_id', \Session::get('program_ids'))->get();
+                if (!count($course_programs)) {
+                    return redirect()->route('superadmin.course.accommodation.edit');
+                }
+                if (\Session::has('program_id')) {
+                    $program_under_age_fee = CourseProgramUnderAgeFee::where('course_program_id', \Session::get('program_id'))->first();
+                    $program_text_book_fee = CourseProgramTextBookFee::where('course_program_id', \Session::get('program_id'))->first();
+                } else {
+                    $program_under_age_fee = CourseProgramUnderAgeFee::where('course_program_id', \Session::get('program_ids'))->get()->collect()->unique('course_program_id')->values()->first();
+                    $program_text_book_fees = CourseProgramTextBookFee::where('course_program_id', \Session::get('program_ids'))->get()->collect()->unique('course_program_id')->values()->first();
+                }
+            }
 
-            $program_under_ages = Choose_Program_Under_Age::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
-            if (isset($program_under_age_fee_with_text_book_first->course_program_id)) {
-                $under_age_fees = CourseProgramUnderAgeFee::where('course_program_id', $program_under_age_fee_with_text_book_first->course_program_id)->get();
-                $text_book_fees = CourseProgramTextBook::where('program_id', $program_under_age_fee_with_text_book_first->course_program_id)->get();
-                
-                return view('superadmin.courses.edit.program_under_age', compact('course_id','program_under_ages','program_under_age_fees_with_text_books','program_under_age_fee_with_text_book_first','under_age_fees','text_book_fees'));
+            if (!empty($program_under_age_fee)) {
+                $course_program_id = $program_under_age_fee->course_program_id;
+                $program_under_age_fees = CourseProgramUnderAgeFee::where('course_program_id', $program_under_age_fee->course_program_id)->get();
+            }
+            if (!empty($program_text_book_fee)) {
+                $course_program_id = $program_text_book_fee->course_program_id;
+                $program_text_book_fees = CourseProgramTextBookFee::where('course_program_id', $program_text_book_fee->course_program_id)->get();
+            }
+            if (!empty($course_programs) && count($course_programs)) {
+                $choose_program_under_ages = Choose_Program_Under_Age::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
+        
+                return view('superadmin.courses.edit.program_under_age', compact('course_id','course_program_id','course_programs','program_under_age_fees','program_text_book_fees','choose_program_under_ages'));
             } else {
                 return redirect()->route('superadmin.course.program_under_age');
             }
@@ -602,12 +628,12 @@ class CourseController extends Controller
             $accomodation_under_age = null;
             $accomodation_under_ages = [];
             $accom_id = \Session::has('accom_id');
-            if(\Session::has('accom_ids')) {
+            if (\Session::has('accom_ids')) {
                 $accomodations = CourseAccommodation::whereIn('unique_id', \Session::get('accom_ids'))->get();
-                if(!count($accomodations)) {
+                if (!count($accomodations)) {
                     return redirect()->route('superadmin.course.airport_medical.edit');
                 }
-                if(\Session::has('accom_id')) {
+                if (\Session::has('accom_id')) {
                     $accomodation_under_age = CourseAccommodationUnderAge::where('accom_id', \Session::get('accom_id'))->first();
                 } else {
                     $accomodation_under_age = CourseAccommodationUnderAge::where('accom_id', \Session::get('accom_ids'))->get()->collect()->unique('accom_id')->values()->first();
@@ -621,7 +647,7 @@ class CourseController extends Controller
             if (!empty($accomodations) && count($accomodations)) {
                 $choose_accomodation_under_ages = Choose_Accommodation_Under_Age::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
         
-                return view('superadmin.courses.edit.accommodation_under_age', compact('course_id','accom_id','accomodations','accomodation_under_age','accomodation_under_ages','choose_accomodation_under_ages'));
+                return view('superadmin.courses.edit.accommodation_under_age', compact('course_id','accom_id','accomodations','accomodation_under_ages','choose_accomodation_under_ages'));
             } else {
                 return redirect()->route('superadmin.course.accommodation_under_age');
             }

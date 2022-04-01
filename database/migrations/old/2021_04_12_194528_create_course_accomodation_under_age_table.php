@@ -17,7 +17,7 @@ class CreateCourseAccommodationUnderAgeTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('accom_id')->index('course_accommodation_under_age_accom_id_foreign');
             $table->longText('under_age');
-            $table->bigInteger('under_age_fees');
+            $table->bigInteger('under_age_fee_per_week');
             $table->timestamps();
         });
     }

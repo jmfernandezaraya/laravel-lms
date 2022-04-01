@@ -40,9 +40,9 @@
                         <div class="row">
                             <div class="form-group col-md-4">
                                 <label>{{__('SuperAdmin/backend.select_program_id')}}</label>
-                                <select onchange="fetchProgramUnderAge(this.value)" class="form-control" name="program_id[]" style="width:100%">
-                                    @foreach ($program_under_age_fees_with_text_books as $program_under_age_fee_with_text_book)
-                                        <option {{$program_under_age_fee_with_text_book_first->course_program_id == $program_under_age_fee_with_text_book->course_program_id ? 'selected' : ''}} value="{{$program_under_age_fee_with_text_book->course_program_id}}">{{$program_under_age_fee_with_text_book->course_program_id}}</option>
+                                <select onchange="fetchProgramUnderAge(this.value)" class="form-control" name="program_id">
+                                    @foreach ($course_programs as $course_program)
+                                        <option {{$course_program->unique_id == $course_program_id ? 'selected' : ''}} value="{{$course_program->unique_id}}">{{$course_program->unique_id}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -52,14 +52,14 @@
 
                         <script>
                             window.addEventListener('load', function() {
-                                program_under_age_clone = {{$under_age_fees && $under_age_fees->count() ? $under_age_fees->count() - 1 : 0}};
+                                program_under_age_clone = {{$program_under_age_fees && $program_under_age_fees->count() ? $program_under_age_fees->count() - 1 : 0}};
                             }, false );
                         </script>
 
-                        <input name="underagefeeincrement" id="underagefeeincrement" value="{{$under_age_fees && $under_age_fees->count() ? $under_age_fees->count() - 1 : 0}}" hidden>
-                        @forelse ($under_age_fees as $under_age_fee)
+                        <input name="underagefeeincrement" id="underagefeeincrement" value="{{$program_under_age_fees && $program_under_age_fees->count() ? $program_under_age_fees->count() - 1 : 0}}" hidden>
+                        @forelse ($program_under_age_fees as $program_under_age_fee)
                             <div id="under_age_fee_clone{{ $loop->iteration - 1 }}" class="under-age-fee-clone clone">
-                                <input type="hidden" value="{{$under_age_fee->id}}" name="age_id[]">
+                                <input type="hidden" value="{{$program_under_age_fee->id}}" name="under_age_id[]">
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label><h3>{{__('SuperAdmin/backend.under_age_fee')}}</h3></label>
@@ -73,15 +73,15 @@
                                             <i class="fa fa-trash pl-3" onclick="deleteProgramUnderAgeRange()" aria-hidden="true"></i>
                                         </label>
                                         <select name="under_age[{{$loop->iteration - 1}}][]" id="program_under_age_range_choose0" multiple="multiple" class="3col active">
-                                            @foreach($program_under_ages as $program_under_age)
-                                                <option {{in_array($program_under_age->unique_id, (array)$under_age_fee->under_age ?? [])  ? 'selected' : ''}} value="{{$under_age_fee->unique_id}}">{{$under_age_fee->age}}</option>
+                                            @foreach($choose_program_under_ages as $choose_program_under_age)
+                                                <option {{in_array($choose_program_under_age->unique_id, (array)$program_under_age_fee->under_age ?? [])  ? 'selected' : ''}} value="{{$choose_program_under_age->unique_id}}">{{$choose_program_under_age->age}}</option>
                                             @endforeach
                                         </select>
                                     </div>
 
                                     <div class="form-group col-md-4 mt-4">
                                         <label>{{__('SuperAdmin/backend.fees_week')}}:</label>
-                                        <input value="{{$under_age_fee->underage_fee_per_week}}" class="form-control" type="number" name="under_age_fee_per_week[]" placeholder="{{__('SuperAdmin/backend.fees_week')}}">
+                                        <input value="{{$program_under_age_fee->under_age_fee_per_week}}" class="form-control" type="number" name="under_age_fee_per_week[]" placeholder="{{__('SuperAdmin/backend.fees_week')}}">
                                     </div>
 
                                     <div class="form-group col-md-2 mt-4 pt-3">
@@ -105,8 +105,8 @@
                                             <i class="fa fa-trash pl-3" onclick="deleteProgramUnderAgeRange()" aria-hidden="true"></i>
                                         </label>
                                         <select name="under_age[0][]" id="program_under_age_range_choose0" multiple="multiple" class="3col active">
-                                            @foreach($program_under_ages as $program_under_age)
-                                                <option value="{{$program_under_age->unique_id}}">{{$program_under_age->age}}</option>
+                                            @foreach($choose_program_under_ages as $choose_program_under_age)
+                                                <option value="{{$choose_program_under_age->unique_id}}">{{$choose_program_under_age->age}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -125,10 +125,10 @@
                         @endforelse
                         
 
-                        <input name="textbookfeeincrement" id="textbookfeeincrement" value="{{$text_book_fees ? $text_book_fees->count() - 1 : 0}}" hidden>
-                        @forelse ($text_book_fees as $text_book_fee)
+                        <input name="textbookfeeincrement" id="textbookfeeincrement" value="{{$program_text_book_fees ? $program_text_book_fees->count() - 1 : 0}}" hidden>
+                        @forelse ($program_text_book_fees as $program_text_book_fee)
                             <div id="text_book_fee_clone{{ $loop->iteration - 1 }}" class="text-book-fee-clone clone">
-                                <input type="hidden" name="textbook_id[]" value="{{$text_book_fee->id}}">
+                                <input type="hidden" name="textbook_id[]" value="{{$program_text_book_fee->id}}">
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label><h3>{{__('SuperAdmin/backend.text_book_fee')}}</h3></label>
@@ -138,15 +138,15 @@
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label>{{__('SuperAdmin/backend.fee')}}:</label>
-                                        <input value="{{$text_book_fee->text_book_fee}}" class="form-control" type="number" name="text_book_fee[]" placeholder="{{__('SuperAdmin/backend.fee')}}">
+                                        <input value="{{$program_text_book_fee->text_book_fee}}" class="form-control" type="number" name="text_book_fee[]" placeholder="{{__('SuperAdmin/backend.fee')}}">
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label>{{__('SuperAdmin/backend.start_date')}}:</label>
-                                        <input value="{{$text_book_fee->text_book_start_date}}" class="form-control" type="number" name="text_book_fee_start_date[]" placeholder="{{__('SuperAdmin/backend.start_date')}}">
+                                        <input value="{{$program_text_book_fee->text_book_start_date}}" class="form-control" type="number" name="text_book_fee_start_date[]" placeholder="{{__('SuperAdmin/backend.start_date')}}">
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label>{{__('SuperAdmin/backend.end_date')}}:</label>
-                                        <input value="{{$text_book_fee->text_book_end_date}}" class="form-control" type="number" name="text_book_fee_end_date[]" placeholder="{{__('SuperAdmin/backend.end_date')}}">
+                                        <input value="{{$program_text_book_fee->text_book_end_date}}" class="form-control" type="number" name="text_book_fee_end_date[]" placeholder="{{__('SuperAdmin/backend.end_date')}}">
                                     </div>
                                 </div>
 
@@ -154,10 +154,10 @@
                                     <div class="form-group col-md-12">
                                         <label>{{__('SuperAdmin/backend.note')}}: </label>
                                         <div class="english">
-                                            <textarea class="form-control" name="text_book_note[]" placeholder="{{__('SuperAdmin/backend.note')}}" id="text_book_note{{ $loop->iteration - 1 }}">{!! $text_book_fee->text_book_note_en !!}</textarea>
+                                            <textarea class="form-control" name="text_book_note[]" placeholder="{{__('SuperAdmin/backend.note')}}" id="text_book_note{{ $loop->iteration - 1 }}">{!! $program_text_book_fee->text_book_note !!}</textarea>
                                         </div>
                                         <div class="arabic">
-                                            <textarea class="form-control" name="text_book_note_ar[]" placeholder="{{__('SuperAdmin/backend.note')}}" id="text_book_note_ar{{ $loop->iteration - 1 }}">{!! $text_book_fee->text_book_note_ar !!}</textarea>
+                                            <textarea class="form-control" name="text_book_note_ar[]" placeholder="{{__('SuperAdmin/backend.note')}}" id="text_book_note_ar{{ $loop->iteration - 1 }}">{!! $program_text_book_fee->text_book_note_ar !!}</textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -218,9 +218,7 @@
                         @endforelse
                     </div>
 
-                    @if($accomodations)
-                        <a type="button" href="{{route('superadmin.course.accommodation.edit')}}" class="btn btn-primary pull-right">@lang('SuperAdmin/backend.next')</a>
-                    @endif
+                    <a type="button" href="{{route('superadmin.course.accommodation.edit')}}" class="btn btn-primary pull-right">@lang('SuperAdmin/backend.next')</a>
                     <button type="button" onclick="getProgramTextBookContents(); submitCourseProgramForm($(this))" class="btn btn-primary pull-left">{{__('SuperAdmin/backend.submit')}}</button>
                 </form>
             </div>

@@ -227,7 +227,7 @@
                             }, false );
                         </script>
 
-                        <input hidden name="program_increment" value="0">
+                        <input hidden id="program_increment" name="program_increment" value="0">
 
                         <div id="course_program_clone0" class="course-program-clone clone">
                             <div class="row">

@@ -124,15 +124,15 @@
                                         <label>{{__('SuperAdmin/backend.custodian_condition')}}:</label>
                                         <div class="row">
                                             <div class="form-group col-md-6">
-                                                <input type="radio" value="required" name="custodian_condition[]" {{$accommodation->custodian_condition == 'required' ? 'checked' : ''}}>&nbsp;
+                                                <input type="radio" value="required" name="custodian_condition[{{ $loop->iteration - 1 }}]" {{$accommodation->custodian_condition == 'required' ? 'checked' : ''}}>&nbsp;
                                                 <label>{{__('SuperAdmin/backend.required')}}</label>
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <input type="radio" value="optional" name="custodian_condition[]" {{$accommodation->custodian_condition == 'optional' ? 'checked' : ''}}>&nbsp;
+                                                <input type="radio" value="optional" name="custodian_condition[{{ $loop->iteration - 1 }}]" {{$accommodation->custodian_condition == 'optional' ? 'checked' : ''}}>&nbsp;
                                                 <label>{{__('SuperAdmin/backend.optional')}}</label>
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <input type="radio" value="invisible" name="custodian_condition[]" {{$accommodation->custodian_condition == 'invisible' ? 'checked' : ''}}>&nbsp;
+                                                <input type="radio" value="invisible" name="custodian_condition[{{ $loop->iteration - 1 }}]" {{$accommodation->custodian_condition == 'invisible' ? 'checked' : ''}}>&nbsp;
                                                 <label>{{__('SuperAdmin/backend.invisible')}}</label>
                                             </div>
                                         </div>
@@ -274,10 +274,10 @@
                                 
                                 <div class="row">
                                     <div class="form-group col-md-6">
-                                        <button class="btn btn-primary fa fa-plus" type="button" onclick="submitAccommodationFormForm($(this))"></button>
+                                        <button class="btn btn-primary fa fa-plus" type="button" onclick="addAccommodation($(this))"></button>
                                     </div>
                                     <div class="pull-rights">
-                                        <button class="btn btn-danger fa fa-minus" type="button" onclick="deleteAccommodationForm($(this))"></button>
+                                        <button class="btn btn-danger fa fa-minus" type="button" onclick="deleteAccommodation($(this))"></button>
                                     </div>
                                 </div>
                             </div>
@@ -362,15 +362,15 @@
                                         <label>{{__('SuperAdmin/backend.custodian_condition')}}:</label>
                                         <div class="row">
                                             <div class="form-group col-md-6">
-                                                <input type="radio" value="required" name="custodian_condition[]">&nbsp;
+                                                <input type="radio" value="required" name="custodian_condition[0]">&nbsp;
                                                 <label>{{__('SuperAdmin/backend.required')}}</label>
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <input type="radio" value="optional" name="custodian_condition[]">&nbsp;
+                                                <input type="radio" value="optional" name="custodian_condition[0]">&nbsp;
                                                 <label>{{__('SuperAdmin/backend.optional')}}</label>
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <input type="radio" value="invisible" name="custodian_condition[]" checked>&nbsp;
+                                                <input type="radio" value="invisible" name="custodian_condition[0]" checked>&nbsp;
                                                 <label>{{__('SuperAdmin/backend.invisible')}}</label>
                                             </div>
                                         </div>
@@ -510,10 +510,10 @@
                             
                                 <div class="row">
                                     <div class="form-group col-md-6">
-                                        <button class="btn btn-primary fa fa-plus" type="button" onclick="submitAccommodationFormForm($(this))"></button>
+                                        <button class="btn btn-primary fa fa-plus" type="button" onclick="addAccommodation($(this))"></button>
                                     </div>
                                     <div class="pull-rights">
-                                        <button class="btn btn-danger fa fa-minus" type="button" onclick="deleteAccommodationForm($(this))"></button>
+                                        <button class="btn btn-danger fa fa-minus" type="button" onclick="deleteAccommodation($(this))"></button>
                                     </div>
                                 </div>
                             </div>

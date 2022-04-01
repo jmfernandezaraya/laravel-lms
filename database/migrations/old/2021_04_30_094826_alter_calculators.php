@@ -18,7 +18,7 @@ class AlterCalculators extends Migration
             $blueprint->decimal('program_registration_fee', 50, 2)->default(0)->change();
             $blueprint->decimal('text_book_fee', 50, 2)->default(0)->change();
             $blueprint->decimal('summer_fee', 50, 2)->default(0)->change();
-            $blueprint->decimal('underage_fee', 50, 2)->default(0)->change();
+            $blueprint->decimal('under_age_fee', 50, 2)->default(0)->change();
             $blueprint->decimal('courier_fee', 50, 2)->default(0)->change();
             $blueprint->decimal('discount_fee', 50, 2)->default(0)->change();
             $blueprint->decimal('fixed_program_cost', 50, 2)->default(0)->change();

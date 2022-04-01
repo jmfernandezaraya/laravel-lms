@@ -45,7 +45,7 @@ function reloadInsertCalculationIntoDB()
 
     $inpu['text_book_fee'] = 0;
     $inpu['summer_fee'] = 0;
-    $inpu['underage_fee'] = 0;
+    $inpu['under_age_fee'] = 0;
     $inpu['peak_time_fee'] = 0;
     $inpu['courier_fee'] = 0;
     $inpu['discount_fee'] = 0;
@@ -57,7 +57,7 @@ function reloadInsertCalculationIntoDB()
     $inpu['accommodation_custodian_fee'] = 0;
     $inpu['accommodation_summer_fee'] = 0;
     $inpu['accommodation_christmas_fee'] = 0;
-    $inpu['accommodation_underage_fee'] = 0;
+    $inpu['accommodation_under_age_fee'] = 0;
     $inpu['accommodation_discount'] = 0;
     $inpu['accommodation_peak_time_fee'] = 0;
     $inpu['accommodation_total'] = 0;

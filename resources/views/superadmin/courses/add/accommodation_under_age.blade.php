@@ -30,7 +30,7 @@
                         <div class="row">
                             <div class="form-group col-md-4">
                                 <label>{{__('SuperAdmin/backend.accommodation_id')}}</label>
-                                <select class="form-control" name="accom_id">
+                                <select class="3col active" name="accom_id[]" multiple="multiple">
                                     @foreach($accomodations as $accomodation)
                                         <option value="{{$accomodation->unique_id}}">{{$accomodation->unique_id}}</option>
                                     @endforeach
@@ -55,8 +55,8 @@
                                     </select>
                                 </div>
                                 <div class="form-group col-md-4 mt-4">
-                                    <label>{{__('SuperAdmin/backend.add_week')}}:</label>
-                                    <input class="form-control" type="number" value="" name="under_age_fee_per_week[]" placeholder="{{__('SuperAdmin/backend.add_week')}}">
+                                    <label>{{__('SuperAdmin/backend.under_age_fee_per_week')}}:</label>
+                                    <input class="form-control" type="number" value="" name="under_age_fee_per_week[]" placeholder="{{__('SuperAdmin/backend.under_age_fee_per_week')}}">
                                 </div>
                                 <div class="form-group col-md-4 mt-4 pt-3">
                                     <i class="fa fa-plus-circle" aria-hidden="true" id="accom_plus_button" onclick="addAccommodationFormUnderAge($(this))"></i>

@@ -194,7 +194,7 @@
                     </div>
                     <div class="form-group col-md-4">
                         <label for="under_age">{{__('Frontend.your_age')}}:</label>
-                        <select name="age_selected" class="form-control" onchange="calculateCourse('requested_for_under_age', $(this).val())" id="under_age">
+                        <select name="age_selected" class="form-control" onchange="calculateCourse('requested_for_under_age')" id="under_age">
                             <option value="">{{__('Frontend.select_age')}}</option>
                             @foreach ($ages as $age)
                                 <option value="{{$age->unique_id}}">{{$age->age}}</option>
@@ -211,19 +211,19 @@
                         <label for="program_name">{{__('Frontend.program_name')}}:</label>                        
                         <input hidden name="program_unique_id" id="program_unique_id">
 
-                        <select class="form-control" id="get_program_name" onchange="set_program_unique_id($(this).children('option:selected').data('id')); calculateCourse('select_program', $(this).val());" name="program_id">
+                        <select class="form-control" id="get_program_name" onchange="set_program_unique_id($(this).children('option:selected').data('id')); calculateCourse('select_program');" name="program_id">
                             <option value="" selected>{{__('Frontend.select_option')}}</option>
                         </select>
                     </div>
 
                     <div class="form-group col-md-4">
                         <label for="program_start_date">{{__('Frontend.program_start_date')}}:</label>
-                        <input class="form-control datepicker" id="datepick" type="text" name="date_selected" autocomplete="off" onchange="calculateCourse('date_selected', $(this).val())">
+                        <input class="form-control datepicker" id="datepick" type="text" name="date_selected" autocomplete="off" onchange="calculateCourse('date_selected')">
                     </div>
 
                     <div class="form-group col-md-4">
                         <label for="program_duration">{{__('Frontend.program_duration')}}:</label>
-                        <select class="form-control" id="program_duration" name="program_duration" onchange="calculateCourse('duration', $(this).val()); discountPrice($(this).val(), '{{csrf_token()}}');">
+                        <select class="form-control" id="program_duration" name="program_duration" onchange="calculateCourse('duration'); discountPrice($(this).val(), '{{csrf_token()}}');">
                             <option value="" selected>{{__('Frontend.select_option')}}</option>
                         </select>
                     </div>
@@ -232,7 +232,7 @@
                 <div class="row" id="courier_fee" style="display: none">
                     <div class="form-group col-md-12">
                         <div class="form-check">
-                            <input name="courier_fee" type="checkbox" class="form-check-input" id="checked_courier_fee" onchange="calculatorForCourier('courier_fee', this.checked)">
+                            <input name="courier_fee" type="checkbox" class="form-check-input" id="checked_courier_fee" onchange="calculateCourse('duration', $('#program_duration').val())">
                             <label class="form-check-label mb-2" for="expressMailingCheck">
                                 {{__('Frontend.express_mailing')}}<i class="fa fa-question-circle pl-2" data-toggle="modal" data-target="#expressMailingModal" aria-hidden="true"></i>
                             </label>
@@ -294,7 +294,7 @@
                         </tr>
 
                         <tr id="under_age_fees">
-                            <td>{{__('Frontend.underage_fees')}}</td>
+                            <td>{{__('Frontend.under_age_fees')}}</td>
                             <td class="cost_value">0</td>
                             <td class="converted_value">0</td>
                         </tr>
@@ -465,7 +465,7 @@
                                 </tr>
 
                                 <tr id="accommodation_under_age_fees">
-                                    <td>{{__('Frontend.underage_fees')}}</td>
+                                    <td>{{__('Frontend.under_age_fees')}}</td>
                                     <td class="cost_value">0</td>
                                     <td class="converted_value">0</td>
                                 </tr>

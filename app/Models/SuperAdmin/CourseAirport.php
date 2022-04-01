@@ -37,6 +37,6 @@ class CourseAirport extends Model
 
     public function fees()
     {
-        return $this->hasMany('App\Models\SuperAdmin\CourseAirportFee', 'course_airport_unique_id', 'unique_id');
+        return $this->hasMany('App\Models\SuperAdmin\CourseAirportFee', 'course_airport_unique_id', 'unique_id')->orderBy('unique_id', 'asc');
     }
 }

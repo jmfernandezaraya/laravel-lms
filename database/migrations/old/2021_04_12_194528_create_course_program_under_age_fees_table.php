@@ -17,7 +17,7 @@ class CreateCourseProgramUnderAgeFeesTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('course_program_id')->index('course_program_under_age_fee_en_course_program_id_foreign');
             $table->string('under_age');
-            $table->bigInteger('underage_fee_per_week');
+            $table->bigInteger('under_age_fee_per_week');
             $table->timestamps();
         });
     }

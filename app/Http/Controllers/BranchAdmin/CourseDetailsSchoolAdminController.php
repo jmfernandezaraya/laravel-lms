@@ -114,7 +114,7 @@ class CourseDetailsSchoolAdminController extends Controller
         $to_be_updated = CourseProgramUnderAgeFee::find($request->id);
         $to_be_updated->under_age = $request->under_age;
 
-        $to_be_updated->underage_fee_per_week = $request->under_age_fee_per_week;
+        $to_be_updated->under_age_fee_per_week = $request->under_age_fee_per_week;
         $to_be_updated->save();
         toastr(__('SuperAdmin/backend.data_updated'), 'success');
         return back();
@@ -373,7 +373,7 @@ class CourseDetailsSchoolAdminController extends Controller
      */
     public function courseAccommodationUnderAgeUpdate(Request $request)
     {
-        CourseAccommodationUnderAge::find($request->id)->update(['under_age_fees' => $request->under_age_fees, 'under_age' => $request->under_age]);
+        CourseAccommodationUnderAge::find($request->id)->update(['under_age_fee_per_week' => $request->under_age_fee_per_week, 'under_age' => $request->under_age]);
 
         toastr()->success(__('SuperAdmin/backend.data_updated'));
 

@@ -20,7 +20,7 @@ class Calculators extends Migration
             $blueprint->double('program_registration_fee');
             $blueprint->double('text_book_fee');
             $blueprint->double('summer_fee');
-            $blueprint->double('underage_fee');
+            $blueprint->double('under_age_fee');
             $blueprint->double('courier_fee');
             $blueprint->double('discount_fee');
             $blueprint->double('total');

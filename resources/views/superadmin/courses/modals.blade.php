@@ -48,7 +48,7 @@
                 </div>
             </div>
             <div class="modal-footer pt-0">
-                <button onclick="addStudyMode($('#study_mode_arabic').val(), $('#study_mode_arabic').val())" type="button" class="btn btn-primary">@lang('SuperAdmin/backend.submit')</button>
+                <button onclick="addStudyMode($('#study_mode_english').val(), $('#study_mode_arabic').val())" type="button" class="btn btn-primary">@lang('SuperAdmin/backend.submit')</button>
             </div>
         </div>
     </div>

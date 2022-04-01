@@ -63,8 +63,8 @@
                                         </select>
                                     </div>
                                     <div class="form-group col-md-4 mt-4">
-                                        <label>{{__('SuperAdmin/backend.add_week')}}:</label>
-                                        <input class="form-control" type="number" value="{{$accomodation_under_age->under_age_fees}}" name="under_age_fee_per_week[]" placeholder="{{__('SuperAdmin/backend.add_week')}}">
+                                        <label>{{__('SuperAdmin/backend.under_age_fee_per_week')}}:</label>
+                                        <input class="form-control" type="number" value="{{$accomodation_under_age->under_age_fee_per_week}}" name="under_age_fee_per_week[]" placeholder="{{__('SuperAdmin/backend.under_age_fee_per_week')}}">
                                     </div>
                                     <div class="form-group col-md-4 mt-4 pt-3">
                                         <i class="fa fa-plus-circle" aria-hidden="true" id="accom_plus_button" onclick="addAccommodationFormUnderAge($(this))"></i>
@@ -88,8 +88,8 @@
                                         </select>
                                     </div>
                                     <div class="form-group col-md-4 mt-4">
-                                        <label>{{__('SuperAdmin/backend.add_week')}}:</label>
-                                        <input class="form-control" type="number" value="" name="under_age_fee_per_week[]" placeholder="{{__('SuperAdmin/backend.add_week')}}">
+                                        <label>{{__('SuperAdmin/backend.under_age_fee_per_week')}}:</label>
+                                        <input class="form-control" type="number" value="" name="under_age_fee_per_week[]" placeholder="{{__('SuperAdmin/backend.under_age_fee_per_week')}}">
                                     </div>
                                     <div class="form-group col-md-4 mt-4 pt-3">
                                         <i class="fa fa-plus-circle" aria-hidden="true" id="accom_plus_button" onclick="addAccommodationFormUnderAge($(this))"></i>

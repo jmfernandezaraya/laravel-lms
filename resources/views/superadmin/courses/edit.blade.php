@@ -203,7 +203,7 @@
                             }, false );
                         </script>
 
-                        <input hidden name="program_increment" value="{{$courses->coursePrograms && $courses->coursePrograms->count() ? $courses->coursePrograms->count() - 1 : 0}}">
+                        <input hidden id="program_increment" name="program_increment" value="{{$courses->coursePrograms && $courses->coursePrograms->count() ? $courses->coursePrograms->count() - 1 : 0}}">
 
                         @forelse ($courses->coursePrograms as $course_program)
                             <div id="course_program_clone{{$loop->iteration - 1}}" class="course-program-clone clone">
@@ -238,8 +238,8 @@
                                     <div class="col-md-2">
                                         <label>{{__('SuperAdmin/backend.deposit_symbol')}}:</label>
                                         <select class="form-control" name="deposit_symbol[]">
-                                            <option {{$course_program->deposit && explode(" ", $course_program->deposit)[1] == '%' ? 'selected' :'' }}>%</option>
-                                            <option {{$course_program->deposit && explode(" ", $course_program->deposit)[1] == 'fixed' ? 'selected' :'' }}>{{__('SuperAdmin/backend.fixed')}}</option>
+                                            <option value="%" {{$course_program->deposit && explode(" ", $course_program->deposit)[1] == '%' ? 'selected' :'' }}>%</option>
+                                            <option value="fixed" {{$course_program->deposit && explode(" ", $course_program->deposit)[1] == 'fixed' ? 'selected' :'' }}>{{__('SuperAdmin/backend.fixed')}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -340,8 +340,8 @@
                                     <div class="form-group col-md-4">
                                         <label>{{__('SuperAdmin/backend.discount_symbol')}}:</label>
                                         <select class="form-control" name="discount_per_week_symbol[]">
-                                            <option {{explode(" ", $course_program->discount_per_week)[1] == '%' ? 'selected' :'' }}>%</option>
-                                            <option {{explode(" ", $course_program->discount_per_week)[1] == '-' ? 'selected' :'' }}>-</option>
+                                            <option value="%" {{explode(" ", $course_program->discount_per_week)[1] == '%' ? 'selected' :'' }}>%</option>
+                                            <option value="-" {{explode(" ", $course_program->discount_per_week)[1] == '-' ? 'selected' :'' }}>-</option>
                                         </select>
                                     </div>
                                     <div class="form-group col-md-4"></div>

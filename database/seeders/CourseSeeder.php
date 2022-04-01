@@ -55,7 +55,7 @@ class CourseSeeder extends Seeder
 			'peak_time_end_date' => $fourdays,			
 			
 			'under_age' => 22,
-			'underage_fee_per_week' =>1000,
+			'under_age_fee_per_week' =>1000,
 			'text_book_fee' => 1000,
 			'text_fee_start_date' => $sevendays,
 			'text_fee_end_date' => $fourdays,

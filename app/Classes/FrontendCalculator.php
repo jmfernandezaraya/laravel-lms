@@ -355,7 +355,7 @@ class FrontendCalculator
         $discounted_total = 0;
         insertCalculationIntoDB('discount_fee', $discounted_total);
 
-        if ($this->check_for_date($this->discount_start_date_for_week_select, $this->discount_end_date_for_week_select, $this->program_start_date_from_frontend)) {
+        if ($this->checkBetweenDate($this->discount_start_date_for_week_select, $this->discount_end_date_for_week_select, Carbon::now()->format('Y-m-d'))) {
             //calculating by program cost * week  - free_week
             $divide = $this->divideProgramDurationByWeekSelect($this->program_duration, $this->discount_week_get);
 
@@ -366,7 +366,7 @@ class FrontendCalculator
 
             $firstdiscount = $discounted_total = $this->program_cost - $data['total'];
 
-            if (isset($firstdiscount) && $this->check_for_date($this->discount_start_date, $this->discount_end_date, $this->program_start_date_from_frontend)) {
+            if (isset($firstdiscount) && $this->checkBetweenDate($this->discount_start_date, $this->discount_end_date, Carbon::now()->format('Y-m-d'))) {
                 $explode_first = explode(" ", $this->discount);
                 $number = $explode_first[0];
                 $cal_symbol = $explode_first[1];
@@ -391,7 +391,7 @@ class FrontendCalculator
 
                 $totalss = readCalculationFromDB('program_cost') + readCalculationFromDB('program_registration_fee') + 
                     readCalculationFromDB('text_book_fee') + readCalculationFromDB('summer_fee') +
-                    readCalculationFromDB('underage_fee') + readCalculationFromDB('courier_fee');
+                    readCalculationFromDB('under_age_fee') + readCalculationFromDB('courier_fee');
                 $minus = $totalss - $data['discount'];
                 $set_total = $minus + $totalss;
                 DB::transaction(function () use ($set_total, $total) {
@@ -399,7 +399,7 @@ class FrontendCalculator
                 });
                 $discounted_total = isset($firstdiscount) ? $firstdiscount + $discounted_total : $discounted_total;
             }
-        } elseif ($this->check_for_date($this->program_start_date, $this->program_end_date, $this->program_start_date_from_frontend)) {
+        } elseif ($this->checkBetweenDate($this->program_start_date, $this->program_end_date, Carbon::now()->format('Y-m-d'))) {
             /*
              * Second insertion of discount fee if the date range is matched
             */
@@ -428,7 +428,7 @@ class FrontendCalculator
 
             $totalss = readCalculationFromDB('program_cost') + readCalculationFromDB('program_registration_fee') + 
                 readCalculationFromDB('text_book_fee') + readCalculationFromDB('summer_fee') + 
-                readCalculationFromDB('underage_fee') + readCalculationFromDB('courier_fee');
+                readCalculationFromDB('under_age_fee') + readCalculationFromDB('courier_fee');
             $minus = $totalss - $data['discount'];
             $set_total = $minus + $totalss;
             DB::transaction(function () use ($set_total, $total) {
@@ -447,7 +447,7 @@ class FrontendCalculator
      *
      * @return boolean (true or false)
      * */
-    public function check_for_date($start, $end, $compare_with)
+    public function checkBetweenDate($start, $end, $compare_with)
     {
         if ($start == null || $end == null) {
             return  false;

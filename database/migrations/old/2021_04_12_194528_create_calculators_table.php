@@ -22,7 +22,7 @@ class CreateCalculatorsTable extends Migration
             $table->double('text_book_fee');
             $table->double('summer_fee');
             $table->decimal('peak_time_fee', 10)->nullable()->default(0.00);
-            $table->double('underage_fee');
+            $table->double('under_age_fee');
             $table->double('courier_fee');
             $table->double('discount_fee');
             $table->double('total');
@@ -34,7 +34,7 @@ class CreateCalculatorsTable extends Migration
             $table->decimal('accommodation_custodian_fee', 10)->default(0.00);
             $table->decimal('accommodation_summer_fee', 10)->default(0.00);
             $table->decimal('accommodation_christmas_fee', 10)->default(0.00);
-            $table->decimal('accommodation_underage_fee', 10)->default(0.00);
+            $table->decimal('accommodation_under_age_fee', 10)->default(0.00);
             $table->decimal('accommodation_discount', 10)->default(0.00);
             $table->decimal('accommodation_peak_time_fee', 10)->default(0.00);
             $table->decimal('airport_pickup_fee', 10)->default(0.00);

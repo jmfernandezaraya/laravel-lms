@@ -35,7 +35,7 @@ class CreateCoursesProgramArTable extends Migration
             $table->string('peak_time_start_date', 500)->nullable();
             $table->string('peak_time_end_date', 500)->nullable();
             $table->string('under_age')->nullable();
-            $table->string('underage_fee_per_week')->nullable();
+            $table->string('under_age_fee_per_week')->nullable();
             $table->string('text_book_fee')->nullable();
             $table->string('text_fee_start_week')->nullable();
             $table->string('text_fee_end_week')->nullable();

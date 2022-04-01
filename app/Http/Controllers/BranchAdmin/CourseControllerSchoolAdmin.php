@@ -97,7 +97,7 @@ class CourseControllerSchoolAdmin extends Controller
 
             /*$courseunderage = new CourseProgramUnderAgeFee;
             $courseunderage->under_age = $r->under_age;
-            $courseunderage->underage_fee_per_week = $r->underage_fee_per_week[0];*/
+            $courseunderage->under_age_fee_per_week = $r->under_age_fee_per_week[0];*/
         }
 
         $data['data'] = 'Data Saved Successfully';
@@ -138,7 +138,7 @@ class CourseControllerSchoolAdmin extends Controller
             $program->text_book_note = $r->text_book_note[0];
             $courseunderage = new CourseProgramUnderAgeFee;
             $courseunderage->under_age = $r->under_age;
-            $courseunderage->underage_fee_per_week = $r->underage_fee_per_week[0];
+            $courseunderage->under_age_fee_per_week = $r->under_age_fee_per_week[0];
             $program->save();
             $program->courseUnderAge()->save($courseunderage);
         }
@@ -251,14 +251,14 @@ class CourseControllerSchoolAdmin extends Controller
         $this->my_unique_id(1);
         $data['success'] = true;
 
-        \DB::transaction(function () use ($courses, $airport, $accommodation, $program, $under_age, $underage_fee_per_week) {
+        \DB::transaction(function () use ($courses, $airport, $accommodation, $program, $under_age, $under_age_fee_per_week) {
             $courses->save();
             $airport->save();
             $accommodation->save();
             $program->save();
             $courseunderage = new CourseProgramUnderAgeFee;
             $courseunderage->under_age = $under_age;
-            $courseunderage->underage_fee_per_week = $underage_fee_per_week;
+            $courseunderage->under_age_fee_per_week = $under_age_fee_per_week;
             $program->courseUnderAge()->save($courseunderage);
         });
         $data['data'] = 'Data Saved Successfully';
