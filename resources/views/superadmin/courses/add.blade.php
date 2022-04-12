@@ -100,7 +100,7 @@
                         <div class="row">
                             <div class="form-group col-md-4">
                                 <label for="school_name">{{__('SuperAdmin/backend.choose_school')}}:</label>
-                                <select onchange="getSchool(url_schols, $(this).val())" class="form-control" id="school_name" name="school_id">
+                                <select onchange="changeCourseSchool()" class="form-control" id="school_name" name="school_id">
                                     <option value="">{{__('SuperAdmin/backend.select_school')}}</option>
                                     @foreach($schools as $school)
                                         <option value="{{$school->id}}">{{get_language() == 'en' ?  $school->name : $school->name_ar}}</option>
@@ -109,36 +109,33 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="country_name">{{__('SuperAdmin/backend.choose_country')}}:</label>
-                                <select class="form-control" id="country_name" name="country">
-                                    <option>{{__('SuperAdmin/backend.select')}}</option>
+                                <select onchange="changeCourseCountry()" class="form-control" id="country_name" name="country">
+                                    <option value="">{{__('SuperAdmin/backend.select')}}</option>
                                 </select>
                             </div>
 
                             <div class="form-group col-md-4">
                                 <label for="city_name">{{__('SuperAdmin/backend.choose_city')}}:</label>
-                                <select class="form-control" id="city_name" name="city">
-                                    <option>{{__('SuperAdmin/backend.select')}}</option>
+                                <select onchange="changeCourseCity()" class="form-control" id="city_name" name="city">
+                                    <option value="">{{__('SuperAdmin/backend.select')}}</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-4">
                                 <label for="branch">{{__('SuperAdmin/backend.add_branch_if_applicable')}}
                                     <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#BranchModal" aria-hidden="true"></i>
                                     <i class="fa fa-trash pl-3" aria-hidden="true" onclick="deleteBranch()"></i>
                                 </label>
-                                <select name="branch[]" id="branch_choose" multiple="multiple" class="3col active2">
-                                    @foreach($choose_branches as $branch)
-                                        <option value="{{$branch->unique_id}}">{{$branch->name}}</option>
-                                    @endforeach
+                                <select class="form-control" name="branch[]" id="branch_choose">
+                                    <option value="">{{__('SuperAdmin/backend.select')}}</option>
                                 </select>
                             </div>
-
-                            <div class="form-group col-md-6 mt-4">
+                            <div class="form-group col-md-4 mt-3">
                                 <label for="choose_currency">{{__('SuperAdmin/backend.choose_currency')}}:</label>
                                 <select class="form-control" id="choose_currency" name="currency">
-                                    <option>{{__('SuperAdmin/backend.select')}}</option>
+                                    <option value="">{{__('SuperAdmin/backend.select')}}</option>
                                     @foreach($currencies as $currency)
                                         <option value="{{$currency->id}}">{{$currency->name}}</option>
                                     @endforeach

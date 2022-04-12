@@ -178,14 +178,14 @@
             </table>
         </div>
 
-        <form method="POST" action="{{route('reservation-detail')}}">
+        <form method="POST" action="{{route('course.details.save')}}">
             @csrf
             <div class="study">
                 <div class="row">
                     <div class="form-group col-md-6">
-                        <input type="hidden" name="school_id" value="{{$schools->id}}">
+                        <input type="hidden" name="school_id" value="{{ $schools->id }}">
                         <label for="study_mode">{{__('SuperAdmin/backend.study_mode')}}:</label>
-                        <select class="form-control" id="study_mode" name="study_mode">
+                        <select class="form-control" id="study_mode" name="study_mode" required>
                             <option value="" selected>{{__('Frontend.select_mode')}}</option>
                             @foreach ($study_modes as $study_mode)
                                 <option value="{{$study_mode->unique_id}}">{{$study_mode->name}}</option>
@@ -194,7 +194,7 @@
                     </div>
                     <div class="form-group col-md-4">
                         <label for="under_age">{{__('Frontend.your_age')}}:</label>
-                        <select name="age_selected" class="form-control" onchange="calculateCourse('requested_for_under_age')" id="under_age">
+                        <select name="age_selected" class="form-control" id="under_age" required>
                             <option value="">{{__('Frontend.select_age')}}</option>
                             @foreach ($ages as $age)
                                 <option value="{{$age->unique_id}}">{{$age->age}}</option>
@@ -211,19 +211,19 @@
                         <label for="program_name">{{__('Frontend.program_name')}}:</label>                        
                         <input hidden name="program_unique_id" id="program_unique_id">
 
-                        <select class="form-control" id="get_program_name" onchange="set_program_unique_id($(this).children('option:selected').data('id')); calculateCourse('select_program');" name="program_id">
+                        <select class="form-control" id="get_program_name" onchange="set_program_unique_id($(this).children('option:selected').data('id')); calculateCourse('select_program');" name="program_id" required>
                             <option value="" selected>{{__('Frontend.select_option')}}</option>
                         </select>
                     </div>
 
                     <div class="form-group col-md-4">
                         <label for="program_start_date">{{__('Frontend.program_start_date')}}:</label>
-                        <input class="form-control datepicker" id="datepick" type="text" name="date_selected" autocomplete="off" onchange="calculateCourse('date_selected')">
+                        <input class="form-control datepicker" id="datepick" type="text" name="date_selected" autocomplete="off" onchange="calculateCourse('date_selected')" required>
                     </div>
 
                     <div class="form-group col-md-4">
                         <label for="program_duration">{{__('Frontend.program_duration')}}:</label>
-                        <select class="form-control" id="program_duration" name="program_duration" onchange="calculateCourse('duration'); discountPrice($(this).val(), '{{csrf_token()}}');">
+                        <select class="form-control" id="program_duration" name="program_duration" onchange="calculateCourse('duration'); discountPrice($(this).val(), '{{csrf_token()}}');" required>
                             <option value="" selected>{{__('Frontend.select_option')}}</option>
                         </select>
                     </div>
@@ -257,9 +257,9 @@
                 <table class="table table-bordered table-no-drawable" id="program_fees_table">
                     <thead>
                         <tr>
-                            <th >{{__('Frontend.details')}}</td>
-                            <th >{{__('Frontend.amount')}} / <span class="cost_currency"></span></td>
-                            <th >{{__('Frontend.amount')}} / <span class="converted_currency"></span></td>
+                            <th>{{__('Frontend.details')}}</th>
+                            <th>{{__('Frontend.amount')}} / <span class="cost_currency"></span></th>
+                            <th>{{__('Frontend.amount')}} / <span class="converted_currency"></span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -410,9 +410,9 @@
                         <table class="table table-bordered table-no-drawable" id="accommodation_fees_table">
                             <thead>
                                 <tr>
-                                    <th >{{__('Frontend.details')}}</td>
-                                    <th >{{__('Frontend.amount')}} / <span class="cost_currency"></span></td>
-                                    <th >{{__('Frontend.amount')}} / <span class="converted_currency"></span></td>
+                                    <th>{{__('Frontend.details')}}</th>
+                                    <th>{{__('Frontend.amount')}} / <span class="cost_currency"></span></th>
+                                    <th>{{__('Frontend.amount')}} / <span class="converted_currency"></span></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -499,7 +499,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-4">
                             <label for="input">{{__('Frontend.service_provider')}}:</label>
-                            <select class="form-control" name="airport_id" id="airport_service_provider" onclick="">
+                            <select class="form-control" name="airport_provider" id="airport_service_provider">
                                 <option value="">{{__('Frontend.select')}}</option>
                             </select>
                         </div>
@@ -556,21 +556,23 @@
                         <table class="table table-bordered table-no-drawable" id="airport_medical_fees_table">
                             <thead>
                                 <tr>
-                                    <th >{{__('Frontend.details')}}</td>
-                                    <th >{{__('Frontend.amount')}} / <span class="cost_currency"></span></td>
-                                    <th >{{__('Frontend.amount')}} / <span class="converted_currency"></span></td>
+                                    <th>{{__('Frontend.details')}}</th>
+                                    <th>{{__('Frontend.amount')}} / <span class="cost_currency"></span></th>
+                                    <th>{{__('Frontend.amount')}} / <span class="converted_currency"></span></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr id="airport_pickup">
-                                    <td>{{__('Frontend.airport_pickup')}}<i class="fa fa-question-circle pl-2" data-toggle="modal" data-target="#AirportPickupModal" aria-hidden="true"></i>
+                                    <td>{{__('Frontend.airport_pickup')}}
+                                        <i class="fa fa-question-circle pl-2" data-toggle="modal" data-target="#AirportPickupModal" aria-hidden="true"></i>
                                     </td>
                                     <td class="cost_value">0</td>
                                     <td class="converted_value">0</td>
                                 </tr>
 
                                 <tr id="medical_insurance">
-                                    <td>{{__('Frontend.medical_insurance')}}<i class="fa fa-question-circle pl-2" data-toggle="modal" data-target="#MedicalInsuranceModal" aria-hidden="true"></i>
+                                    <td>{{__('Frontend.medical_insurance')}}
+                                        <i class="fa fa-question-circle pl-2" data-toggle="modal" data-target="#MedicalInsuranceModal" aria-hidden="true"></i>
                                     </td>
                                     <td class="cost_value">0</td>
                                     <td class="converted_value">0</td>
@@ -585,7 +587,7 @@
                         </table>
                     </div>
                 </div>
-            </div>            
+            </div>
 
             <!-- Special Diet Modal -->
             <div class="modal fade" id="AirportPickupModal" tabindex="-1" role="dialog" aria-labelledby="AirportPickupModalLabel" aria-hidden="true">
@@ -665,8 +667,151 @@
         var airport_medical_fee_url = "{{route('course.airport_medical.fee')}}";
 
         $(document).ready(function () {
-            reloadJson();
+            setTimeout(function() {
+                checkPreloader();
+            }, 1000);
         });
+
+        function checkPreloader() {
+            if ($('#preloader').length) {
+                setTimeout(function() {
+                    checkPreloader();
+                }, 1000);
+            } else {
+                fillCourseForm();
+            }
+        }
+
+        function fillCourseForm() {
+            @if (isset($course_details->study_mode))
+                $('#study_mode').val('{{$course_details->study_mode}}');
+            @endif
+            @if (isset($course_details->age_selected))
+                $('#under_age').val('');
+                $('#under_age').val('{{$course_details->age_selected}}').trigger('change');
+            @endif
+        }
+
+        function callbackCalculateCourse(type) {
+            if (type == 'requested_for_under_age') {
+                @if (isset($course_details->program_id))
+                    $('#get_program_name').val('');
+                    $('#get_program_name').val('{{$course_details->program_id}}').trigger('change');
+                @endif
+            } else if (type == 'select_program') {
+                @if (isset($course_details->date_selected))
+                    $('#datepick').val('');
+                    $('#datepick').val('{{$course_details->date_selected}}').trigger('change');
+                @endif
+            } else if (type == 'date_selected') {
+                @if (isset($course_details->program_duration))
+                    $('#program_duration').val('');
+                    $('#program_duration').val('{{$course_details->program_duration}}').trigger('change');
+                @endif
+            } else if (type == 'duration') {
+                @if (isset($course_details->accommodation_id))
+                    $('#accom_type').val('');
+                    $('#accom_type').val('{{$course_details->accommodation_id}}').trigger('change');
+                @endif
+            }
+        }
+
+        function callbackChangeAccommodationType() {
+            @if (isset($course_details->room_type))
+                @if ($course_details->room_type)
+                    $('#room_type').val('');
+                    $('#room_type').val('{{$course_details->room_type}}').trigger('change');
+                @else
+                    @if (isset($course_details->airport_provider))
+                        $('#airport_service_provider').val('');
+                        $('#airport_service_provider').val('{{$course_details->airport_provider}}').trigger('change');
+                    @endif
+                @endif
+            @endif
+            @if (isset($course_details->meal_type))
+                @if ($course_details->meal_type)
+                    $('#meal_type').val('');
+                    $('#meal_type').val('{{$course_details->meal_type}}').trigger('change');
+                @else
+                    @if (isset($course_details->airport_provider))
+                        $('#airport_service_provider').val('');
+                        $('#airport_service_provider').val('{{$course_details->airport_provider}}').trigger('change');
+                    @endif
+                @endif
+            @endif
+        }
+
+        function callbackChangeAccommodationMealType() {
+            @if (isset($course_details->accommodation_duration))
+                $('#accom_duration').val('');
+                $('#accom_duration').val('{{$course_details->accommodation_duration}}').trigger('change');
+            @endif
+        }
+
+        function callbackCalcuateAccommodation() {
+            @if (isset($course_details->airport_provider))
+                @if ($course_details->airport_provider)
+                    $('#airport_service_provider').val('');
+                    $('#airport_service_provider').val('{{$course_details->airport_provider}}').trigger('change');
+                @else
+                    @if (isset($course_details->company_name))
+                        $('#medical_company_name').val('');
+                        $('#medical_company_name').val('{{$course_details->company_name}}').trigger('change');
+                    @endif
+                @endif
+            @endif
+        }
+
+        function callbackChangeAirportServiceProvider() {
+            @if (isset($course_details->airport_name))
+                @if ($course_details->airport_name)
+                    $('#airport_name').val('');
+                    $('#airport_name').val('{{$course_details->airport_name}}').trigger('change');
+                @else
+                    @if (isset($course_details->company_name))
+                        $('#medical_company_name').val('');
+                        $('#medical_company_name').val('{{$course_details->company_name}}').trigger('change');
+                    @endif
+                @endif
+            @endif
+        }
+
+        function callbackChangeAirportName() {
+            @if (isset($course_details->airport_service))
+                @if ($course_details->airport_service)
+                    $('#airport_type_of_service').val('');
+                    $('#airport_type_of_service').val('{{$course_details->airport_service}}').trigger('change');
+                @else
+                    @if (isset($course_details->company_name))
+                        $('#medical_company_name').val('');
+                        $('#medical_company_name').val('{{$course_details->company_name}}').trigger('change');
+                    @endif
+                @endif
+            @endif
+        }
+
+        function callbackCalculateAirportMedical(type) {
+            if (type == 'airport') {
+                @if (isset($course_details->company_name))
+                    $('#medical_company_name').val('');
+                    $('#medical_company_name').val('{{$course_details->company_name}}').trigger('change');
+                @endif
+            }
+        }
+
+        function callbackChangeMedicalCompanyName() {
+            @if (isset($course_details->deductible_up_to))
+                $('#medical_deductible_up_to').val('');
+                $('#medical_deductible_up_to').val('{{$course_details->deductible_up_to}}').trigger('change');
+            @endif
+        }
+
+        function callbackChangeMedicalDeductibleUpTo() {
+            @if (isset($course_details->duration))
+                $('#medical_duration').val('');
+                $('#medical_duration').val('{{$course_details->duration}}').trigger('change');
+            @endif
+        }
 
         function highlightStar(obj) {
             removeHighlight();

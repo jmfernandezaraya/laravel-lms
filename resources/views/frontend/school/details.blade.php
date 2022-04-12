@@ -254,16 +254,13 @@
                                     <table class="table">
                                         <tbody>
                                             <tr>
-                                                <th class="border-none" scope="row">{{ucfirst($school->name)}}
-                                                    - {{is_array($school->branch_name) ? implode(", ", $school->branch_name) : $school->branch_name}}<br><span class="city">{{$school->city}},</span><span
-                                                      class="city">{{$school->country}}</span><br>
+                                                <th class="border-none" scope="row">
+                                                    {{ucfirst($school->name)}} - {{is_array($school->branch_name) ? implode(", ", $school->branch_name) : $school->branch_name}}<br>
+                                                    <span class="city">{{$school->city}},</span>
+                                                    <span class="country">{{$school->country}}</span><br>
                                                     <ul class="custom">
                                                         @for($i = 1; $i <=5; $i ++)
-                                                            <li data-toggle="modal" data-target="#myModal"
-                                                              class="dynamic_starli" onclick="save_rating({{$i}})"
-                                                                onmouseover="highlightStar(this);"
-                                                                onClick="addRating(this);" id="rating{{$i}}">★
-                                                            </li>
+                                                            <li data-toggle="modal" data-target="#myModal" class="dynamic_starli" onclick="save_rating({{$i}})" onmouseover="highlightStar(this);" onClick="addRating(this);" id="rating{{$i}}">★</li>
                                                         @endfor
                                                         ({{round($school->avgRating())}})
                                                     </ul>
@@ -331,8 +328,7 @@
                 </div>
             </div>
 
-            <div class="program">
-            </div>
+            <div class="program"></div>
 
             <div class="review-section border-bottom mt-3">
                 <h5 class="best">Reviews</h5>
@@ -551,7 +547,7 @@
                                 <h4>{{$school->getBranchByCity($countries)}}</h4>
                                 <div class="d-flex">
                                     <div class="w-40 float-left text-align-left">
-                                        {{$countries}},{{$school->getCityByCountry($countries)}}
+                                        {{$countries}},{{$school->getCityByCountries($countries)}}
                                     </div>
                                 </div>
                             </div>

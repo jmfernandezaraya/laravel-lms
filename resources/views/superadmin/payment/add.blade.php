@@ -12,7 +12,7 @@
 				fieldName: "video_url[]"
 			});
 		});
-		var addschoolurl = "{{route('schools.store')}}";
+		var addschoolurl = "{{route('school.store')}}";
 		var in_arabic =  "{{__('SuperAdmin/backend.in_arabic')}}";
 		var in_english = "{{__('SuperAdmin/backend.in_english')}}";
 	</script>
@@ -38,7 +38,7 @@
 
 <div id="show_form"></div>
 
-<form id="form1" class="forms-sample" enctype="multipart/form-data" action  = "{{route('schools.store')}}" method = "post">
+<form id="form1" class="forms-sample" enctype="multipart/form-data" action  = "{{route('school.store')}}" method = "post">
 {{csrf_field()}}
 <div class="form-group">
 <label for="exampleInputName1">{{__('SuperAdmin/backend.school_name')}}</label>
@@ -186,7 +186,7 @@
 <a class="btn btn-light" href = "{{url()->previous()}}">{{__('SuperAdmin/backend.cancel')}}</a>
 </form>
 
-<form id="form2" class="forms-sample" enctype="multipart/form-data" action  = "{{route('schools.store')}}" method = "post">
+<form id="form2" class="forms-sample" enctype="multipart/form-data" action  = "{{route('school.store')}}" method = "post">
 {{csrf_field()}}
 <div class="form-group">
 <label for="exampleInputName1">{{__('SuperAdmin/backend.school_name')}}</label>

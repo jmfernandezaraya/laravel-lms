@@ -255,6 +255,35 @@
                                 </div>
                             </div>
 
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label>{{__('SuperAdmin/backend.x_week_selected')}}:</label>
+                                    <input class="form-control" type="number" name="x_week_selected[]" placeholder="{{__('SuperAdmin/backend.every_week')}}">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>{{__('SuperAdmin/backend.free_week')}}:</label>
+                                    <select class="form-control" name="how_many_week_free[]">
+                                        <option value="1" selected>{{__('SuperAdmin/backend.1_week_free')}} </option>
+                                        <option value="2">{{__('SuperAdmin/backend.2_week_free')}}</option>
+                                        <option value="3">{{__('SuperAdmin/backend.3_week_free')}}</option>
+                                        <option value="4">{{__('SuperAdmin/backend.4_week_free')}}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4"></div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label>{{__('SuperAdmin/backend.x_week_start_date')}}:</label>
+                                    <input class="form-control" type="date" name="x_week_start_date[]">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>{{__('SuperAdmin/backend.x_week_end_date')}}:</label>
+                                    <input class="form-control" type="date" name="x_week_end_date[]">
+                                </div>
+                                <div class="form-group col-md-4"></div>
+                            </div>
+
                             <script>
                                 window.addEventListener('load', function() {
                                     yeardatepicker_days.push([]);

@@ -75,7 +75,7 @@ class LoginController extends Controller
     public function register()
     {
         if (auth()->check()) {
-            $reroute = \Session::has('program_unique_id') ? redirect()->route('reservation-detail-get_request') : redirect()->route('land_page');
+            $reroute = \Session::has('program_unique_id') ? redirect()->route('course.register.detail') : redirect()->route('land_page');
 
             return \Session::has('visa_form') ? redirect()->route('frontend.visa') : $reroute;
         }

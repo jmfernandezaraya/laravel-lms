@@ -31,7 +31,9 @@
         var add_accomm_under_range_url = "{{route('superadmin.accomm_under_age.add')}}";
         var delete_accomm_under_range_url = "{{route('superadmin.accomm_under_age.delete')}}";
         
-        var url_schols = "{{route('superadmin.schools.get')}}";
+        var url_school_country_list = "{{route('superadmin.school.country.list')}}";
+        var url_school_city_list = "{{route('superadmin.school.city.list')}}";
+        var url_school_branch_list = "{{route('superadmin.school.branch.list')}}";
         var select_option = "{{__('SuperAdmin/backend.select_option')}}";
         var search = "{{__('SuperAdmin/backend.search')}}";
 
@@ -254,7 +256,7 @@
             });
         });
 
-        var addschoolurl = "{{route('superadmin.schools.store')}}";
+        var addschoolurl = "{{route('superadmin.school.store')}}";
         var in_arabic = "{{__('SuperAdmin/backend.in_arabic')}}";
         var in_english = "{{__('SuperAdmin/backend.in_english')}}";
     </script>

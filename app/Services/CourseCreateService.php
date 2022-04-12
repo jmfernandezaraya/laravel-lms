@@ -14,6 +14,7 @@ use App\Models\SuperAdmin\CourseMedicalFee;
 use App\Models\SuperAdmin\CourseProgram;
 use App\Models\SuperAdmin\CourseProgramTextBookFee;
 use App\Models\SuperAdmin\CourseProgramUnderAgeFee;
+use App\Models\SuperAdmin\School;
 
 use Illuminate\Http\Request;
 
@@ -93,9 +94,21 @@ class CourseCreateService
         $course['program_type'] = $r->program_type;
         $course['study_mode'] = $r->study_mode;
         $course['school_id'] = $r->school_id;
+        $course->school_id = $r->school_id;
+        $school = School::find($r->school_id);
+        if ($school) {
+            if (app()->getLocale() == 'en') {
+                $course_school = School::where('name', $school->name)->where('country', $r->country)->where('city', $r->city)->first();
+            } else {
+                $course_school = School::where('name_ar', $school->name_ar)->where('country_ar', $r->country)->where('city_ar', $r->city)->first();
+            }
+            if ($course_school) {
+                $course['school_id'] = $course_school->id;
+            }
+        }
         $course['city'] = $r->city;
         $course['country'] = $r->country;
-        $course['branch'] = $r->branch ?? [];
+        $course['branch'] = $r->branch;
         $course['currency'] = $r->currency;
         $course['program_name'] = $r->program_name;
         $course['program_level'] = $r->program_level;
@@ -149,8 +162,7 @@ class CourseCreateService
     
                     $course_program->x_week_selected = $r->x_week_selected[$count] ?? null;
                     $course_program->x_week_start_date = $r->x_week_start_date[$count] ?? null;
-                    $course_program->x_week_end_date = $r->x_week_end_date[$count] ?? null;
-    
+                    $course_program->x_week_end_date = $r->x_week_end_date[$count] ?? null;    
                     $course_program->how_many_week_free = $r->how_many_week_free[$count] ?? null;
     
                     $course_program->summer_fee_per_week = $r->summer_fee_per_week[$count];
@@ -160,6 +172,7 @@ class CourseCreateService
                     $course_program->peak_time_fee_per_week = $r->peak_time_fee_per_week[$count];
                     $course_program->peak_time_start_date = $r->peak_time_start_date[$count];
                     $course_program->peak_time_end_date = $r->peak_time_end_date[$count];
+
                     $course_program->save();
                 }
             }
@@ -186,7 +199,7 @@ class CourseCreateService
         $new_course['school_id'] = $course->school_id;
         $new_course['city'] = $course->city;
         $new_course['country'] = $course->country;
-        $new_course['branch'] = $course->branch ?? [];
+        $new_course['branch'] = $course->branch;
         $new_course['currency'] = $course->currency;
         $new_course['program_name'] = $course->program_name;
         $new_course['program_level'] = $course->program_level;
@@ -246,7 +259,6 @@ class CourseCreateService
             $course_program_table->x_week_selected = $course_program->x_week_selected ?? null;
             $course_program_table->x_week_start_date = $course_program->x_week_start_date ?? null;
             $course_program_table->x_week_end_date = $course_program->x_week_end_date ?? null;
-
             $course_program_table->how_many_week_free = $course_program->how_many_week_free ?? null;
 
             $course_program_table->summer_fee_per_week = $course_program->program_summer_fee_per_week;
@@ -256,6 +268,7 @@ class CourseCreateService
             $course_program_table->peak_time_fee_per_week = $course_program->program_peak_time_fee_per_week;
             $course_program_table->peak_time_start_date = $course_program->program_peak_time_start_date;
             $course_program_table->peak_time_end_date = $course_program->program_peak_time_end_date;
+
             $course_program_table->save();
 
             $course_under_ages = $course_program->courseUnderAges()->get();
@@ -338,6 +351,12 @@ class CourseCreateService
             $course_accommodations_table->christmas_fee_per_week = $course_accomodation->christmas_fee_per_week ?? null;
             $course_accommodations_table->christmas_fee_start_date = $course_accomodation->christmas_fee_start_date ?? null;
             $course_accommodations_table->christmas_fee_end_date = $course_accomodation->christmas_fee_end_date ?? null;
+
+            $course_accommodations_table->x_week_selected = $course_accomodation->x_week_selected ?? null;
+            $course_accommodations_table->x_week_start_date = $course_accomodation->x_week_start_date ?? null;
+            $course_accommodations_table->x_week_end_date = $course_accomodation->x_week_end_date ?? null;
+            $course_accommodations_table->how_many_week_free = $course_accomodation->how_many_week_free ?? null;
+
             $course_accommodations_table->save();
         }
 
@@ -539,6 +558,12 @@ class CourseCreateService
                 $course_accommodations_table->christmas_fee_per_week = $christmas_fee_per_week[$accom] ?? null;
                 $course_accommodations_table->christmas_fee_start_date = $christmas_fee_start_date[$accom] ?? null;
                 $course_accommodations_table->christmas_fee_end_date = $christmas_fee_end_date[$accom] ?? null;
+
+                $course_accommodations_table->x_week_selected = $x_week_selected[$accom] ?? null;
+                $course_accommodations_table->x_week_start_date = $x_week_start_date[$accom] ?? null;
+                $course_accommodations_table->x_week_end_date = $x_week_end_date[$accom] ?? null;
+                $course_accommodations_table->how_many_week_free = $how_many_week_free[$accom] ?? null;
+                
                 $course_accommodations_table->save();
 
                 \Session::push('accom_ids', '' . $accommodation_id[$accom]);
@@ -595,11 +620,9 @@ class CourseCreateService
         return \DB::transaction(function () use ($request) {
             $rules = [
                 'airport_service_provider.*' => 'required',
-                'airport_week_selected_fee.*' => 'required',
                 'airport_note.*' => 'required',
                 'medical_company_name.*' => 'required',
                 'medical_deductible.*' => 'required',
-                'medical_week_selected_fee.*' => 'required',
                 'medical_note.*' => 'required',
             ];
 
@@ -608,11 +631,9 @@ class CourseCreateService
              * */
             $validation = \Validator::make($request->all(), $rules, [
                 'airport_service_provider.*.required' => "Airport Service Provider required",
-                'airport_week_selected_fee.*.required' => "Airport Week Selected Fee required",
                 'airport_note.*.required' => "Airport Note required",
                 'medical_company_name.*.required' => "Medical Company Name required",
                 'medical_deductible.*.required' => "Medical Deductible required",
-                'medical_week_selected_fee.*.required' => "Medical Week Selected Fee required",
                 'medical_note.*.required' => "Medical Note required",
             ]);
 
@@ -710,9 +731,20 @@ class CourseCreateService
             $course->program_type = $r->program_type ?? [];
             $course->study_mode = $r->study_mode;
             $course->school_id = $r->school_id;
-            $course->city = $r->city;
+            $school = School::find($r->school_id);
+            if ($school) {
+                if (app()->getLocale() == 'en') {
+                    $course_school = School::where('name', $school->name)->where('country', $r->country)->where('city', $r->city)->first();
+                } else {
+                    $course_school = School::where('name_ar', $school->name_ar)->where('country_ar', $r->country)->where('city_ar', $r->city)->first();
+                }
+                if ($course_school) {
+                    $course->school_id = $course_school->id;
+                }
+            }
             $course->country = $r->country;
-            $course->branch = $r->branch ?? [];
+            $course->city = $r->city;
+            $course->branch = $r->branch;
             $course->currency = $r->currency;
             $course->program_name = $r->program_name;
             $course->program_level = $r->program_level;
@@ -755,15 +787,19 @@ class CourseCreateService
                     $course_program->program_duration_end = $r->program_duration_end[$count] ?? null;
                     $course_program->program_start_date = $r->program_start_date[$count] ?? null;
                     $course_program->program_end_date = $r->program_end_date[$count] ?? null;
+
                     $course_program->available_date = $r->available_date[$count] ?? null;
                     $course_program->select_day_week = $r->select_day_week[$count] ?? null;
                     $course_program->available_days = $r->available_days[$count] ?? null;
+
                     $course_program->deposit = $r->deposit[$count] . " " . $r->deposit_symbol[$count] ?? '';
                     $course_program->discount_per_week = $r->discount_per_week[$count] . " " . $r->discount_per_week_symbol[$count] ?? null;
                     $course_program->discount_start_date = $r->discount_start_date[$count] ?? null;
                     $course_program->discount_end_date = $r->discount_end_date[$count] ?? null;
+
                     $course_program->christmas_start_date = $r->christmas_start_date[$count] ?? null;
                     $course_program->christmas_end_date = $r->christmas_end_date[$count] ?? null;
+
                     $course_program->x_week_selected = $r->x_week_selected[$count] ?? null;
                     $course_program->x_week_start_date = $r->x_week_start_date[$count] ?? null;
                     $course_program->x_week_end_date = $r->x_week_end_date[$count] ?? null;
@@ -772,8 +808,8 @@ class CourseCreateService
                     $course_program->summer_fee_per_week = $r->summer_fee_per_week[$count];
                     $course_program->summer_fee_start_date = $r->summer_fee_start_date[$count];
                     $course_program->summer_fee_end_date = $r->summer_fee_end_date[$count];
-                    $course_program->peak_time_fee_per_week = $r->peak_time_fee_per_week[$count];
 
+                    $course_program->peak_time_fee_per_week = $r->peak_time_fee_per_week[$count];
                     $course_program->peak_time_start_date = $r->peak_time_start_date[$count];
                     $course_program->peak_time_end_date = $r->peak_time_end_date[$count];
 
@@ -944,6 +980,7 @@ class CourseCreateService
             $course_accomodation->fee_per_week = $fee_per_week[$accom] ?? null;
             $course_accomodation->start_week = $start_week[$accom] ?? null;
             $course_accomodation->end_week = $end_week[$accom] ?? null;
+
             $course_accomodation->available_date = $available_date[$accom] ?? null;
             $course_accomodation->available_days = $available_days[$accom] ?? null;
             $course_accomodation->start_date = $start_date[$accom] ?? null;
@@ -965,6 +1002,12 @@ class CourseCreateService
             $course_accomodation->christmas_fee_per_week = $christmas_fee_per_week[$accom] ?? null;
             $course_accomodation->christmas_fee_start_date = $christmas_fee_start_date[$accom] ?? null;
             $course_accomodation->christmas_fee_end_date = $christmas_fee_end_date[$accom] ?? null;
+
+            $course_accomodation->x_week_selected = $x_week_selected[$accom] ?? null;
+            $course_accomodation->x_week_start_date = $x_week_start_date[$accom] ?? null;
+            $course_accomodation->x_week_end_date = $x_week_end_date[$accom] ?? null;
+            $course_accomodation->how_many_week_free = $how_many_week_free[$accom] ?? null;
+
             $course_accomodation->save();
             $course_accommodation_ids[] = $course_accomodation->unique_id;
         }
@@ -1040,11 +1083,9 @@ class CourseCreateService
         return \DB::transaction(function () use ($request, $id) {
             $rules = [
                 'airport_service_provider.*' => 'required',
-                'airport_week_selected_fee.*' => 'required',
                 'airport_note.*' => 'required',
                 'medical_company_name.*' => 'required',
                 'medical_deductible.*' => 'required',
-                'medical_week_selected_fee.*' => 'required',
                 'medical_note.*' => 'required',
             ];
 
@@ -1053,11 +1094,9 @@ class CourseCreateService
              * */
             $validation = \Validator::make($request->all(), $rules, [
                 'airport_service_provider.*.required' => "Airport Service Provider required",
-                'airport_week_selected_fee.*.required' => "Airport Week Selected Fee required",
                 'airport_note.*.required' => "Airport Note required",
                 'medical_company_name.*.required' => "Medical Company Name required",
                 'medical_deductible.*.required' => "Medical Deductible required",
-                'medical_week_selected_fee.*.required' => "Medical Week Selected Fee required",
                 'medical_note.*.required' => "Medical Note required",
             ]);
 
@@ -1086,8 +1125,8 @@ class CourseCreateService
                 for ($j = 0; $j <= $request->airportfeeincrement[$i]; $j++) {
                     if ($request->airport_name[$i][$j] && $request->airport_service_name[$i][$j]) {
                         $course_airport_fee = null;
-                        if (isset($request->airport_fee_id[$j]) && $request->airport_fee_id[$j]) {
-                            $course_airport_fee = CourseAirportFee::where('unique_id', $request->airport_fee_id[$j])->first();
+                        if (isset($request->airport_fee_id[$i][$j]) && $request->airport_fee_id[$i][$j]) {
+                            $course_airport_fee = CourseAirportFee::where('unique_id', $request->airport_fee_id[$i][$j])->first();
                         }
                         if (!$course_airport_fee) {
                             $course_airport_fee = new CourseAirportFee;
@@ -1136,8 +1175,8 @@ class CourseCreateService
                 for ($l = 0; $l <= $request->medicalfeeincrement[$k]; $l++) {
                     if ($request->medical_fees_per_week[$k][$l]) {
                         $course_medical_fee = null;
-                        if (isset($request->medical_fee_id[$j]) && $request->medical_fee_id[$j]) {
-                            $course_medical_fee = CourseMedicalFee::where('unique_id', $request->medical_fee_id[$l])->first();
+                        if (isset($request->medical_fee_id[$k][$l]) && $request->medical_fee_id[$k][$l]) {
+                            $course_medical_fee = CourseMedicalFee::where('unique_id', $request->medical_fee_id[$k][$l])->first();
                         }
                         if (!$course_medical_fee) {
                             $course_medical_fee = new CourseMedicalFee;

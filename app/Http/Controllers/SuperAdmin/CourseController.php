@@ -190,35 +190,49 @@ class CourseController extends Controller
         return view('superadmin.courses.deleted', compact('courses', 'choose_fields'));
     }
 
-    // Function to get all city, country and branch with school id
+    /**
+     * @param Request $r
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    function getSchoolCountryList(Request $r)
+    {
+        $school = School::find($r->id);
+        $country_list = "<option value = ''>" . __('SuperAdmin/backend.select_option') . "</option>";
+        foreach ($school->getCountries() as $country) {
+            if ($country) $country_list .= "<option value='$country'>$country</option>";
+        }
+
+        return response($country_list);
+    }
 
     /**
      * @param Request $r
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    function school_get_allrequest(Request $r)
+    function getSchoolCityList(Request $r)
     {
-        $select = __('SuperAdmin/backend.select_option');
         $school = School::find($r->id);
-        $value = [];
-        $data['branch_name'] = "<option value = ''>$select</option>";
-
-        foreach ($school->getCityCountryState()->getBranch() as $branches) {
-            $data['branch_name'] .= $branches;
-            array_push($value, $branches);
+        $city_list  = "<option value = ''>" . __('SuperAdmin/backend.select_option') . "</option>";
+        foreach ($school->getCitiesByCountry($r->country) as $city) {
+            if ($city) $city_list .= "<option value='$city'>$city</option>";
         }
 
-        $data['branch'] = $value;
-        $data['country']  = "<option value = ''>$select</option>";
-        foreach ($school->getCityCountryState()->getCountry() as $country) {
-            $data['country'] .= "<option value = '$country'>$country</option>";
-        }
-        $data['city'] = "<option value = ''>$select</option>";
-        foreach ($school->getCityCountryState()->getCity() as $city) {
-            $data['city'] .= "<option value ='$city'>$city</option>";
+        return response($city_list);
+    }
+
+    /**
+     * @param Request $r
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    function getSchoolBranchList(Request $r)
+    {
+        $school = School::find($r->id);
+        $branch_list = "<option value = ''>" . __('SuperAdmin/backend.select_option') . "</option>";
+        foreach ($school->getBranchesByCountryCity($r->country, $r->city) as $branch) {
+            if ($branch) $branch_list .= "<option value='$branch'>$branch</option>";
         }
 
-        return response($data);
+        return response($branch_list);
     }
 
     /**
@@ -314,7 +328,7 @@ class CourseController extends Controller
      */
     function edit($id)
     {
-        $schools = School::all();
+        $schools = School::all()->unique('name')->values()->all();
 
         $choose_languages = Choose_Language::all();
         $choose_study_times = Choose_Study_Time::all();
@@ -326,11 +340,15 @@ class CourseController extends Controller
         $choose_branches = Choose_Branch::all();
         $currencies = CurrencyExchangeRate::all();
 
-        $courses = Course::whereUniqueId($id)->with('school')->with('coursePrograms')->first();
+        $course = Course::whereUniqueId($id)->with('coursePrograms')->first();
+        $school = School::find($course->school_id);
+        $school_countries = $school->getCityCountryState()->getCountry();
+        $school_cities = $school->getCitiesByCountry($course->country);
+        $school_branches = $school->getBranchesByCountryCity($course->country, $course->city);
 
-        return view('superadmin.courses.edit', compact('courses', 'schools', 'choose_languages', 'choose_study_times', 'choose_study_modes',
-            'choose_classes_days', 'choose_start_days', 'choose_program_age_ranges', 'choose_program_types', 'choose_branches',
-            'currencies'));
+        return view('superadmin.courses.edit', compact('course', 'schools', 'school', 'school_countries', 'school_cities', 'school_branches',
+            'choose_languages', 'choose_study_times', 'choose_study_modes', 'choose_classes_days', 'choose_start_days', 'choose_program_age_ranges',
+            'choose_program_types', 'choose_branches', 'currencies'));
     }
 
     /**
@@ -542,7 +560,7 @@ class CourseController extends Controller
                     $program_text_book_fee = CourseProgramTextBookFee::where('course_program_id', \Session::get('program_id'))->first();
                 } else {
                     $program_under_age_fee = CourseProgramUnderAgeFee::where('course_program_id', \Session::get('program_ids'))->get()->collect()->unique('course_program_id')->values()->first();
-                    $program_text_book_fees = CourseProgramTextBookFee::where('course_program_id', \Session::get('program_ids'))->get()->collect()->unique('course_program_id')->values()->first();
+                    $program_text_book_fee = CourseProgramTextBookFee::where('course_program_id', \Session::get('program_ids'))->get()->collect()->unique('course_program_id')->values()->first();
                 }
             }
 
@@ -573,8 +591,7 @@ class CourseController extends Controller
         $accommodation_age_ranges = Choose_Accommodation_Age_Range::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
 
         return view('superadmin.courses.add.accommodation', compact('course_id','custodian_under_ages','accommodation_age_ranges'));
-    }
-    
+    }    
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
@@ -669,14 +686,18 @@ class CourseController extends Controller
      */
     public function editAirportMedical()
     {
-        $course_id = '' . \Session::get('course_id');
-        $airports = CourseAirport::with('fees')->where('course_unique_id', $course_id)->get();
-        $medicals = CourseMedical::with('fees')->where('course_unique_id', $course_id)->get();
+        if (\Session::get('course_id')) {
+            $course_id = \Session::get('course_id');
+            $airports = CourseAirport::with('fees')->where('course_unique_id', $course_id)->get();
+            $medicals = CourseMedical::with('fees')->where('course_unique_id', $course_id)->get();
 
-        if (!empty($course_id) && !empty($airports) && !empty($medicals)) {
-            return view('superadmin.courses.edit.airport_medical', compact('course_id','airports','medicals'));
+            if (!empty($airports) && count($airports) && !empty($medicals) && count($medicals)) {
+                return view('superadmin.courses.edit.airport_medical', compact('course_id','airports','medicals'));
+            } else {
+                return redirect()->route('superadmin.course.airport_medical');
+            }
         } else {
-            return redirect()->route('superadmin.courses.index');
+            return redirect()->route('superadmin.course.index');
         }
     }
 

@@ -4,7 +4,7 @@
 <div class="card">
 <div class="card-body table table-responsive">
 <div style="text-align: center;"><h1 class="card-title">{{__('SuperAdmin/backend.school_details')}}</h1></div>
-<a href = "{{route('schools.create')}}" type="button" class="btn btn-primary btn-sm pull-right"><i class="fa fa-plus"></i>&nbsp;{{__('SuperAdmin/backend.add')}}</a>
+<a href = "{{route('school.create')}}" type="button" class="btn btn-primary btn-sm pull-right"><i class="fa fa-plus"></i>&nbsp;{{__('SuperAdmin/backend.add')}}</a>
 <table class="table table-hover table-bordered">
 <thead>
 <tr>
@@ -35,8 +35,8 @@
 <td>{{$school->created_at->diffForHumans()}}</td>
 <td>
 <div class="btn-group">
-<a href  = "{{route('schools.edit', $school->unique_id)}}" class="btn btn-info btn-sm fa fa-pencil"></a>
- <form action="{{route('schools.destroy', $school->unique_id)}}" method="post">
+<a href  = "{{route('school.edit', $school->unique_id)}}" class="btn btn-info btn-sm fa fa-pencil"></a>
+ <form action="{{route('school.destroy', $school->unique_id)}}" method="post">
  @csrf
 {{ method_field('delete') }}
 

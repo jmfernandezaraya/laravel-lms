@@ -46,7 +46,11 @@
 
         {{-- @yield('after_header') --}}
 
-        <main id="main" class="mt-5 pt-5">
+        <div class="breadcrumbs mt-9 pt-5" data-aos="fade-in">
+            @yield('breadcrumbs')
+        </div>
+
+        <main id="main" class="">
             <div class="container">
                 @yield('content')
         @include('frontend.layouts.footer')

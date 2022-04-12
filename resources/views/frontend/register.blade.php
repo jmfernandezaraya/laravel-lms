@@ -84,7 +84,7 @@
                                         </ul>
                                     </div>
                                 @endif
-                                <form method = "post" action = "{{route('user_register_post')}}">
+                                <form method="post" action = "{{route('user_register_post')}}">
                                     @csrf
                                     <div class="row">
                                         <div class="col-lg-12 col-md-12">

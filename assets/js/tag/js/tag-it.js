@@ -25,7 +25,6 @@
 *   jQuery UI v1.8+
 */
 (function($) {
-
     $.widget('ui.tagit', {
         options: {
             allowDuplicates   : false,
@@ -94,7 +93,6 @@
             onTagClicked        : null,
             onTagLimitExceeded  : null,
 
-
             // DEPRECATED:
             //
             // /!\ These event callbacks are deprecated and WILL BE REMOVED at some
@@ -121,7 +119,7 @@
                 this.options.singleFieldNode = this.element;
                 this.element.addClass('tagit-hidden-field');
             } else {
-                this.tagList = this.element.find('ul, ol').andSelf().last();
+                this.tagList = this.element.find('ul, ol').addBack().last();
             }
 
             this.tagInput = $('<input type="text" />').addClass('ui-widget-content');
@@ -585,6 +583,5 @@
                 that.removeTag(tag, false);
             });
         }
-
     });
 })(jQuery);

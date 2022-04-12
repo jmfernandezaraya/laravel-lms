@@ -31,51 +31,51 @@ class CourseController extends Controller
 
     public function __construct()
     {
-        $this->crete_calculator_db();
+        $this->creteCalculatorDb();
 
         $this->calculator = new AccommodationCalculator;
     }
 
-    private function crete_calculator_db()
+    private function creteCalculatorDb()
     {
         if (!Calculator::whereCalcId(request()->ip())->first()) {
-            $calculator = new  \App\Models\Calculator;
+            $calculator = new Calculator;
             $calcid = request()->ip();
-            $inpu['calc_id'] = $calcid;
-            $inpu['program_cost'] = 0;
-            $inpu['fixed_program_cost'] = 0;
-            $inpu['program_registration_fee'] = 0;
-            $inpu['text_book_fee'] = 0;
-            $inpu['summer_fee'] = 0;
-            $inpu['under_age_fee'] = 0;
-            $inpu['peak_time_fee'] = 0;
-            $inpu['courier_fee'] = 0;
-            $inpu['discount_fee'] = 0;
+            $input['calc_id'] = $calcid;
+            $input['program_cost'] = 0;
+            $input['fixed_program_cost'] = 0;
+            $input['program_registration_fee'] = 0;
+            $input['text_book_fee'] = 0;
+            $input['summer_fee'] = 0;
+            $input['under_age_fee'] = 0;
+            $input['peak_time_fee'] = 0;
+            $input['courier_fee'] = 0;
+            $input['discount_fee'] = 0;
 
-            $inpu['accommodation_fee'] = 0;
-            $inpu['accommodation_placement_fee'] = 0;
-            $inpu['accommodation_deposit'] = 0;
-            $inpu['accommodation_custodian_fee'] = 0;
-            $inpu['accommodation_summer_fee'] = 0;
-            $inpu['accommodation_under_age_fee'] = 0;
-            $inpu['accommodation_christmas_fee'] = 0;
-            $inpu['accommodation_special_diet_fee'] = 0;
-            $inpu['accommodation_peak_time_fee'] = 0;
-            $inpu['accommodation_discount'] = 0;
-            $inpu['accommodation_total'] = 0;
+            $input['accommodation_fee'] = 0;
+            $input['accommodation_placement_fee'] = 0;
+            $input['accommodation_deposit'] = 0;
+            $input['accommodation_custodian_fee'] = 0;
+            $input['accommodation_summer_fee'] = 0;
+            $input['accommodation_under_age_fee'] = 0;
+            $input['accommodation_christmas_fee'] = 0;
+            $input['accommodation_special_diet_fee'] = 0;
+            $input['accommodation_peak_time_fee'] = 0;
+            $input['accommodation_discount'] = 0;
+            $input['accommodation_total'] = 0;
 
-            $inpu['airport_pickup_fee'] = 0;
-            $inpu['medical_insurance_fee'] = 0;
-            $inpu['airport_total'] = 0;
+            $input['airport_pickup_fee'] = 0;
+            $input['medical_insurance_fee'] = 0;
+            $input['airport_total'] = 0;
 
-            $inpu['total'] = 0;
+            $input['total'] = 0;
 
-            return $calculator->fill($inpu)->save();
+            return $calculator->fill($input)->save();
         }
         return true;
     }
 
-    public function reload_calculator()
+    public function reloadCalculator()
     {
         $this->calculator->setProgramCost(read_json_file('program_cost'));
         $this->calculator->setProgramRegistrationFee(read_json_file('program_registration_fee'));
@@ -110,18 +110,18 @@ class CourseController extends Controller
 
     public function index()
     {
-        //return $this->getEndDate('03/01/2021', 2);
+        // Return $this->getEndDate('03/01/2021', 2);
         Session::forget('accom_unique_id');
         Session::forget('airport_id');
-
-        //$course = \DB::table('courses_en')->where('unique_id', '>', 0)->first();
+        Session::forget('medical_id');
+        
         $course = new Course;
         $data['course'] = $course = $course->latest()->first();
-        if (!$course)
+        if (!$course) {
             abort(404);
+        }
 
         /*  We Are Making weekdays available in date picker available in frontend */
-        // $every_day_search = $course->every_day;
         $dates = [0, 1, 2, 3, 4, 5, 6];
 
         $data['enabled_days'] = implode(",", $dates);
@@ -143,34 +143,34 @@ class CourseController extends Controller
     {
         $data['success'] = false;
 
-        if (!Session::has('program_unique_id') && $r->type == 'select_program')
+        if (!Session::has('program_unique_id') && $r->type == 'select_program') {
             Session::put('program_unique_id', $r->value);
+        }
 
         $data['success'] = true;
 
         $program_get = CourseProgram::where('unique_id', Session::get('program_unique_id'))->first();
-        $age = "";
-
-        $arra = $program_get->course->age_range;
-        sort($arra);
-        foreach ($arra as $ages) {
-            $age .= "<option value = $ages>$ages</option>";
+        $program_age = "";
+        $course_age_ranges = $program_get->course->age_range;
+        sort($course_age_ranges);
+        foreach ($course_age_ranges as $course_age_range) {
+            $program_age .= "<option value = $course_age_range>$course_age_range</option>";
         }
 
         if ($r->type == "select_program") {
-            $data['age'] = $age;
+            $data['age'] = $program_age;
 
-            $k = '';
-            for ($i = $program_get->program_duration_start; $i <= $program_get->program_duration_end; $i++) {
-                $k .= "<option value= $i> $i</option>";
+            $program_duration_html = '';
+            for ($program_duration_index = $program_get->program_duration_start; $program_duration_index <= $program_get->program_duration_end; $program_duration_index++) {
+                $program_duration_html .= "<option value= $program_duration_index> $program_duration_index</option>";
             }
-            $data['program_duration'] = $k;
+            $data['program_duration'] = $program_duration_html;
         }
 
         if ($r->type == 'duration') {
             $add_program_cost = $program_get->program_cost;
 
-            // multiplying program cost here
+            // Multiplying program cost here
             $multiple_program_cost = (int)$r->value * $add_program_cost;
 
             $text_book_fee = $this->inBetween($r->value, $program_get->text_fee_start_week, $program_get->text_fee_end_week) ? $program_get->text_book_fee : 0;
@@ -179,14 +179,14 @@ class CourseController extends Controller
 
             if ($r->date_set != null) {
                 $this->calculator->setSummerDateFromDbProgram($program_get->summer_fee_end_date);
-                $this->calculator->setPeakDateFromDbProgram($program_get->peak_time_end_date);
                 $this->calculator->setSummerStartDateProgram($program_get->summer_fee_start_date);
+                $this->calculator->setSummerEndDateProgram($program_get->summer_fee_end_date);
+                $this->calculator->setSummerFee($program_get->summer_fee_per_week);
+                $this->calculator->setPeakDateFromDbProgram($program_get->peak_time_end_date);
                 $this->calculator->setPeakStartDate($program_get->peak_time_start_date);
                 $this->calculator->setPeakEndDate($program_get->peak_time_end_date);
-                $this->calculator->setSummerFee($program_get->summer_fee_per_week);
                 $this->calculator->setFrontEndDate($this->getEndDate($r->date_set, (int)$r->value));
                 $this->calculator->setProgramStartDateFromFrontend(Carbon::create($r->date_set)->format('Y-m-d'));
-                $this->calculator->setSummerEndDateProgram($program_get->summer_fee_end_date);
                 $summer_week_fee = $program_get->summer_fee_per_week * $this->calculator->CompareDatesAndGetResult()['summer_date_program'];
                 $peakfee = $program_get->peak_time_fee_per_week * $this->calculator->CompareDatesAndGetResult()['peak_date_program'];
                 $data['which'] = $this->calculator->CompareDatesAndGetResult()['which'] ?? 0;
@@ -195,17 +195,17 @@ class CourseController extends Controller
                 json_file('peak_time_fee', $peakfee);
             }
 
-            //checking whether program duration is greater than the selected program duration and setting registration fee here
-
+            // Checking whether program duration is greater than the selected program duration and setting registration fee here
             (int)$r->value >= $program_get->course->program_duration ? json_file('program_registration_fee', 0) : json_file('program_registration_fee', $program_get->course->program_registration_fee);
             in_array($r->under_age, $program_get->under_age) ? json_file('under_age_fee', $program_get->under_age_fee_per_week * $r->value) : json_file('under_age_fee', 0);
 
-            //updating program cost here
+            // Updating program cost here
             json_file('program_cost', $multiple_program_cost);
         } elseif ($r->type == 'courier_fee') {
             $data['error'] = null;
-            if ($r->under_age == null)
+            if ($r->under_age == null) {
                 $data['error'] = "Select Age First";
+            }
 
             $r->value == 'true' ? json_file('courier_fee', $program_get->course->courier_fee) : json_file('courier_fee', 0);
         }
@@ -284,29 +284,24 @@ class CourseController extends Controller
         //
     }
 
-    // for below duration checking if fees is free or not
-
+    // For below duration checking if fees is free or not
     public function discountCalculator(Request $r)
     {
         if ($r->has('reload')) {
             reload_json_file();
         }
 
-        // week_selected fetching from db
-        // $r->week fetching from user
         $program_getting = CourseProgram::where('unique_id', Session::get('program_unique_id'))->first();
 
         $week_selected_discount = $this->calculator->calculateDiscountWeekFree($r->value, $program_getting->x_week_selected);
         $data['discount_fee'] = $week_selected_discount;
-        $data['check_for_date'] = ($this->calculator->checkBetweenDate($program_getting->discount_start_date, $program_getting->discount_end_date, Carbon::now()->format('Y-m-d')));
-
+        
+        $date_set_format = Carbon::create($r->date_set)->format('Y-m-d');
         if (($this->calculator->checkBetweenDate($program_getting->discount_start_date, $program_getting->discount_end_date, Carbon::now()->format('Y-m-d'))) ) {
-            $data['week_selected'] = $r->value;
-            $this->calculator->setProgramStartDateFromFrontend(Carbon::create($r->date_set)->format('Y-m-d'));
+            $this->calculator->setProgramStartDateFromFrontend($date_set_format);
             $this->calculator->setDiscountStartDateForWeekSelect($program_getting->x_week_start_date);
             $this->calculator->setDiscountEndDateForWeekSelect($program_getting->x_week_end_date);
             $this->calculator->setProgramDuration($r->value);
-            $data['week_in_db'] = $week_in_db = $program_getting->x_week_selected;
             $this->calculator->setDiscountWeekGet($week_in_db);
             $this->calculator->setDiscountStartDate($program_getting->discount_start_date);
             $this->calculator->setDiscountEndDate($program_getting->discount_end_date);
@@ -341,14 +336,13 @@ class CourseController extends Controller
         return response()->json($data);
     }
 
-    public function calculator_accomodation(Request $request)
+    public function calculateAccomodation(Request $request)
     {
         if ($request->has('airport')) {
             return $this->calculateAirport($request);
         }
 
         if ($request->has('special_diet')) {
-            //Function for adding special diet if checked
             return $this->calculateSpecialDiet($request);
         }
 
@@ -366,7 +360,7 @@ class CourseController extends Controller
             }
         }
 
-        //Calling Class Accommodation Calculator for caluclation puprose
+        // Calling Class Accommodation Calculator for caluclation puprose
         if ($request->set_session == false || $request->set_session == 'false') {
             $multiple = $request->id;
             $this->calculator->setAccommodationFee($accomodation->ee_per_week * $multiple);
@@ -384,10 +378,10 @@ class CourseController extends Controller
             $this->calculator->setSummerStartDateAccommodation($accomodation->summer_fee_start_date);
             $this->calculator->setSummerDateFromDbAccommodation($accomodation->summer_fee_end_date);
             $data['which'] = $this->calculator->CompareDatesandGetWeeksAccommodation()['which'];
-            $this->calculator->setAccomDuration((int)$request->id);
+            $this->calculator->setAccommodationDuration((int)$request->id);
             $this->calculator->setAccommodationDiscountEndDate($accomodation->discount_end_date);
 
-            //check for dates
+            // Check for dates
             $this->calculator->setAccommodationChristmasFee($accomodation->christmas_fee_per_week * $this->calculator->CompareDatesandGetWeeksAccommodation()['christmas']);
             $this->calculator->setAccommodationDiscount($accomodation->discount_per_week);
             $this->calculator->setAccommodationPeakFee($accomodation->peak_time_fee_per_week * $this->calculator->CompareDatesandGetWeeksAccommodation()['peak']);
@@ -439,11 +433,12 @@ class CourseController extends Controller
         return response($data);
     }
 
-    private function week_between_two_dates($date1, $date2)
+    private function weeksBetweenTwoDates($date1, $date2)
     {
         $first = Carbon::createFromFormat('Y-m-d', $date1);
         $second = Carbon::createFromFormat('Y-m-d', $date2);
-        if ($date1 > $date2) return $this->week_between_two_dates($date2, $date1);
+        if ($date1 > $date2) return $this->weeksBetweenTwoDates($date2, $date1);
+
         return floor($first->diff($second)->days / 7);
     }
 
@@ -460,15 +455,14 @@ class CourseController extends Controller
         json_file('accommodation_discount', 0);
         json_file('accommodation_peak_time_fee', 0);
         json_file('accommodation_total', 0);
+
         return true;
     }
 
     /*
-     *
      * @params : $date, $weeks
      *
-     * return HOw many weeks
-     *
+     * return How many weeks
      *
      * */
     public function resetMedical()
@@ -476,13 +470,15 @@ class CourseController extends Controller
         json_file('airport_pickup_fee', 0);
         json_file('medical_insurance_fee', 0);
         json_file('airport_total', 0);
+
         return true;
     }
 
-    /*Function to check textbook fee whether the weeks lies between duration or not*/
+    /* Function to check textbook fee whether the weeks lies between duration or not */
     private function inBetween($varToCheck, $low,  $high) {
-        if($varToCheck < $low) return false;
-        if($varToCheck > $high) return false;
+        if ($varToCheck < $low) return false;
+        if ($varToCheck > $high) return false;
+
         return true;
     }
 }

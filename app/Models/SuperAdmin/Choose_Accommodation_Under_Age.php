@@ -21,8 +21,9 @@ class Choose_Accommodation_Under_Age extends Model
         $db = \DB::transaction(function () use ($db1, $db2, $input1, $input2) {
             $db1->fill($input1)->save();
             $save1 = $db2->fill($input2)->save();
-            if ($save1)
+            if ($save1) {
                 return true;
+            }
         });
 
         if ($db) {

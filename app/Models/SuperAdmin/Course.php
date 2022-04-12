@@ -19,7 +19,6 @@ class Course extends Model
     protected $casts = [
         'under_age' => 'array',
         'program_type' => 'array',
-        'branch' => 'array',
         'study_mode' => 'array',
         'study_time' => 'array',
         'start_date' => 'array',

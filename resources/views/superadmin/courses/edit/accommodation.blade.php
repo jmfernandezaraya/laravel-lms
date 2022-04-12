@@ -196,15 +196,16 @@
                                 </div>
 
                                 <div class="row">
+                                    @php $accommodation_discounts = explode(" ", $accommodation->discount_per_week); @endphp
                                     <div class="form-group col-md-3">
                                         <label>{{__('SuperAdmin/backend.discount_per_week')}}:</label>
-                                        <input value="{{ isset(explode(" ", $accommodation->discount_per_week)[0]) ?? '' }}" class="form-control" type="number" name="discount_per_week[]" placeholder="{{__('SuperAdmin/backend.discount_per_week')}} ">
+                                        <input value="{{ isset($accommodation_discounts[0]) ? $accommodation_discounts[0] : '' }}" class="form-control" type="number" name="discount_per_week[]" placeholder="{{__('SuperAdmin/backend.discount_per_week')}} ">
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label>{{__('SuperAdmin/backend.discount_symbol')}}:</label>
                                         <select class="form-control" name="discount_per_week_symbol[]">
                                             @php
-                                                $symbol = isset(explode(" ", $accommodation->discount_per_week)[1]) ? explode(" ", $accommodation->discount_per_week)[1] : '';
+                                                $symbol = isset($accommodation_discounts[1]) ? $accommodation_discounts[1] : '';
                                             @endphp
                                             <option {{ $symbol == "%" ? 'selected' : '' }} value="%">%</option>
                                             <option {{ $symbol == "-" ? 'selected' : '' }} value='-'>-</option>
@@ -263,6 +264,35 @@
                                         <label>{{__('SuperAdmin/backend.christmas_end_fee')}}:</label>
                                         <input value="{{ $accommodation->christmas_fee_end_date }}" class="form-control" type="date" name="christmas_fee_end_date[]">
                                     </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label>{{__('SuperAdmin/backend.x_week_selected')}}:</label>
+                                        <input value="{{ $accommodation->x_week_selected }}" class="form-control" type="number" name="x_week_selected[]" placeholder="{{__('SuperAdmin/backend.every_week')}}">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>{{__('SuperAdmin/backend.free_week')}}:</label>
+                                        <select class="form-control" name="how_many_week_free[]">
+                                            <option value="1" {{$accommodation->how_many_week_free == 1 ? 'selected' : ''}}>{{__('SuperAdmin/backend.1_week_free')}} </option>
+                                            <option value="2" {{$accommodation->how_many_week_free == 2 ? 'selected' : ''}}>{{__('SuperAdmin/backend.2_week_free')}}</option>
+                                            <option value="3" {{$accommodation->how_many_week_free == 3 ? 'selected' : ''}}>{{__('SuperAdmin/backend.3_week_free')}}</option>
+                                            <option value="4" {{$accommodation->how_many_week_free == 4 ? 'selected' : ''}}>{{__('SuperAdmin/backend.4_week_free')}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-4"></div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label>{{__('SuperAdmin/backend.x_week_start_date')}}:</label>
+                                        <input value="{{ $accommodation->x_week_start_date }}" class="form-control" type="date" name="x_week_start_date[]">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>{{__('SuperAdmin/backend.x_week_end_date')}}:</label>
+                                        <input value="{{ $accommodation->x_week_end_date }}" class="form-control" type="date" name="x_week_end_date[]">
+                                    </div>
+                                    <div class="form-group col-md-4"></div>
                                 </div>
 
                                 <script>
@@ -488,8 +518,7 @@
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label>{{__('SuperAdmin/backend.christmas_fee')}}:</label>
-                                        <input class="form-control" type="number" name="christmas_fee_per_week[]"
-                                            placeholder="{{__('SuperAdmin/backend.christmas_fee_per_week')}}">
+                                        <input class="form-control" type="number" name="christmas_fee_per_week[]" placeholder="{{__('SuperAdmin/backend.christmas_fee_per_week')}}">
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label>{{__('SuperAdmin/backend.christmas_start_fee')}}:</label>
@@ -499,6 +528,35 @@
                                         <label>{{__('SuperAdmin/backend.christmas_end_fee')}}:</label>
                                         <input class="form-control" type="date" name="christmas_fee_end_date[]">
                                     </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label>{{__('SuperAdmin/backend.x_week_selected')}}:</label>
+                                        <input class="form-control" type="number" name="x_week_selected[]" placeholder="{{__('SuperAdmin/backend.every_week')}}">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>{{__('SuperAdmin/backend.free_week')}}:</label>
+                                        <select class="form-control" name="how_many_week_free[]">
+                                            <option value="1" selected>{{__('SuperAdmin/backend.1_week_free')}} </option>
+                                            <option value="2">{{__('SuperAdmin/backend.2_week_free')}}</option>
+                                            <option value="3">{{__('SuperAdmin/backend.3_week_free')}}</option>
+                                            <option value="4">{{__('SuperAdmin/backend.4_week_free')}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-4"></div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label>{{__('SuperAdmin/backend.x_week_start_date')}}:</label>
+                                        <input class="form-control" type="date" name="x_week_start_date[]">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>{{__('SuperAdmin/backend.x_week_end_date')}}:</label>
+                                        <input class="form-control" type="date" name="x_week_end_date[]">
+                                    </div>
+                                    <div class="form-group col-md-4"></div>
                                 </div>
 
                                 <script>

@@ -1,17 +1,21 @@
 <?php
 
 namespace App\Models\SuperAdmin;
+
 use App\Traits\CityCountryStateTrait;
 use App\Traits\StorageTrait;
+
 use Ghanem\Rating\Traits\Ratingable;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
 class School extends Model
 {
-    use Ratingable, StorageTrait;
+    use CityCountryStateTrait;
     use HasFactory;
+    use Ratingable, StorageTrait;
 
     protected $guarded = [];
     protected $casts = [
@@ -19,18 +23,16 @@ class School extends Model
         'multiple_photos' => 'array',
         'school_video' => 'array',
         'video_url' => 'array',
-        'branch_name' => 'array',
-        'branch_name_ar' => 'array',
     ];
 
-    use CityCountryStateTrait;
     public function save_model($db1, $db2, $input1, $input2)
     {
         $db = \DB::transaction(function () use ($db1, $db2, $input1, $input2) {
             $db1->fill($input1)->save();
             $save1 = $db2->fill($input2)->save();
-            if ($save1)
+            if ($save1) {
                 return true;
+            }
         });
 
         if ($db) {

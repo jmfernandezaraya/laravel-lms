@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\SuperAdmin;
 
-use App\Classes\ImageSaverToStorage;
-use App\Http\Requests\SuperAdmin\AddSchoolRequest;
 use Storage;
 use Session;
+
 use App\Http\Controllers\Controller;
+use App\Classes\ImageSaverToStorage;
 use App\Models\SuperAdmin\School;
+use App\Http\Requests\SuperAdmin\AddSchoolRequest;
 
 /**
  * Class SchoolController
@@ -175,9 +176,7 @@ class SchoolController extends Controller
         unset($save['multiple_photos']);
         unset($save['video_url']);
 
-        $input['branch_name_ar'] = $input['branch_name_ar'] ?? null;
-        $input['branch_name'] = $input['branch_name'] ?? null;
-
+        $input['school_video'] = $r->video_url;
         $schools->fill($save + $input)->save();
 
         $data['success'] = true;

@@ -72,7 +72,7 @@
                                 @if ($airport->fees->count())
                                     @foreach ($airport->fees as $airport_fee)
                                         <div class="row airport-fee-clone clone" id="airport{{$loop->parent->iteration - 1}}_fee_clone{{$loop->iteration - 1}}">
-                                            <input hidden value="{{$airport_fee->unique_id}}" name="airport_fee_id[]">
+                                            <input hidden value="{{$airport_fee->unique_id}}" name="airport_fee_id[{{$loop->parent->iteration - 1}}][]">
                                             <div class="form-group col-md-3">
                                                 <label>{{__('SuperAdmin/backend.airport_name')}}:</label>
                                                 <input class="form-control" type="text" value="{{$airport_fee->name}}" name="airport_name[{{$loop->parent->iteration - 1}}][]" placeholder="{{__('SuperAdmin/backend.airport_name')}}">
@@ -230,7 +230,7 @@
                                 @if ($medical->fees->count())
                                     @foreach ($medical->fees as $medical_fee)
                                         <div class="row medical-fee-clone clone" id="medical{{$loop->parent->iteration - 1}}_fee_clone{{$loop->iteration - 1}}">
-                                            <input hidden value="{{$medical_fee->unique_id}}" name="medical_fee_id[]">
+                                            <input hidden value="{{$medical_fee->unique_id}}" name="medical_fee_id[{{$loop->parent->iteration - 1}}][]">
                                             <div class="form-group col-md-3">
                                                 <label>{{__('SuperAdmin/backend.insurance_fee')}}:</label>
                                                 <input class="form-control" type="number" value="{{$medical_fee->fees_per_week}}" name="medical_fees_per_week[{{$loop->parent->iteration - 1}}][]" placeholder="{{__('SuperAdmin/backend.insurance_fee')}}">

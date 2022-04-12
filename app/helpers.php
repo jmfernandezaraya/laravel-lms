@@ -209,6 +209,11 @@ function getCourseStartDateNames($course_start_date_ids)
     return $course_start_dates;
 }
 
+function toFixedNumber($num, $decimals = 2, $decimal_separator = '.', $thousands_separator = ',')
+{
+    return number_format((float)$num, $decimals, $decimal_separator, $thousands_separator);
+}
+
 if (!function_exists('getBranchesForBranchAdmin')) {
     function getBranchesForBranchAdmin() : array {
         return auth('branch_admin')->user()->branch;

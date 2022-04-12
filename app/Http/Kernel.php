@@ -73,7 +73,7 @@ class Kernel extends HttpKernel
         'super_admin' => \App\Http\Middleware\SuperAdmin::class,
         'branch_admin' => BranchAdmin::class,
         'paymentauth' => PaymentAuth::class,
-        'savecoursedetails' => SaveCourseDetailsMiddleware::class,
+        'course.register' => SaveCourseDetailsMiddleware::class,
         'emailverification' => \App\Http\Middleware\EmailVerification::class,
     ];
 }

@@ -152,7 +152,7 @@
 
                         <div class="col-md-4 mt-3">
                             <label for="school_name">{{__('SuperAdmin/backend.choose_school')}}:</label>
-                            <select onchange="getSchool(url_schols, $(this).val())" class="form-control" id="school_name" name="school_id">
+                            <select onchange="changeCourseSchool(url_school_country_list, $(this).val())" class="form-control" id="school_name" name="school_id">
                                 <option value="">{{__('SuperAdmin/backend.select_school')}}</option>
                                 @foreach($schools as $school)
                                     <option value="{{$school->unique_id}}">{{$school->name}}</option>
@@ -407,7 +407,6 @@
                                     <label>@lang('SuperAdmin/backend.x_week_start_date'):</label>
                                     <input class="form-control" type="date" name="x_week_start_date[]">
                                 </div>
-
                             </div>
                             <br><br>
 
@@ -418,6 +417,7 @@
                                 </div>
                             </div>
                             <br><br>
+                            
                             <div class="row">
                                 <div class="col-md-4">
                                     <label>@lang('SuperAdmin/backend.summer_fee'):</label>

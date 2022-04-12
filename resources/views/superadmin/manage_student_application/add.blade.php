@@ -11,7 +11,7 @@
 					fieldName: "video_url[]"
 				});
 			});
-			var addschoolurl = "{{route('superadmin.schools.store')}}";
+			var addschoolurl = "{{route('superadmin.school.store')}}";
 			var in_arabic =  "{{__('SuperAdmin/backend.in_arabic')}}";
 			var in_english = "{{__('SuperAdmin/backend.in_english')}}";
 		</script>
@@ -48,7 +48,7 @@
 
 				<div id="show_form"></div>
 
-				<form id="form1" class="forms-sample" enctype="multipart/form-data" action  = "{{route('superadmin.schools.store')}}" method = "post">
+				<form id="form1" class="forms-sample" enctype="multipart/form-data" action  = "{{route('superadmin.school.store')}}" method = "post">
 					{{csrf_field()}}
 
 					<div class="row">
@@ -227,7 +227,7 @@
 					<a class="btn btn-light" href = "{{url()->previous()}}">{{__('SuperAdmin/backend.cancel')}}</a>
 				</form>
 
-				<form id="form2" class="forms-sample" enctype="multipart/form-data" action  = "{{route('superadmin.schools.store')}}" method = "post">
+				<form id="form2" class="forms-sample" enctype="multipart/form-data" action  = "{{route('superadmin.school.store')}}" method = "post">
 					{{csrf_field()}}
 					<div class="row">
 						<div class="form-group col-md-12">

@@ -65,7 +65,7 @@
                                 <td>{{ get_language() == 'en' ? $course->school->name ?? '-' : $course->school->name_ar ?? '-' }}</td>
                                 <td>{{ $course->city }}</td>
                                 <td>{{ $course->country }}</td>
-                                <td>{{ implode(", ", getCourseBranchNames($course->branch)) }}</td>
+                                <td>{{ $course->branch }}</td>
                                 <td>{{ is_null($course->getCurrency) ? '-' : $course->getCurrency->name }}</td>
                                 <td>{{ $course->program_name }}</td>
                                 <td>{{ $course->program_level }}</td>

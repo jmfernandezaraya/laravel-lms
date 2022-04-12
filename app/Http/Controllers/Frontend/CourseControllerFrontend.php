@@ -18,6 +18,7 @@ use App\Services\SuperAdminEditUserCourse;
 
 use App\Models\Calculator;
 use App\Models\SuperAdmin\Choose_Accommodation_Age_Range;
+use App\Models\SuperAdmin\Choose_Accommodation_Under_Age;
 use App\Models\SuperAdmin\Choose_Classes_Day;
 use App\Models\SuperAdmin\Choose_Custodian_Under_Age;
 use App\Models\SuperAdmin\Choose_Program_Age_Range;
@@ -27,6 +28,7 @@ use App\Models\SuperAdmin\Choose_Study_Mode;
 use App\Models\SuperAdmin\Choose_Study_Time;
 use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\CourseAccommodation;
+use App\Models\SuperAdmin\CourseAccommodationUnderAge;
 use App\Models\SuperAdmin\CourseAirport;
 use App\Models\SuperAdmin\CourseAirportFee;
 use App\Models\SuperAdmin\CourseMedical;
@@ -106,7 +108,9 @@ class CourseControllerFrontend extends Controller
 
         $data['ages'] = $program_age_ranges;
 
-        return view('frontend.course.single', $data, compact('courses', 'schools', 'study_modes'));
+        $course_details = (object)(\Session::get('course_details') ?? []);
+
+        return view('frontend.course.single', $data, compact('courses', 'schools', 'study_modes', 'course_details'));
     }
 
     /**
@@ -313,7 +317,7 @@ class CourseControllerFrontend extends Controller
         } elseif ($r->type == 'duration') {
             $program_get = CourseProgram::where('course_unique_id', \Session::get('course_unique_id'))
                 ->where('program_duration_start', '<=', (int)$r->value)->where('program_duration_end', '>=', (int)$r->value)
-                ->with("course","courseUnderAges","courseTextBookFees")->first();
+                ->with("course", "courseUnderAges", "courseTextBookFees")->first();
 
             $under_age = $r->under_age == null ? [] : $r->under_age;
             $under_age = !is_array($r->under_age) ? array($r->under_age) : $under_age;
@@ -569,19 +573,16 @@ class CourseControllerFrontend extends Controller
                 $week_selected_discount = $this->calculator->calculateDiscountWeekFree($r->value, $program_getting->x_week_selected);
                 $data['discount_fee'] = $week_selected_discount;
 
-                if ($this->calculator->checkBetweenDate($program_getting->x_week_start_date, $program_getting->x_week_end_date, $date_set) || 
+                if ($this->calculator->checkBetweenDate($program_getting->x_week_start_date, $program_getting->x_week_end_date, Carbon::now()->format('Y-m-d')) || 
                     ($this->calculator->checkBetweenDate($program_getting->discount_start_date, $program_getting->discount_end_date, Carbon::now()->format('Y-m-d')))) {
-                    $data['week_selected'] = $r->value;
-
                     $this->calculator->setProgramStartDateFromFrontend($date_set);
                     $this->calculator->setDiscountStartDateForWeekSelect($program_getting->x_week_start_date);
                     $this->calculator->setDiscountEndDateForWeekSelect($program_getting->x_week_end_date);
+                    $this->calculator->setHowManyWeekFree($program_getting->how_many_week_free);
                     $this->calculator->setProgramDuration($r->value);
-                    $data['week_in_db'] = $week_in_db = $program_getting->x_week_selected;
-                    $this->calculator->setDiscountWeekGet($week_in_db);
+                    $this->calculator->setDiscountWeekGet($program_getting->x_week_selected);
                     $this->calculator->setDiscountStartDate($program_getting->discount_start_date);
                     $this->calculator->setDiscountEndDate($program_getting->discount_end_date);
-                    $this->calculator->setHowManyWeekFree($program_getting->how_many_week_free);
                     $this->calculator->setProgramCost($program_getting->program_cost * $r->value);
                     $this->calculator->setProgramStartDate($program_getting->program_start_date);
                     $this->calculator->setProgramEndDate($program_getting->program_end_date);
@@ -591,7 +592,7 @@ class CourseControllerFrontend extends Controller
                     $this->calculator->setDiscountEndDate($program_getting->discount_end_date);
                     $this->calculator->setGetProgramWeeks($r->value);
                 } else {
-                    insertCalculationIntoDB('accommodation_discount', 0);
+                    insertCalculationIntoDB('discount_fee', 0);
                 }
                 $data['discount'] = $this->calculator->discountedTotal();
                 $data['request'] = $r->all();
@@ -616,57 +617,71 @@ class CourseControllerFrontend extends Controller
             ->where('end_week', '>=', (int)$request->duration)
             ->first();
 
-        $data['special_diet'] = $accommodation->special_diet_fee;
-        $data['special_diet_note'] = $accommodation->special_diet_note;
-        
-        $data['custodianship'] = $accommodation->custodian_condition == 'optional' ? true : false;
-        $data['unique_id'] = $accommodation->unique_id;
-
-        $date_set = substr($request->date_set, 6, 4) . "-" . substr($request->date_set, 3, 2) . "-" . substr($request->date_set, 0, 2);
-        $this->calculator->setAccommodationFee($accommodation->fee_per_week * $request->duration);
-        $request->program_duration >= $accommodation->program_duration ? $this->calculator->setAccommodationPlacementFee(0) : $this->calculator->setAccommodationPlacementFee($accommodation->placement_fee);
-        $this->calculator->setChristmasStartDate($accommodation->christmas_fee_start_date);
-        $this->calculator->setChristmasEndDate($accommodation->christmas_fee_end_date);
-        $deposit = $accommodation->deposit_fee == null ? 0 : $accommodation->deposit_fee;
-        $this->calculator->setAccommodationDeposit($deposit);
-        $this->calculator->setSummerDateFromDbAccommodation($accommodation->summer_fee_end_date);
-        $request->special_diet == 'true' ? $this->calculator->setAccommodationSpecialDietFee($accommodation->special_diet_fee * $request->duration) : $this->calculator->setAccommodationSpecialDietFee(0);
-        $this->calculator->setPeakStartDateAccommodation($accommodation->peak_time_fee_start_date);
-        $this->calculator->setPeakDateFromDbAccommodation($accommodation->peak_time_fee_end_date);
-        in_array($request->age, $accommodation->getUnderAge()) ? $this->calculator->setAccommodationUnderageFee($accommodation->getUnderAgeFees($request->age) * (int)$request->duration) : 0;
-        $custodian_age = $accommodation->custodian_age_range == null ? [] : $accommodation->custodian_age_range;
-        $program_age_range = Choose_Program_Age_Range::where('unique_id', $request->age)->first();
-        $request_age = 0;
-        if ($program_age_range) {
-            $request_age = $program_age_range->age;
-        }
-        $data['request_age'] = $request_age;
-        $custodian_under_age = Choose_Custodian_Under_Age::where('age', $request_age)->first();
-        $data['custodian_under_age_age_id'] = $custodian_under_age->unique_id;
-        $custodian_fee_flag = false;
-        if (in_array($custodian_under_age->unique_id, $custodian_age)) {
-            if ($accommodation->custodian_condition == 'required') {
-                $custodian_fee_flag = true;
-            } else {
-                if ($request->custodianship == 'true') {
-                    $custodian_fee_flag = true;
+        if ($accommodation) {
+            $data['special_diet'] = $accommodation->special_diet_fee;
+            $data['special_diet_note'] = $accommodation->special_diet_note;
+            
+            $data['custodianship'] = $accommodation->custodian_condition == 'optional' ? true : false;
+            $data['unique_id'] = $accommodation->unique_id;
+    
+            $date_set = substr($request->date_set, 6, 4) . "-" . substr($request->date_set, 3, 2) . "-" . substr($request->date_set, 0, 2);
+            $this->calculator->setAccommodationFee($accommodation->fee_per_week * $request->duration);
+            $request->program_duration >= $accommodation->program_duration ? $this->calculator->setAccommodationPlacementFee(0) : $this->calculator->setAccommodationPlacementFee($accommodation->placement_fee);
+            $this->calculator->setChristmasStartDate($accommodation->christmas_fee_start_date);
+            $this->calculator->setChristmasEndDate($accommodation->christmas_fee_end_date);
+            $deposit = $accommodation->deposit_fee == null ? 0 : $accommodation->deposit_fee;
+            $this->calculator->setAccommodationDeposit($deposit);
+            $this->calculator->setSummerDateFromDbAccommodation($accommodation->summer_fee_end_date);
+            $request->special_diet == 'true' ? $this->calculator->setAccommodationSpecialDietFee($accommodation->special_diet_fee * $request->duration) : $this->calculator->setAccommodationSpecialDietFee(0);
+            $this->calculator->setPeakStartDateAccommodation($accommodation->peak_time_fee_start_date);
+            $this->calculator->setPeakDateFromDbAccommodation($accommodation->peak_time_fee_end_date);            
+            $program_age_range = Choose_Program_Age_Range::where('unique_id', $request->age)->first();
+            $request_age = 0;
+            if ($program_age_range) {
+                $request_age = $program_age_range->age;
+            }
+            $under_age_fee_per_week = 0;
+            $accommodation_under_age = Choose_Accommodation_Under_Age::where('age', $request_age)->first();
+            $course_accommodation_under_ages = CourseAccommodationUnderAge::where('accom_id', '' . $accommodation->unique_id)->get();
+            if ($accommodation_under_age && $course_accommodation_under_ages) {
+                foreach ($course_accommodation_under_ages as $course_accommodation_under_age) {
+                    if (in_array($accommodation_under_age->unique_id, $course_accommodation_under_age->under_age)) {
+                        $under_age_fee_per_week += $course_accommodation_under_age->under_age_fee_per_week;
+                    }
                 }
             }
+            $this->calculator->setAccommodationUnderageFee($under_age_fee_per_week * (int)$request->duration);
+            $custodian_age = $accommodation->custodian_age_range == null ? [] : $accommodation->custodian_age_range;
+            $custodian_under_age = Choose_Custodian_Under_Age::where('age', $request_age)->first();
+            $custodian_fee_flag = false;
+            if (in_array($custodian_under_age->unique_id, $custodian_age)) {
+                if ($accommodation->custodian_condition == 'required') {
+                    $custodian_fee_flag = true;
+                } else {
+                    if ($request->custodianship == 'true') {
+                        $custodian_fee_flag = true;
+                    }
+                }
+            }
+            $custodian_fee_flag ? $this->calculator->setAccommodationCustodianFee($accommodation->custodian_fee) : $this->calculator->setAccommodationCustodianFee(0);
+            $this->calculator->setFrontEndDate($this->getEndDate($date_set, (int)$request->duration));
+            $this->calculator->setProgramStartDateFromFrontend(Carbon::create($date_set)->format('Y-m-d'));
+            $this->calculator->setSummerStartDateAccommodation($accommodation->summer_fee_start_date);
+            $this->calculator->setSummerDateFromDbAccommodation($accommodation->summer_fee_end_date);
+            $this->calculator->setAccommodationDuration((int)$request->duration);
+            $this->calculator->setAccommodationDiscountEndDate($accommodation->discount_end_date);
+            $this->calculator->setAccommodationXWeekSelected($accommodation->x_week_selected);
+            $this->calculator->setAccommodationXWeekStartDate($accommodation->x_week_start_date);
+            $this->calculator->setAccommodationXWeekEndDate($accommodation->x_week_end_date);
+            $this->calculator->setAccommodationXWeekFee($accommodation->how_many_week_free);
+    
+            // Check for dates
+            $this->calculator->setAccommodationChristmasFee($accommodation->christmas_fee_per_week * $this->calculator->CompareDatesandGetWeeksAccommodation()['christmas']);
+            $this->calculator->setAccommodationDiscount($accommodation->discount_per_week);
+            $this->calculator->setAccommodationPeakFee($accommodation->peak_time_fee_per_week * $this->calculator->CompareDatesandGetWeeksAccommodation()['peak']);
+            $this->calculator->setAccommodationSummerFee($accommodation->summer_fee_per_week * $this->calculator->CompareDatesandGetWeeksAccommodation()['summer']);
+            $this->calculator->setAccommodationDiscountStartDate($accommodation->discount_start_date);
         }
-        $custodian_fee_flag ? $this->calculator->setAccommodationCustodianFee($accommodation->custodian_fee) : $this->calculator->setAccommodationCustodianFee(0);
-        $this->calculator->setFrontEndDate($this->getEndDate($date_set, (int)$request->duration));
-        $this->calculator->setProgramStartDateFromFrontend(Carbon::create($date_set)->format('Y-m-d'));
-        $this->calculator->setSummerStartDateAccommodation($accommodation->summer_fee_start_date);
-        $this->calculator->setSummerDateFromDbAccommodation($accommodation->summer_fee_end_date);
-        $this->calculator->setAccomDuration((int)$request->duration);
-        $this->calculator->setAccommodationDiscountEndDate($accommodation->discount_end_date);
-
-        // Check for dates
-        $this->calculator->setAccommodationChristmasFee($accommodation->christmas_fee_per_week * $this->calculator->CompareDatesandGetWeeksAccommodation()['christmas']);
-        $this->calculator->setAccommodationDiscount($accommodation->discount_per_week);
-        $this->calculator->setAccommodationPeakFee($accommodation->peak_time_fee_per_week * $this->calculator->CompareDatesandGetWeeksAccommodation()['peak']);
-        $this->calculator->setAccommodationSummerFee($accommodation->summer_fee_per_week * $this->calculator->CompareDatesandGetWeeksAccommodation()['summer']);
-        $this->calculator->setAccommodationDiscountStartDate($accommodation->discount_start_date);
         
         $accom_fee = $this->calculator->getAccommodationFee();
         $placement_fee = $this->calculator->getAccommodationPlacementFee();
@@ -1142,12 +1157,10 @@ class CourseControllerFrontend extends Controller
         if (!empty($airport)) {
             $data['airport_note'] = $airport->note;
             $airport_week_selected_fee = (int)$airport->week_selected_fee;
-            if ($airport_week_selected_fee) {
-                if ($airport_week_selected_fee > $request->program_duration) {
-                    foreach ($airport->fees as $airport_fee) {
-                        if ($airport_fee->name == $request->airport_name && $airport_fee->service_name == $request->airport_service) {
-                            $airport_pickup_fee = $airport_fee->service_fee;
-                        }
+            if (($airport_week_selected_fee && $airport_week_selected_fee > $request->program_duration) || !$airport_week_selected_fee) {
+                foreach ($airport->fees as $airport_fee) {
+                    if ($airport_fee->name == $request->airport_name && $airport_fee->service_name == $request->airport_service) {
+                        $airport_pickup_fee = $airport_fee->service_fee;
                     }
                 }
             }
@@ -1167,12 +1180,10 @@ class CourseControllerFrontend extends Controller
         if (!empty($medical)) {
             $data['medical_note'] = $medical->note;
             $medical_week_selected_fee = (int)$medical->week_selected_fee;
-            if ($medical_week_selected_fee) {
-                if ($medical_week_selected_fee > $request->program_duration) {
-                    foreach ($medical->fees as $medical_fee) {
-                        if ($medical_fee->start_date <= $request->medical_duration && $medical_fee->end_date >= $request->medical_duration) {
-                            $medical_insurance_fee += $medical_fee->fees_per_week * ($request->medical_duration - $medical_fee->start_date + 1);
-                        }
+            if (($medical_week_selected_fee && $medical_week_selected_fee > $request->program_duration) || !$medical_week_selected_fee) {
+                foreach ($medical->fees as $medical_fee) {
+                    if ($medical_fee->start_date <= $request->medical_duration && $medical_fee->end_date >= $request->medical_duration) {
+                        $medical_insurance_fee += $medical_fee->fees_per_week * ($request->medical_duration - $medical_fee->start_date + 1);
                     }
                 }
             }

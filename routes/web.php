@@ -22,23 +22,18 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+///// Test Routes /////
 Route::get('test_school', function() {
     $school =  \App\Models\SuperAdmin\School::find(21);
 
     return $school->getCityCountryStatewithCommas()->branch;
 });
-
 Route::get('tesetCourseSend', 'Frontend\FrontendController@testCourseNotification');
-//test routes
 Route::view('superamin/test_livewire', 'superadmin.test');
+// Route::get('superadmin/course/test', [CourseController::class, 'create_backup']);
 
-//Route::get('superadmin/course/test', [CourseController::class, 'create_backup']);
-
-/*
- * Frontend Routes
- * Start
- *
- * */
+///// Frontend Routes Start /////
 Route::post('visa_submit', [ApplyVisaController::class, 'applyForVisaPost'])->name('frontend.visa_submit')->middleware('paymentauth:visa_form');
 Route::post('getNumberofPeople','Frontend\ApplyVisaController@getNumberOfPeople')->name('frontend.get_number_of_people');
 
@@ -91,43 +86,35 @@ Route::group(['prefix' => 'course', 'as' => 'course.'], function () {
     Route::post('medical/fee', [CourseControllerFrontend::class, 'setMedicalInsuranceFee'])->name('medical.fee');
     
     Route::post('airport_medical/fee', [CourseControllerFrontend::class, 'setAirportMedicalFee'])->name('airport_medical.fee');
+
+    Route::post('details/back', [FrontendController::class, 'backDetails'])->name('details.back');
+    Route::post('details', [FrontendController::class, 'saveDetails'])->name('details.save')->middleware('course.register');
 });
 
-Route::get('db_migrate', function() {
-    return Artisan::call('migrate');
-});
-
-/*
- * Frontend middleware starts
- *
- * */
-Route::post('reservation_detail', [FrontendController::class, 'reservationDetail'])->name('reservation-detail')->middleware('savecoursedetails');
-
+///// Frontend Middleware Starts //////
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('reservation_detail', [FrontendController::class, 'reservationDetail'])->name('reservation-detail-get_request');
+    Route::group(['prefix' => 'course', 'as' => 'course.'], function () {
+        Route::post('details', [FrontendController::class, 'saveDetails'])->name('details.save');
+        Route::get('register', [FrontendController::class, 'registerDetail'])->name('register.detail');
+        Route::post('register', [FrontendController::class, 'register'])->name('register');
+        Route::get('reservation', [FrontendController::class, 'reservationDetail'])->name('reservation.detail');
+        Route::get('reservation_confirm', [FrontendController::class, 'confirmReservationDetail'])->name('reservation_confirm.detail');
+        Route::post('reservation_confirm', [FrontendController::class, 'confirmReservation'])->name('reservation_confirm');
+    });
 
     Route::get('/like_school/{school_id}', [FrontendController::class, 'likeSchool'])->name('likeschool');
-    Route::post('/telr-gateway', [rontendController::class, 'paymentPost'])->name('payment-gateway');
+    Route::post('/telr-gateway', [FrontendController::class, 'paymentPost'])->name('payment-gateway');
     Route::post('/school/rating_save', [\App\Http\Controllers\RatingController::class, 'saveComments'])->name('rateSaved');
 });
 
 Route::view('payment_terms', 'frontend.payment_page.payment-refund');
 
-/*
- * Frontend middleware ends
- *
- * */
+Route::get('db_migrate', function() { return Artisan::call('migrate'); });
 
-/*
- * Frontend Routes
- * End
- *
- *
- * */
 Route::get('/verify_email/{id}', [\App\Http\Controllers\LoginController::class, 'verifyEmail'])->name('verify-email-user');
 Route::get('/verify_email_again/{id}', [\App\Http\Controllers\LoginController::class, 'verifyEmailAgain'])->name('verify-email-user-again');
 
-//Contact url
+///// Contact URL /////
 Route::view('/contact_us', 'frontend.contact')->name('contact-us-get');
 Route::post('/contact_us/post', [ContactController::class, 'ContactUS'])->name('contact-us');
 Route::get('/register', [\App\Http\Controllers\LoginController::class, 'register'])->name('register_user');
@@ -174,8 +161,6 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => '
 
     Route::post('programagerangeupdate', 'CourseController@update')->name('course.programagerangeupdate');
     Route::get('update_airport_page', 'CourseController@viewAirportForUpdate')->name('update_airport_page');
-
-    Route::post('school_get_request', 'CourseController@school_get_allrequest')->name('schools.get');
 
     Route::get('course_program_under_age_give_access_to_school_admin/{id}', [CourseDetailsController::class, 'giveAccessToSchoolAdminCourseProgramUnderAge'])->name('course_program_under_age_give_access_to_school_admin');
     Route::get('course_give_access_to_school_admin/{id}', [CourseDetailsController::class, 'giveAccessToSchoolAdminCourse'])->name('course_give_access_to_school_admin');
@@ -227,10 +212,15 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => '
     Route::post('blogs/image_upload', 'BlogController@upload')->name('blogs.upload');
     Route::resource('blogs', 'BlogController');
 
-    Route::post('schools/update/{id}', 'SchoolController@update')->name('school.update');
-    Route::resource('schools', 'SchoolController');
+    Route::group(['prefix' => 'school', 'as' => 'school.'], function () {
+        Route::post('country', 'CourseController@getSchoolCountryList')->name('country.list');
+        Route::post('city', 'CourseController@getSchoolCityList')->name('city.list');
+        Route::post('branch', 'CourseController@getSchoolBranchList')->name('branch.list');
+        Route::post('update/{id}', 'SchoolController@update')->name('school.update');
+    });
+    Route::resource('school', 'SchoolController');
 
-    Route::post('schools/save/program/session', 'CourseController@programSessionSave')->name('course.session_store_for_program');
+    Route::post('school/save/program/session', 'CourseController@programSessionSave')->name('course.session_store_for_program');
 
     Route::post('language', [CourseFormController::class, 'addLanguage'])->name('language.add');
     Route::delete('language', [CourseFormController::class, 'deleteLanguage'])->name('language.delete');    
@@ -238,8 +228,8 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => '
     Route::delete('study_mode', [CourseFormController::class, 'deleteStudyMode'])->name('study_mode.delete');
     Route::post('program_type', [CourseFormController::class, 'addProgramType'])->name('program_type.add');
     Route::delete('program_type', [CourseFormController::class, 'deleteProgramType'])->name('program_type.delete');
-    Route::post('branch', [CourseFormController::class, 'addBranchType'])->name('branch.add');
-    Route::delete('branch', [CourseFormController::class, 'deleteBranchType'])->name('branch.delete');
+    Route::post('branch', [CourseFormController::class, 'addBranch'])->name('branch.add');
+    Route::delete('branch', [CourseFormController::class, 'deleteBranch'])->name('branch.delete');
     Route::post('study_time', [CourseFormController::class, 'addStudyTime'])->name('study_time.add');
     Route::delete('study_time', [CourseFormController::class, 'deleteStudyTime'])->name('study_time.delete');
     Route::post('classes_day', [CourseFormController::class, 'addClassesDay'])->name('classes_day.add');
@@ -303,10 +293,7 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => '
     Route::get('visa_application/other_fields/{id}', 'VisaApplicationController@getOtherFields')->name('visa.otherfields');
 });
 
-/*
- *
- * School admin routes start
- * */
+///// School admin routes start /////
 Route::group(['namespace' => 'SchoolAdmin', 'prefix' => 'schooladmin', 'middleware' => 'school_admin', 'as' => 'schooladmin.'], function () {
     Route::get('/', function () {
         return redirect()->route('schooladmin.dashboard');
@@ -359,10 +346,10 @@ Route::group(['namespace' => 'SchoolAdmin', 'prefix' => 'schooladmin', 'middlewa
     /*Route::post('blogs/update/{id}', [\App\Http\Controllers\SuperAdmin\BlogController::class, 'update'])->name('sblogs.update');
     Route::resource('blogs', \App\Http\Controllers\SuperAdmin\BlogController::class);*/
 
-    Route::post('schools/update/{id}', 'SchoolController@update')->name('school.update');
-    Route::resource('schools', 'SchoolController');
+    Route::post('school/update/{id}', 'SchoolController@update')->name('school.update');
+    Route::resource('school', 'SchoolController');
 
-    Route::post('schools/save/program/session', 'CourseControllerSchoolAdmin@programSessionSave')->name('course.session_store_for_program');
+    Route::post('school/save/program/session', 'CourseControllerSchoolAdmin@programSessionSave')->name('course.session_store_for_program');
 
     Route::get('manage_application', 'ManageStudentController@index')->name('manage_application.index');
     Route::get('manage_application/view_message/{id}', 'ManageStudentController@viewMessage')->name('manage_application.view_message');
@@ -432,10 +419,10 @@ Route::group(['namespace' => 'BranchAdmin', 'prefix' => 'branch_admin', 'middlew
     /*Route::post('blogs/update/{id}', [\App\Http\Controllers\SuperAdmin\BlogController::class, 'update'])->name('sblogs.update');
     Route::resource('blogs', \App\Http\Controllers\SuperAdmin\BlogController::class);*/
 
-    Route::post('schools/update/{id}', 'SchoolController@update')->name('school.update');
-    Route::resource('schools', 'SchoolController');
+    Route::post('school/update/{id}', 'SchoolController@update')->name('school.update');
+    Route::resource('school', 'SchoolController');
 
-    Route::post('schools/save/program/session', 'CourseControllerSchoolAdmin@programSessionSave')->name('course.session_store_for_program');
+    Route::post('school/save/program/session', 'CourseControllerSchoolAdmin@programSessionSave')->name('course.session_store_for_program');
 
     Route::get('manage_application', 'ManageStudentController@index')->name('manage_application.index');
     Route::get('manage_application/view_message/{id}', 'ManageStudentController@viewMessage')->name('manage_application.view_message');

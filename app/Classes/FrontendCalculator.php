@@ -356,7 +356,7 @@ class FrontendCalculator
         insertCalculationIntoDB('discount_fee', $discounted_total);
 
         if ($this->checkBetweenDate($this->discount_start_date_for_week_select, $this->discount_end_date_for_week_select, Carbon::now()->format('Y-m-d'))) {
-            //calculating by program cost * week  - free_week
+            // Calculating by program cost * week  - free_week
             $divide = $this->divideProgramDurationByWeekSelect($this->program_duration, $this->discount_week_get);
 
             $data['total'] =  $this->fixed_program_cost * $divide * $this->how_many_week_free;
@@ -656,7 +656,7 @@ class FrontendCalculator
             'values' => [],
         ];
         foreach ($values as $value) {
-            $result_value = $value ? $value : 0;
+            $result_value = $value ? (float)$value : 0;
             if ($course) {
                 $result_value = round($result_value * $course->getCurrency->exchange_rate);
             }

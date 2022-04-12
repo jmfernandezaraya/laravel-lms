@@ -1,12 +1,4 @@
 /*
-* Multiselect option initialisation starts here
-*/
-
-/*
-* function for removing element program under age
-*/
-
-/*
 * Init tinymce
 */
 function initCkeditor(editor_id = 'textarea_en') {
@@ -34,7 +26,6 @@ function tinymceInit(id = null) {
             selector: 'textarea'
         });
     } else {
-        alert(id);
         tinymce.init({
             selector: 'textarea#' + id
         });
@@ -55,63 +46,6 @@ var yeardatepicker_days = [];
 var yeardatepicker_months = [];
 
 $(document).ready(function () {
-    var remove_program_button = 0;
-    var formnum = 0;
-
-    $('#program_under_age_remove' + remove_program_button).click(function () {
-    });
-
-    $('#clone_program_text_book_fee').find('.fa-minus').click(function (e) {
-        if (!(rowNum1 <= 1)) {
-            rowNum1--;
-
-            $(this).closest("#clone_program_text_book_fee").remove();
-            $('#clone_program_text_book_fee').find('#increment').attr('value', rowNum);
-        }
-    });
-
-    var airportincrement = typeof (airportincrements) != 'undefined' ? airportincrements : 0;
-    $('#accom_program_duration_clone').find('.fa-plus-circle').click(function () {
-        airportincrement++;
-        $(this).parents().find('#airportincrement').attr('value', airportincrement);
-        var copied = $(this).parent().parent().parent().parent().clone(true);
-        copied.insertAfter($(this).parent().parent());
-    });
-
-    $('#accom_program_duration_clone').find('.fa-minus').click(function (e) {
-        if (!(airportincrement == 0)) {
-            $(this).closest("#accom_program_duration_clone").remove();
-            $('#accom_program_duration_clone').find('#increment').attr('value', airportincrement);
-            airportincrement--;
-        }
-    });
-
-    var medical_clone = typeof (medical_clones) != 'undefined' ? medical_clones : '';
-    $('#medical_clone' + medical_clone).find('.fa-plus-circle').click(function () {
-        $('#medical_clone' + medical_clone).find('#medicalincrement').attr('value', rowNum3);
-        var copied = $("#medical_clone" + medical_clone).clone(true);
-        copied.insertAfter("#accom_program_duration_clone");
-        rowNum3++;
-    });
-    $('#medical_clone' + medical_clone).find('.fa-minus').click(function (e) {
-        if (!(rowNum3 <= 1)) {
-            rowNum3--;
-            $(this).closest("#medical_clone" + medical_clone).remove();
-            $('#medical_clone' + medical_clone).find('#increment').attr('value', rowNum);
-        }
-    });
-
-    var accomunderagecloneselect = 0;
-    $('#accom_under_age_clone' + formnum).find('.fa-minus').click(function (e) {
-        alert('CLIEKD');
-        if (!(accomunderagecloneselect == 0)) {
-            $(this).parent().parent().remove();
-            $(this).parent().parent().parent().find('#accomincreement').attr('value', accomunderagecloneselect);
-
-            accomunderagecloneselect--;
-        }
-    });
-
     $('.available_date').change(function (e) {
         if ($(this).val() == 'selected_dates') {
             $(this).parent().parent().find('.available_days').show();
@@ -266,36 +200,34 @@ $(document).ready(function () {
     }
 });
 
-function getSchool(thisurl, id) {
-    if (id != '') {
-        $('select[multiple].active2.3col').multiselect({
-            enableFiltering: true,
-            maxHeight: 450
-        });
-        $.post(thisurl, {_token: token, id: id}, function (data) {
-            $('#country_name').html(data.country);
-            $('#city_name').html(data.city);
-
-            var models_dropdown = $("select[multiple].active2.3col");
-            models_dropdown.empty();
-
-            $(data.branch).each(function () {
-                var option = $("<option />");
-                option.html(this);
-                option.val(this);
-                models_dropdown.append(option);
-            });
-
-            $('select[multiple].active2.3col').multiselect('rebuild');
+function changeCourseSchool() {
+    var school = $('#school_name').val();
+    if (school != '') {
+        $.post(url_school_country_list, {_token: token, id: school}, function (data) {
+            $('#country_name').html(data);
         });
     }
 }
 
-function reloadJson() {
-    var reload = true;
-    var tok = $('meta[name="csrf-token"]').attr('content');
-    $.post(calculate_discount_url, {_token: tok, reload: reload}, function (data) {
-    });
+function changeCourseCountry() {
+    var school = $('#school_name').val();
+    var country = $('#country_name').val();
+    if (school != '' && country != '') {
+        $.post(url_school_city_list, {_token: token, id: school, country: country}, function (data) {
+            $('#city_name').html(data);
+        });
+    }
+}
+
+function changeCourseCity() {
+    var school = $('#school_name').val();
+    var country = $('#country_name').val();
+    var city = $('#city_name').val();
+    if (school != '' && country != '' && city != '') {
+        $.post(url_school_branch_list, {_token: token, id: school, country: country, city: city}, function (data) {
+            $('#branch_choose').html(data);
+        });
+    }
 }
 
 function confirmDelete() {
@@ -329,6 +261,7 @@ function submitCourseForm(object) {
             if (data.errors) {
                 document.documentElement.scrollTop = 0;
                 $("#loader").hide();
+
                 $('.alert-danger').show();
                 $('.alert-danger ul').html('');
                 for (var error in data.errors) {
@@ -338,10 +271,12 @@ function submitCourseForm(object) {
                 console.log(data.catch_error);
                 document.documentElement.scrollTop = 0;
                 $("#loader").hide();
+
                 $('.alert-danger').show();
                 $('.alert-danger ul').html(data.catch_error);
             } else if (data.success == 'success') {
                 $("#loader").hide();
+
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
                 document.documentElement.scrollTop = 0;
@@ -371,6 +306,7 @@ function updateCourseForm(object) {
             if (data.errors) {
                 document.documentElement.scrollTop = 0;
                 $("#loader").hide();
+
                 $('.alert-danger').show();
                 $('.alert-danger ul').html('');
                 for (var error in data.errors) {
@@ -380,10 +316,12 @@ function updateCourseForm(object) {
                 console.log(data.catch_error);
                 document.documentElement.scrollTop = 0;
                 $("#loader").hide();
+
                 $('.alert-danger').show();
                 $('.alert-danger ul').html(data.catch_error);
             } else if (data.success == 'success') {
                 $("#loader").hide();
+
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
                 document.documentElement.scrollTop = 0;
@@ -417,6 +355,7 @@ function submitCommonForBlogForm(urlname, typeMethod = "POST") {
             if (data.errors) {
                 document.documentElement.scrollTop = 0;
                 $("#loader").hide();
+
                 $('.alert-danger').show();
                 $('.alert-danger ul').html('');
                 for (var error in data.errors) {
@@ -425,11 +364,13 @@ function submitCommonForBlogForm(urlname, typeMethod = "POST") {
             } else if (data.catch_error) {
                 document.documentElement.scrollTop = 0;
                 $("#loader").hide();
+
                 $('.alert-danger').show();
                 $('.alert-danger ul').html(data.catch_error);
             } else {
                 document.documentElement.scrollTop = 0;
                 $("#loader").hide();
+
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
             }
@@ -451,6 +392,7 @@ function submitSchoolAdminForm(urlname, method = 'POST') {
         processData: false,
         success: function (data) {
             $("#loader").hide();
+
             if (data.errors) {
                 document.documentElement.scrollTop = 0;
 
@@ -489,6 +431,7 @@ function submitForm(object, method = 'POST') {
         processData: false,
         success: function (data) {
             $("#loader").hide();
+
             if (data.errors) {
                 document.documentElement.scrollTop = 0;
 
@@ -500,10 +443,12 @@ function submitForm(object, method = 'POST') {
             } else if (data.catch_error) {
                 document.documentElement.scrollTop = 0;
                 $("#loader").hide();
+
                 $('.alert-danger').show();
                 $('.alert-danger ul').html(data.catch_error);
             } else if (data.success == true) {
                 $("#loader").hide();
+
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
                 document.documentElement.scrollTop = 0;
@@ -511,6 +456,7 @@ function submitForm(object, method = 'POST') {
         },
         error: function (data) {
             $("#loader").hide();
+
             document.documentElement.scrollTop = 0;
 
             var rees = JSON.parse(data.responseText);
@@ -613,7 +559,7 @@ function calculateCourse(type) {
             $("#lessons_per_week").html(data.lessons_per_week);
             $("#hours_per_week").html(data.hours_per_week);
             $("#study_time").html(data.study_time);
-            $("#classes_day").html(data.classes_day);
+            $("#classes_day").html(data.classes_days);
             $("#start_date").html(data.start_date);
 
             if (data.availale_days != undefined) {
@@ -703,16 +649,20 @@ function calculateCourse(type) {
         resetAirportMedical(true); 
         reloadCourseCalclulator();
 
-        setTimeout(function() {
-            if (type == 'date_selected') {
-                if ($("#program_duration option").length) {
-                    if (default_program_duration != $($("#program_duration option")[0]).attr('value')) {
-                        $("#program_duration").val($($("#program_duration option")[0]).attr('value')).change();
+        if (typeof callbackCalculateCourse === "function") {
+            callbackCalculateCourse(type);
+        } else {
+            setTimeout(function() {
+                if (type == 'date_selected') {
+                    if ($("#program_duration option").length) {
+                        if (default_program_duration != $($("#program_duration option")[0]).attr('value')) {
+                            $("#program_duration").val($($("#program_duration option")[0]).attr('value')).change();
+                        }
+                        calculateCourse('duration');
                     }
-                    calculateCourse('duration');
                 }
-            }
-        }, 1000);
+            }, 1000);
+        }
     });
 }
 
@@ -899,13 +849,17 @@ function calcuateAccommodation() {
                     $("#custodianship").hide();
                 }
             }
+
+            if (typeof callbackCalcuateAccommodation === "function") {
+                callbackCalcuateAccommodation();
+            }
         }).done(function () {
             $("#loader").hide();
         });
     }
 }
 
-function calculateAirportMedical() {
+function calculateAirportMedical(type = 'airport') {
     var program_duration = $('#program_duration').val();
 
     var airport_service_provider = $('#airport_service_provider option:selected').val() ? jQuery.trim($('#airport_service_provider option:selected').text()) : '';
@@ -918,13 +872,13 @@ function calculateAirportMedical() {
 
     $.post(airport_medical_fee_url, {
         _token: $('meta[name="csrf-token"]').attr('content'),
-        'program_duration': program_duration,
-        'airport_service_provider': airport_service_provider,
-        'airport_name': airport_name,
-        'airport_service': airport_service,
-        'medical_company_name': medical_company_name,
-        'medical_deductible': medical_deductible,
-        'medical_duration': medical_duration
+        program_duration: program_duration,
+        airport_service_provider: airport_service_provider,
+        airport_name: airport_name,
+        airport_service: airport_service,
+        medical_company_name: medical_company_name,
+        medical_deductible: medical_deductible,
+        medical_duration: medical_duration
     }, function (data) {
         $("#airport_medical_fees_table #airport_pickup .cost_value").html(data.airport_fee.value);
         $("#airport_medical_fees_table #airport_pickup .converted_value").html(parseFloat(data.airport_fee.converted_value).toFixed(2));
@@ -949,6 +903,10 @@ function calculateAirportMedical() {
 
         $("#AirportPickupModal .modal-body").html(data.airport_note);
         $("#MedicalInsuranceModal .modal-body").html(data.medical_note);
+
+        if (typeof callbackCalculateAirportMedical === "function") {
+            callbackCalculateAirportMedical(type);
+        }
     });
 }
 
@@ -967,6 +925,10 @@ function discountPrice(value, form_token = '') {
 }
 
 $(document).ready(function() {
+    $('#under_age').change(function () {
+        calculateCourse('requested_for_under_age');
+    });
+
     $('#airport_service_provider').change(function () {
         var airport_service_provider = $('#airport_service_provider option:selected').val() ? jQuery.trim($('#airport_service_provider option:selected').text()) : '';
         $.post(airport_names_url, {
@@ -974,6 +936,10 @@ $(document).ready(function() {
             'service_provider': airport_service_provider
         }, function (data) {
             $('#airport_name').html(data);
+
+            if (typeof callbackChangeAirportServiceProvider === "function") {
+                callbackChangeAirportServiceProvider();
+            }
         });
     });
 
@@ -986,11 +952,15 @@ $(document).ready(function() {
             'name': airport_name
         }, function (data) {
             $('#airport_type_of_service').html(data);
+
+            if (typeof callbackChangeAirportName === "function") {
+                callbackChangeAirportName();
+            }
         });
     });
 
     $('#airport_type_of_service').change(function () {
-        calculateAirportMedical();
+        calculateAirportMedical('airport');
     });
 
     $('#medical_company_name').change(function () {
@@ -1000,6 +970,10 @@ $(document).ready(function() {
             'company_name': medical_company_name
         }, function (data) {
             $('#medical_deductible_up_to').html(data);
+
+            if (typeof callbackChangeMedicalCompanyName === "function") {
+                callbackChangeMedicalCompanyName();
+            }
         });
     });
 
@@ -1014,11 +988,15 @@ $(document).ready(function() {
             'deductible': medical_deductible,
         }, function (data) {
             $('#medical_duration').html(data);
+
+            if (typeof callbackChangeMedicalDeductibleUpTo === "function") {
+                callbackChangeMedicalDeductibleUpTo();
+            }
         });
     });
 
     $('#medical_duration').change(function () {
-        calculateAirportMedical();
+        calculateAirportMedical('medical');
     });
 
     $('#accom_type').change(function () {
@@ -1030,6 +1008,10 @@ $(document).ready(function() {
         }, function (data) {
             $('#room_type').html(data.room_type);
             $('#meal_type').html(data.meal_type);
+
+            if (typeof callbackChangeAccommodationType === "function") {
+                callbackChangeAccommodationType();
+            }
         });
     });
 
@@ -1042,6 +1024,10 @@ $(document).ready(function() {
             program_duration: $("#program_duration").val()
         }, function (data) {
             $('#accom_duration').html(data.duration);
+
+            if (typeof callbackChangeAccommodationMealType === "function") {
+                callbackChangeAccommodationMealType();
+            }
         });
     });
 
@@ -1070,6 +1056,8 @@ function submitAccommodationForm(object) {
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
                 document.documentElement.scrollTop = 0;
+
+                window.location.href = edit_accomm_under_age_url;
             } else if (data.errors) {
                 document.documentElement.scrollTop = 0;
                 $("#loader").hide();
@@ -1091,9 +1079,8 @@ function submitAccommodationForm(object) {
 
 function submitAirportMedicalForm(object, reload = false) {
     var urlname = $(object).parents().find('#courseform').attr('action');
-    var accommodationForm = $(object).parents().find('#courseform');
-
-    var formData = new FormData($(accommodationForm)[0]);
+    var form = $(object).parents().find('#courseform');
+    var formData = new FormData($(form)[0]);
 
     $("#loader").show();
     $.ajax({
@@ -1423,7 +1410,6 @@ function addBranch(english_name, arabic_name) {
 
         models_dropdown.append(data.result);
         document.documentElement.scrollTop = 0;
-        $("#branch_choose").multiselect('rebuild');
         $("#loader").hide();
     });
 }
@@ -1442,7 +1428,6 @@ function deleteBranch() {
             $.post(delete_branch_url, {_method: 'DELETE', _token: token, ids: ids}, function (data) {
                 $("#branch_choose").html(data.result);
                 document.documentElement.scrollTop = 0;
-                $("#branch_choose").multiselect('rebuild');
             }).done(function (data) {
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
@@ -1929,6 +1914,7 @@ function addApplyFrom(object) {
         processData: false,
         success: function (data) {
             $("#loader").hide();
+
             if (data.success) {
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
@@ -1955,6 +1941,7 @@ function addApplyFrom(object) {
         },
         error: function (data) {
             $("#loader").hide();
+
             close_button.click();
             var rees = JSON.parse(data.responseText);
             $('.alert-danger').show();
@@ -1981,6 +1968,7 @@ function deleteApplyFrom(object) {
 
         success: function (data) {
             $("#loader").hide();
+
             if (data.success) {
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
@@ -2027,6 +2015,7 @@ function addApplicationCenter(object) {
         processData: false,
         success: function (data) {
             $("#loader").hide();
+
             if (data.success) {
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
@@ -2051,6 +2040,7 @@ function addApplicationCenter(object) {
         },
         error: function (data) {
             $("#loader").hide();
+
             close_button.click();
             var rees = JSON.parse(data.responseText);
             $('.alert-danger').show();
@@ -2079,6 +2069,7 @@ function deleteApplicationCenter(object) {
 
         success: function (data) {
             $("#loader").hide();
+
             if (data.success) {
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
@@ -2117,6 +2108,7 @@ function addNationality(object) {
         processData: false,
         success: function (data) {
             $("#loader").hide();
+
             if (data.success) {
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
@@ -2143,12 +2135,12 @@ function addNationality(object) {
         },
         error: function (data) {
             $("#loader").hide();
+
             close_button.click();
             var rees = JSON.parse(data.responseText);
 
             $('.alert-danger').show();
             $('.alert-danger ul').html('');
-
             for (var error in rees.errors) {
                 $('.alert-danger ul').append('<li>' + rees.errors[error] + '</li>');
             }
@@ -2172,6 +2164,7 @@ function deleteNationality(object) {
 
         success: function (data) {
             $("#loader").hide();
+
             if (data.success) {
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
@@ -2210,11 +2203,11 @@ function addTravel(object) {
         processData: false,
         success: function (data) {
             $("#loader").hide();
+
             if (data.success) {
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
                 document.documentElement.scrollTop = 0;
-
                 close_button.click();
                 $("#to_travel").html(data.option);
             } else if (data.errors) {
@@ -2226,7 +2219,6 @@ function addTravel(object) {
                 }
             } else if (data.message) {
                 close_button.click();
-
                 $('.alert-danger').show();
                 $('.alert-danger ul').html('');
                 for (var error in data.errors) {
@@ -2236,12 +2228,11 @@ function addTravel(object) {
         },
         error: function (data) {
             $("#loader").hide();
+
             close_button.click();
             var rees = JSON.parse(data.responseText);
-
             $('.alert-danger').show();
             $('.alert-danger ul').html('');
-
             for (var error in rees.errors) {
                 $('.alert-danger ul').append('<li>' + rees.errors[error] + '</li>');
             }
@@ -2266,6 +2257,7 @@ function deleteTravel(object) {
 
         success: function (data) {
             $("#loader").hide();
+
             if (data.success) {
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
@@ -2304,11 +2296,11 @@ function addTypeOfVisa(object) {
         processData: false,
         success: function (data) {
             $("#loader").hide();
+
             if (data.success) {
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
                 document.documentElement.scrollTop = 0;
-
                 close_button.click();
                 $("#type_of_visa").html(data.option);
             } else if (data.errors) {
@@ -2320,7 +2312,6 @@ function addTypeOfVisa(object) {
                 }
             } else if (data.message) {
                 close_button.click();
-
                 $('.alert-danger').show();
                 $('.alert-danger ul').html('');
                 for (var error in data.errors) {
@@ -2335,7 +2326,6 @@ function addTypeOfVisa(object) {
 
             $('.alert-danger').show();
             $('.alert-danger ul').html('');
-
             for (var error in rees.errors) {
                 $('.alert-danger ul').append('<li>' + rees.errors[error] + '</li>');
             }
@@ -2360,6 +2350,7 @@ function deleteTypeOfVisa(object) {
 
         success: function (data) {
             $("#loader").hide();
+
             if (data.success) {
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
@@ -2458,6 +2449,7 @@ function sendMessage(id) {
 
         success: function (data) {
             $("#loader").hide();
+
             if (data.success != 'error') {
                 toastr.success(data.success);
             } else {
@@ -2466,8 +2458,8 @@ function sendMessage(id) {
         },
         error: function (data) {
             $("#loader").hide();
+
             var rees = JSON.parse(data.responseText);
-            console.log(data)
             for (errors in rees.errors) {
                 toastr.error(rees.errors[errors])
             }

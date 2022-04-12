@@ -49,7 +49,7 @@ $schoolupdateurl  = route('school.update', $school_ar->unique_id);
             fieldName: "video_url[]"
         });
     });
-    var addschoolurl = "{{route('schools.store')}}";
+    var addschoolurl = "{{route('school.store')}}";
     var addschoolupdate_url = "{{$schoolupdateurl}}";
     var in_arabic = "{{__('SuperAdmin/backend.in_arabic')}}";
     var in_english = "{{__('SuperAdmin/backend.in_english')}}";
@@ -91,7 +91,7 @@ endif;
 
             <div id="show_form"></div>
 
-            <form id="form1" class="forms-sample" enctype="multipart/form-data" action="{{route('schools.store')}}"
+            <form id="form1" class="forms-sample" enctype="multipart/form-data" action="{{route('school.store')}}"
                   method="post">
                 {{csrf_field()}}
                 <div class="form-group">

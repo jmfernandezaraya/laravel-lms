@@ -81,8 +81,9 @@ class User extends Authenticatable
 
             $db1->fill($input1)->save();
             $save1 = $db2->fill($input2)->save();
-            if ($save1)
+            if ($save1) {
                 return true;
+            }
         });
 
 

@@ -172,7 +172,7 @@
 
                         <div class="col-md-4 mt-3">
                             <label for="school_name">{{__('SuperAdmin/backend.choose_school')}}:</label>
-                            <select onchange="getSchool(url_schols, $(this).val())" class="form-control" id="school_name" name="school_id">
+                            <select onchange="changeCourseSchool(url_school_country_list, $(this).val())" class="form-control" id="school_name" name="school_id">
                                 <option value="">{{__('SuperAdmin/backend.select_school')}}</option>
                                 @foreach($schools as $school)
                                 <option value="{{$school->unique_id}}">{{$school->name}}</option>
@@ -891,7 +891,7 @@
                 <button type="submit" onclick="get_content(); /*submitCourseForm(course_url_store)*/" class="btn btn-primary">@lang('SuperAdmin/backend.submit')</button>
             </form>
             --}} {{--
-            <form id="form2" class="forms-sample" enctype="multipart/form-data" action="{{route('schools.store')}}" method="post">
+            <form id="form2" class="forms-sample" enctype="multipart/form-data" action="{{route('school.store')}}" method="post">
                 {{csrf_field()}}
                 <div class="form-group">
                     <label for="exampleInputName1">{{__('SuperAdmin/backend.school_name')}}</label>

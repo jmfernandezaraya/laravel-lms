@@ -35,7 +35,9 @@
         var add_accomm_under_range_url = "{{route('superadmin.accomm_under_age.add')}}";
         var delete_accomm_under_range_url = "{{route('superadmin.accomm_under_age.delete')}}";
 
-        var url_schols = "{{route('superadmin.schools.get')}}";
+        var url_school_country_list = "{{route('superadmin.school.country.list')}}";
+        var url_school_city_list = "{{route('superadmin.school.city.list')}}";
+        var url_school_branch_list = "{{route('superadmin.school.branch.list')}}";
         var select_option = "{{__('SuperAdmin/backend.select_option')}}";
         var search = "{{__('SuperAdmin/backend.search')}}";
 
@@ -367,6 +369,10 @@
             $(new_clone_form).find('[name="christmas_fee_per_week[]"]').val('');
             $(new_clone_form).find('[name="christmas_fee_start_date[]"]').val('');
             $(new_clone_form).find('[name="christmas_fee_end_date[]"]').val('');
+            $(new_clone_form).find('[name="x_week_selected[]"]').val('');
+            $(new_clone_form).find('[name="how_many_week_free[]"]').val('');
+            $(new_clone_form).find('[name="x_week_start_date[]"]').val('');
+            $(new_clone_form).find('[name="x_week_end_date[]"]').val('');
 
             new_clone_form.insertAfter($(clone_accommodation_form));
 
@@ -427,6 +433,7 @@
             $('#accomunderageincrement').val(accommodation_under_age_clone);
             var new_clone_form = $(clone_accommodation_under_age_form).clone(true);
             new_clone_form.attr('id', 'accommodation_under_age_clone' + accommodation_under_age_clone);
+            $(new_clone_form).find('[name="accom_under_age_id[]"]').val('');
 
             var under_age_html = $(new_clone_form).find('[name="under_age[' + accommodation_under_age_index + '][]"]').html();
             under_age_html = '<select name="under_age[' + accommodation_under_age_clone + '][]" id="under_age_choose' + accommodation_under_age_clone + '" multiple="multiple" class="3col active">' + under_age_html + '</select>';
@@ -473,6 +480,7 @@
             for (var airport_fee_index = 0; airport_fee_index < airport_fees.length; airport_fee_index++) {
                 if (airport_fee_index == 0) {
                     $(airport_fees[airport_fee_index]).attr('id', 'airport' + airport_clone + '_fee_clone0');
+                    $(airport_fees[airport_fee_index]).find('[name="airport_fee_id[' + airport_index + '][]"]').attr('name', 'airport_fee_id[' + airport_clone + '][]').val('');
                     $(airport_fees[airport_fee_index]).find('[name="airport_name[' + airport_index + '][]"]').attr('name', 'airport_name[' + airport_clone + '][]').val('');
                     $(airport_fees[airport_fee_index]).find('[name="airport_service_name[' + airport_index + '][]"]').attr('name', 'airport_service_name[' + airport_clone + '][]').val('');
                     $(airport_fees[airport_fee_index]).find('[name="airport_service_fee[' + airport_index + '][]"]').attr('name', 'airport_service_fee[' + airport_clone + '][]').val('');
@@ -504,6 +512,7 @@
                 var clone_airport_index = parseInt($(clone_airport_forms[airport_index]).attr('id').replace("airport_clone", ""));
                 if (clone_airport_index >= airport_clone) {
                     $(clone_airport_forms[airport_index]).attr('id', 'airport_clone' + clone_airport_index - 1);
+                    $(clone_airport_forms[airport_index]).find('[name="airport_fee_id[' + clone_airport_index + '][]"]').attr('name', 'airport_fee_id[' + (clone_airport_index - 1) + '][]');
                     $(clone_airport_forms[airport_index]).find('[name="airport_name[' + clone_airport_index + '][]"]').attr('name', 'airport_name[' + (clone_airport_index - 1) + '][]');
                     $(clone_airport_forms[airport_index]).find('[name="airport_service_name[' + clone_airport_index + '][]"]').attr('name', 'airport_service_name[' + (clone_airport_index - 1) + '][]');
                     $(clone_airport_forms[airport_index]).find('[name="airport_service_fee[' + clone_airport_index + '][]"]').attr('name', 'airport_service_fee[' + (clone_airport_index - 1) + '][]');
@@ -528,7 +537,7 @@
             new_clone_form.attr('id', 'airport' + airport_index + '_fee_clone' + airport_fee_clone);
             $(clone_airport_form).find('[name="airportfeeincrement[]"]').val(airport_fee_clone);
 
-            $(new_clone_form).find('[name="airport_fee_id[]"]').val('');
+            $(new_clone_form).find('[name="airport_fee_id[' + airport_index + '][]"]').val('');
             $(new_clone_form).find('[name="airport_name[' + airport_index + '][]"]').val('');
             $(new_clone_form).find('[name="airport_service_name[' + airport_index + '][]"]').val('');
             $(new_clone_form).find('[name="airport_service_fee[' + airport_index + '][]"]').val('');            
@@ -573,6 +582,7 @@
             for (var medical_fee_index = 0; medical_fee_index < medical_fees.length; medical_fee_index++) {
                 if (medical_fee_index == 0) {
                     $(medical_fees[medical_fee_index]).attr('id', 'medical' + medical_clone + '_fee_clone0');
+                    $(medical_fees[medical_fee_index]).find('[name="medical_fee_id[' + medical_index + '][]"]').attr('name', 'medical_fee_id[' + medical_clone + '][]').val('');
                     $(medical_fees[medical_fee_index]).find('[name="medical_fees_per_week[' + medical_index + '][]"]').attr('name', 'medical_fees_per_week[' + medical_clone + '][]').val('');
                     $(medical_fees[medical_fee_index]).find('[name="medical_start_date[' + medical_index + '][]"]').attr('name', 'medical_start_date[' + medical_clone + '][]').val('');
                     $(medical_fees[medical_fee_index]).find('[name="medical_end_date[' + medical_index + '][]"]').attr('name', 'medical_end_date[' + medical_clone + '][]').val('');
@@ -606,6 +616,7 @@
                 var clone_medical_index = parseInt($(clone_medical_forms[medical_index]).attr('id').replace("medical_clone", ""));
                 if (clone_medical_index >= medical_clone) {
                     $(clone_medical_forms[medical_index]).attr('id', 'medical_clone' + clone_medical_index - 1);
+                    $(clone_medical_forms[medical_index]).find('[name="medical_fee_id[' + clone_medical_index + '][]"]').attr('name', 'medical_fee_id[' + (clone_medical_index - 1) + '][]');
                     $(clone_medical_forms[medical_index]).find('[name="medical_fees_per_week[' + clone_medical_index + '][]"]').attr('name', 'medical_fees_per_week[' + (clone_medical_index - 1) + '][]');
                     $(clone_medical_forms[medical_index]).find('[name="medical_start_date[' + clone_medical_index + '][]"]').attr('name', 'medical_start_date[' + (clone_medical_index - 1) + '][]');
                     $(clone_medical_forms[medical_index]).find('[name="medical_end_date[' + clone_medical_index + '][]"]').attr('name', 'medical_end_date[' + (clone_medical_index - 1) + '][]');
@@ -630,7 +641,7 @@
             new_clone_form.attr('id', 'medical' + medical_index + '_fee_clone' + medical_fee_clone);
             $(clone_medical_form).find('[name="medicalfeeincrement[]"]').val(medical_fee_clone);
 
-            $(new_clone_form).find('[name="medical_fee_id[]"]').val('');
+            $(new_clone_form).find('[name="medical_fee_id[' + medical_index + '][]"]').val('');
             $(new_clone_form).find('[name="medical_fees_per_week[' + medical_index + '][]"]').val('');
             $(new_clone_form).find('[name="medical_start_date[' + medical_index + '][]"]').val('');
             $(new_clone_form).find('[name="medical_end_date[' + medical_index + '][]"]').val('');     
@@ -727,7 +738,7 @@
             @endif
         });
 
-        var addschoolurl = "{{route('superadmin.schools.store')}}";
+        var addschoolurl = "{{route('superadmin.school.store')}}";
         var in_arabic = "{{__('SuperAdmin/backend.in_arabic')}}";
         var in_english = "{{__('SuperAdmin/backend.in_english')}}";
     </script>

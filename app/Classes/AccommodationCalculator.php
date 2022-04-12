@@ -9,6 +9,13 @@ use App\Models\SuperAdmin\Course;
 class AccommodationCalculator extends FrontendCalculator
 {
     private
+        $airport_pickup_fee = 0,
+        $medical_insurance_fee = 0,
+
+        $christmas_start_date,
+        $christmas_end_date,
+        
+        $accommodation_duration,
         $accommodation_fee = 0,
         $accommodation_placement_fee = 0,
         $accommodation_special_diet_fee = 0,
@@ -20,15 +27,45 @@ class AccommodationCalculator extends FrontendCalculator
         $accommodation_discount,
         $accommodation_peak_fee = 0,
 
-        $airport_pickup_fee = 0,
-        $medical_insurance_fee = 0,
-        $accom_duration,
-
-        $christmas_start_date,
-        $christmas_end_date,
+        $accommodation_x_week_selected,
+        $accommodation_x_week_start_date,
+        $accommodation_x_week_end_date,
+        $accommodation_how_many_week_free,
 
         $accommodation_discount_start_date,
         $accommodation_discount_end_date;
+
+    /**
+     * @return mixed
+     */
+    public function getAirportPickupFee()
+    {
+        return $this->airport_pickup_fee;
+    }
+
+    /**
+     * @param mixed $airport_pickup_fee
+     */
+    public function setAirportPickupFee($airport_pickup_fee)
+    {
+        $this->airport_pickup_fee = $airport_pickup_fee;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMedicalInsuranceFee()
+    {
+        return $this->medical_insurance_fee;
+    }
+
+    /**
+     * @param mixed $medical_insurance_fee
+     */
+    public function setMedicalInsuranceFee($medical_insurance_fee)
+    {
+        $this->medical_insurance_fee = $medical_insurance_fee;
+    }
 
     /**
      * @param mixed $christmas_start_date
@@ -47,35 +84,19 @@ class AccommodationCalculator extends FrontendCalculator
     }
     
     /**
-     * @param mixed $accom_duration
+     * @param mixed $accommodation_duration
      */
-    public function setAccomDuration($accom_duration): void
+    public function setAccommodationDuration($accommodation_duration): void
     {
-        $this->accom_duration = $accom_duration;
+        $this->accommodation_duration = $accommodation_duration;
     }
 
     /**
-     * @param mixed $accommodation_discount_start_date
+     * @param mixed $accommodation_discount
      */
     public function setAccommodationDiscount($accommodation_discount): void
     {
         $this->accommodation_discount = $accommodation_discount;
-    }
-
-    /**
-     * @param mixed $accommodation_discount_start_date
-     */
-    public function setAccommodationDiscountStartDate($accommodation_discount_start_date): void
-    {
-        $this->accommodation_discount_start_date = $accommodation_discount_start_date;
-    }
-
-    /**
-     * @param mixed $accommodation_discount_end_date
-     */
-    public function setAccommodationDiscountEndDate($accommodation_discount_end_date): void
-    {
-        $this->accommodation_discount_end_date = $accommodation_discount_end_date;
     }
 
     /**
@@ -113,6 +134,22 @@ class AccommodationCalculator extends FrontendCalculator
     /**
      * @return mixed
      */
+    public function getAccommodationSpecialDietFee()
+    {
+        return $this->accommodation_special_diet_fee;
+    }
+
+    /**
+     * @param mixed $special_diet_fee
+     */
+    public function setAccommodationSpecialDietFee($special_diet_fee)
+    {
+        $this->accommodation_special_diet_fee = $special_diet_fee;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getAccommodationDeposit()
     {
         return $this->accommodation_deposit;
@@ -124,6 +161,35 @@ class AccommodationCalculator extends FrontendCalculator
     public function setAccommodationDeposit($deposit)
     {
         $this->accommodation_deposit = $deposit;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAccommodationCustodianFee()
+    {
+        return $this->accommodation_custodian_fee;
+    }
+
+    /**
+     * @param mixed $custodian_fee
+     */
+    public function setAccommodationCustodianFee($custodian_fee)
+    {
+        $this->accommodation_custodian_fee = $custodian_fee;
+    }
+
+    public function getAccommodationPeakFee()
+    {
+        return $this->accommodation_peak_fee;
+    }
+
+    /**
+     * @param mixed $peak_fee
+     */
+    public function setAccommodationPeakFee($peak_fee): void
+    {
+        $this->accommodation_peak_fee = $peak_fee;
     }
 
     /**
@@ -175,48 +241,51 @@ class AccommodationCalculator extends FrontendCalculator
     }
 
     /**
-     * @return mixed
+     * @param mixed $accommodation_discount_start_date
      */
-    public function getAccommodationSpecialDietFee()
+    public function setAccommodationDiscountStartDate($accommodation_discount_start_date): void
     {
-        return $this->accommodation_special_diet_fee;
+        $this->accommodation_discount_start_date = $accommodation_discount_start_date;
     }
 
     /**
-     * @param mixed $special_diet_fee
+     * @param mixed $accommodation_discount_end_date
      */
-    public function setAccommodationSpecialDietFee($special_diet_fee)
+    public function setAccommodationDiscountEndDate($accommodation_discount_end_date): void
     {
-        $this->accommodation_special_diet_fee = $special_diet_fee;
+        $this->accommodation_discount_end_date = $accommodation_discount_end_date;
     }
 
     /**
-     * @return mixed
+     * @param mixed $accommodation_discount_start_date
      */
-    public function getAccommodationCustodianFee()
+    public function setAccommodationXWeekSelected($accommodation_x_week_selected): void
     {
-        return $this->accommodation_custodian_fee;
+        $this->accommodation_x_week_selected = $accommodation_x_week_selected;
     }
 
     /**
-     * @param mixed $custodian_fee
+     * @param mixed $accommodation_x_week_start_date
      */
-    public function setAccommodationCustodianFee($custodian_fee)
+    public function setAccommodationXWeekStartDate($accommodation_x_week_start_date): void
     {
-        $this->accommodation_custodian_fee = $custodian_fee;
-    }
-
-    public function getAccommodationPeakFee()
-    {
-        return $this->accommodation_peak_fee;
+        $this->accommodation_x_week_start_date = $accommodation_x_week_start_date;
     }
 
     /**
-     * @param mixed $peak_fee
+     * @param mixed $accommodation_x_week_end_date
      */
-    public function setAccommodationPeakFee($peak_fee): void
+    public function setAccommodationXWeekEndDate($accommodation_x_week_end_date): void
     {
-        $this->accommodation_peak_fee = $peak_fee;
+        $this->accommodation_x_week_end_date = $accommodation_x_week_end_date;
+    }
+
+    /**
+     * @param mixed $accommodation_how_many_week_free
+     */
+    public function setAccommodationXWeekFee($accommodation_how_many_week_free): void
+    {
+        $this->accommodation_how_many_week_free = $accommodation_how_many_week_free;
     }
 
     // Only Accommodation Total
@@ -236,59 +305,32 @@ class AccommodationCalculator extends FrontendCalculator
         return $total;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getAirportPickupFee()
-    {
-        return $this->airport_pickup_fee;
-    }
-
-    /**
-     * @param mixed $airport_pickup_fee
-     */
-    public function setAirportPickupFee($airport_pickup_fee)
-    {
-        $this->airport_pickup_fee = $airport_pickup_fee;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMedicalInsuranceFee()
-    {
-        return $this->medical_insurance_fee;
-    }
-
-    /**
-     * @param mixed $medical_insurance_fee
-     */
-    public function setMedicalInsuranceFee($medical_insurance_fee)
-    {
-        $this->medical_insurance_fee = $medical_insurance_fee;
-    }
-
     public function TotalCalculation()
     {
-        $total = readCalculationFromDB('total') + readCalculationFromDB('accommodation_total') + readCalculationFromDB('airport_pickup_fee') +  readCalculationFromDB('medical_insurance_fee') + readCalculationFromDB('accommodation_special_diet_fee');
+        $total = readCalculationFromDB('total') + readCalculationFromDB('accommodation_total') + readCalculationFromDB('accommodation_special_diet_fee') + readCalculationFromDB('airport_pickup_fee') + readCalculationFromDB('medical_insurance_fee');
         return $total - readCalculationFromDB('discount_fee') - readCalculationFromDB('accommodation_discount');
     }
 
     public function resultAccommodationDiscount()
     {
         $discount_total = 0;
-        if ($this->checkBetweenDate($this->accommodation_discount_start_date, $this->accommodation_discount_end_date, Carbon::now()->format('Y-m-d'))) {
+        if ($this->checkBetweenDate($this->accommodation_x_week_start_date, $this->accommodation_x_week_end_date, Carbon::now()->format('Y-m-d'))) {
+            if ($this->accommodation_x_week_selected) {
+                $discount_total = $this->accommodation_fee * (int)((int)$this->accommodation_duration / (int)$this->accommodation_x_week_selected) * $this->accommodation_how_many_week_free;
+            } else {
+                $discount_total = 0;
+            }
+        } else if ($this->checkBetweenDate($this->accommodation_discount_start_date, $this->accommodation_discount_end_date, Carbon::now()->format('Y-m-d'))) {
             $get_symbol = explode(" ", $this->accommodation_discount);
 
-            //We are calculating discount based on % or - here
-            $discount_total = $get_symbol[1] == '%' ? (($this->accommodation_fee / 100) * $get_symbol[0]) : ((float)$this->accommodation_discount * (float)$this->accom_duration);
+            // We are calculating discount based on % or - here
+            $discount_total = $get_symbol[1] == '%' ? (($this->accommodation_fee / 100) * $get_symbol[0]) : ((float)$this->accommodation_discount * (float)$this->accommodation_duration);
         }
         return $discount_total;
     }
 
     /**
-     * @param mixed $date1 , $date2,
-     * $date3, $date4+
+     * @param mixed $date1 , $date2, $date3, $date4+
      *
      * return array
      *
@@ -298,27 +340,15 @@ class AccommodationCalculator extends FrontendCalculator
     {
         $multiply['summer'] = 0 ;
 
-        if (!($this->getProgramStartDateFromFrontend() > $this->getSummerDateFromDbAccommodation())
-            && !($this->getFrontEndDate() < $this->getSummerStartDateAccommodation())
-        )
-        {
-            if ($this->getFrontEndDate() >= $this->getSummerDateFromDbAccommodation()
-                && $this->getProgramStartDateFromFrontend() <= $this->getSummerStartDateAccommodation()
-            ){
+        if (!($this->getProgramStartDateFromFrontend() > $this->getSummerDateFromDbAccommodation()) && !($this->getFrontEndDate() < $this->getSummerStartDateAccommodation())) {
+            if ($this->getFrontEndDate() >= $this->getSummerDateFromDbAccommodation() && $this->getProgramStartDateFromFrontend() <= $this->getSummerStartDateAccommodation()) {
                 $multiply['which'] = 33;
-                $multiply['summer'] =
-                    $this->compare_between_two_dates($this->getSummerStartDateAccommodation(), $this->getSummerDateFromDbAccommodation());
-            } elseif (($this->getFrontEndDate() < $this->getSummerDateFromDbAccommodation()
-                && $this->getSummerStartDateAccommodation() > $this->getProgramStartDateFromFrontend()
-            )
-            ){
+                $multiply['summer'] = $this->compare_between_two_dates($this->getSummerStartDateAccommodation(), $this->getSummerDateFromDbAccommodation());
+            } elseif (($this->getFrontEndDate() < $this->getSummerDateFromDbAccommodation() && $this->getSummerStartDateAccommodation() > $this->getProgramStartDateFromFrontend()))
+            {
                 $multiply['which'] = 222;
-                $multiply['summer'] =
-                    $this->getFrontEndDate() < $this->getSummerDateFromDbAccommodation() ?  $this->compare_between_two_dates($this->getFrontEndDate(), $this->getSummerStartDateAccommodation()) :
-                        $this->compare_between_two_dates($this->getFrontEndDate(), $this->getSummerDateFromDbAccommodation());
-            } elseif ($this->getFrontEndDate() <= $this->getSummerDateFromDbAccommodation() &&
-                $this->getFrontEndDate() >= $this->getSummerStartDateAccommodation()
-            ) {
+                $multiply['summer'] = $this->getFrontEndDate() < $this->getSummerDateFromDbAccommodation() ? $this->compare_between_two_dates($this->getFrontEndDate(), $this->getSummerStartDateAccommodation()) : $this->compare_between_two_dates($this->getFrontEndDate(), $this->getSummerDateFromDbAccommodation());
+            } elseif ($this->getFrontEndDate() <= $this->getSummerDateFromDbAccommodation() && $this->getFrontEndDate() >= $this->getSummerStartDateAccommodation()) {
                 $multiply['which'] = 2;
                 $multiply['summer'] = $this->compare_between_two_dates($this->getProgramStartDateFromFrontend(), $this->getFrontEndDate());
             } elseif ($this->getFrontEndDate() >= $this->getSummerDateFromDbAccommodation() &&
@@ -330,58 +360,34 @@ class AccommodationCalculator extends FrontendCalculator
 
         $multiply['which'] = 'null';
         $multiply['peak'] = 0;
-        if (!($this->getProgramStartDateFromFrontend() > $this->getPeakDateFromDbAccommodation())
-            && !($this->getFrontEndDate() < $this->getPeakStartDateAccommodation())
-        )
-        {
-            if ($this->getFrontEndDate() >= $this->getPeakDateFromDbAccommodation()
-                && $this->getProgramStartDateFromFrontend() <= $this->getPeakStartDateAccommodation()
-            ) {
+        if (!($this->getProgramStartDateFromFrontend() > $this->getPeakDateFromDbAccommodation()) && !($this->getFrontEndDate() < $this->getPeakStartDateAccommodation())) {
+            if ($this->getFrontEndDate() >= $this->getPeakDateFromDbAccommodation() && $this->getProgramStartDateFromFrontend() <= $this->getPeakStartDateAccommodation()) {
                 $multiply['which'] = 33;
-                $multiply['peak'] =
-                    $this->compare_between_two_dates($this->getPeakStartDateAccommodation(), $this->getPeakDateFromDbAccommodation());
-            } elseif (($this->getFrontEndDate() < $this->getPeakDateFromDbAccommodation()
-                && $this->getPeakStartDateAccommodation() > $this->getProgramStartDateFromFrontend())) {
+                $multiply['peak'] = $this->compare_between_two_dates($this->getPeakStartDateAccommodation(), $this->getPeakDateFromDbAccommodation());
+            } elseif (($this->getFrontEndDate() < $this->getPeakDateFromDbAccommodation() && $this->getPeakStartDateAccommodation() > $this->getProgramStartDateFromFrontend())) {
                 $multiply['which'] = 222;
-                $multiply['peak'] =
-                    $this->getFrontEndDate() < $this->getPeakDateFromDbAccommodation() ?  $this->compare_between_two_dates($this->getFrontEndDate(), $this->getPeakStartDateAccommodation()) :
-                        $this->compare_between_two_dates($this->getFrontEndDate(), $this->getPeakDateFromDbAccommodation());
-            } elseif ($this->getFrontEndDate() <= $this->getPeakDateFromDbAccommodation() &&
-                $this->getFrontEndDate() >= $this->getPeakStartDateAccommodation()) {
+                $multiply['peak'] = $this->getFrontEndDate() < $this->getPeakDateFromDbAccommodation() ?  $this->compare_between_two_dates($this->getFrontEndDate(), $this->getPeakStartDateAccommodation()) : $this->compare_between_two_dates($this->getFrontEndDate(), $this->getPeakDateFromDbAccommodation());
+            } elseif ($this->getFrontEndDate() <= $this->getPeakDateFromDbAccommodation() && $this->getFrontEndDate() >= $this->getPeakStartDateAccommodation()) {
                 $multiply['which'] = 2;
-                $multiply['peak'] =
-                    $this->compare_between_two_dates($this->getProgramStartDateFromFrontend(), $this->getFrontEndDate());
-            } elseif ($this->getFrontEndDate() >= $this->getPeakDateFromDbAccommodation() &&
-                $this->getProgramStartDateFromFrontend() >= $this->getPeakStartDateAccommodation()){
+                $multiply['peak'] = $this->compare_between_two_dates($this->getProgramStartDateFromFrontend(), $this->getFrontEndDate());
+            } elseif ($this->getFrontEndDate() >= $this->getPeakDateFromDbAccommodation() && $this->getProgramStartDateFromFrontend() >= $this->getPeakStartDateAccommodation()){
                 $multiply['which'] = 3;
-                $multiply['peak'] =
-                    $this->compare_between_two_dates($this->getProgramStartDateFromFrontend(), $this->getPeakDateFromDbAccommodation());
+                $multiply['peak'] = $this->compare_between_two_dates($this->getProgramStartDateFromFrontend(), $this->getPeakDateFromDbAccommodation());
             }
         }
 
         $multiply['christmas'] = 0;
-        if (!($this->getProgramStartDateFromFrontend() > $this->christmas_end_date)
-            && !($this->getFrontEndDate() < $this->christmas_start_date)
-        )
-        {
-            if ($this->getFrontEndDate() >= $this->christmas_end_date
-                && $this->getProgramStartDateFromFrontend() <= $this->christmas_start_date
-            ) {
+        if (!($this->getProgramStartDateFromFrontend() > $this->christmas_end_date) && !($this->getFrontEndDate() < $this->christmas_start_date)) {
+            if ($this->getFrontEndDate() >= $this->christmas_end_date && $this->getProgramStartDateFromFrontend() <= $this->christmas_start_date) {
                 $multiply['which'] = 33;
                 $multiply['christmas'] = $this->compare_between_two_dates($this->christmas_start_date, $this->christmas_end_date);
-            } elseif (($this->getFrontEndDate() < $this->christmas_end_date
-                && $this->christmas_start_date > $this->getProgramStartDateFromFrontend()
-            )) {
+            } elseif (($this->getFrontEndDate() < $this->christmas_end_date && $this->christmas_start_date > $this->getProgramStartDateFromFrontend())) {
                 $multiply['which'] = 222;
-                $multiply['christmas'] = $this->getFrontEndDate() < $this->christmas_end_date ?  $this->compare_between_two_dates($this->getFrontEndDate(), $this->christmas_start_date) :
-                        $this->compare_between_two_dates($this->getFrontEndDate(), $this->christmas_end_date);
-            } elseif ($this->getFrontEndDate() <= $this->christmas_end_date &&
-                $this->getFrontEndDate() >= $this->christmas_start_date
-            ){ 
+                $multiply['christmas'] = $this->getFrontEndDate() < $this->christmas_end_date ?  $this->compare_between_two_dates($this->getFrontEndDate(), $this->christmas_start_date) : $this->compare_between_two_dates($this->getFrontEndDate(), $this->christmas_end_date);
+            } elseif ($this->getFrontEndDate() <= $this->christmas_end_date && $this->getFrontEndDate() >= $this->christmas_start_date) { 
                 $multiply['which'] = 2;
                 $multiply['christmas'] = $this->compare_between_two_dates($this->getProgramStartDateFromFrontend(), $this->getFrontEndDate());
-            } elseif ($this->getFrontEndDate() >= $this->christmas_end_date &&
-                $this->getProgramStartDateFromFrontend() >= $this->christmas_start_date) {
+            } elseif ($this->getFrontEndDate() >= $this->christmas_end_date && $this->getProgramStartDateFromFrontend() >= $this->christmas_start_date) {
                 $multiply['which'] = 3;
                 $multiply['christmas'] = $this->compare_between_two_dates($this->getProgramStartDateFromFrontend(), $this->christmas_end_date);
             }
