@@ -451,7 +451,7 @@
                                     </div>
                                     <div class="form-group col-md-4 available_days" style="display: none">
                                         <label>{{__('SuperAdmin/backend.available_days')}}:</label>
-                                        <input class="form-control available_days yeardatepicker" data-index="0" name="available_days[]">
+                                        <input class="form-control yeardatepicker" data-index="0" name="available_days[]">
                                     </div>
                                     <div class="form-group col-md-4 start_date">
                                         <label>{{__('SuperAdmin/backend.start_date')}}:</label>

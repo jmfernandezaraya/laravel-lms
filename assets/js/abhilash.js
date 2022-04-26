@@ -45,21 +45,64 @@ var datepicker_format = 'dd-mm-yy';
 var yeardatepicker_days = [];
 var yeardatepicker_months = [];
 
-$(document).ready(function () {
-    $('.available_date').change(function (e) {
-        if ($(this).val() == 'selected_dates') {
-            $(this).parent().parent().find('.available_days').show();
-            $(this).parent().parent().find('.select_day').hide();
-            $(this).parent().parent().find('.start_date').hide();
-            $(this).parent().parent().find('.end_date').hide();
+function detectDatePickerMonthClick(datepickerEl) {
+    var datepicker_index = $(datepickerEl).data('index');
+    var datepickerObj = $($(datepickerEl).data('datepicker').dpDiv);
+    datepickerObj.find('.ui-datepicker-group .ui-datepicker-header .ui-datepicker-title').click(function() {
+        var click_year = $(this).find('.ui-datepicker-year').html();
+        var click_month_str = $(this).find('.ui-datepicker-month').html();
+        var click_month = 1;
+        if (click_month_str == 'January') click_month = '01';
+        else if (click_month_str == 'February') click_month = '02';
+        else if (click_month_str == 'March') click_month = '03';
+        else if (click_month_str == 'April') click_month = '04';
+        else if (click_month_str == 'May') click_month = '05';
+        else if (click_month_str == 'June') click_month = '06';
+        else if (click_month_str == 'July') click_month = '07';
+        else if (click_month_str == 'August') click_month = '08';
+        else if (click_month_str == 'September') click_month = '09';
+        else if (click_month_str == 'October') click_month = '10';
+        else if (click_month_str == 'November') click_month = '11';
+        else if (click_month_str == 'December') click_month = '12';
+        var month_days = $(this).parent().parent().find('.ui-datepicker-calendar td');
+        var month_index = $.inArray(click_month + "/" + click_year, yeardatepicker_months[datepicker_index]);        
+        if (month_index == -1) {
+            if (click_year && click_month) yeardatepicker_months[datepicker_index].push(click_month + "/" + click_year);
         } else {
-            $(this).parent().parent().find('.available_days').hide();
-            $(this).parent().parent().find('.select_day').show();
-            $(this).parent().parent().find('.start_date').show();
-            $(this).parent().parent().find('.end_date').show();
+            yeardatepicker_months[datepicker_index].splice(month_index, 1);
         }
+        for (var month_day_index = 0; month_day_index < month_days.length; month_day_index++) {
+            if (!$(month_days[month_day_index]).hasClass('ui-datepicker-other-month')) {
+                var click_day = $(month_days[month_day_index]).find('a').html();
+                if (click_day) {
+                    if (parseInt(click_day) < 10) click_day = '0' + click_day;
+                    var click_date = click_month + "/" + click_day + "/" + click_year;
+                    if (click_date) {
+                        if (month_index == -1) {
+                            var date_index = $.inArray(click_date, yeardatepicker_days[datepicker_index]);
+                            if (date_index == -1) {
+                                yeardatepicker_days[datepicker_index].push(click_date);
+                            }
+                        } else {
+                            var date_index = $.inArray(click_date, yeardatepicker_days[datepicker_index]);
+                            if (date_index != -1) {
+                                yeardatepicker_days[datepicker_index].splice(date_index, 1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        $(datepickerEl).val(yeardatepicker_days[datepicker_index].join(","));
+        datepickerObj.find('.ui-datepicker-today').click();            
+        setTimeout(function() {
+            datepickerObj.find('.ui-datepicker-today').click();
+        }, 300);
     });
+}
 
+function initYearDatePicker() {
     $('.yeardatepicker').each(function() {
         var datepicker_index = $(this).data('index');
         var todayDate = new Date();
@@ -133,59 +176,25 @@ $(document).ready(function () {
             }
         });
     });
-    function detectDatePickerMonthClick(datepickerEl) {
-        var datepicker_index = $(datepickerEl).data('index');
-        var datepickerObj = $($(datepickerEl).data('datepicker').dpDiv);
-        datepickerObj.find('.ui-datepicker-group .ui-datepicker-header .ui-datepicker-title').click(function() {
-            var click_year = $(this).find('.ui-datepicker-year').html();
-            var click_month_str = $(this).find('.ui-datepicker-month').html();
-            var click_month = 1;
-            if (click_month_str == 'January') click_month = '01';
-            else if (click_month_str == 'February') click_month = '02';
-            else if (click_month_str == 'March') click_month = '03';
-            else if (click_month_str == 'April') click_month = '04';
-            else if (click_month_str == 'May') click_month = '05';
-            else if (click_month_str == 'June') click_month = '06';
-            else if (click_month_str == 'July') click_month = '07';
-            else if (click_month_str == 'August') click_month = '08';
-            else if (click_month_str == 'September') click_month = '09';
-            else if (click_month_str == 'October') click_month = '10';
-            else if (click_month_str == 'November') click_month = '11';
-            else if (click_month_str == 'December') click_month = '12';
-            var month_days = $(this).parent().parent().find('.ui-datepicker-calendar td');
-            var month_index = $.inArray(click_month + "/" + click_year, yeardatepicker_months[datepicker_index]);
-            if (month_index == -1) {
-                yeardatepicker_months[datepicker_index].push(click_month + "/" + click_year);
-            } else {
-                yeardatepicker_months[datepicker_index].splice(month_index, 1);
-            }
-            for (var month_day_index = 0; month_day_index < month_days.length; month_day_index++) {
-                if (!$(month_days[month_day_index]).hasClass('ui-datepicker-other-month')) {
-                    var click_day = $(month_days[month_day_index]).find('a').html();
-                    if (parseInt(click_day) < 10) click_day = '0' + click_day;
-                    var click_date = click_month + "/" + click_day + "/" + click_year;
-                    if (month_index == -1) {
-                        var date_index = $.inArray(click_date, yeardatepicker_days[datepicker_index]);
-                        if (date_index == -1) {
-                            yeardatepicker_days[datepicker_index].push(click_date);
-                        }
-                    } else {
-                        var date_index = $.inArray(click_date, yeardatepicker_days[datepicker_index]);
-                        if (date_index != -1) {
-                            yeardatepicker_days[datepicker_index].splice(date_index, 1);
-                        }
-                    }
-                }
-            }
-            
-            $(datepickerEl).val(yeardatepicker_days[datepicker_index].join(","));
-            datepickerObj.find('.ui-datepicker-today').click();            
-            setTimeout(function() {
-                datepickerObj.find('.ui-datepicker-today').click();
-            }, 300);
-        });
-    }
-    
+}
+
+$(document).ready(function () {
+    $('.available_date').change(function (e) {
+        if ($(this).val() == 'selected_dates') {
+            $(this).parent().parent().find('.available_days').show();
+            $(this).parent().parent().find('.select_day_week').hide();
+            $(this).parent().parent().find('.start_date').hide();
+            $(this).parent().parent().find('.end_date').hide();
+        } else {
+            $(this).parent().parent().find('.available_days').hide();
+            $(this).parent().parent().find('.select_day_week').show();
+            $(this).parent().parent().find('.start_date').show();
+            $(this).parent().parent().find('.end_date').show();
+        }
+    });
+
+    initYearDatePicker();
+
     var todayDate = new Date();
     if ($("#datepick").length) {
         $("#datepick").datepicker({
@@ -553,8 +562,12 @@ function calculateCourse(type) {
         if (type == 'requested_for_under_age') {
             if (data.program_get != undefined) {
                 $("#get_program_name").html(data.program_get);
+                $("#get_program_name").val('');
+                $("#datepick").val('');
+                $("#program_duration").val('');
             }
         } else if (type == 'select_program') {
+            $("#program_information").html(data.program_information);
             $("#level_required").html(data.level_required);
             $("#lessons_per_week").html(data.lessons_per_week);
             $("#hours_per_week").html(data.hours_per_week);
@@ -588,9 +601,6 @@ function calculateCourse(type) {
             if (data.program_duration != undefined) {
                 $("#program_duration").html(data.program_duration);
             }
-            if (data.christmas_notification != undefined) {
-                confirm(data.christmas_notification);
-            }
         } else if (type == 'duration') {
             if (data.courier_fee != undefined) {
                 if (data.courier_fee) {
@@ -606,6 +616,9 @@ function calculateCourse(type) {
             }
             if (data.accommodations != undefined) {
                 $("#accom_type").html(data.accommodations);
+                $("#room_type").val('');
+                $("#meal_type").val('');
+                $("#accom_duration").val('');
             }
             if (data.accommodations_visible != undefined) {
                 if (data.accommodations_visible) {
@@ -642,6 +655,9 @@ function calculateCourse(type) {
                 }
             } else {
                 $("#other_services").hide();
+            }
+            if (data.christmas_notification != undefined) {
+                confirm(data.christmas_notification);
             }
         }
 
@@ -711,8 +727,8 @@ function reloadCourseCalclulator() {
 
 function resetAccommodation(init = false) {
     if (init) {
-        $("#accom_type")[0].selectedIndex = '';
-        $("#accom_duration")[0].selectedIndex = '';
+        $("#accom_type")[0].selectedIndex = 0;
+        $("#accom_duration")[0].selectedIndex = 0;
         $("#special_diet").hide();
         $("#custodianship").hide();
     }
@@ -765,7 +781,7 @@ function resetAirportMedical(init = false) {
 }
 
 function calcuateAccommodation() {
-    meal_type = jQuery.trim($("#meal_type option:selected").text())
+    var meal_type = $("#meal_type").val();
     if (meal_type != '') {
         $('#loader').show();
         $.post(calculate_accommodation_url, {
@@ -774,8 +790,8 @@ function calcuateAccommodation() {
             program_duration: $("#program_duration").val(),
             age: $("#under_age").val(),
             accom_id: $("#accom_type").val(),
-            accom_type: jQuery.trim($("#accom_type option:selected").text()),
-            room_type: jQuery.trim($("#room_type option:selected").text()),
+            accom_type: jQuery.trim($('#accom_type option:selected').text()),
+            room_type: $("#room_type").val(),
             meal_type: meal_type,
             duration: $("#accom_duration").val(),
             special_diet: $("#special_diet_check").is(':checked'),
@@ -1000,14 +1016,15 @@ $(document).ready(function() {
     });
 
     $('#accom_type').change(function () {
-        var accom_text = $('#accom_type option:selected').val() ? jQuery.trim($('#accom_type option:selected').text()) : '';
+        var accom_type = $('#accom_type option:selected').val() ? jQuery.trim($('#accom_type option:selected').text()) : '';
         $.post(rooms_meals_url, {
             _token: $('meta[name="csrf-token"]').attr('content'),
-            'accom_type': accom_text,
+            'accom_type': accom_type,
             'age_selected': $("#under_age").val()
         }, function (data) {
             $('#room_type').html(data.room_type);
             $('#meal_type').html(data.meal_type);
+            $('#accom_duration').val('');
 
             if (typeof callbackChangeAccommodationType === "function") {
                 callbackChangeAccommodationType();
@@ -1018,12 +1035,13 @@ $(document).ready(function() {
     $('#meal_type').change(function () {
         $.post(accomm_durations_url, {
             _token: $('meta[name="csrf-token"]').attr('content'),
-            accom_type: jQuery.trim($("#accom_type option:selected").text()),
-            room_type: jQuery.trim($("#room_type option:selected").text()),
-            meal_type: jQuery.trim($("#meal_type option:selected").text()),
+            accom_type: jQuery.trim($('#accom_type option:selected').text()),
+            room_type: $("#room_type").val(),
+            meal_type: $("#meal_type").val(),
             program_duration: $("#program_duration").val()
         }, function (data) {
             $('#accom_duration').html(data.duration);
+            $('#accom_duration').val('');
 
             if (typeof callbackChangeAccommodationMealType === "function") {
                 callbackChangeAccommodationMealType();
@@ -1057,7 +1075,11 @@ function submitAccommodationForm(object) {
                 $('.alert-success p').html(data.data);
                 document.documentElement.scrollTop = 0;
 
-                window.location.href = edit_accomm_under_age_url;
+                if ($(accommodationForm).data('mode') == 'create') {
+                    window.location.href = accomm_under_age_url;
+                } else {
+                    window.location.href = edit_accomm_under_age_url;
+                }
             } else if (data.errors) {
                 document.documentElement.scrollTop = 0;
                 $("#loader").hide();
@@ -1145,8 +1167,9 @@ function submitAccommodationUnderAgeForm(object, reload = false) {
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
                 document.documentElement.scrollTop = 0;
-                if (reload)
+                if (reload) {
                     window.location.reload();
+                }
             } else if (data.catch_error) {
                 console.log(data.catch_error);
                 document.documentElement.scrollTop = 0;

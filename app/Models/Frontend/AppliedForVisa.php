@@ -2,7 +2,7 @@
 
 namespace App\Models\Frontend;
 
-use App\Models\SuperAdmin\addNationality;
+use App\Models\SuperAdmin\AddNationality;
 use App\Models\SuperAdmin\AddTypeOfVisa;
 use App\Models\SuperAdmin\AddWhereToTravel;
 use App\Models\SuperAdmin\ApplyFrom;
@@ -20,41 +20,32 @@ class AppliedForVisa extends Model
     public function visaCenter()
     {
         return $this->belongsTo(VisaApplicationCenter::class, 'visa_center', 'id');
-
     }
 
     public function user()
     {
         return $this->belongsTo(User::class);
-
     }
 
     public function applyingFrom()
     {
         return $this->belongsTo(ApplyFrom::class, 'applyfrom');
-
     }
 
     public function typeOfVisa()
     {
         return $this->belongsTo(AddTypeOfVisa::class, 'visa');
-
     }
 
     public function whereToTravel()
     {
         return $this->belongsTo(AddWhereToTravel::class, 'travel');
-
     }
 
 
     public function getNationality()
     {
-        return $this->belongsTo(addNationality::class, 'nationality');
+        return $this->belongsTo(AddNationality::class, 'nationality');
 
     }
-
-
-
-
 }

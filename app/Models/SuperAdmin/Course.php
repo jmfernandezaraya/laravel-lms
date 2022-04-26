@@ -35,7 +35,7 @@ class Course extends Model
 
     public function accomodations()
     {
-        return $this->hasMany('App\Models\SuperAdmin\CourseAccommodation', 'course_unique_id')->orderBy('unique_id', 'asc');
+        return $this->hasMany('App\Models\SuperAdmin\CourseAccommodation', 'course_unique_id')->orderBy('order', 'asc');
     }
 
     public function courseProgram()
@@ -45,7 +45,7 @@ class Course extends Model
 
     public function coursePrograms()
     {
-        return $this->hasMany('App\Models\SuperAdmin\CourseProgram', 'course_unique_id')->orderBy('unique_id', 'asc');
+        return $this->hasMany('App\Models\SuperAdmin\CourseProgram', 'course_unique_id')->orderBy('order', 'asc');
     }
 
     public function airport()
@@ -55,7 +55,7 @@ class Course extends Model
 
     public function airports()
     {
-        return $this->hasMany('App\Models\SuperAdmin\CourseAirport', 'course_unique_id')->orderBy('unique_id', 'asc');
+        return $this->hasMany('App\Models\SuperAdmin\CourseAirport', 'course_unique_id')->orderBy('order', 'asc');
     }
 
     public function medical()
@@ -65,7 +65,7 @@ class Course extends Model
 
     public function medicals()
     {
-        return $this->hasMany('App\Models\SuperAdmin\CourseMedical', 'course_unique_id')->orderBy('unique_id', 'asc');
+        return $this->hasMany('App\Models\SuperAdmin\CourseMedical', 'course_unique_id')->orderBy('order', 'asc');
     }
 
     public function getMedicalInsuranceFees($value)

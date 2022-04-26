@@ -22,7 +22,7 @@ class SendMessageToSchoolFromSuperAdmin extends Mailable
     public function __construct(Request $request, $file)
     {
         $this->request  = $request;
-        $this->file  = $file;
+        $this->file = $file;
     }
 
     /**
@@ -32,8 +32,7 @@ class SendMessageToSchoolFromSuperAdmin extends Mailable
      */
     public function build()
     {
-        $mail = $this->markdown('mail/sendSchoolMessage', ['data' => $this->request])
-                    ->subject('Message From ' . config('app.name'));
+        $mail = $this->markdown('mail/sendSchoolMessage', ['data' => $this->request])->subject('Message From ' . config('app.name'));
         $mail = $this->file != null ? $mail->attach($this->file) : $mail;
 
         return $mail;

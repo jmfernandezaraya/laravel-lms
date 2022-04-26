@@ -76,21 +76,21 @@
                         <a href = "{{route('superadmin.manage_application.editCourse', ['course_id' =>$bookeddetails->course_id, 'user_course_booked_id' => $bookeddetails->id, 'school_id' => $bookeddetails->course->school->id])}}" class="btn btn-primary pull-right">Edit</a>
                         <table class="table table-bordered">
                             <tbody>
-                            <tr>
-                                <td>School Name</td>
-                                <?php
-                                $branch_name = is_array($bookeddetails->course->school->branch_name) ? $bookeddetails->course->school->branch_name[0] : $bookeddetails->course->school->branch_name ?? '';
-                                ?>
-                                <td>{{get_language() == 'en' ? $bookeddetails->course->school->name . ' - ' . $branch_name  :  $bookeddetails->course->school->name_ar . ' - ' . $branch_name }}</td>
-                            </tr>
-                            <tr>
-                                <td>City</td>
-                                <td>{{get_language() == 'en' ? $bookeddetails->course->school->city :  $bookeddetails->course->school->city_ar }}</td>
-                            </tr>
-                            <tr>
-                                <td>Country</td>
-                                <td>{{get_language() == 'en' ? $bookeddetails->course->school->country :  $bookeddetails->course->school->country_ar }}</td>
-                            </tr>
+                                <tr>
+                                    <td>School Name</td>
+                                    <?php
+                                    $branch_name = is_array($bookeddetails->course->school->branch_name) ? $bookeddetails->course->school->branch_name[0] : $bookeddetails->course->school->branch_name ?? '';
+                                    ?>
+                                    <td>{{get_language() == 'en' ? $bookeddetails->course->school->name . ' - ' . $branch_name  :  $bookeddetails->course->school->name_ar . ' - ' . $branch_name }}</td>
+                                </tr>
+                                <tr>
+                                    <td>City</td>
+                                    <td>{{get_language() == 'en' ? $bookeddetails->course->school->city :  $bookeddetails->course->school->city_ar }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Country</td>
+                                    <td>{{get_language() == 'en' ? $bookeddetails->course->school->country :  $bookeddetails->course->school->country_ar }}</td>
+                                </tr>
                             </tbody>
                         </table>
 
@@ -122,12 +122,12 @@
                             </tr>
                             <tr>
                                 <td>Age Range</td>
-                                <td>{{min($bookeddetails->getCourseProgram->program_age_range)}}
-                                    - {{max($bookeddetails->getCourseProgram->program_age_range)}} Years
+                                <td>{{min($bookeddetails->getCourseProgram->program_age_range)}} - {{max($bookeddetails->getCourseProgram->program_age_range)}} Years
                                 </td>
                             </tr>
                             </tbody>
                         </table>
+
                         @if(isset($bookeddetails->accomodation->type))
                             <h6 class="best mt-3">Accommodation Details:</h6>
                             <table class="table table-bordered">
@@ -160,6 +160,7 @@
                                 </tbody>
                             </table>
                         @endif
+
                         @if(isset($bookeddetails->airport->{'airport_name_'.get_language() } ))
                             <h6 class="best mt-3">Airport Transfer:</h6>
                             <table class="table table-bordered">
@@ -172,6 +173,7 @@
                                 </tbody>
                             </table>
                         @endif
+
                         @if($bookeddetails->insurance_duration != null)
                             <h6 class="best mt-3">Medical Insurance:</h6>
                             <table class="table table-bordered">
@@ -190,14 +192,8 @@
                         @endif
                         <h6 class="best mt-3">Total Cost {{$bookeddetails->total_fees}}
                             / {{$bookeddetails->other_currency}} </h6>
-                    <!--                    <a href="{{route('superadmin.course.edit', $bookeddetails->course_id)}}"
-                     class="btn btn-primary pull-right">Edit</a>-->
-                        <p>{{__('Please Note: Balance / final payment will be according to the exchange rate for the day of the
-                        payment')}}</p>
-
-
+                        <p>{{__('Please Note: Balance / final payment will be according to the exchange rate for the day of the payment')}}</p>
                     </div>
-
                 </div>
                 <div class="card-header collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
                     <a class="card-title">
@@ -913,7 +909,7 @@
     <br>
     <b>Amount Paid :</b> {{optional($bookeddetails->transaction)->amount ?? $bookeddetails->paid_amount +  $transaction_details->amountAdded()   ?? 0 }}  SAR<br>
     <b>Amount Refunded :</b> {{$totalrefund}} SAR<br>
-    <b>Amount Due :</b> {{$transaction_details->amountDue(explode(" ", $bookeddetails->other_currency)[0])}} SAR
+    <b>Amount Due :</b> {{$transaction_details->amountDue($bookeddetails->total_balance)}} SAR
     <br><br><br>
 
     <div>

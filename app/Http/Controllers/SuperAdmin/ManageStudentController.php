@@ -7,6 +7,8 @@ use App\Events\UserCourseBookedStatus;
 use App\Http\Controllers\Controller;
 use App\Mail\SendMessageToSchoolFromSuperAdmin;
 use App\Mail\UpdatedUserCourseBooked;
+use App\Services\SuperAdminEditUserCourse;
+
 use App\Models\Calculator;
 use App\Models\SchoolAdmin\ReplyToSendSchoolMessage;
 use App\Models\SuperAdmin\CourseAccommodation;
@@ -18,7 +20,8 @@ use App\Models\SuperAdmin\SendSchoolMessage;
 use App\Models\SuperAdmin\TransactionRefund;
 use App\Models\SuperAdmin\UserCourseBookedDetailsApproved;
 use App\Models\UserCourseBookedDetails;
-use App\Services\SuperAdminEditUserCourse;
+
+
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
@@ -329,22 +332,20 @@ class ManageStudentController extends Controller
         $accom_end_date = Carbon::create($enddate)->addDay()->format('Y-m-d');
 
         $usercoursebook = UserCourseBookedDetails::find($request->id);
+        $usercoursebook->course_program_id = $request->program_unique_id;
         $usercoursebook->start_date = $request->date_selected;
         $usercoursebook->age_selected = $request->age_selected;
-        $usercoursebook->study_mode_selected = $request->study_mode;
-        $usercoursebook->courier_fee = $calculator->courier_fee;
-        $usercoursebook->airport_id = $request->airport_id ?? null;
-        $usercoursebook->course_program_id = $request->program_unique_id;
+        $usercoursebook->study_mode = $request->study_mode;
         $usercoursebook->accommodation_id = $request->accommodation_id ?? null;
-        $usercoursebook->room_type = CourseAccommodation::where('unique_id', $request->room_type)->first()['room_type'] ?? null;
-        $usercoursebook->meal_type = CourseAccommodation::where('unique_id', $request->room_type)->first()['meal_type'] ?? null;
-        $usercoursebook->insurance_duration = $request->insurance_duration;
+        $usercoursebook->accommodation_start_date =  $usercoursebook->accomodation_id != null ? $accom_start_date : null;
+        $usercoursebook->accommodation_end_date = $usercoursebook->accomodation_id != null ? $accom_end_date : null;
+        $usercoursebook->airport_id = $request->airport_id ?? null;
+        $usercoursebook->medical_duration = $request->medical_duration;
         $usercoursebook->accommodation_duration = $request->accommodation_duration ?? null;
         $usercoursebook->airport_service_name = CourseAirport::where('unique_id', $request->airport_service)->first()['service_name_en'] ?? null;
         $usercoursebook->airport_name = CourseAirport::where('unique_id', $request->airport_id)->first()['name_en'] ?? null;
-        $usercoursebook->accommodation_start_date =  $usercoursebook->room_type != null ?  $accom_start_date : null;
-        $usercoursebook->accommodation_end_date = $usercoursebook->room_type != null ? $accom_end_date : null;
         $usercoursebook->other_currency = $request->other_currency_to_save_to_db;
+        $usercoursebook->courier_fee = $calculator->courier_fee;
         $usercoursebook->total_fees = $request->total_fees_to_save_to_db;
         $usercoursebook->save();
 

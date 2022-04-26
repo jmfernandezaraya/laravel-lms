@@ -363,29 +363,28 @@ class CourseController extends Controller
         // Calling Class Accommodation Calculator for caluclation puprose
         if ($request->set_session == false || $request->set_session == 'false') {
             $multiple = $request->id;
-            $this->calculator->setAccommodationFee($accomodation->ee_per_week * $multiple);
+            $this->calculator->setAccommodationFee($accomodation->fee_per_week * $multiple);
             $request->program_duration >= $accomodation->program_duration ? $this->calculator->setAccommodationPlacementFee(0) : $this->calculator->setAccommodationPlacementFee($accomodation->placement_fee);
-            $this->calculator->setChristmasStartDate($accomodation->christmas_fee_start_date);
-            $this->calculator->setChristmasEndDate($accomodation->christmas_fee_end_date);
+            $this->calculator->setAccommodationChristmasStartDate($accomodation->christmas_fee_start_date);
+            $this->calculator->setAccommodationChristmasEndDate($accomodation->christmas_fee_end_date);
             $this->calculator->setAccommodationDeposit($accomodation->deposit_fee);
-            $this->calculator->setSummerDateFromDbAccommodation($accomodation->summer_fee_end_date);
-            $this->calculator->setPeakStartDateAccommodation($accomodation->peak_time_fee_start_date);
-            $this->calculator->setPeakDateFromDbAccommodation($accomodation->peak_time_fee_end_date);
+            $this->calculator->setAccommodationPeakStartDate($accomodation->peak_time_fee_start_date);
+            $this->calculator->setAccommodationPeakEndDate($accomodation->peak_time_fee_end_date);
             in_array($request->age, $accomodation->age_range) ? $this->calculator->setAccommodationUnderageFee($accomodation->under_age_fee_per_week * (int)$request->id) : 0;
             in_array($request->age, $accomodation->custodian_age_range) ? $this->calculator->setAccommodationCustodianFee($accomodation->custodian_fee) : $this->calculator->setAccommodationCustodianFee(0);
             $this->calculator->setFrontEndDate($this->getEndDate($request->date_set, (int)$request->id));
             $this->calculator->setProgramStartDateFromFrontend(Carbon::create($request->date_set)->format('Y-m-d'));
-            $this->calculator->setSummerStartDateAccommodation($accomodation->summer_fee_start_date);
-            $this->calculator->setSummerDateFromDbAccommodation($accomodation->summer_fee_end_date);
-            $data['which'] = $this->calculator->CompareDatesandGetWeeksAccommodation()['which'];
+            $this->calculator->setAccommodationSummerStartDate($accomodation->summer_fee_start_date);
+            $this->calculator->setAccommodationSummerEndDate($accomodation->summer_fee_end_date);
             $this->calculator->setAccommodationDuration((int)$request->id);
             $this->calculator->setAccommodationDiscountEndDate($accomodation->discount_end_date);
 
             // Check for dates
-            $this->calculator->setAccommodationChristmasFee($accomodation->christmas_fee_per_week * $this->calculator->CompareDatesandGetWeeksAccommodation()['christmas']);
+            $dates_and_get_weeks_accommodation = $this->calculator->CompareDatesandGetWeeksAccommodation();
+            $this->calculator->setAccommodationChristmasFee($accomodation->christmas_fee_per_week * $dates_and_get_weeks_accommodation['christmas']);
             $this->calculator->setAccommodationDiscount($accomodation->discount_per_week);
-            $this->calculator->setAccommodationPeakFee($accomodation->peak_time_fee_per_week * $this->calculator->CompareDatesandGetWeeksAccommodation()['peak']);
-            $this->calculator->setAccommodationSummerFee($accomodation->summer_fee_per_week * $this->calculator->CompareDatesandGetWeeksAccommodation()['summer']);
+            $this->calculator->setAccommodationPeakFee($accomodation->peak_time_fee_per_week * $dates_and_get_weeks_accommodation['peak']);
+            $this->calculator->setAccommodationSummerFee($accomodation->summer_fee_per_week * $dates_and_get_weeks_accommodation['summer']);
             $this->calculator->setAccommodationDiscountStartDate($accomodation->discount_start_date);
 
             $accom_fee = $this->calculator->getAccommodationFee();

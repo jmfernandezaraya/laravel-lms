@@ -4,11 +4,11 @@ namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SuperAdmin\AddApplicationRequest;
-use App\Http\Requests\SuperAdmin\addNationalityRequest;
+use App\Http\Requests\SuperAdmin\AddNationalityRequest;
 use App\Http\Requests\SuperAdmin\AddTravelRequest;
 use App\Http\Requests\SuperAdmin\AddTypeOfVisaRequest;
 use App\Http\Requests\SuperAdmin\ApplyFromRequest;
-use App\Models\SuperAdmin\addNationality;
+use App\Models\SuperAdmin\AddNationality;
 use App\Models\SuperAdmin\AddTypeOfVisa;
 use App\Models\SuperAdmin\AddWhereToTravel;
 use App\Models\SuperAdmin\ApplyFrom;
@@ -82,14 +82,14 @@ class AddVisaFieldsController extends Controller
         return response($data);
     }
 
-    public function addNationality(addNationalityRequest $request)
+    public function addNationality(AddNationalityRequest $request)
     {
-        (new addNationality())->fill($request->validated())->save();
+        (new AddNationality())->fill($request->validated())->save();
 
         $select = __('SuperAdmin/backend.select_option');
         $data['success'] = true;
         $data['option'] = "<option value = ''>$select</option>";
-        foreach(addNationality::all() as $options){
+        foreach(AddNationality::all() as $options){
             $data['option'] .= "<option value = '$options->id'>".$options->{'nationality_'.  get_language() }." </option>";
         }
 
@@ -99,12 +99,12 @@ class AddVisaFieldsController extends Controller
 
     public function deleteNationality(Request $request)
     {
-        addNationality::find($request->application_center)->delete();
+        AddNationality::find($request->application_center)->delete();
 
         $select = __('SuperAdmin/backend.select_option');
         $data['success'] = true;
         $data['option'] = "<option value = ''>$select</option>";
-        foreach(addNationality::all() as $applyform){
+        foreach(AddNationality::all() as $applyform){
             $data['option'] .= "<option value = '$applyform->id'>".$applyform->{'nationality_'.  get_language() }." </option>";
         }
 
@@ -134,7 +134,7 @@ class AddVisaFieldsController extends Controller
         $select = __('SuperAdmin/backend.select_option');
         $data['success'] = true;
         $data['option'] = "<option value = ''>$select</option>";
-        foreach(addNationality::all() as $applyform){
+        foreach(AddNationality::all() as $applyform){
             $data['option'] .= "<option value = '$applyform->id'>".$applyform->{'nationality_'.  get_language() }." </option>";
         }
 

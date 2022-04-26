@@ -57,7 +57,6 @@ class AddSchoolRequest extends FormRequest
             'about_ar' => 'required',
 
             'email' => 'required',
-
         ];
     }
 
@@ -67,14 +66,9 @@ class AddSchoolRequest extends FormRequest
     public function messages()
     {
         return [
-
-
             'multiple_photos.*.required' => __('SuperAdmin/backend.messages.multiple_photos_required'),
             'logos.*.required' => __('SuperAdmin/backend.messages.logos_required'),
             'video_url.*.required' => __('SuperAdmin/backend.messages.video_url_required'),
-
-
-
         ];
     }
 }

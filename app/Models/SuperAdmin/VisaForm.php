@@ -24,7 +24,7 @@ class VisaForm extends Model
      */
     public function getNationality()
     {
-        return $this->belongsTo(addNationality::class, 'nationality', 'id');
+        return $this->belongsTo(AddNationality::class, 'nationality', 'id');
     }
 
     /**
@@ -88,7 +88,7 @@ class VisaForm extends Model
      */
     public function nationalityRelation()
     {
-        return $this->belongsTo(addNationality::class, 'nationality');
+        return $this->belongsTo(AddNationality::class, 'nationality');
     }
 
     /**

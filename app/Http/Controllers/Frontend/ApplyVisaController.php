@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Formbuilder;
 use App\Models\Frontend\AppliedForVisa;
-use App\Models\SuperAdmin\addNationality;
+use App\Models\SuperAdmin\AddNationality;
 use App\Models\SuperAdmin\AddTypeOfVisa;
 use App\Models\SuperAdmin\AddWhereToTravel;
 use App\Models\SuperAdmin\ApplyFrom;
@@ -27,7 +27,7 @@ class ApplyVisaController extends Controller
     {
         $apply_from = ApplyFrom::all();
         $visa_center = VisaApplicationCenter::all();
-        $nationality = addNationality::all();
+        $nationality = AddNationality::all();
         $travel = AddWhereToTravel::all();
         $visa = AddTypeOfVisa::all();
 

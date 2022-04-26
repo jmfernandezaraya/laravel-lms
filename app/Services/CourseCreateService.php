@@ -93,8 +93,6 @@ class CourseCreateService
         $course['language'] = $r->language;
         $course['program_type'] = $r->program_type;
         $course['study_mode'] = $r->study_mode;
-        $course['school_id'] = $r->school_id;
-        $course->school_id = $r->school_id;
         $school = School::find($r->school_id);
         if ($school) {
             if (app()->getLocale() == 'en') {
@@ -124,16 +122,16 @@ class CourseCreateService
         \Session::put('course_id', '' . $course_id);
         \Session::forget('program_ids');
 
-        if (isset($program_increment)) {
-            for ($count = 0; $count <= (int)$program_increment; $count++) {
-                if (isset($program_id[$count])) {
-                    \Session::push('program_ids', '' . $program_id[$count]);
+        if (isset($r->program_increment)) {
+            for ($count = 0; $count <= (int)$r->program_increment; $count++) {
+                if (isset($r->program_id[$count])) {
+                    \Session::push('program_ids', '' . $r->program_id[$count]);
                 }
     
-                if (isset($program_id[$count]) && $program_id[$count]) {
+                if (isset($r->program_id[$count]) && $r->program_id[$count]) {
                     $course_program = new CourseProgram;
                     $course_program->course_unique_id = $course_id;
-                    $course_program->unique_id = $program_id[$count];
+                    $course_program->unique_id = $r->program_id[$count];
                     $course_program->program_name = null;
                     $course_program->program_registration_fee = $r->program_registration_fee[$count];
                     $course_program->program_duration = $r->program_duration[$count] ?? null;
@@ -151,9 +149,9 @@ class CourseCreateService
                     $course_program->available_date = $r->available_date[$count] ?? null;
                     $course_program->select_day_week = $r->select_day_week[$count] ?? null;
                     $course_program->available_days = $r->available_days[$count] ?? null;
-    
-                    $course_program->deposit = $r->deposit[$count] . " " . $r->deposit_symbol[$count] ?? '';
-                    $course_program->discount_per_week = $r->discount_per_week[$count] . " " . $r->discount_symbol[$count] ?? null;
+                    
+                    $course_program->deposit = $r->deposit[$count] . " " . (isset($r->deposit_symbol[$count]) ? $r->deposit_symbol[$count] : "");
+                    $course_program->discount_per_week = $r->discount_per_week[$count] . " " . (isset($r->discount_per_week_symbol[$count]) ? $r->discount_per_week_symbol[$count] : "");
                     $course_program->discount_start_date = $r->discount_start_date[$count] ?? null;
                     $course_program->discount_end_date = $r->discount_end_date[$count] ?? null;
     
@@ -173,6 +171,8 @@ class CourseCreateService
                     $course_program->peak_time_start_date = $r->peak_time_start_date[$count];
                     $course_program->peak_time_end_date = $r->peak_time_end_date[$count];
 
+                    $course_program->order = $count;
+
                     $course_program->save();
                 }
             }
@@ -188,7 +188,7 @@ class CourseCreateService
         $exist_course = Course::where('unique_id', $course_id)->get();
         while (count($exist_course)) {
             (new Controller())->my_unique_id(1);
-            $course_id = (new Controller())->my_unique_id();
+            $course_id = '' . (new Controller())->my_unique_id();
             $exist_course = Course::where('unique_id', $course_id)->get();
         }
         $new_course = [];
@@ -212,9 +212,9 @@ class CourseCreateService
         $new_course['program_information_ar'] = $course->program_information_ar;
         Course::create($new_course);
 
-        \Session::put('course_id', '' . $course_id);
+        \Session::put('course_id', $course_id);
         
-        $course_programs = $course->coursePrograms()->get();
+        $course_programs = CourseProgram::where('course_unique_id', '' . $course->unique_id)->orderBy('order')->get();
         for ($count = 0; $count < count($course_programs); $count++) {
             $course_program = $course_programs[$count];
             $new_course_program = [];
@@ -226,52 +226,54 @@ class CourseCreateService
                 $exist_course_program = CourseProgram::where('unique_id', $course_program_id)->get();
             }
 
-            $course_program_table = new CourseProgram;
-            $course_program_table->course_unique_id = $course_id;
-            $course_program_table->unique_id = $course_program_id;
-            $course_program_table->program_name = null;
-            $course_program_table->program_registration_fee = $course_program->program_registration_fee;
-            $course_program_table->program_duration = $course_program->program_duration ?? null;
-            $course_program_table->program_age_range = $course_program->program_age_range ?? null;
-            $course_program_table->program_cost = $course_program->program_cost;
-            $course_program_table->program_duration_start = $course_program->program_duration_start ?? null;
-            $course_program_table->program_duration_end = $course_program->program_duration_end ?? null;
-            $course_program_table->program_start_date = $course_program->program_start_date ?? null;
-            $course_program_table->program_end_date = $course_program->program_end_date ?? null;
+            $new_course_program = new CourseProgram;
+            $new_course_program->course_unique_id = $course_id;
+            $new_course_program->unique_id = $course_program_id;
+            $new_course_program->program_name = null;
+            $new_course_program->program_registration_fee = $course_program->program_registration_fee;
+            $new_course_program->program_duration = $course_program->program_duration ?? null;
+            $new_course_program->program_age_range = $course_program->program_age_range ?? null;
+            $new_course_program->program_cost = $course_program->program_cost;
+            $new_course_program->program_duration_start = $course_program->program_duration_start ?? null;
+            $new_course_program->program_duration_end = $course_program->program_duration_end ?? null;
+            $new_course_program->program_start_date = $course_program->program_start_date ?? null;
+            $new_course_program->program_end_date = $course_program->program_end_date ?? null;
 
-            $course_program_table->available_date = $course_program->available_date[$count] ?? null;
-            $course_program_table->select_day_week = $course_program->select_day_week[$count] ?? null;
-            $course_program_table->available_days = $course_program->available_days[$count] ?? null;
+            $new_course_program->available_date = $course_program->available_date[$count] ?? null;
+            $new_course_program->select_day_week = $course_program->select_day_week[$count] ?? null;
+            $new_course_program->available_days = $course_program->available_days[$count] ?? null;
 
-            $course_program_table->courier_fee = $course_program->courier_fee;
-            $course_program_table->about_courier = $course_program->about_courier;
-            $course_program_table->about_courier_ar = $course_program->about_courier_ar;
+            $new_course_program->courier_fee = $course_program->courier_fee;
+            $new_course_program->about_courier = $course_program->about_courier;
+            $new_course_program->about_courier_ar = $course_program->about_courier_ar;
 
-            $course_program_table->deposit = $course_program->deposit . " " . $course_program->deposit_symbol ?? '';
+            $new_course_program->deposit = $course_program->deposit . " " . $course_program->deposit_symbol ?? '';
 
-            $course_program_table->discount_per_week = $course_program->discount_per_week . " " . $course_program->discount_per_week_symbol ?? null;
-            $course_program_table->discount_start_date = $course_program->discount_start_date ?? null;
-            $course_program_table->discount_end_date = $course_program->discount_end_date ?? null;
+            $new_course_program->discount_per_week = $course_program->discount_per_week . " " . $course_program->discount_per_week_symbol ?? '';
+            $new_course_program->discount_start_date = $course_program->discount_start_date ?? null;
+            $new_course_program->discount_end_date = $course_program->discount_end_date ?? null;
 
-            $course_program_table->christmas_start_date = $course_program->christmas_start_date ?? null;
-            $course_program_table->christmas_end_date = $course_program->christmas_end_date ?? null;
+            $new_course_program->christmas_start_date = $course_program->christmas_start_date ?? null;
+            $new_course_program->christmas_end_date = $course_program->christmas_end_date ?? null;
 
-            $course_program_table->x_week_selected = $course_program->x_week_selected ?? null;
-            $course_program_table->x_week_start_date = $course_program->x_week_start_date ?? null;
-            $course_program_table->x_week_end_date = $course_program->x_week_end_date ?? null;
-            $course_program_table->how_many_week_free = $course_program->how_many_week_free ?? null;
+            $new_course_program->x_week_selected = $course_program->x_week_selected ?? null;
+            $new_course_program->x_week_start_date = $course_program->x_week_start_date ?? null;
+            $new_course_program->x_week_end_date = $course_program->x_week_end_date ?? null;
+            $new_course_program->how_many_week_free = $course_program->how_many_week_free ?? null;
 
-            $course_program_table->summer_fee_per_week = $course_program->program_summer_fee_per_week;
-            $course_program_table->summer_fee_start_date = $course_program->program_summer_fee_start_date;
-            $course_program_table->summer_fee_end_date = $course_program->program_summer_fee_end_date;
+            $new_course_program->summer_fee_per_week = $course_program->program_summer_fee_per_week;
+            $new_course_program->summer_fee_start_date = $course_program->program_summer_fee_start_date;
+            $new_course_program->summer_fee_end_date = $course_program->program_summer_fee_end_date;
 
-            $course_program_table->peak_time_fee_per_week = $course_program->program_peak_time_fee_per_week;
-            $course_program_table->peak_time_start_date = $course_program->program_peak_time_start_date;
-            $course_program_table->peak_time_end_date = $course_program->program_peak_time_end_date;
+            $new_course_program->peak_time_fee_per_week = $course_program->program_peak_time_fee_per_week;
+            $new_course_program->peak_time_start_date = $course_program->program_peak_time_start_date;
+            $new_course_program->peak_time_end_date = $course_program->program_peak_time_end_date;
 
-            $course_program_table->save();
+            $new_course_program->order = $course_program->order;
 
-            $course_under_ages = $course_program->courseUnderAges()->get();
+            $new_course_program->save();
+
+            $course_under_ages = CourseProgramUnderAgeFee::where('course_program_id', '' . $new_course_program->unique_id)->get();
             for ($under_age_count = 0; $under_age_count < count($course_under_ages); $under_age_count++) {
                 $course_under_age = $course_under_ages[$under_age_count];
                 $new_course_under_age = [];
@@ -282,7 +284,7 @@ class CourseCreateService
                 CourseProgramUnderAgeFee::create($new_course_under_age);
             }
 
-            $course_text_book_fees = $course_program->courseTextBookFees()->get();
+            $course_text_book_fees = CourseProgramTextBookFee::where('course_program_id', '' . $new_course_program->unique_id)->get();
             for ($text_book_fee_count = 0; $text_book_fee_count < count($course_text_book_fees); $text_book_fee_count++) {
                 $course_text_book_fee = $course_text_book_fees[$text_book_fee_count];
                 $new_course_text_book_fee = [];
@@ -297,7 +299,7 @@ class CourseCreateService
             }
         }
 
-        $course_accommodations = $course->accomodations()->get();
+        $course_accommodations = CourseAccommodation::where('course_unique_id', '' . $course->unique_id)->orderBy('order')->get();
         for ($count = 0; $count < count($course_accommodations); $count++) {
             $course_accomodation = $course_accommodations[$count];
             $new_course_accomodation = [];
@@ -309,58 +311,60 @@ class CourseCreateService
                 $exist_accomodation = CourseAccommodation::where('unique_id', $accommodation_id)->get();
             }
 
-            $course_accommodations_table = new CourseAccommodation;
-            $course_accommodations_table->unique_id = $accommodation_id;
-            $course_accommodations_table->course_unique_id = $course_id;
-            $course_accommodations_table->room_type = $course_accomodation->room_type ?? null;
-            $course_accommodations_table->meal = $course_accomodation->meal ?? null;
-            $course_accommodations_table->age_range = $course_accomodation->age_range ?? null;
+            $new_course_accommodation = new CourseAccommodation;
+            $new_course_accommodation->unique_id = $accommodation_id;
+            $new_course_accommodation->course_unique_id = $course_id;
+            $new_course_accommodation->room_type = $course_accomodation->room_type ?? null;
+            $new_course_accommodation->meal = $course_accomodation->meal ?? null;
+            $new_course_accommodation->age_range = $course_accomodation->age_range ?? null;
             
-            $course_accommodations_table->deposit_fee = $course_accomodation->deposit_fee ?? null;
-            $course_accommodations_table->custodian_fee = $course_accomodation->custodian_fee ?? null;
-            $course_accommodations_table->custodian_age_range = $course_accomodation->age_range_for_custodian ?? null;
-            $course_accommodations_table->custodian_condition = $course_accomodation->custodian_condition ?? null;
-            $course_accommodations_table->special_diet_fee = $course_accomodation->special_diet_fee ?? null;
-            $course_accommodations_table->special_diet_note = $course_accomodation->special_diet_note;
-            $course_accommodations_table->special_diet_note_ar = $course_accomodation->special_diet_note_ar;
+            $new_course_accommodation->deposit_fee = $course_accomodation->deposit_fee ?? null;
+            $new_course_accommodation->custodian_fee = $course_accomodation->custodian_fee ?? null;
+            $new_course_accommodation->custodian_age_range = $course_accomodation->age_range_for_custodian ?? null;
+            $new_course_accommodation->custodian_condition = $course_accomodation->custodian_condition ?? null;
+            $new_course_accommodation->special_diet_fee = $course_accomodation->special_diet_fee ?? null;
+            $new_course_accommodation->special_diet_note = $course_accomodation->special_diet_note;
+            $new_course_accommodation->special_diet_note_ar = $course_accomodation->special_diet_note_ar;
             
-            $course_accommodations_table->type = $course_accomodation->type ?? null;
-            $course_accommodations_table->placement_fee = $course_accomodation->placement_fee ?? null;
-            $course_accommodations_table->program_duration = $course_accomodation->program_duration ?? null;
-            $course_accommodations_table->fee_per_week = $course_accomodation->fee_per_week ?? null;
-            $course_accommodations_table->start_week = $course_accomodation->start_week ?? null;
-            $course_accommodations_table->end_week = $course_accomodation->end_week ?? null;
-            $course_accommodations_table->available_date = $course_accomodation->available_date ?? null;
-            $course_accommodations_table->available_days = $course_accomodation->available_days ?? null;
-            $course_accommodations_table->start_date = $course_accomodation->start_date ?? null;
-            $course_accommodations_table->end_date = $course_accomodation->end_date ?? null;
+            $new_course_accommodation->type = $course_accomodation->type ?? null;
+            $new_course_accommodation->placement_fee = $course_accomodation->placement_fee ?? null;
+            $new_course_accommodation->program_duration = $course_accomodation->program_duration ?? null;
+            $new_course_accommodation->fee_per_week = $course_accomodation->fee_per_week ?? null;
+            $new_course_accommodation->start_week = $course_accomodation->start_week ?? null;
+            $new_course_accommodation->end_week = $course_accomodation->end_week ?? null;
+            $new_course_accommodation->available_date = $course_accomodation->available_date ?? null;
+            $new_course_accommodation->available_days = $course_accomodation->available_days ?? null;
+            $new_course_accommodation->start_date = $course_accomodation->start_date ?? null;
+            $new_course_accommodation->end_date = $course_accomodation->end_date ?? null;
             
-            $course_accommodations_table->discount_per_week = $course_accomodation->discount_per_week . " " . $course_accomodation->discount_per_week_symbol ?? null;
-            $course_accommodations_table->discount_per_week_symbol = $course_accomodation->discount_per_week_symbol ?? null;
-            $course_accommodations_table->discount_start_date = $course_accomodation->discount_start_date ?? null;
-            $course_accommodations_table->discount_end_date = $course_accomodation->discount_end_date ?? null;
+            $new_course_accommodation->discount_per_week = $course_accomodation->discount_per_week . " " . $course_accomodation->discount_per_week_symbol ?? '';
+            $new_course_accommodation->discount_per_week_symbol = $course_accomodation->discount_per_week_symbol ?? null;
+            $new_course_accommodation->discount_start_date = $course_accomodation->discount_start_date ?? null;
+            $new_course_accommodation->discount_end_date = $course_accomodation->discount_end_date ?? null;
 
-            $course_accommodations_table->summer_fee_per_week = $course_accomodation->summer_fee_per_week ?? null;
-            $course_accommodations_table->summer_fee_start_date = $course_accomodation->summer_fee_start_date ?? null;
-            $course_accommodations_table->summer_fee_end_date = $course_accomodation->summer_fee_end_date ?? null;
+            $new_course_accommodation->summer_fee_per_week = $course_accomodation->summer_fee_per_week ?? null;
+            $new_course_accommodation->summer_fee_start_date = $course_accomodation->summer_fee_start_date ?? null;
+            $new_course_accommodation->summer_fee_end_date = $course_accomodation->summer_fee_end_date ?? null;
             
-            $course_accommodations_table->peak_time_fee_per_week = $course_accomodation->peak_time_fee_per_week ?? null;
-            $course_accommodations_table->peak_time_fee_start_date = $course_accomodation->peak_time_fee_start_date ?? null;
-            $course_accommodations_table->peak_time_fee_end_date = $course_accomodation->peak_time_fee_end_date ?? null;
+            $new_course_accommodation->peak_time_fee_per_week = $course_accomodation->peak_time_fee_per_week ?? null;
+            $new_course_accommodation->peak_time_fee_start_date = $course_accomodation->peak_time_fee_start_date ?? null;
+            $new_course_accommodation->peak_time_fee_end_date = $course_accomodation->peak_time_fee_end_date ?? null;
             
-            $course_accommodations_table->christmas_fee_per_week = $course_accomodation->christmas_fee_per_week ?? null;
-            $course_accommodations_table->christmas_fee_start_date = $course_accomodation->christmas_fee_start_date ?? null;
-            $course_accommodations_table->christmas_fee_end_date = $course_accomodation->christmas_fee_end_date ?? null;
+            $new_course_accommodation->christmas_fee_per_week = $course_accomodation->christmas_fee_per_week ?? null;
+            $new_course_accommodation->christmas_fee_start_date = $course_accomodation->christmas_fee_start_date ?? null;
+            $new_course_accommodation->christmas_fee_end_date = $course_accomodation->christmas_fee_end_date ?? null;
 
-            $course_accommodations_table->x_week_selected = $course_accomodation->x_week_selected ?? null;
-            $course_accommodations_table->x_week_start_date = $course_accomodation->x_week_start_date ?? null;
-            $course_accommodations_table->x_week_end_date = $course_accomodation->x_week_end_date ?? null;
-            $course_accommodations_table->how_many_week_free = $course_accomodation->how_many_week_free ?? null;
+            $new_course_accommodation->x_week_selected = $course_accomodation->x_week_selected ?? null;
+            $new_course_accommodation->x_week_start_date = $course_accomodation->x_week_start_date ?? null;
+            $new_course_accommodation->x_week_end_date = $course_accomodation->x_week_end_date ?? null;
+            $new_course_accommodation->how_many_week_free = $course_accomodation->how_many_week_free ?? null;
+            
+            $new_course_accommodation->order = $course_accomodation->order;
 
-            $course_accommodations_table->save();
+            $new_course_accommodation->save();
         }
 
-        $course_airports = $course->airports()->get();
+        $course_airports = CourseAirport::where('course_unique_id', '' . $course->unique_id)->orderBy('order')->get();
         for ($count = 0; $count < count($course_airports); $count++) {
             $course_airport = $course_airports[$count];
             $new_course_airport = [];
@@ -368,10 +372,11 @@ class CourseCreateService
             $new_course_airport['service_provider'] = $course_airport->service_provider ?? null;
             $new_course_airport['week_selected_fee'] = (double)$course_airport->week_selected_fee ?? null;
             $new_course_airport['note'] = $course_airport->note ?? null;
+            $new_course_airport['order'] = $course_airport->order;
 
             $created_course_airport = CourseAirport::create($new_course_airport);
 
-            $course_airport_fees = $course_airport->fees()->get();
+            $course_airport_fees = CourseAirportFee::where('course_airport_unique_id', '' . $created_course_airport->unique_id)->get();
             for ($count_fee = 0; $count_fee < count($course_airport_fees); $count_fee++) {
                 $course_airport_fee = $course_airport_fees[$count_fee];
                 $new_course_airport_fee = [];
@@ -384,7 +389,7 @@ class CourseCreateService
             }
         }
 
-        $course_medicals = $course->medicals()->get();
+        $course_medicals = CourseMedical::where('course_unique_id', '' . $course->unique_id)->orderBy('order')->get();
         for ($count = 0; $count < count($course_medicals); $count++) {
             $course_medical = $course_medicals[$count];
             $new_course_medical = [];
@@ -393,10 +398,11 @@ class CourseCreateService
             $new_course_medical['deductible'] = $course_medical->deductible ?? null;
             $new_course_medical['week_selected_fee'] = $course_medical->week_selected_fee ?? null;
             $new_course_medical['note'] = $course_medical->note ?? null;
+            $new_course_medical['order'] = $course_medical->order;
 
             $created_course_medical = CourseMedical::create($new_course_medical);
 
-            $course_medical_fees = $course_medical->fees()->get();
+            $course_medical_fees = CourseMedicalFee::where('course_medical_unique_id', '' . $created_course_medical->unique_id)->get();
             for ($count_fee = 0; $count_fee < count($course_medical_fees); $count_fee++) {
                 $course_medical_fee = $course_medical_fees[$count_fee];
                 $new_course_medical_fee = [];
@@ -515,56 +521,58 @@ class CourseCreateService
 
         for ($accom = 0; $accom < count($accommodation_id); $accom++) {
             if (isset($accom)) {
-                $course_accommodations_table = new CourseAccommodation;
-                $course_accommodations_table->unique_id = $accommodation_id[$accom] ?? null;
-                $course_accommodations_table->course_unique_id = '' . \Session::get('course_id');
-                $course_accommodations_table->room_type = $room_type[$accom] ?? null;
-                $course_accommodations_table->meal = $meal[$accom] ?? null;
-                $course_accommodations_table->age_range = $age_range[$accom] ?? null;
-                $course_accommodations_table->type = $type[$accom] ?? null;
-                $course_accommodations_table->placement_fee = $placement_fee[$accom] ?? null;
-                $course_accommodations_table->program_duration = $program_duration[$accom] ?? null;
-                $course_accommodations_table->deposit_fee = $deposit_fee[$accom] ?? null;
+                $new_course_accommodation = new CourseAccommodation;
+                $new_course_accommodation->unique_id = $accommodation_id[$accom] ?? null;
+                $new_course_accommodation->course_unique_id = '' . \Session::get('course_id');
+                $new_course_accommodation->room_type = $room_type[$accom] ?? null;
+                $new_course_accommodation->meal = $meal[$accom] ?? null;
+                $new_course_accommodation->age_range = $age_range[$accom] ?? null;
+                $new_course_accommodation->type = $type[$accom] ?? null;
+                $new_course_accommodation->placement_fee = $placement_fee[$accom] ?? null;
+                $new_course_accommodation->program_duration = $program_duration[$accom] ?? null;
+                $new_course_accommodation->deposit_fee = $deposit_fee[$accom] ?? null;
 
-                $course_accommodations_table->custodian_fee = $custodian_fee[$accom] ?? null;
-                $course_accommodations_table->custodian_age_range = $age_range_for_custodian[$accom] ?? null;
-                $course_accommodations_table->custodian_condition = $custodian_condition[$accom] ?? null;
+                $new_course_accommodation->custodian_fee = $custodian_fee[$accom] ?? null;
+                $new_course_accommodation->custodian_age_range = $age_range_for_custodian[$accom] ?? null;
+                $new_course_accommodation->custodian_condition = $custodian_condition[$accom] ?? null;
 
-                $course_accommodations_table->special_diet_fee = $special_diet_fee[$accom] ?? null;
-                $course_accommodations_table->special_diet_note = $special_diet_note[$accom] ?? null;
-                $course_accommodations_table->special_diet_note_ar = $special_diet_note_ar[$accom] ?? null;
+                $new_course_accommodation->special_diet_fee = $special_diet_fee[$accom] ?? null;
+                $new_course_accommodation->special_diet_note = $special_diet_note[$accom] ?? null;
+                $new_course_accommodation->special_diet_note_ar = $special_diet_note_ar[$accom] ?? null;
                 
-                $course_accommodations_table->fee_per_week = $fee_per_week[$accom] ?? null;
-                $course_accommodations_table->start_week = $start_week[$accom] ?? null;
-                $course_accommodations_table->end_week = $end_week[$accom] ?? null;
-                $course_accommodations_table->available_date = $available_date[$accom] ?? null;
-                $course_accommodations_table->available_days = $available_days[$accom] ?? null;
-                $course_accommodations_table->start_date = $start_date[$accom] ?? null;
-                $course_accommodations_table->end_date = $end_date[$accom] ?? null;
+                $new_course_accommodation->fee_per_week = $fee_per_week[$accom] ?? null;
+                $new_course_accommodation->start_week = $start_week[$accom] ?? null;
+                $new_course_accommodation->end_week = $end_week[$accom] ?? null;
+                $new_course_accommodation->available_date = $available_date[$accom] ?? null;
+                $new_course_accommodation->available_days = $available_days[$accom] ?? null;
+                $new_course_accommodation->start_date = $start_date[$accom] ?? null;
+                $new_course_accommodation->end_date = $end_date[$accom] ?? null;
                 
-                $course_accommodations_table->discount_per_week = (isset($discount_per_week[$accom]) ? $discount_per_week[$accom] : 0) . " " . (isset($discount_per_week_symbol[$accom]) ? $discount_per_week_symbol[$accom] : ' ');
-                $course_accommodations_table->discount_per_week_symbol = $discount_per_week_symbol[$accom] ?? null;
-                $course_accommodations_table->discount_start_date = $discount_start_date[$accom] ?? null;
-                $course_accommodations_table->discount_end_date = $discount_end_date[$accom] ?? null;
+                $new_course_accommodation->discount_per_week = $discount_per_week[$accom] ?? '' . " " . (isset($discount_per_week_symbol[$accom]) ? $discount_per_week_symbol[$accom] : '');
+                $new_course_accommodation->discount_per_week_symbol = (isset($discount_per_week_symbol[$accom]) ? $discount_per_week_symbol[$accom] : null);
+                $new_course_accommodation->discount_start_date = $discount_start_date[$accom] ?? null;
+                $new_course_accommodation->discount_end_date = $discount_end_date[$accom] ?? null;
                 
-                $course_accommodations_table->summer_fee_per_week = $summer_fee_per_week[$accom] ?? null;
-                $course_accommodations_table->summer_fee_start_date = $summer_fee_start_date[$accom] ?? null;
-                $course_accommodations_table->summer_fee_end_date = $summer_fee_end_date[$accom] ?? null;
+                $new_course_accommodation->summer_fee_per_week = $summer_fee_per_week[$accom] ?? null;
+                $new_course_accommodation->summer_fee_start_date = $summer_fee_start_date[$accom] ?? null;
+                $new_course_accommodation->summer_fee_end_date = $summer_fee_end_date[$accom] ?? null;
                 
-                $course_accommodations_table->peak_time_fee_per_week = $peak_time_fee_per_week[$accom] ?? null;
-                $course_accommodations_table->peak_time_fee_start_date = $peak_time_fee_start_date[$accom] ?? null;
-                $course_accommodations_table->peak_time_fee_end_date = $peak_time_fee_end_date[$accom] ?? null;
+                $new_course_accommodation->peak_time_fee_per_week = $peak_time_fee_per_week[$accom] ?? null;
+                $new_course_accommodation->peak_time_fee_start_date = $peak_time_fee_start_date[$accom] ?? null;
+                $new_course_accommodation->peak_time_fee_end_date = $peak_time_fee_end_date[$accom] ?? null;
                 
-                $course_accommodations_table->christmas_fee_per_week = $christmas_fee_per_week[$accom] ?? null;
-                $course_accommodations_table->christmas_fee_start_date = $christmas_fee_start_date[$accom] ?? null;
-                $course_accommodations_table->christmas_fee_end_date = $christmas_fee_end_date[$accom] ?? null;
+                $new_course_accommodation->christmas_fee_per_week = $christmas_fee_per_week[$accom] ?? null;
+                $new_course_accommodation->christmas_fee_start_date = $christmas_fee_start_date[$accom] ?? null;
+                $new_course_accommodation->christmas_fee_end_date = $christmas_fee_end_date[$accom] ?? null;
 
-                $course_accommodations_table->x_week_selected = $x_week_selected[$accom] ?? null;
-                $course_accommodations_table->x_week_start_date = $x_week_start_date[$accom] ?? null;
-                $course_accommodations_table->x_week_end_date = $x_week_end_date[$accom] ?? null;
-                $course_accommodations_table->how_many_week_free = $how_many_week_free[$accom] ?? null;
+                $new_course_accommodation->x_week_selected = $x_week_selected[$accom] ?? null;
+                $new_course_accommodation->x_week_start_date = $x_week_start_date[$accom] ?? null;
+                $new_course_accommodation->x_week_end_date = $x_week_end_date[$accom] ?? null;
+                $new_course_accommodation->how_many_week_free = $how_many_week_free[$accom] ?? null;
+
+                $new_course_accommodation->order = $accom;
                 
-                $course_accommodations_table->save();
+                $new_course_accommodation->save();
 
                 \Session::push('accom_ids', '' . $accommodation_id[$accom]);
             }
@@ -621,9 +629,9 @@ class CourseCreateService
             $rules = [
                 'airport_service_provider.*' => 'required',
                 'airport_note.*' => 'required',
-                'medical_company_name.*' => 'required',
-                'medical_deductible.*' => 'required',
-                'medical_note.*' => 'required',
+                // 'medical_company_name.*' => 'required',
+                // 'medical_deductible.*' => 'required',
+                // 'medical_note.*' => 'required',
             ];
 
             /*
@@ -632,9 +640,9 @@ class CourseCreateService
             $validation = \Validator::make($request->all(), $rules, [
                 'airport_service_provider.*.required' => "Airport Service Provider required",
                 'airport_note.*.required' => "Airport Note required",
-                'medical_company_name.*.required' => "Medical Company Name required",
-                'medical_deductible.*.required' => "Medical Deductible required",
-                'medical_note.*.required' => "Medical Note required",
+                // 'medical_company_name.*.required' => "Medical Company Name required",
+                // 'medical_deductible.*.required' => "Medical Deductible required",
+                // 'medical_note.*.required' => "Medical Note required",
             ]);
 
             if ($validation->fails()) {
@@ -648,6 +656,7 @@ class CourseCreateService
                 $airport_save->week_selected_fee = $request->airport_week_selected_fee[$i] ?? null;
                 $airport_save->note = $request->airport_note[$i] ?? null;
                 $airport_save->note_ar = $request->airport_note_ar[$i] ?? null;
+                $airport_save->order = $i;
                 $airport_save->save();
                 
                 for ($j = 0; $j <= $request->airportfeeincrement[$i]; $j++) {
@@ -670,6 +679,7 @@ class CourseCreateService
                 $medical_save->week_selected_fee = $request->medical_week_selected_fee[$k] ?? null;
                 $medical_save->note = $request->medical_note[$k] ?? null;
                 $medical_save->note_ar = $request->medical_note_ar[$k] ?? null;
+                $medical_save->order = $k;
                 $medical_save->save();
                 
                 for ($l = 0; $l <= $request->medicalfeeincrement[$k]; $l++) {
@@ -730,7 +740,6 @@ class CourseCreateService
             $course->language = $r->language;
             $course->program_type = $r->program_type ?? [];
             $course->study_mode = $r->study_mode;
-            $course->school_id = $r->school_id;
             $school = School::find($r->school_id);
             if ($school) {
                 if (app()->getLocale() == 'en') {
@@ -760,18 +769,24 @@ class CourseCreateService
             $course_id = $course->unique_id;
             \Session::put('course_id', '' . $course_id);
             
+            \Session::forget('program_id');
             \Session::forget('program_ids');
 
             $course_program_ids = [];
-            if (isset($program_increment)) {
-                for ($count = 0; $count <= (int)$program_increment; $count++) {
+            if (isset($r->program_increment)) {
+                for ($count = 0; $count <= (int)$r->program_increment; $count++) {
                     $course_program = null;
                     if (isset($r->program_id[$count]) && $r->program_id[$count]) {
                         $course_program = CourseProgram::where('unique_id', $r->program_id[$count])->first();
                     }
                     if (!$course_program) {
                         $course_program = new CourseProgram;
-                        $course_program->unique_id = $r->program_id[$count];
+                        if (isset($r->program_id[$count]) && $r->program_id[$count]) {
+                            $course_program->unique_id = $r->program_id[$count];
+                        } else {
+                            (new Controller())->my_unique_id(1);
+                            $course_program->unique_id = (new Controller())->my_unique_id();
+                        }
                     }
                     $course_program->course_unique_id = '' . $course_id;
                     $course_program->program_name = null;
@@ -792,8 +807,8 @@ class CourseCreateService
                     $course_program->select_day_week = $r->select_day_week[$count] ?? null;
                     $course_program->available_days = $r->available_days[$count] ?? null;
 
-                    $course_program->deposit = $r->deposit[$count] . " " . $r->deposit_symbol[$count] ?? '';
-                    $course_program->discount_per_week = $r->discount_per_week[$count] . " " . $r->discount_per_week_symbol[$count] ?? null;
+                    $course_program->deposit = $r->deposit[$count] . " " . (isset($r->deposit_symbol[$count]) ? $r->deposit_symbol[$count] : '');
+                    $course_program->discount_per_week = $r->discount_per_week[$count] . " " . (isset($r->discount_per_week_symbol[$count]) ? $r->discount_per_week_symbol[$count] : '');
                     $course_program->discount_start_date = $r->discount_start_date[$count] ?? null;
                     $course_program->discount_end_date = $r->discount_end_date[$count] ?? null;
 
@@ -813,8 +828,10 @@ class CourseCreateService
                     $course_program->peak_time_start_date = $r->peak_time_start_date[$count];
                     $course_program->peak_time_end_date = $r->peak_time_end_date[$count];
 
-                    $course_program->save();
+                    $course_program->order = $count;
+
                     $course_program_ids[] = $course_program->unique_id;
+                    $course_program->save();
                 }
             }
             
@@ -868,7 +885,7 @@ class CourseCreateService
             }
             if (!$program_under_age_fee) {
                 $program_under_age_fee = new CourseProgramUnderAgeFee;
-                $course_program->course_program_id = $program_id;
+                $program_under_age_fee->course_program_id = $program_id;
             }
             $program_under_age_fee->under_age = $under_age[$under_age_fee_index] ?? null;
             $program_under_age_fee->under_age_fee_per_week = $under_age_fee_per_week[$under_age_fee_index] ?? null;
@@ -916,8 +933,6 @@ class CourseCreateService
      */
     public function updateAccommodation(Request $request)
     {
-        \Session::forget('accom_ids');
-
         $rules = ['accommodation_id.*' => 'required', 'type.*' => 'required',];
 
         /*
@@ -959,6 +974,12 @@ class CourseCreateService
             }
             if (!$course_accomodation) {
                 $course_accomodation = new CourseAccommodation;
+                if (isset($accommodation_id[$accom]) && $accommodation_id[$accom]) {
+                    $course_accomodation->unique_id = $accommodation_id[$accom];
+                } else {
+                    (new Controller())->my_unique_id(1);
+                    $course_accomodation->unique_id = (new Controller())->my_unique_id();;
+                }
                 $course_accomodation->course_unique_id = '' . \Session::get('course_id');
             }
             $course_accomodation->room_type = $room_type[$accom] ?? null;
@@ -986,8 +1007,8 @@ class CourseCreateService
             $course_accomodation->start_date = $start_date[$accom] ?? null;
             $course_accomodation->end_date = $end_date[$accom] ?? null;
             
-            $course_accomodation->discount_per_week = $discount_per_week[$accom] . " " . $discount_per_week_symbol[$accom] ?? null;
-            $course_accomodation->discount_per_week_symbol = $discount_per_week_symbol[$accom] ?? null;
+            $course_accomodation->discount_per_week = $discount_per_week[$accom] ?? "" . " " . (isset($discount_per_week_symbol[$accom]) ? $discount_per_week_symbol[$accom] : "") ?? null;
+            $course_accomodation->discount_per_week_symbol = (isset($discount_per_week_symbol[$accom]) ? $discount_per_week_symbol[$accom] : null);
             $course_accomodation->discount_start_date = $discount_start_date[$accom] ?? null;
             $course_accomodation->discount_end_date = $discount_end_date[$accom] ?? null;
             
@@ -1008,8 +1029,10 @@ class CourseCreateService
             $course_accomodation->x_week_end_date = $x_week_end_date[$accom] ?? null;
             $course_accomodation->how_many_week_free = $how_many_week_free[$accom] ?? null;
 
-            $course_accomodation->save();
+            $course_accomodation->order = $accom;
+
             $course_accommodation_ids[] = $course_accomodation->unique_id;
+            $course_accomodation->save();
         }
         $course_accomodations = CourseAccommodation::where('course_unique_id', '' . \Session::get('course_id'))->get();
         foreach ($course_accomodations as $course_accomodation) {
@@ -1084,9 +1107,9 @@ class CourseCreateService
             $rules = [
                 'airport_service_provider.*' => 'required',
                 'airport_note.*' => 'required',
-                'medical_company_name.*' => 'required',
-                'medical_deductible.*' => 'required',
-                'medical_note.*' => 'required',
+                // 'medical_company_name.*' => 'required',
+                // 'medical_deductible.*' => 'required',
+                // 'medical_note.*' => 'required',
             ];
 
             /*
@@ -1095,9 +1118,9 @@ class CourseCreateService
             $validation = \Validator::make($request->all(), $rules, [
                 'airport_service_provider.*.required' => "Airport Service Provider required",
                 'airport_note.*.required' => "Airport Note required",
-                'medical_company_name.*.required' => "Medical Company Name required",
-                'medical_deductible.*.required' => "Medical Deductible required",
-                'medical_note.*.required' => "Medical Note required",
+                // 'medical_company_name.*.required' => "Medical Company Name required",
+                // 'medical_deductible.*.required' => "Medical Deductible required",
+                // 'medical_note.*.required' => "Medical Note required",
             ]);
 
             if ($validation->fails()) {
@@ -1118,8 +1141,13 @@ class CourseCreateService
                 $course_airport->week_selected_fee = $request->airport_week_selected_fee[$i] ?? null;
                 $course_airport->note = $request->airport_note[$i] ?? null;
                 $course_airport->note_ar = $request->airport_note_ar[$i] ?? null;
+                $course_airport->order = $i;
                 $course_airport->save();
-                $course_airport_ids[] = $course_airport->unique_id;
+                if (!$course_airport->unique_id) {
+                    $course_airport_ids[] = CourseAirport::orderBy('unique_id')->last()->unique_id;
+                } else {
+                    $course_airport_ids[] = $course_airport->unique_id;
+                }
 
                 $course_airport_fee_ids = [];
                 for ($j = 0; $j <= $request->airportfeeincrement[$i]; $j++) {
@@ -1136,7 +1164,11 @@ class CourseCreateService
                         $course_airport_fee->service_name = $request->airport_service_name[$i][$j] ?? null;
                         $course_airport_fee->service_fee = (double)$request->airport_service_fee[$i][$j] ?? null;
                         $course_airport_fee->save();
-                        $course_airport_fee_ids[] = $course_airport_fee->unique_id;
+                        if (!$course_airport_fee->unique_id) {
+                            $course_airport_fee_ids[] = CourseAirportFee::orderBy('unique_id')->last()->unique_id;
+                        } else {
+                            $course_airport_fee_ids[] = $course_airport_fee->unique_id;
+                        }
                     }
                 }
                 $course_airport_fees = CourseAirportFee::where('course_airport_unique_id', $course_airport->unique_id)->get();
@@ -1168,8 +1200,13 @@ class CourseCreateService
                 $course_medical->week_selected_fee = $request->medical_week_selected_fee[$k] ?? null;
                 $course_medical->note = $request->medical_note[$k] ?? null;
                 $course_medical->note_ar = $request->medical_note_ar[$k] ?? null;
+                $course_medical->order = $k;
                 $course_medical->save();
-                $course_medical_ids[] = $course_medical->unique_id;
+                if (!$course_medical->unique_id) {
+                    $course_medical_ids[] = CourseMedical::orderBy('unique_id')->last()->unique_id;
+                } else {
+                    $course_medical_ids[] = $course_medical->unique_id;
+                }
 
                 $course_medical_fee_ids = [];
                 for ($l = 0; $l <= $request->medicalfeeincrement[$k]; $l++) {
@@ -1186,7 +1223,11 @@ class CourseCreateService
                         $course_medical_fee->start_date = $request->medical_start_date[$k][$l] ?? null;
                         $course_medical_fee->end_date = $request->medical_end_date[$k][$l] ?? null;
                         $course_medical_fee->save();
-                        $course_medical_fee_ids[] = $course_medical_fee->unique_id;
+                        if (!$course_medical_fee->unique_id) {
+                            $course_medical_fee_ids[] = CourseMedicalFee::orderBy('unique_id')->last()->unique_id;
+                        } else {
+                            $course_medical_fee_ids[] = $course_medical_fee->unique_id;
+                        }
                     }
                 }
                 $course_medical_fees = CourseMedicalFee::where('course_medical_unique_id', $course_medical->unique_id)->get();

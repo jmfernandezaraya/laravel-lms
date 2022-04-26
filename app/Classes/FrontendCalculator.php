@@ -20,17 +20,22 @@ class FrontendCalculator
         $program_duration,
         $text_book_fee,
         $summer_fee,
+        //$christmas_fee,
         $program_start_date_from_frontend,
         $under_age_fee,
         $mail_fee,
         $discount,
-        $peak_end_date_accomodation,
+
         $program_start_date,
         $program_end_date,
+
         $forpercentage = 0,
+
         $peak_time_fee = 0,
         $peak_start_date,
         $peak_end_date,
+        $summer_start_date_program,
+        $summer_date_from_db_program,
 
         $discount_week_get = 0,
         $how_many_week_free,
@@ -40,71 +45,95 @@ class FrontendCalculator
         $discount_end_date_for_week_select,
 
         $get_program_weeks,
-        $summer_date_from_db_program,
-        $summer_date_from_db_accomodation,
-        $peak_date_from_db_accomodation,  //end date of peak accomodation
-        $summer_start_date_program,
-        $summer_start_date_accomodation,
-        $peak_start_date_accomodation,
+
+        $accomodation_peak_end_date,
+        $accomodation_peak_start_date,
+        $accomodation_summer_start_date,
+        $accomodation_summer_end_date,
+
         $front_end_date;
 
     /**
      * @return mixed
      */
-    public function getPeakEndDateAccommodation()
+    public function getAccommodationPeakEndDate()
     {
-        return $this->peak_end_date_accomodation;
+        return $this->accomodation_peak_end_date;
+    }
+
+    /**
+     * @param mixed $accomodation_peak_end_date
+     */
+    public function setAccommodationPeakEndDate($accomodation_peak_end_date)
+    {
+        $this->accomodation_peak_end_date = $accomodation_peak_end_date;
     }
 
     /**
      * @return mixed
      */
-    public function getSummerDateFromDbAccommodation()
+    public function getAccommodationSummerStartDate()
     {
-        return $this->summer_date_from_db_accomodation;
+        return $this->accomodation_summer_start_date;
+    }
+
+    /**
+     * @param mixed $accomodation_summer_start_date
+     */
+    public function setAccommodationSummerStartDate($accomodation_summer_start_date)
+    {
+        $this->accomodation_summer_start_date = $accomodation_summer_start_date;
     }
 
     /**
      * @return mixed
      */
-    public function getSummerStartDateAccommodation()
+    public function getAccommodationSummerEndDate()
     {
-        return $this->summer_start_date_accomodation;
+        return $this->accomodation_summer_end_date;
+    }
+
+    public function setAccommodationSummerEndDate($accomodation_summer_end_date)
+    {
+        $this->accomodation_summer_end_date = $accomodation_summer_end_date;
     }
 
     /**
      * @param mixed $program_start_date_from_frontend
      */
-    public function setProgramStartDateFromFrontend($program_start_date_from_frontend): void
+    public function setProgramStartDateFromFrontend($program_start_date_from_frontend)
     {
         $this->program_start_date_from_frontend = $program_start_date_from_frontend;
     }
 
     /**
+     * @return mixed
+     */
+    public function getAccommodationPeakStartDate()
+    {
+        return $this->accomodation_peak_start_date;
+    }
+
+    /**
+     * @param mixed $accomodation_peak_start_date
+     */
+    public function setAccommodationPeakStartDate($accomodation_peak_start_date)
+    {
+        $this->accomodation_peak_start_date = $accomodation_peak_start_date;
+    }
+
+    /**
      * @param mixed $summer_end_date
      */
-    public function setSummerEndDateProgram($summer_end_date_program): void
+    public function setSummerEndDateProgram($summer_end_date_program)
     {
         $this->summer_end_date_program = $summer_end_date_program;
     }
 
     /**
-     * @param mixed $peak_end_date_accomodation
-     */
-    public function setPeakEndDateAccommodation($peak_end_date_accomodation): void
-    {
-        $this->peak_end_date_accomodation = $peak_end_date_accomodation;
-    }
-
-    public function setSummerDateFromDbAccommodation($summer_date_from_db_accomodation): void
-    {
-        $this->summer_date_from_db_accomodation = $summer_date_from_db_accomodation;
-    }
-
-    /**
      * @param mixed $front_end_date
      */
-    public function setFrontEndDate($front_end_date): void
+    public function setFrontEndDate($front_end_date)
     {
         $this->front_end_date = $front_end_date;
     }
@@ -115,42 +144,12 @@ class FrontendCalculator
     public function setSummerStartDateProgram($summer_start_date_program)
     {
         $this->summer_start_date_program = $summer_start_date_program;
-    }  //end date
-
-    /**
-     * @param mixed $summer_start_date_accomodation
-     */
-    public function setSummerStartDateAccommodation($summer_start_date_accomodation): void
-    {
-        $this->summer_start_date_accomodation = $summer_start_date_accomodation;
-    }
-
-    /**
-     * @param mixed $summer_date_from_db_accomodation
-     */
-
-    //Accom end date summer date
-
-    /**
-     * @param mixed $peak_start_date_accomodation
-     */
-    public function setPeakStartDateAccommodation($peak_start_date_accomodation): void
-    {
-        $this->peak_start_date_accomodation = $peak_start_date_accomodation;
-    } //this end date of chirstmas
-
-    /**
-     * @param mixed $peak_date_from_db_accomodation
-     */
-    public function setPeakDateFromDbAccommodation($peak_date_from_db_accomodation): void
-    {
-        $this->peak_date_from_db_accomodation = $peak_date_from_db_accomodation;
     }
 
     /**
      * @param mixed $summer_date_from_db_program
      */
-    public function setSummerDateFromDbProgram($summer_date_from_db_program): void
+    public function setSummerDateFromDbProgram($summer_date_from_db_program)
     {
         $this->summer_date_from_db_program = $summer_date_from_db_program;
     }
@@ -158,7 +157,7 @@ class FrontendCalculator
     /**
      * @param mixed $peak_date_from_db_program
      */
-    public function setPeakDateFromDbProgram($peak_end_date): void
+    public function setPeakDateFromDbProgram($peak_end_date)
     {
         $this->peak_end_date = $peak_end_date;
     }
@@ -166,15 +165,15 @@ class FrontendCalculator
     /**
      * @param mixed $program_duration
      */
-    public function setProgramDuration($program_duration): int
+    public function setProgramDuration($program_duration)
     {
-        return $this->program_duration = $program_duration;
+        $this->program_duration = $program_duration;
     }
 
     /**
      * @param int $peak_time_fee
      */
-    public function setPeakTimeFee(int $peak_time_fee): void
+    public function setPeakTimeFee(int $peak_time_fee)
     {
         $this->peak_time_fee = $peak_time_fee;
     }
@@ -182,7 +181,7 @@ class FrontendCalculator
     /**
      * @param mixed $peak_start_date
      */
-    public function setPeakStartDate($peak_start_date): void
+    public function setPeakStartDate($peak_start_date)
     {
         $this->peak_start_date = $peak_start_date;
     }
@@ -190,7 +189,7 @@ class FrontendCalculator
     /**
      * @param mixed $peak_end_date
      */
-    public function setPeakEndDate($peak_end_date): void
+    public function setPeakEndDate($peak_end_date)
     {
         $this->peak_end_date = $peak_end_date;
     }
@@ -198,7 +197,7 @@ class FrontendCalculator
     /**
      * @param mixed $fixed_program_cost
      */
-    public function setFixedProgramCost($fixed_program_cost): void
+    public function setFixedProgramCost($fixed_program_cost)
     {
         $this->fixed_program_cost = $fixed_program_cost;
     }
@@ -206,7 +205,7 @@ class FrontendCalculator
     /**
      * @param int $forpercentage
      */
-    public function setForpercentage(int $forpercentage): void
+    public function setForpercentage(int $forpercentage)
     {
         $this->forpercentage = $forpercentage;
     }
@@ -222,7 +221,7 @@ class FrontendCalculator
     /**
      * @param mixed $program_start_date
      */
-    public function setProgramStartDate($program_start_date): void
+    public function setProgramStartDate($program_start_date)
     {
         $this->program_start_date = $program_start_date;
     }
@@ -238,7 +237,7 @@ class FrontendCalculator
     /**
      * @param mixed $program_end_date
      */
-    public function setProgramEndDate($program_end_date): void
+    public function setProgramEndDate($program_end_date)
     {
         $this->program_end_date = $program_end_date;
     }
@@ -246,7 +245,7 @@ class FrontendCalculator
     /**
      * @param mixed $discount_start_date_for_week_select
      */
-    public function setDiscountStartDateForWeekSelect($discount_start_date_for_week_select): void
+    public function setDiscountStartDateForWeekSelect($discount_start_date_for_week_select)
     {
         $this->discount_start_date_for_week_select = $discount_start_date_for_week_select;
     }
@@ -254,7 +253,7 @@ class FrontendCalculator
     /**
      * @param mixed $discount_end_date_for_week_select
      */
-    public function setDiscountEndDateForWeekSelect($discount_end_date_for_week_select): void
+    public function setDiscountEndDateForWeekSelect($discount_end_date_for_week_select)
     {
         $this->discount_end_date_for_week_select = $discount_end_date_for_week_select;
     }
@@ -262,7 +261,7 @@ class FrontendCalculator
     /**
      * @param mixed $get_program_weeks
      */
-    public function setGetProgramWeeks($get_program_weeks): void
+    public function setGetProgramWeeks($get_program_weeks)
     {
         $this->get_program_weeks = $get_program_weeks;
     }
@@ -270,7 +269,7 @@ class FrontendCalculator
     /**
      * @param mixed $discount_start_date
      */
-    public function setDiscountStartDate($discount_start_date): void
+    public function setDiscountStartDate($discount_start_date)
     {
         $this->discount_start_date = $discount_start_date;
     }
@@ -278,7 +277,7 @@ class FrontendCalculator
     /**
      * @param mixed $discount_end_date
      */
-    public function setDiscountEndDate($discount_end_date): void
+    public function setDiscountEndDate($discount_end_date)
     {
         $this->discount_end_date = $discount_end_date;
     }
@@ -286,25 +285,21 @@ class FrontendCalculator
     public function setDiscountWeekGet($cost)
     {
         $this->discount_week_get = $cost;
-        return $this;
     }
 
     public function setHowManyWeekFree($cost)
     {
         $this->how_many_week_free = $cost;
-        return $this;
     }
 
     public function setProgramCost($cost)
     {
         $this->program_cost = $cost == null ? 0 : $cost;
-        return $this;
     }
 
     public function setProgramRegistrationFee($cost)
     {
         $this->program_registration_fee = $cost == null ? 0 : $cost;
-        return $this;
     }
 
     public function setTextBookFee($cost)
@@ -315,13 +310,16 @@ class FrontendCalculator
     public function setSummerFee($cost)
     {
         $this->summer_fee = $cost == null ? 0 : $cost;
-        return $this;
     }
+
+    // public function setChristmasFee($cost)
+    // {
+    //     $this->christmas_fee = $cost == null ? 0 : $cost;
+    // }
 
     public function setUnderAgeFee($cost)
     {
         $this->under_age_fee = $cost == null ? 0 : $cost;
-        return $this;
     }
 
     public function setTotalPrice()
@@ -391,6 +389,7 @@ class FrontendCalculator
 
                 $totalss = readCalculationFromDB('program_cost') + readCalculationFromDB('program_registration_fee') + 
                     readCalculationFromDB('text_book_fee') + readCalculationFromDB('summer_fee') +
+                    // readCalculationFromDB('christmas_fee') +
                     readCalculationFromDB('under_age_fee') + readCalculationFromDB('courier_fee');
                 $minus = $totalss - $data['discount'];
                 $set_total = $minus + $totalss;
@@ -428,6 +427,7 @@ class FrontendCalculator
 
             $totalss = readCalculationFromDB('program_cost') + readCalculationFromDB('program_registration_fee') + 
                 readCalculationFromDB('text_book_fee') + readCalculationFromDB('summer_fee') + 
+                // readCalculationFromDB('christmas_fee') + 
                 readCalculationFromDB('under_age_fee') + readCalculationFromDB('courier_fee');
             $minus = $totalss - $data['discount'];
             $set_total = $minus + $totalss;
@@ -471,6 +471,7 @@ class FrontendCalculator
             $this->program_registration_fee +
             $this->text_book_fee +
             $this->summer_fee +
+            //$this->christmas_fee +
             $this->under_age_fee +
             $this->mail_fee;
     }
@@ -483,68 +484,34 @@ class FrontendCalculator
         $multiply['front_end_date_check'] = $this->front_end_date;
         $multiply['front_end_date_exact'] = $this->front_end_date;
         $multiply['summer_date_check'] = $this->summer_start_date_program;
-        $multiply['which'] = null;
         $multiply['summer_date_program'] = 0;
 
-        if (!($this->program_start_date_from_frontend > $this->summer_date_from_db_program)
-            && !($this->getFrontEndDate() < $this->summer_start_date_program)
-        ) {
-            if ($this->getFrontEndDate() >= $this->summer_date_from_db_program
-                && $this->getProgramStartDateFromFrontend() <= $this->summer_start_date_program
-            ) {
-                $multiply['which'] = 33;
-                $multiply['summer_date_program'] =
-                    $this->compare_between_two_dates($this->summer_start_date_program, $this->summer_date_from_db_program);
-            } elseif (($this->getFrontEndDate() < $this->summer_date_from_db_program
-                && $this->summer_start_date_program > $this->getProgramStartDateFromFrontend()
-            )
-            ) {
-                $multiply['which'] = 222;
-                $multiply['summer_date_program'] =
-                    $this->getFrontEndDate() < $this->summer_date_from_db_program ? $this->compare_between_two_dates($this->getFrontEndDate(), $this->summer_start_date_program) :
-                        $this->compare_between_two_dates($this->getFrontEndDate(), $this->summer_date_from_db_program);
-            } elseif ($this->getFrontEndDate() <= $this->summer_date_from_db_program &&
-                $this->getFrontEndDate() >= $this->summer_start_date_program
-            ) {
-                $multiply['which'] = 2;
-                $multiply['summer_date_program'] =
-                    $this->compare_between_two_dates($this->program_start_date_from_frontend, $this->getFrontEndDate());
-            } elseif ($this->getFrontEndDate() >= $this->summer_date_from_db_program &&
-                $this->program_start_date_from_frontend >= $this->summer_start_date_program) {
-                $multiply['which'] = 3;
-                $multiply['summer_date_program'] =
-                    $this->compare_between_two_dates($this->program_start_date_from_frontend, $this->summer_date_from_db_program);
+        if (!($this->program_start_date_from_frontend > $this->summer_date_from_db_program) && !($this->getFrontEndDate() < $this->summer_start_date_program)) {
+            if ($this->getFrontEndDate() >= $this->summer_date_from_db_program && $this->getProgramStartDateFromFrontend() <= $this->summer_start_date_program ) {
+                $multiply['summer_date_program'] = $this->compareBetweenTwoDates($this->summer_start_date_program, $this->summer_date_from_db_program);
+            } elseif (($this->getFrontEndDate() < $this->summer_date_from_db_program && $this->summer_start_date_program > $this->getProgramStartDateFromFrontend())) {
+                $multiply['summer_date_program'] = $this->getFrontEndDate() < $this->summer_date_from_db_program ?
+                    $this->compareBetweenTwoDates($this->getFrontEndDate(), $this->summer_start_date_program) :
+                    $this->compareBetweenTwoDates($this->getFrontEndDate(), $this->summer_date_from_db_program);
+            } elseif ($this->getFrontEndDate() <= $this->summer_date_from_db_program && $this->getFrontEndDate() >= $this->summer_start_date_program) {
+                $multiply['summer_date_program'] = $this->compareBetweenTwoDates($this->program_start_date_from_frontend, $this->getFrontEndDate());
+            } elseif ($this->getFrontEndDate() >= $this->summer_date_from_db_program && $this->program_start_date_from_frontend >= $this->summer_start_date_program) {
+                $multiply['summer_date_program'] = $this->compareBetweenTwoDates($this->program_start_date_from_frontend, $this->summer_date_from_db_program);
             }
         }
 
         $multiply['peak_date_program'] = 0;
-
-        if (!($this->program_start_date_from_frontend > $this->peak_end_date)
-            && !($this->getFrontEndDate() < $this->peak_start_date)
-        ) {
-            if ($this->getFrontEndDate() >= $this->peak_end_date
-                && $this->getProgramStartDateFromFrontend() <= $this->peak_start_date
-            ) {
-                $multiply['which'] = 33;
-                $multiply['peak_date_program'] =
-                    $this->compare_between_two_dates($this->peak_start_date, $this->peak_end_date);
-            } elseif (($this->getFrontEndDate() < $this->peak_end_date
-                && $this->peak_start_date > $this->getProgramStartDateFromFrontend()
-            )
-            ) {
-                $multiply['which'] = 222;
-                $multiply['peak_date_program'] =
-                    $this->getFrontEndDate() < $this->peak_end_date ? $this->compare_between_two_dates($this->getFrontEndDate(), $this->peak_start_date) :
-                        $this->compare_between_two_dates($this->getFrontEndDate(), $this->peak_end_date);
-            } elseif ($this->getFrontEndDate() <= $this->peak_end_date &&
-                $this->getFrontEndDate() >= $this->peak_start_date
-            ) {
-                $multiply['which'] = 2;
-                $multiply['peak_date_program'] = $this->compare_between_two_dates($this->program_start_date_from_frontend, $this->getFrontEndDate());
-            } elseif ($this->getFrontEndDate() >= $this->peak_end_date &&
-                $this->program_start_date_from_frontend >= $this->peak_start_date) {
-                $multiply['which'] = 3;
-                $multiply['peak_date_program'] = $this->compare_between_two_dates($this->program_start_date_from_frontend, $this->peak_end_date);
+        if (!($this->program_start_date_from_frontend > $this->peak_end_date) && !($this->getFrontEndDate() < $this->peak_start_date)) {
+            if ($this->getFrontEndDate() >= $this->peak_end_date && $this->getProgramStartDateFromFrontend() <= $this->peak_start_date) {
+                $multiply['peak_date_program'] = $this->compareBetweenTwoDates($this->peak_start_date, $this->peak_end_date);
+            } elseif (($this->getFrontEndDate() < $this->peak_end_date && $this->peak_start_date > $this->getProgramStartDateFromFrontend())) {
+                $multiply['peak_date_program'] = $this->getFrontEndDate() < $this->peak_end_date ?
+                    $this->compareBetweenTwoDates($this->getFrontEndDate(), $this->peak_start_date) :
+                    $this->compareBetweenTwoDates($this->getFrontEndDate(), $this->peak_end_date);
+            } elseif ($this->getFrontEndDate() <= $this->peak_end_date && $this->getFrontEndDate() >= $this->peak_start_date) {
+                $multiply['peak_date_program'] = $this->compareBetweenTwoDates($this->program_start_date_from_frontend, $this->getFrontEndDate());
+            } elseif ($this->getFrontEndDate() >= $this->peak_end_date && $this->program_start_date_from_frontend >= $this->peak_start_date) {
+                $multiply['peak_date_program'] = $this->compareBetweenTwoDates($this->program_start_date_from_frontend, $this->peak_end_date);
             }
         }
 
@@ -567,7 +534,7 @@ class FrontendCalculator
         return $this->program_start_date_from_frontend;
     }
 
-    public function compare_between_two_dates($date1, $date2)
+    public function compareBetweenTwoDates($date1, $date2)
     {
         $first = Carbon::createFromFormat('Y-m-d', $date1);
         $second = Carbon::createFromFormat('Y-m-d', $date2);
@@ -575,43 +542,6 @@ class FrontendCalculator
         return $first->diffInWeeks($second);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPeakDateFromDbAccommodation()
-    {
-        return $this->peak_date_from_db_accomodation;
-    }
-
-    /*
-     *Function for returning divided by value
-     *
-     * @param program_duration
-     * @param week_selected by frontend
-     *
-     * @return int : number
-     * */
-
-    /**
-     * @return mixed
-     */
-    public function getPeakStartDateAccommodation()
-    {
-        return $this->peak_start_date_accomodation;
-    }
-
-    /*
-       * Function for getting division by week
-       *
-       *
-       * and program duration
-       *
-       * @param program_duration
-       * @param week_selected
-       *
-       * @return boolean
-       *
-       * */
     public function calculateDiscountWeekFree($value, $week_selected): bool
     {
         if ($week_selected == null) return false;

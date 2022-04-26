@@ -128,7 +128,7 @@
                                     <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#BranchModal" aria-hidden="true"></i>
                                     <i class="fa fa-trash pl-3" aria-hidden="true" onclick="deleteBranch()"></i>
                                 </label>
-                                <select class="form-control" name="branch[]" id="branch_choose">
+                                <select class="form-control" name="branch" id="branch_choose">
                                     <option value="">{{__('SuperAdmin/backend.select')}}</option>
                                 </select>
                             </div>
@@ -249,7 +249,7 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>{{__('SuperAdmin/backend.program_duration')}}:</label>
-                                    <input class="form-control" type="number" name="program_duration[]" id="gotilla" placeholder="{{__('SuperAdmin/backend.if_program_duration_=X_weeks+_get_free _Program_Registration_fee')}}">
+                                    <input class="form-control" type="number" name="program_duration[]" placeholder="{{__('SuperAdmin/backend.if_program_duration_=X_weeks+_get_free _Program_Registration_fee')}}">
                                 </div>
                                 <div class="col-md-2">
                                     <label>{{__('SuperAdmin/backend.program_deposit')}}:</label>
@@ -334,20 +334,21 @@
                                         <option value="selected_dates">{{__('SuperAdmin/backend.selected_dates')}}</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-4 select_day">
+                                <div class="form-group col-md-4 select_day_week">
                                     <label>{{__('SuperAdmin/backend.select_day')}}:</label>
-                                    <select class="form-control select_day_week" name="select_day_week[]">
+                                    <select class="form-control" name="select_day_week[]">
                                         <option value="Monday" selected>{{__('SuperAdmin/backend.Monday')}}</option>
                                         <option value="Tuesday">{{__('SuperAdmin/backend.Tuesday')}}</option>
                                         <option value="Wednesday">{{__('SuperAdmin/backend.Wednesday')}}</option>
                                         <option value="Thursday">{{__('SuperAdmin/backend.Thursday')}}</option>
                                         <option value="Friday">{{__('SuperAdmin/backend.Friday')}}</option>
                                         <option value="Saturday">{{__('SuperAdmin/backend.Saturday')}}</option>
+                                        <option value="Sunday">{{__('SuperAdmin/backend.Sunday')}}</option>
                                     </select>
                                 </div>
                                 <div class="form-group col-md-4 available_days" style="display: none">
                                     <label>{{__('SuperAdmin/backend.available_days')}}:</label>
-                                    <input class="form-control available_days yeardatepicker" data-index="0" name="available_days[]" style="display: none">
+                                    <input class="form-control yeardatepicker" data-index="0" name="available_days[]" style="display: none">
                                 </div>
                                 <div class="form-group col-md-4"></div>
                             </div>
@@ -359,7 +360,7 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>{{__('SuperAdmin/backend.discount_symbol')}}:</label>
-                                    <select class="form-control" name="discount_symbol[]">
+                                    <select class="form-control" name="discount_per_week_symbol[]">
                                         <option value="%" selected>%</option>
                                         <option value="-">-</option>
                                     </select>

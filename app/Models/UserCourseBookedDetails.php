@@ -18,7 +18,8 @@ use TelrGateway\Transaction;
  */
 class UserCourseBookedDetails extends Model
 {
-    use HasFactory;
+    use HasFactory;    
+    use Notifiable;
 
     /**
      * @var string[]
@@ -28,7 +29,6 @@ class UserCourseBookedDetails extends Model
      * @var array
      */
     protected $guarded = [];
-    use Notifiable;
 
     /**
      * @return array
@@ -42,11 +42,8 @@ class UserCourseBookedDetails extends Model
         unset($attribute['created_at']);
         unset($attribute['updated_at']);
 
-
         return $attribute;
-
     }
-
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -112,11 +109,11 @@ class UserCourseBookedDetails extends Model
     {
         $created_at = '-';
         $coursebookedstatus = $this->userCourseBookedStatusus()->where('status', $status)->first();
-        if ($coursebookedstatus)
+        if ($coursebookedstatus) {
             $created_at = $coursebookedstatus->created_at->format('d M Y');
+        }
 
         return $created_at;
-
     }
 
     /**
@@ -124,8 +121,6 @@ class UserCourseBookedDetails extends Model
      */
     public function transaction()
     {
-
-
         return $this->belongsTo(Transaction::class, 'order_id', 'cart_id');
     }
 
@@ -144,5 +139,4 @@ class UserCourseBookedDetails extends Model
     {
         return $this->hasOne(UserCourseBookedFee::class);
     }
-
 }

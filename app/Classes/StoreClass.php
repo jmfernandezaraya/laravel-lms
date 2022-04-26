@@ -204,7 +204,7 @@ class StoreClass {
 				
 				/* Saving Multiple Photos Here */
 				if (isset($this->type_of_request) && $this->type_of_request == 'update' && $this->request->logos && $this->request->logos != null) {
-					if(is_array($schools->logos)){
+					if(is_array($schools->logos)) {
 						foreach($schools->logos as $videos){
 							//Deleting previous videos if present to save the storage space
 							Storage::delete('public/school_images/'. $videos);
@@ -293,7 +293,7 @@ class StoreClass {
 
 	private function my_unique_id($forget=null) {
 		if ($forget == null) {
-			if(!Session::has('unique_id_time'))
+			if (!Session::has('unique_id_time'))
 			{
 				Session::put('unique_id_time', time());
 			}

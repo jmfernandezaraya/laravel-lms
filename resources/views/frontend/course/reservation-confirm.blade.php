@@ -48,16 +48,8 @@
 
                 @include('schooladmin.include.alert')
 
-                <form id="course_reversation_confirm" enctype="multipart/form-data" action="{{route('payment-gateway')}}" method="POST">
+                <form id="course_reversation_confirm" enctype="multipart/form-data" action="{{route('course.reservation_confirm')}}" method="POST">
                     {{csrf_field()}}
-
-                    @foreach ($course_details as $course_detail_key => $course_detail_val)
-                        <input hidden name="{{ $course_detail_key }}" value="{{ $course_detail_val }}" />
-                    @endforeach
-
-                    @foreach ($course_register_details as $course_register_detail_key => $course_register_detail_val)
-                        <input hidden name="{{ $course_register_detail_key }}" value="{{ $course_register_detail_val }}" />
-                    @endforeach
 
                     <div class="study m-2">
                         <div class="row align-items-center">
@@ -100,7 +92,7 @@
                             <div class="col-md-2">
                             </div>
                             <div class="col-md-10">
-                                <button type="button" class="btn btn-danger" id="sig-clearBtn">Clear Signature</button>
+                                <button type="button" class="btn btn-danger" id="sig-clearBtn">{{__('Frontend.clear_signature')}}</button>
                             </div>
                         </div>
                         <div class="row form-group">
@@ -116,7 +108,7 @@
                         <div class="row form-group">
                             <div class="col-md-12">
                                 <div class="form-check">
-                                    <input name="terms" class="form-check-input" type="checkbox" value="terms">
+                                    <input name="terms" class="form-check-input" type="checkbox" value="terms" />
                                     <label class="form-check-label">
                                         {{__('Frontend.i_read_and_agreed_to_the')}} <a href="{{$school->website_link}}">{{__('Frontend.terms_and_conditions')}}</a> {{__('Frontend.of_the_school_institute')}}
                                     </label>
@@ -125,7 +117,7 @@
                         </div>
                         <div class="row form-group">
                             <div class="col-md-12">
-                                <button type="submit" onclick="register_now($(this))" class="btn btn-primary btn-submit">{{__('Frontend.confirm_registration')}}</button>
+                                <button type="button" onclick="confirmReservation($(this))" class="btn btn-primary btn-submit">{{__('Frontend.confirm_registration')}}</button>
                             </div>
                         </div>
                     </div>
@@ -135,7 +127,7 @@
     </div>
 
     <script>
-        function register_now(object) {
+        function confirmReservation(object) {
             var canvas = document.getElementById("sig-canvas");
             var sigText = document.getElementById("sig-dataUrl");
             var dataUrl = canvas.toDataURL();
@@ -154,19 +146,25 @@
                 success: function(data) {
                     $("#loader").hide();
                     console.log(data);
-                    if(data.success == true) {
-                        $('.alert-success').show();
-                        $('.alert-success p').html(data.data);
+                    if (data.success == true) {
                         document.documentElement.scrollTop = 0;
 
                         window.location.href = data.url;
-                    } else if(data.errors) {
-                        $('.alert-danger').show();
-                        $('.alert-danger ul').html('');
+                    } else if (data.errors) {
                         document.documentElement.scrollTop = 0;
-                        for(var error in data.errors) {
-                            $('.alert-danger ul').append('<li>' + data.errors[error] + '</li>');
+                        var alert_messages = '';
+                        if (typeof data.errors === 'object') {
+                            for (const [error_key, error_value] of Object.entries(data.errors)) {
+                                alert_messages += error_value + '\n';
+                            }
+                        } else if (typeof data.errors === 'array') {
+                            for (let error_index = 0; error_index < data.errors.length; error_index++) {
+                                alert_messages += data.errors[error_index] + '\n';
+                            }
+                        } else {
+                            alert_messages += error + '\n';
                         }
+                        alert(alert_messages);
                     }
                 }
             });

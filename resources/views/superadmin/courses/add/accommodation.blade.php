@@ -33,7 +33,7 @@
 
                 <div id="show_form"></div>
 
-                <form class="forms-sample" method="POST" action="{{route("superadmin.course.store")}}" id="courseform">
+                <form class="forms-sample" method="POST" action="{{route("superadmin.course.store")}}" id="courseform" data-mode="create">
                     {{csrf_field()}}
                     <div class="first-form">
                         <div id="accommodation_clone0" class="accommodation-clone clone">
@@ -175,7 +175,7 @@
                                 </div>
                                 <div class="form-group col-md-4 available_days" style="display: none">
                                     <label>{{__('SuperAdmin/backend.available_days')}}:</label>
-                                    <input class="form-control available_days yeardatepicker" data-index="0" name="available_days[]">
+                                    <input class="form-control yeardatepicker" data-index="0" name="available_days[]">
                                 </div>
                                 <div class="form-group col-md-4 start_date">
                                     <label>{{__('SuperAdmin/backend.start_date')}}:</label>

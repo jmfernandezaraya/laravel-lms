@@ -5,12 +5,14 @@ namespace App\Models;
 use App\Models\Frontend\LikedSchool;
 use App\Models\SuperAdmin\SchoolAdminCourseEditPermissions;
 use App\Models\SuperAdmin\UsersSchools;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Storage;
-use App\Classes\BindsDynamically;
 
+use Storage;
+
+use App\Classes\BindsDynamically;
 
 class User extends Authenticatable
 {
@@ -24,11 +26,8 @@ class User extends Authenticatable
     protected $guarded = [
         'created_at',
         'updated_at',
-
         'email_verified',
-
     ];
-
 
     /**
      * The attributes that should be hidden for arrays.
@@ -40,7 +39,6 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-
     /**
      * The attributes that should be cast to native types.
      *
@@ -51,7 +49,6 @@ class User extends Authenticatable
         'branch' => 'array',
         'city' => 'array',
         'country' => 'array',
-
     ];
 
     /**
@@ -59,12 +56,8 @@ class User extends Authenticatable
      */
     public static function delete_images($image)
     {
-
         Storage::delete('public/school_admin_images/' . $image);
-
-
     }
-
 
     /**
      * @param $db1
@@ -75,10 +68,7 @@ class User extends Authenticatable
      */
     public function save_model($db1, $db2, $input1, $input2)
     {
-
-
         $db = \DB::transaction(function () use ($db1, $db2, $input1, $input2) {
-
             $db1->fill($input1)->save();
             $save1 = $db2->fill($input2)->save();
             if ($save1) {
@@ -86,12 +76,10 @@ class User extends Authenticatable
             }
         });
 
-
         if ($db) {
             \Session::forget(['input1', 'input2', 'db1', 'db2']);
             return true;
         }
-
     }
 
     /**
@@ -102,16 +90,12 @@ class User extends Authenticatable
         $this->attributes['password'] = bcrypt($value);
     }
 
-
     /**
      * @return bool
      */
     public function isSchoolAdmin()
     {
-
         return $this->user_type == 'school_admin' ? true : false;
-
-
     }
 
     /**
@@ -119,10 +103,7 @@ class User extends Authenticatable
      */
     public function isSuperAdmin()
     {
-
         return $this->user_type == 'super_admin' ? true : false;
-
-
     }
 
     /**
@@ -130,10 +111,7 @@ class User extends Authenticatable
      */
     public function isBranchAdmin()
     {
-
         return $this->user_type == 'branch_admin' ? true : false;
-
-
     }
 
     /**
@@ -183,5 +161,4 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserCourseBookedDetails::class, 'user_id')->latest()->where('paid',  0)->orWhere('paid', 2);
     }
-
 }

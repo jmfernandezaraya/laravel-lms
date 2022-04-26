@@ -33,6 +33,19 @@
             bottom: 0;
             left: 0;
         }
+
+        #tab-video .carousel-item {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        #tab-video .carousel-item .video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
     </style>
 @endsection
 
@@ -70,36 +83,32 @@
 
                 <div id="tab-video" class="tab-pane fade">
                     <div class="row pb-2">
-                        <div id="carousel-video" class="carousel slide" data-ride="carousel">
-                            <ol class="carousel-indicators">
-                                <li data-target="#carousel-video-item1" data-slide-to="0" class="active"></li>
-                                <li data-target="#carousel-video-item2" data-slide-to="1"></li>
-                                <li data-target="#carousel-video-item3" data-slide-to="2"></li>
-                            </ol>
+                        <div class="col-md-12">
+                            <div id="carousel-video" class="carousel slide" data-ride="carousel">
+                                <ol class="carousel-indicators">
+                                    @foreach((array)$schools->video_url as $video_url)
+                                        <li data-target="#carousel-video-item{{$loop->iteration - 1}}" data-slide-to="{{$loop->iteration - 1}}" class="{{$loop->iteration - 1 == 0? 'active' : ''}}"></li>
+                                    @endforeach
+                                </ol>
 
-                            <div class="carousel-inner">
-                                <div class="carousel-item active" href="#carousel-video-item1">
-                                    <iframe class="embed-responsive-item" src="{{asset('assets/videos/video.mp4')}}" style="width: 100%;"></iframe>
+                                <div class="carousel-inner">
+                                    @foreach((array)$schools->video_url as $video_url)
+                                        <div class="carousel-item active" href="#carousel-video-item{{$loop->iteration - 1}}">
+                                            <iframe class="embed-responsive-item" src="{{$video_url}}" class="video" allowfullscreen height="450"></iframe>
+                                        </div>
+                                    @endforeach
                                 </div>
 
-                                <div class="carousel-item" href="#carousel-video-item2">
-                                    <iframe class="embed-responsive-item" src="{{asset('assets/videos/02.mp4')}}" style="width: 100%;"></iframe>
-                                </div>
+                                <a class="carousel-control-prev" href="#carousel-video-item2" role="button" data-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">{{__('Frontend.previous')}}</span>
+                                </a>
 
-                                <div class="carousel-item" href="#carousel-video-item3">
-                                    <iframe class="embed-responsive-item" src="{{asset('assets/videos/03.mp4')}}" style="width: 100%;"></iframe>
-                                </div>
+                                <a class="carousel-control-next" href="#carousel-video-item3" role="button" data-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">{{__('Frontend.next')}}</span>
+                                </a>
                             </div>
-
-                            <a class="carousel-control-prev" href="#carousel-video-item2" role="button" data-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="sr-only">{{__('Frontend.previous')}}</span>
-                            </a>
-
-                            <a class="carousel-control-next" href="#carousel-video-item3" role="button" data-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="sr-only">{{__('Frontend.next')}}</span>
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -142,7 +151,7 @@
             <div class="row">
                 <div class="col-md-12">                            
                     <h3>{{__('Frontend.program_information')}}</h3>
-                    <div>{!! get_language() == 'en' ? $course_update->program_information : $course_update->program_information_ar !!}</div>
+                    <div id="program_information">{!! get_language() == 'en' ? $course_update->program_information : $course_update->program_information_ar !!}</div>
                 </div>
             </div>
             <table class="table table-bordered table-no-drawable">
@@ -327,21 +336,21 @@
                         <div class="row">
                             <div class="form-group col-md-3">
                                 <label for="input">{{__("Frontend.accommodation_type")}}:</label>
-                                <select id="accom_type" class="form-control" name="accommodation_id">
+                                <select name="accommodation_id" id="accom_type" class="form-control">
                                     <option value="">{{__('Frontend.select_option')}}</option>
                                 </select>
                             </div>
 
                             <div class="form-group col-md-3">
                                 <label for="input">{{__('Frontend.room_type')}}:</label>
-                                <select name="room_type" class="form-control" id="room_type">
+                                <select class="form-control" id="room_type">
                                     <option value="">{{__('Frontend.select_option')}}</option>
                                 </select>
                             </div>
 
                             <div class="form-group col-md-3">
                                 <label for="input">{{__('Frontend.meal_type')}}:</label>
-                                <select name="meal_type" class="form-control" id="meal_type">
+                                <select class="form-control" id="meal_type">
                                     <option value="">{{__('Frontend.select_option')}}</option>
                                 </select>
                             </div>

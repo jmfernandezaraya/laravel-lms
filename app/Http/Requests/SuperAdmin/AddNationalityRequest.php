@@ -4,7 +4,7 @@ namespace App\Http\Requests\SuperAdmin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class addNationalityRequest extends FormRequest
+class AddNationalityRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

@@ -80,6 +80,7 @@
 
                 <form id="form2store" class="forms-sample" enctype="multipart/form-data" action="{{route('superadmin.school.update', $schools->id)}}" method="post">
                     {{csrf_field()}}
+                    @method('PUT')
 
                     <div class="row">
                         <div class="form-group col-md-6">

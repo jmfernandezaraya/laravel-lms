@@ -9,11 +9,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class UserCourseBookedFee extends Model
 {
     use HasFactory, SoftDeletes;
+
     protected $guarded = [];
 
     public function userCourseBookDetail()
     {
         return $this->belongsTo(UserCourseBookedDetails::class);
     }
-
 }

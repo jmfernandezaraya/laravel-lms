@@ -88,22 +88,23 @@ Route::group(['prefix' => 'course', 'as' => 'course.'], function () {
     Route::post('airport_medical/fee', [CourseControllerFrontend::class, 'setAirportMedicalFee'])->name('airport_medical.fee');
 
     Route::post('details/back', [FrontendController::class, 'backDetails'])->name('details.back');
-    Route::post('details', [FrontendController::class, 'saveDetails'])->name('details.save')->middleware('course.register');
+    Route::post('details', [FrontendController::class, 'registerDetail'])->name('details.save')->middleware('course.register');
 });
 
 ///// Frontend Middleware Starts //////
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'course', 'as' => 'course.'], function () {
-        Route::post('details', [FrontendController::class, 'saveDetails'])->name('details.save');
+        Route::post('details', [FrontendController::class, 'registerDetail'])->name('details.save');
         Route::get('register', [FrontendController::class, 'registerDetail'])->name('register.detail');
         Route::post('register', [FrontendController::class, 'register'])->name('register');
         Route::get('reservation', [FrontendController::class, 'reservationDetail'])->name('reservation.detail');
+        Route::post('reservation', [FrontendController::class, 'reservation'])->name('reservation');
         Route::get('reservation_confirm', [FrontendController::class, 'confirmReservationDetail'])->name('reservation_confirm.detail');
         Route::post('reservation_confirm', [FrontendController::class, 'confirmReservation'])->name('reservation_confirm');
+        // Route::post('/telr-gateway', [FrontendController::class, 'paymentPost'])->name('payment-gateway');
     });
 
     Route::get('/like_school/{school_id}', [FrontendController::class, 'likeSchool'])->name('likeschool');
-    Route::post('/telr-gateway', [FrontendController::class, 'paymentPost'])->name('payment-gateway');
     Route::post('/school/rating_save', [\App\Http\Controllers\RatingController::class, 'saveComments'])->name('rateSaved');
 });
 

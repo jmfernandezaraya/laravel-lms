@@ -9,8 +9,6 @@ use Illuminate\Queue\InteractsWithQueue;
 
 class UserCourseBookedStatusListen
 {
-
-
     /**
      * Handle the event.
      *
@@ -19,9 +17,9 @@ class UserCourseBookedStatusListen
      */
     public function handle(UserCourseBookedStatus $userCourseBookedStatus)
     {
-
-        return \App\Models\UserCourseBookedStatus::updateOrCreate(['user_course_booked_detail_id' => $userCourseBookedStatus->userCourseBookedStatus->id, 'status' =>$userCourseBookedStatus->userCourseBookedStatus->status],['user_course_booked_detail_id' => $userCourseBookedStatus->userCourseBookedStatus->id, 'status' => $userCourseBookedStatus->userCourseBookedStatus->status]);
-
-
+        return \App\Models\UserCourseBookedStatus::updateOrCreate(
+            ['user_course_booked_detail_id' => $userCourseBookedStatus->userCourseBookedStatus->id, 'status' =>$userCourseBookedStatus->userCourseBookedStatus->status],
+            ['user_course_booked_detail_id' => $userCourseBookedStatus->userCourseBookedStatus->id, 'status' => $userCourseBookedStatus->userCourseBookedStatus->status]
+        );
     }
 }

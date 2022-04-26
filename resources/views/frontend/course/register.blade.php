@@ -55,14 +55,12 @@
         <form id="course_form_register" enctype="multipart/form-data" action="{{route('course.register')}}" data-action="{{route('course.details.back')}}" method="POST">
             {{csrf_field()}}
 
-            @foreach($course_details as $course_detail_key => $course_detail_val)
-                <input hidden name="{{ $course_detail_key }}" value="{{ $course_detail_val }}" />
-            @endforeach
-
             <input hidden id="get_country" value="{{ $course_country }}" />
             
             <input hidden name="min_age" value="{{ $min_age }}" />
             <input hidden name="max_age" value="{{ $max_age }}" />
+            <input hidden name="accommodation_min_age" value="{{ $accommodation_min_age }}" />
+            <input hidden name="accommodation_max_age" value="{{ $accommodation_max_age }}" />
 
             <h3>{{__('Frontend.personal_info')}}:</h3>
             <div class="study m-2">
@@ -95,7 +93,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="city" class="col-form-label">{{__('Frontend.gender')}}*</label>
+                            <label for="gender" class="col-form-label">{{__('Frontend.gender')}}*</label>
                             <select name="gender" class="form-control" required>
                                 <option value="">{{__('Frontend.please_select')}}</option>
                                 <option value="male">{{__('Frontend.male')}}</option>
@@ -105,7 +103,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="fname" class="col-form-label">{{__('Frontend.date_of_birth')}}*</label>
+                            <label for="dob" class="col-form-label">{{__('Frontend.date_of_birth')}}*</label>
                             <input class="form-control" required type="date" name="dob">
                         </div>
                     </div>
@@ -405,6 +403,12 @@
                             <input type="file" name="financial_guarantee" class="form-control" placeholder="">
                         </div>
                     </div>
+                    <div class="col-md-4" id="bank_statement">
+                        <div class="form-group">
+                            <label for="nat" class="col-form-label">{{__('Frontend.upload_bank_statement')}}</label>
+                            <input type="file" name="bank_statement" class="form-control" placeholder="">
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -558,13 +562,19 @@
 
     <script>
         function checkFinancialGurantee() {
-            var country_name = $("#get_country").text();
-            var study_finance = $("#study_finance").text();
+            var country_name = $("#get_country").val();
+            var study_finance = $("#study_finance").val();
 
-            if((country_name == 'USA' || country_name == 'usa' || country_name == 'united states of america') && study_finance != 'scholarship') {
-                $("#financial_guarantee").show();
-            } else {
+            if (study_finance == 'personal') {
                 $("#financial_guarantee").hide();
+                if ((country_name == 'USA' || country_name == 'usa' || country_name == 'united states of america')) {
+                    $("#bank_statement").show();
+                } else {
+                    $("#bank_statement").hide();
+                }
+            } else {
+                $("#financial_guarantee").show();
+                $("#bank_statement").hide();
             }
         }
 
@@ -619,18 +629,21 @@
                     $("#loader").hide();
                     console.log(data);
                     if (data.success == true) {
-                        $('.alert-success').show();
-                        $('.alert-success p').html(data.data);
-                        document.documentElement.scrollTop = 0;
-
                         window.location.href = data.url;
-                    } else if(data.errors) {
-                        $('.alert-danger').show();
-                        $('.alert-danger ul').html('');
-                        document.documentElement.scrollTop = 0;
-                        for(var error in data.errors) {
-                            $('.alert-danger ul').append('<li>' + data.errors[error] + '</li>');
+                    } else if (data.errors) {
+                        var alert_messages = '';
+                        if (typeof data.errors === 'object') {
+                            for (const [error_key, error_value] of Object.entries(data.errors)) {
+                                alert_messages += error_value + '\n';
+                            }
+                        } else if (typeof data.errors === 'array') {
+                            for (let error_index = 0; error_index < data.errors.length; error_index++) {
+                                alert_messages += data.errors[error_index] + '\n';
+                            }
+                        } else {
+                            alert_messages += error + '\n';
                         }
+                        alert(alert_messages);
                     }
                 }
             });
