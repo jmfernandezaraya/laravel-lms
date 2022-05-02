@@ -65,7 +65,7 @@
         .table-bordered thead td, .table-bordered thead th {
             border-bottom-width: 2px;
         }
-        .highlight {            
+        .highlight {
             color: #ff3333;
         }
     </style>

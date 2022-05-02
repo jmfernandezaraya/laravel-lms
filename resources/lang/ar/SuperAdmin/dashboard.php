@@ -1,16 +1,16 @@
 <?php
 
 return [
-    'formbuilder' => 'Form Builder',
-    'dashboard' => 'Dashboard',
-	'school' => 'School',
-	'school_admin' => 'School Admin',
-	'courses' => 'Courses',
-	'view' => 'View',
-	'deleted' => 'Deleted',
-	'total_schools' => 'Total Schools',
-	'total_school_admin' => 'Total School Admin',
-	'copyright' => 'Copyright',
+    'formbuilder' => 'منشئ النماذج',
+    'dashboard' => 'لوحة التحكم',
+	'school' => 'المدارس',
+	'school_admin' => 'حسابات المدارس',
+	'courses' => 'الدورات',
+	'view' => 'عرض',
+	'deleted' => 'المحذوفات',
+	'total_schools' => 'جميع المدارس',
+	'total_school_admin' => 'جميع حسابات المدارس',
+	'copyright' => 'حقوق النشر',
 	'2020' => '2020',
-	'signout' => 'Signout',
+	'signout' => 'تسجيل الخروج',
 ];

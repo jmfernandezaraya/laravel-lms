@@ -34,17 +34,17 @@
                         </form>
                     </li>
                 @else
-                    <li><a href="{{route('login')}}">Log In</a></li>
+                    <li><a href="{{route('login')}}">@lang('Frontend.login')</a></li>
                 @endauth
 
                 <li>
-                    <a href="#">
-                        <img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" class="img-fluid" alt="">English
+                    <a href="{{route('change_lang', 'en')}}">
+                        <img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" class="img-fluid" alt="">@lang('Frontend.english')
                     </a>
                 </li>
                 <li>
-                    <a href="#">
-                        <img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" class="img-fluid" alt="">Arabic
+                    <a href="{{route('change_lang', 'ar')}}">
+                        <img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" class="img-fluid" alt="">@lang('Frontend.arabic')
                     </a>
                 </li>
             </ul>

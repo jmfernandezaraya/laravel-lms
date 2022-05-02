@@ -105,10 +105,16 @@ trait CityCountryStateTrait
      * @return $this
      */
     public function IndividualgetCityCountryState()
-    {
-        $this->city = $this->where('name', $this->name)->distinct()->pluck('city');
-        $this->country = $this->where('name', $this->name)->distinct()->pluck('country');
-        $this->branch = $this->where('name', $this->name)->distinct()->pluck('branch_name');
+    {        
+        if (app()->getLocale() == 'en') {
+            $this->city = $this->where('name', $this->name)->distinct()->pluck('city');
+            $this->country = $this->where('name', $this->name)->distinct()->pluck('country');
+            $this->branch = $this->where('name', $this->name)->distinct()->pluck('branch_name');
+        } else {
+            $this->city = $this->where('name_ar', $this->name)->distinct()->pluck('city_ar');
+            $this->country = $this->where('name_ar', $this->name)->distinct()->pluck('country_ar');
+            $this->branch = $this->where('name_ar', $this->name)->distinct()->pluck('branch_name_ar');
+        }
 
         return $this;
     }
@@ -118,9 +124,15 @@ trait CityCountryStateTrait
      */
     public function getCityCountryStatewithCommas()
     {
-        $this->city = implode(", ", $this->where('name', $this->name)->distinct()->pluck('city')->toArray());
-        $this->country = implode(", ", $this->where('name', $this->name)->distinct()->pluck('country')->toArray());
-        $this->branch = implode(", ", $this->where('name', $this->name)->distinct()->pluck('branch_name')->toArray());
+        if (app()->getLocale() == 'en') {
+            $this->city = implode(", ", $this->where('name', $this->name)->distinct()->pluck('city')->toArray());
+            $this->country = implode(", ", $this->where('name', $this->name)->distinct()->pluck('country')->toArray());
+            $this->branch = implode(", ", $this->where('name', $this->name)->distinct()->pluck('branch_name')->toArray());
+        } else {
+            $this->city = implode(", ", $this->where('name_ar', $this->name)->distinct()->pluck('city_ar')->toArray());
+            $this->country = implode(", ", $this->where('name_ar', $this->name)->distinct()->pluck('country_ar')->toArray());
+            $this->branch = implode(", ", $this->where('name_ar', $this->name)->distinct()->pluck('branch_name_ar')->toArray());
+        }
 
         return $this;
     }
@@ -131,7 +143,14 @@ trait CityCountryStateTrait
      */
     public function getCityByCountries($countries)
     {
-        return $this->where('country', $countries)->first()['city'];
+        if (app()->getLocale() == 'en') {
+            $first_country = $this->where('country', $countries)->first();
+            if ($first_country) return $first_country['city'];
+        } else {
+            $first_country = $this->where('country_ar', $countries)->first();
+            if ($first_country) return $first_country['city_ar'];
+        }
+        return '';
     }
 
     /**
@@ -140,7 +159,14 @@ trait CityCountryStateTrait
      */
     public function getBranchByCity($countries)
     {
-        return $this->where('country', $countries)->first()['branch'];
+        if (app()->getLocale() == 'en') {
+            $first_country = $this->where('country', $countries)->first();
+            if ($first_country) return $first_country['branch'];
+        } else {
+            $first_country = $this->where('country_ar', $countries)->first();
+            if ($first_country) return $first_country['branch_ar'];
+        }
+        return '';
     }
 
     /**
@@ -148,12 +174,21 @@ trait CityCountryStateTrait
      */
     public function getCityCountryStateAuth()
     {
-        $this->city = $this->where('name', $this->name)->whereIn('branch_name', auth('branch_admin')->user()->branch)->pluck('city')->toArray();
-        $this->city = array_unique(array_filter($this->city));
-        $this->country = $this->where('name', $this->name)->whereIn('branch_name', auth('branch_admin')->user()->branch)->pluck('country')->toArray();
-        $this->country = array_unique(array_filter($this->country));
-        $this->branch = $this->where('name', $this->name)->whereIn('branch_name', auth('branch_admin')->user()->branch)->pluck('branch_name')->toArray();
-        $this->branch = array_unique(array_filter($this->branch));
+        if (app()->getLocale() == 'en') {
+            $this->city = $this->where('name', $this->name)->whereIn('branch_name', auth('branch_admin')->user()->branch)->pluck('city')->toArray();
+            $this->city = array_unique(array_filter($this->city));
+            $this->country = $this->where('name', $this->name)->whereIn('branch_name', auth('branch_admin')->user()->branch)->pluck('country')->toArray();
+            $this->country = array_unique(array_filter($this->country));
+            $this->branch = $this->where('name', $this->name)->whereIn('branch_name', auth('branch_admin')->user()->branch)->pluck('branch_name')->toArray();
+            $this->branch = array_unique(array_filter($this->branch));
+        } else {
+            $this->city = $this->where('name_ar', $this->name)->whereIn('branch_name_ar', auth('branch_admin')->user()->branch)->pluck('city_ar')->toArray();
+            $this->city = array_unique(array_filter($this->city));
+            $this->country = $this->where('name_ar', $this->name)->whereIn('branch_name_ar', auth('branch_admin')->user()->branch)->pluck('country_ar')->toArray();
+            $this->country = array_unique(array_filter($this->country));
+            $this->branch = $this->where('name_ar', $this->name)->whereIn('branch_name_ar', auth('branch_admin')->user()->branch)->pluck('branch_name_ar')->toArray();
+            $this->branch = array_unique(array_filter($this->branch));
+        }
 
         return $this;
     }

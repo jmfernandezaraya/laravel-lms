@@ -3,6 +3,7 @@
 use App\Http\Controllers\Frontend\ApplyVisaController;
 use App\Http\Controllers\Frontend\BlogController;
 use App\Http\Controllers\Frontend\ContactController;
+use App\Http\Controllers\Frontend\CustomerController;
 use App\Http\Controllers\Frontend\FrontendController;
 use App\Http\Controllers\Frontend\CourseControllerFrontend;
 
@@ -26,7 +27,6 @@ use Illuminate\Support\Facades\Route;
 ///// Test Routes /////
 Route::get('test_school', function() {
     $school =  \App\Models\SuperAdmin\School::find(21);
-
     return $school->getCityCountryStatewithCommas()->branch;
 });
 Route::get('tesetCourseSend', 'Frontend\FrontendController@testCourseNotification');
@@ -106,6 +106,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/like_school/{school_id}', [FrontendController::class, 'likeSchool'])->name('likeschool');
     Route::post('/school/rating_save', [\App\Http\Controllers\RatingController::class, 'saveComments'])->name('rateSaved');
+    
+    Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
+        Route::get('/', [CustomerController::class, 'index'])->name('');
+    });
 });
 
 Route::view('payment_terms', 'frontend.payment_page.payment-refund');
@@ -120,9 +124,7 @@ Route::view('/contact_us', 'frontend.contact')->name('contact-us-get');
 Route::post('/contact_us/post', [ContactController::class, 'ContactUS'])->name('contact-us');
 Route::get('/register', [\App\Http\Controllers\LoginController::class, 'register'])->name('register_user');
 Route::post('/save_rating', [\App\Http\Controllers\RatingController::class, 'saveRating'])->name('save_rating');
-Route::get('/forgot-password/{token}', function ($token) {
-    return view('frontend.reset_password', ['token' => $token]);
-})->name('password.reset');
+Route::get('/forgot-password/{token}', function ($token) { return view('frontend.reset_password', ['token' => $token]); })->name('password.reset');
 Route::post('/forgot-password', [\App\Http\Controllers\LoginController::class, 'forgotPassword'])->name('forgot-password-post');
 Route::post('/reset-password', [\App\Http\Controllers\LoginController::class, 'resetPassword'])->name('reset-password-post');
 
