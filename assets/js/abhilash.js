@@ -10,12 +10,17 @@ function initCkeditor(editor_id = 'textarea_en') {
     CKEDITOR.replace(editor_id, option);
 }
 
-function getCKEDITORdataSchool(textarea, value) {
-    var text = CKEDITOR.instances.textareaid2.getData();
+function getCkEditorData(textareaid, value) {
+    var text = CKEDITOR.instances.textareaid.getData();
     $("#" + value).val(text);
 }
 
-function getCKEDITORdataCustomer(textarea, value) {
+function getCKEDITORdataSchool(textareaid, value) {
+    var text = CKEDITOR.instances.textareaid.getData();
+    $("#" + value).val(text);
+}
+
+function getCKEDITORdataCustomer(textareaid, value) {
     var text = CKEDITOR.instances.textareaid.getData();
     $("#" + value).val(text);
 }
@@ -1987,8 +1992,10 @@ function deleteApplyFrom(object) {
     $.ajax({
         url: urlname,
         method: 'POST',
-        data: {_token: $("meta[name='csrf-token']").attr('content'), applying_from: applying_from},
-
+        data: {
+            _token: $("meta[name='csrf-token']").attr('content'),
+            applying_from: applying_from
+        },
         success: function (data) {
             $("#loader").hide();
 
@@ -2459,7 +2466,6 @@ function getContent(texteditorId, inputId) {
 function sendMessage(id) {
     $("#loader").show();
     var data = new FormData($('#' + id)[0]);
-
     var urlname = $("#" + id).attr('action');
 
     $.ajax({
@@ -2489,3 +2495,22 @@ function sendMessage(id) {
         }
     });
 }
+
+function initRating() {
+    let rating_inputs = $('.rating-input');
+    for (let rating_input_index = 0; rating_input_index < rating_inputs.length; rating_input_index++) {
+        $(rating_inputs[rating_input_index]).igRating(
+            {
+                voteCount: 5,
+                value: $(rating_inputs[rating_input_index]).data('value') ? parseFloat($(rating_inputs[rating_input_index]).data('value')) / 5 : 0,
+                valueChange: function (evt, ui) {
+                    $('input[name="' + $(rating_inputs[rating_input_index]).data('name') + '"]').val(parseFloat(ui.value) * 5);
+                }
+            }
+        );
+    }
+}
+
+$(document).ready(function() {
+    initRating();
+});

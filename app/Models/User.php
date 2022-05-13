@@ -83,14 +83,6 @@ class User extends Authenticatable
     }
 
     /**
-     * @param $value
-     */
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = bcrypt($value);
-    }
-
-    /**
      * @return bool
      */
     public function isSchoolAdmin()

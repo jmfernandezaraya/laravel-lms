@@ -109,7 +109,9 @@ class CourseCreateService
         $course['branch'] = $r->branch;
         $course['currency'] = $r->currency;
         $course['program_name'] = $r->program_name;
+        $course['program_name_ar'] = $r->program_name_ar;
         $course['program_level'] = $r->program_level;
+        $course['program_level_ar'] = $r->program_level_ar;
         $course['lessons_per_week'] = $r->lessons_per_week;
         $course['hours_per_week'] = $r->hours_per_week;
         $course['study_time'] = $r->study_time;
@@ -202,7 +204,9 @@ class CourseCreateService
         $new_course['branch'] = $course->branch;
         $new_course['currency'] = $course->currency;
         $new_course['program_name'] = $course->program_name;
+        $new_course['program_name_ar'] = $course->program_name_ar;
         $new_course['program_level'] = $course->program_level;
+        $new_course['program_level_ar'] = $course->program_level_ar;
         $new_course['lessons_per_week'] = $course->lessons_per_week;
         $new_course['hours_per_week'] = $course->hours_per_week;
         $new_course['study_time'] = $course->study_time ?? [];
@@ -314,8 +318,12 @@ class CourseCreateService
             $new_course_accommodation = new CourseAccommodation;
             $new_course_accommodation->unique_id = $accommodation_id;
             $new_course_accommodation->course_unique_id = $course_id;
+            $new_course_accommodation->type = $course_accomodation->type ?? null;
+            $new_course_accommodation->type_ar = $course_accomodation->type_ar ?? null;
             $new_course_accommodation->room_type = $course_accomodation->room_type ?? null;
+            $new_course_accommodation->room_type_ar = $course_accomodation->room_type_ar ?? null;
             $new_course_accommodation->meal = $course_accomodation->meal ?? null;
+            $new_course_accommodation->meal_ar = $course_accomodation->meal_ar ?? null;
             $new_course_accommodation->age_range = $course_accomodation->age_range ?? null;
             
             $new_course_accommodation->deposit_fee = $course_accomodation->deposit_fee ?? null;
@@ -326,7 +334,6 @@ class CourseCreateService
             $new_course_accommodation->special_diet_note = $course_accomodation->special_diet_note;
             $new_course_accommodation->special_diet_note_ar = $course_accomodation->special_diet_note_ar;
             
-            $new_course_accommodation->type = $course_accomodation->type ?? null;
             $new_course_accommodation->placement_fee = $course_accomodation->placement_fee ?? null;
             $new_course_accommodation->program_duration = $course_accomodation->program_duration ?? null;
             $new_course_accommodation->fee_per_week = $course_accomodation->fee_per_week ?? null;
@@ -370,6 +377,7 @@ class CourseCreateService
             $new_course_airport = [];
             $new_course_airport['course_unique_id'] = $course_id;
             $new_course_airport['service_provider'] = $course_airport->service_provider ?? null;
+            $new_course_airport['service_provider_ar'] = $course_airport->service_provider_ar ?? null;
             $new_course_airport['week_selected_fee'] = (double)$course_airport->week_selected_fee ?? null;
             $new_course_airport['note'] = $course_airport->note ?? null;
             $new_course_airport['order'] = $course_airport->order;
@@ -382,7 +390,9 @@ class CourseCreateService
                 $new_course_airport_fee = [];
                 $new_course_airport_fee['course_airport_unique_id'] = $created_course_airport->unique_id;
                 $new_course_airport_fee['name'] = $course_airport_fee->name ?? null;
+                $new_course_airport_fee['name_ar'] = $course_airport_fee->name_ar ?? null;
                 $new_course_airport_fee['service_name'] = $course_airport_fee->service_name ?? null;
+                $new_course_airport_fee['service_name_ar'] = $course_airport_fee->service_name_ar ?? null;
                 $new_course_airport_fee['service_fee'] = $course_airport_fee->service_fee ?? null;
 
                 CourseAirportFee::create($new_course_airport_fee);
@@ -395,6 +405,7 @@ class CourseCreateService
             $new_course_medical = [];
             $new_course_medical['course_unique_id'] = $course_id;
             $new_course_medical['company_name'] = $course_medical->company_name ?? null;
+            $new_course_medical['company_name_ar'] = $course_medical->company_name_ar ?? null;
             $new_course_medical['deductible'] = $course_medical->deductible ?? null;
             $new_course_medical['week_selected_fee'] = $course_medical->week_selected_fee ?? null;
             $new_course_medical['note'] = $course_medical->note ?? null;
@@ -524,10 +535,13 @@ class CourseCreateService
                 $new_course_accommodation = new CourseAccommodation;
                 $new_course_accommodation->unique_id = $accommodation_id[$accom] ?? null;
                 $new_course_accommodation->course_unique_id = '' . \Session::get('course_id');
-                $new_course_accommodation->room_type = $room_type[$accom] ?? null;
-                $new_course_accommodation->meal = $meal[$accom] ?? null;
-                $new_course_accommodation->age_range = $age_range[$accom] ?? null;
                 $new_course_accommodation->type = $type[$accom] ?? null;
+                $new_course_accommodation->type_ar = $type_ar[$accom] ?? null;
+                $new_course_accommodation->room_type = $room_type[$accom] ?? null;
+                $new_course_accommodation->room_type_ar = $room_type_ar[$accom] ?? null;
+                $new_course_accommodation->meal = $meal[$accom] ?? null;
+                $new_course_accommodation->meal_ar = $meal_ar[$accom] ?? null;
+                $new_course_accommodation->age_range = $age_range[$accom] ?? null;
                 $new_course_accommodation->placement_fee = $placement_fee[$accom] ?? null;
                 $new_course_accommodation->program_duration = $program_duration[$accom] ?? null;
                 $new_course_accommodation->deposit_fee = $deposit_fee[$accom] ?? null;
@@ -653,6 +667,7 @@ class CourseCreateService
                 $airport_save = new CourseAirport();
                 $airport_save->course_unique_id = '' . \Session::get('course_id');
                 $airport_save->service_provider = $request->airport_service_provider[$i] ?? null;
+                $airport_save->service_provider_ar = $request->airport_service_provider_ar[$i] ?? null;
                 $airport_save->week_selected_fee = $request->airport_week_selected_fee[$i] ?? null;
                 $airport_save->note = $request->airport_note[$i] ?? null;
                 $airport_save->note_ar = $request->airport_note_ar[$i] ?? null;
@@ -660,11 +675,13 @@ class CourseCreateService
                 $airport_save->save();
                 
                 for ($j = 0; $j <= $request->airportfeeincrement[$i]; $j++) {
-                    if ($request->airport_name[$i][$j] && $request->airport_service_name[$i][$j]) {
+                    if (($request->airport_name[$i][$j] || $request->airport_name_ar[$i][$j]) && ($request->airport_service_name[$i][$j] && $request->airport_service_name_ar[$i][$j])) {
                         $airport_fee_save = new CourseAirportFee();
                         $airport_fee_save->course_airport_unique_id = $airport_save->unique_id;
                         $airport_fee_save->name = $request->airport_name[$i][$j] ?? null;
+                        $airport_fee_save->name_ar = $request->airport_name_ar[$i][$j] ?? null;
                         $airport_fee_save->service_name = $request->airport_service_name[$i][$j] ?? null;
+                        $airport_fee_save->service_name_ar = $request->airport_service_name_ar[$i][$j] ?? null;
                         $airport_fee_save->service_fee = (double)$request->airport_service_fee[$i][$j] ?? null;
                         $airport_fee_save->save();
                     }
@@ -675,6 +692,7 @@ class CourseCreateService
                 $medical_save = new CourseMedical();
                 $medical_save->course_unique_id = '' . \Session::get('course_id');
                 $medical_save->company_name = $request->medical_company_name[$k] ?? null;
+                $medical_save->company_name_ar = $request->medical_company_name_ar[$k] ?? null;
                 $medical_save->deductible = $request->medical_deductible[$k] ?? null;
                 $medical_save->week_selected_fee = $request->medical_week_selected_fee[$k] ?? null;
                 $medical_save->note = $request->medical_note[$k] ?? null;
@@ -714,7 +732,7 @@ class CourseCreateService
                 'program_type' => ['required',],
                 'school_id' => ['required',],
                 'currency' => ['required',],
-                'program_level' => ['required',],
+                'program_name' => ['required',],
                 'lessons_per_week' => ['required',],
                 'hours_per_week' => ['required',],
                 'study_time' => ['required',],
@@ -756,7 +774,9 @@ class CourseCreateService
             $course->branch = $r->branch;
             $course->currency = $r->currency;
             $course->program_name = $r->program_name;
+            $course->program_name_ar = $r->program_name_ar;
             $course->program_level = $r->program_level;
+            $course->program_level_ar = $r->program_level_ar;
             $course->lessons_per_week = $r->lessons_per_week;
             $course->hours_per_week = $r->hours_per_week;
             $course->study_time = $r->study_time ?? [];
@@ -982,10 +1002,13 @@ class CourseCreateService
                 }
                 $course_accomodation->course_unique_id = '' . \Session::get('course_id');
             }
-            $course_accomodation->room_type = $room_type[$accom] ?? null;
-            $course_accomodation->meal = $meal[$accom] ?? null;
-            $course_accomodation->age_range = $age_range[$accom] ?? null;
             $course_accomodation->type = $type[$accom] ?? null;
+            $course_accomodation->type_ar = $type_ar[$accom] ?? null;
+            $course_accomodation->room_type = $room_type[$accom] ?? null;
+            $course_accomodation->room_type_ar = $room_type_ar[$accom] ?? null;
+            $course_accomodation->meal = $meal[$accom] ?? null;
+            $course_accomodation->meal_ar = $meal_ar[$accom] ?? null;
+            $course_accomodation->age_range = $age_range[$accom] ?? null;
             $course_accomodation->placement_fee = $placement_fee[$accom] ?? null;
             $course_accomodation->program_duration = $program_duration[$accom] ?? null;
             $course_accomodation->deposit_fee = $deposit_fee[$accom] ?? null;
@@ -1138,6 +1161,7 @@ class CourseCreateService
                     $course_airport->course_unique_id = $id;
                 }
                 $course_airport->service_provider = $request->airport_service_provider[$i] ?? null;
+                $course_airport->service_provider_ar = $request->airport_service_provider_ar[$i] ?? null;
                 $course_airport->week_selected_fee = $request->airport_week_selected_fee[$i] ?? null;
                 $course_airport->note = $request->airport_note[$i] ?? null;
                 $course_airport->note_ar = $request->airport_note_ar[$i] ?? null;
@@ -1151,7 +1175,7 @@ class CourseCreateService
 
                 $course_airport_fee_ids = [];
                 for ($j = 0; $j <= $request->airportfeeincrement[$i]; $j++) {
-                    if ($request->airport_name[$i][$j] && $request->airport_service_name[$i][$j]) {
+                    if (($request->airport_name[$i][$j] || $request->airport_name_ar[$i][$j]) && ($request->airport_service_name[$i][$j] || $request->airport_service_name_ar[$i][$j])) {
                         $course_airport_fee = null;
                         if (isset($request->airport_fee_id[$i][$j]) && $request->airport_fee_id[$i][$j]) {
                             $course_airport_fee = CourseAirportFee::where('unique_id', $request->airport_fee_id[$i][$j])->first();
@@ -1161,7 +1185,9 @@ class CourseCreateService
                             $course_airport_fee->course_airport_unique_id = $course_airport->unique_id;
                         }
                         $course_airport_fee->name = $request->airport_name[$i][$j] ?? null;
+                        $course_airport_fee->name_ar = $request->airport_name_ar[$i][$j] ?? null;
                         $course_airport_fee->service_name = $request->airport_service_name[$i][$j] ?? null;
+                        $course_airport_fee->service_name_ar = $request->airport_service_name_ar[$i][$j] ?? null;
                         $course_airport_fee->service_fee = (double)$request->airport_service_fee[$i][$j] ?? null;
                         $course_airport_fee->save();
                         if (!$course_airport_fee->unique_id) {
@@ -1196,6 +1222,7 @@ class CourseCreateService
                     $course_medical->course_unique_id = $id;
                 }
                 $course_medical->company_name = $request->medical_company_name[$k] ?? null;
+                $course_medical->company_name_ar = $request->medical_company_name_ar[$k] ?? null;
                 $course_medical->deductible = $request->medical_deductible[$k] ?? null;
                 $course_medical->week_selected_fee = $request->medical_week_selected_fee[$k] ?? null;
                 $course_medical->note = $request->medical_note[$k] ?? null;

@@ -2,14 +2,20 @@
 
 namespace App\Models;
 
+use App\Models\Frontend\Review;
+
 use App\Models\SuperAdmin\CourseAccommodation;
 use App\Models\SuperAdmin\CourseAirport;
 use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\CourseProgram;
+use App\Models\SuperAdmin\School;
 use App\Models\SuperAdmin\UserCourseBookedDetailsApproved;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
 use Illuminate\Notifications\Notifiable;
+
 use TelrGateway\Transaction;
 
 /**
@@ -80,6 +86,14 @@ class UserCourseBookedDetails extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
+    public function school()
+    {
+        return $this->belongsTo(School::class, 'school_id', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function airport()
     {
         return $this->belongsTo(CourseAirport::class, 'airport_id', 'unique_id');
@@ -91,6 +105,14 @@ class UserCourseBookedDetails extends Model
     public function accomodation()
     {
         return $this->belongsTo(CourseAccommodation::class, 'accommodation_id', 'unique_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function review()
+    {
+        return $this->belongsTo(Review::class, 'id', 'user_course_booked_details_id');
     }
 
     /**

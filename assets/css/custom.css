@@ -1,3 +1,7 @@
+html[lang="ar"] body {
+    direction: rtl;
+}
+
 #loader {
     display: none;
     position: fixed;
@@ -178,10 +182,9 @@ i.fa.fa-trash {
     cursor: pointer;
 }
 
-.highlight,
 .selected {
-    color: #F4B30A;
-    text-shadow: 0 0 1px #F48F0A;
+    color: #FF3333;
+    text-shadow: 0 0 1px #FF3333;
 }
 
 .carousel-inner img {
@@ -204,7 +207,6 @@ i.fa.fa-trash {
 .img-hover-zoom:hover img {
     transform: scale(1.5);
 }
-
 .img-hover-zoom {
     overflow: hidden;
 }
@@ -215,20 +217,6 @@ i.fa.fa-trash {
 
 .agree {
     text-align: center;
-}
-
-.dynamic_starli {
-    display: inline-block;
-    color: #F0F0F0;
-    text-shadow: 0 0 1px #666666;
-    font-size: 30px;
-    cursor: pointer;
-}
-
-.highlight,
-.selected {
-    color: #F4B30A;
-    text-shadow: 0 0 1px #F48F0A;
 }
 
 #accommodation {
@@ -253,11 +241,9 @@ i.fa.fa-trash {
 .addReadMore.showlesscontent .readLess {
     display: none;
 }
-
 .addReadMore.showmorecontent .readMore {
     display: none;
 }
-
 .addReadMore .readMore,
 .addReadMore .readLess {
     font-weight: bold;
@@ -265,7 +251,6 @@ i.fa.fa-trash {
     color: blue;
     cursor: pointer;
 }
-
 .addReadMoreWrapTxt.showmorecontent .SecSec,
 .addReadMoreWrapTxt.showmorecontent .readLess {
     display: block;
@@ -273,13 +258,24 @@ i.fa.fa-trash {
 
 .w-100 {
     width: 100% !important;
-    height: 270px;
 }
-
 .ui-datepicker-group .ui-datepicker-header .ui-datepicker-title {
     cursor: pointer;
 }
-
 .lang li {
     cursor: pointer;
+}
+
+.accordion .card-header.collapsed:after {
+    content: "\f067";
+    cursor: pointer;
+}
+.accordion .card-header:after {
+    font-family: 'FontAwesome';
+    content: "\f068";
+    float: right;
+}
+
+.highlight {
+    color: #ff3333;
 }

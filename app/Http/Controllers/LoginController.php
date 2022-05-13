@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RegisterUserRequest;
+
 use App\Mail\RegisterOTPMail;
 use App\Mail\SendVerifyEmailAgain;
+
 use App\Models\User;
+
 use Carbon\Carbon;
+
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -35,24 +39,17 @@ class LoginController extends Controller
      */
     public function authenticate(Request $request)
     {
-        $route = '/';
+        $route = '/dashboard';
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            if (session()->has("previous_url")) {
-                $route = session()->get('previous_url');
-                session()->forget('previous_url');
-            }
-
             $reroute = \Session::has('program_unique_id') ? 'reservation_detail' : $route;
             $route = \Session::has('visa_form') ? 'frontend.visa' : $reroute;
             $request->session()->regenerate();
             return redirect()->intended($route);
         }
 
-        return back()->withErrors([
-            'email' => __('Frontend.credentials_error'),
-        ])->withInput();
+        return back()->withErrors([ 'email' => __('Frontend.credentials_error') ])->withInput();
     }
 
     /**
@@ -89,8 +86,9 @@ class LoginController extends Controller
      */
     public function registerPost(RegisterUserRequest $request)
     {
-        if (!$request->validated())
+        if (!$request->validated()) {
             return back()->withInput()->withErrors();
+        }
 
         $store = new User;
         $token = hash('sha256', \Str::random(16) . time() . rand(0000, 9999));
@@ -109,9 +107,7 @@ class LoginController extends Controller
     {
         $status = \Password::sendResetLink($request->only('email'));
 
-        return $status === \Password::RESET_LINK_SENT
-            ? back()->with(['status' => __($status)])
-            : back()->withErrors(['email' => __($status)]);
+        return $status === \Password::RESET_LINK_SENT ? back()->with(['status' => __($status)]) : back()->withErrors(['email' => __($status)]);
     }
 
     /**
@@ -132,16 +128,12 @@ class LoginController extends Controller
                 $user->forceFill([
                     'password' => \Hash::make($password)
                 ])->setRememberToken(\Illuminate\Support\Str::random(60));
-
                 $user->save();
-
                 event(new PasswordReset($user));
             }
         );
 
-        return $status == \Password::PASSWORD_RESET
-            ? redirect()->route('login')->with('status', __($status))
-            : back()->withErrors(['email' => [__($status)]]);
+        return $status == \Password::PASSWORD_RESET ? redirect()->route('login')->with('status', __($status)) : back()->withErrors(['email' => [__($status)]]);
     }
 
     /**
@@ -163,7 +155,6 @@ class LoginController extends Controller
     public function sendMailAgain($id)
     {
         $store = User::whereId($id)->first();
-
         \Mail::to($store->email)->send(new SendVerifyEmailAgain($id));
 
         return back()->with('message', __('Frontend.check_your_email'));
@@ -192,8 +183,8 @@ class LoginController extends Controller
     {
         $credentials = $request->only('email', 'password');
         $route = '/';
-        if (auth('superadmin')->attempt($credentials)) {
 
+        if (auth('superadmin')->attempt($credentials)) {
             if (auth('superadmin')->user()->isSuperAdmin() == true) {
                 $request->session()->regenerate();
                 if (session()->has("previous_url")) {
@@ -209,9 +200,7 @@ class LoginController extends Controller
             }
         }
 
-        return back()->withErrors([
-            'email' => __('Frontend.credentials_error'),
-        ])->withInput();
+        return back()->withErrors([ 'email' => __('Frontend.credentials_error') ])->withInput();
     }
 
     /**
@@ -239,7 +228,6 @@ class LoginController extends Controller
 
         return redirect()->route('superlogin');
     }
-
 
     /**
      * @param Request $request
@@ -276,18 +264,13 @@ class LoginController extends Controller
      */
     public function schoolAdminauthenticate(Request $request)
     {
-        echo "===first====";
-                
         $credentials = $request->only('email', 'password');
-        var_dump($credentials);
         if (auth('schooladmin')->attempt($credentials)) {
             if (auth('schooladmin')->user()->isSchoolAdmin() == true) {
                 $request->session()->regenerate();
                 return redirect()->route('schooladmin.dashboard');
             }
         }
-        echo "===else====";
-        die();
 
         return back()->withErrors([
             'email' => __('Frontend.credentials_error'),

@@ -1,4 +1,5 @@
 @extends('superadmin.layouts.app')
+
 @section('content')
 	@section('js')
 		<script>
@@ -371,7 +372,6 @@
 
 					<input hidden name="ar" value = '1'>
 
-					<!-- onclick="submitForm('forms-sample', addschoolurl) -->
 					<button  type="button" onclick="submitForm(addschoolurl)" class="btn btn-gradient-primary mr-2">{{__('SuperAdmin/backend.submit')}}</button>
 					<a class="btn btn-light" href = "{{url()->previous()}}">{{__('SuperAdmin/backend.cancel')}}</a>
 				</form>

@@ -107,8 +107,21 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/like_school/{school_id}', [FrontendController::class, 'likeSchool'])->name('likeschool');
     Route::post('/school/rating_save', [\App\Http\Controllers\RatingController::class, 'saveComments'])->name('rateSaved');
     
+    Route::get('/dashboard', [CustomerController::class, 'index'])->name('dashboard');
     Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
-        Route::get('/', [CustomerController::class, 'index'])->name('');
+        Route::get('/login_password', [CustomerController::class, 'loginPassword'])->name('login_password');
+        Route::post('/login_password', [CustomerController::class, 'updateLoginPassword'])->name('login_password.update');
+        Route::post('/verify_email', [CustomerController::class, 'verifyEmail'])->name('verify_email');
+        Route::post('/verify_phone', [CustomerController::class, 'verifyPhone'])->name('verify_phone');
+        Route::get('/course_applications', [CustomerController::class, 'courseApplication'])->name('course_applications');
+        Route::get('/course_application/{id}', [CustomerController::class, 'detailCourseApplication'])->name('course_application');
+        Route::post('/course_application/print', [CustomerController::class, 'printCourseApplication'])->name('course_application.print');
+        Route::get('/course_application/approve/{id}/{value}', [CustomerController::class, 'approveCourseApplication'])->name('course_application.approve');
+        Route::post('/course_application/send_message', [CustomerController::class, 'sendCourseApplicationMessage'])->name('course_application.send_message');
+        Route::get('/reviews', [CustomerController::class, 'reviews'])->name('reviews');
+        Route::get('/review/{id}', [CustomerController::class, 'review'])->name('review');
+        Route::post('/review/{id}', [CustomerController::class, 'reviewBooking'])->name('review.booking');
+        Route::get('/payments', [CustomerController::class, 'payments'])->name('payments');
     });
 });
 

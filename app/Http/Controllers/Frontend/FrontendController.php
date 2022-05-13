@@ -235,7 +235,7 @@ class FrontendController extends Controller
             'relative_emergency' => 'required',
             'mobile_emergency' => 'required',
             'telephone_emergency' => 'sometimes',
-            'email_emergency' => 'required',            
+            'email_emergency' => 'required',
 
             'comments' => 'sometimes',
         ];

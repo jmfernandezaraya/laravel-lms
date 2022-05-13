@@ -60,10 +60,15 @@
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label>{{__('SuperAdmin/backend.service_provider')}}:</label>
-                                        <input class="form-control" type="text" value="{{$airport->service_provider}}" name="airport_service_provider[]" placeholder="{{__('SuperAdmin/backend.service_provider')}}">
+                                        <div class="english">
+                                            <input class="form-control" type="text" value="{{$airport->service_provider}}" name="airport_service_provider[]" placeholder="{{__('SuperAdmin/backend.service_provider')}}">
+                                        </div>
+                                        <div class="arabic">
+                                            <input class="form-control" type="text" value="{{$airport->service_provider_ar}}" name="airport_service_provider_ar[]" placeholder="{{__('SuperAdmin/backend.service_provider')}}">
+                                        </div>
                                     </div>
                                     <div class="form-group col-md-4">
-                                        <label>{{__('SuperAdmin/backend.week_selected_fee')}}:</label>
+                                        <label>{{__('SuperAdmin/backend.airport_week_selected_fee')}}:</label>
                                         <input class="form-control" type="number" value="{{$airport->week_selected_fee}}" name="airport_week_selected_fee[]" placeholder="{{__('SuperAdmin/backend.if_program_duration_airport_fee')}}">
                                     </div>
                                 </div>
@@ -75,11 +80,21 @@
                                             <input hidden value="{{$airport_fee->unique_id}}" name="airport_fee_id[{{$loop->parent->iteration - 1}}][]">
                                             <div class="form-group col-md-3">
                                                 <label>{{__('SuperAdmin/backend.airport_name')}}:</label>
-                                                <input class="form-control" type="text" value="{{$airport_fee->name}}" name="airport_name[{{$loop->parent->iteration - 1}}][]" placeholder="{{__('SuperAdmin/backend.airport_name')}}">
+                                                <div class="english">
+                                                    <input class="form-control" type="text" value="{{$airport_fee->name}}" name="airport_name[{{$loop->parent->iteration - 1}}][]" placeholder="{{__('SuperAdmin/backend.airport_name')}}">
+                                                </div>
+                                                <div class="arabic">
+                                                    <input class="form-control" type="text" value="{{$airport_fee->name_ar}}" name="airport_name_ar[{{$loop->parent->iteration - 1}}][]" placeholder="{{__('SuperAdmin/backend.airport_name')}}">
+                                                </div>
                                             </div>
                                             <div class="form-group col-md-3">
                                                 <label>{{__('SuperAdmin/backend.type_of_service')}}:</label>
-                                                <input class="form-control" type="text" value="{{$airport_fee->service_name}}" name="airport_service_name[{{$loop->parent->iteration - 1}}][]" placeholder="{{__('SuperAdmin/backend.type_of_service')}}">
+                                                <div class="english">
+                                                    <input class="form-control" type="text" value="{{$airport_fee->service_name}}" name="airport_service_name[{{$loop->parent->iteration - 1}}][]" placeholder="{{__('SuperAdmin/backend.type_of_service')}}">
+                                                </div>
+                                                <div class="arabic">
+                                                    <input class="form-control" type="text" value="{{$airport_fee->service_name_ar}}" name="airport_service_name_ar[{{$loop->parent->iteration - 1}}][]" placeholder="{{__('SuperAdmin/backend.type_of_service')}}">
+                                                </div>
                                             </div>
                                             <div class="form-group col-md-3">
                                                 <label>{{__('SuperAdmin/backend.airport_service_fee')}}:</label>
@@ -95,11 +110,21 @@
                                     <div class="row airport-fee-clone clone" id="airport{{$loop->iteration - 1}}_fee_clone0">
                                         <div class="form-group col-md-3">
                                             <label>{{__('SuperAdmin/backend.airport_name')}}:</label>
-                                            <input class="form-control" type="text" name="airport_name[{{$loop->iteration - 1}}][]" placeholder="{{__('SuperAdmin/backend.airport_name')}}" placeholder="{{__('SuperAdmin/backend.airport_name')}}">
+                                            <div class="english">
+                                                <input class="form-control" type="text" name="airport_name[{{$loop->iteration - 1}}][]" placeholder="{{__('SuperAdmin/backend.airport_name')}}" placeholder="{{__('SuperAdmin/backend.airport_name')}}">
+                                            </div>
+                                            <div class="arabic">
+                                                <input class="form-control" type="text" name="airport_name_ar[{{$loop->iteration - 1}}][]" placeholder="{{__('SuperAdmin/backend.airport_name')}}" placeholder="{{__('SuperAdmin/backend.airport_name')}}">
+                                            </div>
                                         </div>
                                         <div class="form-group col-md-3">
                                             <label>{{__('SuperAdmin/backend.type_of_service')}}:</label>
-                                            <input class="form-control" type="text" name="airport_service_name[{{$loop->iteration - 1}}][]" placeholder="{{__('SuperAdmin/backend.type_of_service')}}" placeholder="{{__('SuperAdmin/backend.type_of_service')}}">
+                                            <div class="english">
+                                                <input class="form-control" type="text" name="airport_service_name[{{$loop->iteration - 1}}][]" placeholder="{{__('SuperAdmin/backend.type_of_service')}}" placeholder="{{__('SuperAdmin/backend.type_of_service')}}">
+                                            </div>
+                                            <div class="arabic">
+                                                <input class="form-control" type="text" name="airport_service_name_ar[{{$loop->iteration - 1}}][]" placeholder="{{__('SuperAdmin/backend.type_of_service')}}" placeholder="{{__('SuperAdmin/backend.type_of_service')}}">
+                                            </div>
                                         </div>
                                         <div class="form-group col-md-3">
                                             <label>{{__('SuperAdmin/backend.airport_service_fee')}}:</label>
@@ -147,7 +172,7 @@
                                         <input class="form-control" type="text" name="airport_service_provider[]" placeholder="{{__('SuperAdmin/backend.service_provider')}}">
                                     </div>
                                     <div class="form-group col-md-4">
-                                        <label>{{__('SuperAdmin/backend.week_selected_fee')}}:</label>
+                                        <label>{{__('SuperAdmin/backend.airport_week_selected_fee')}}:</label>
                                         <input class="form-control" type="number" name="airport_week_selected_fee[]" placeholder="{{__('SuperAdmin/backend.if_program_duration_airport_fee')}}">
                                     </div>
                                 </div>
@@ -214,7 +239,12 @@
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label>{{__('SuperAdmin/backend.company_name')}}:</label>
-                                        <input class="form-control" type="text" value="{{$medical->company_name}}" name="medical_company_name[]" placeholder="{{__('SuperAdmin/backend.company_name')}}">
+                                        <div class="english">
+                                            <input class="form-control" type="text" value="{{$medical->company_name}}" name="medical_company_name[]" placeholder="{{__('SuperAdmin/backend.company_name')}}">
+                                        </div>
+                                        <div class="arabic">
+                                            <input class="form-control" type="text" value="{{$medical->company_name_ar}}" name="medical_company_name_ar[]" placeholder="{{__('SuperAdmin/backend.company_name')}}">
+                                        </div>
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label>{{__('SuperAdmin/backend.deductible_up_to')}}:</label>
@@ -302,7 +332,12 @@
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label>{{__('SuperAdmin/backend.company_name')}}:</label>
-                                        <input class="form-control" type="text" name="medical_company_name[]" placeholder="{{__('SuperAdmin/backend.company_name')}}">
+                                        <div class="english">
+                                            <input class="form-control" type="text" name="medical_company_name[]" placeholder="{{__('SuperAdmin/backend.company_name')}}">
+                                        </div>
+                                        <div class="arabic">
+                                            <input class="form-control" type="text" name="medical_company_name_ar[]" placeholder="{{__('SuperAdmin/backend.company_name')}}">
+                                        </div>
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label>{{__('SuperAdmin/backend.deductible_up_to')}}:</label>

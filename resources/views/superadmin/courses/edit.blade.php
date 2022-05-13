@@ -138,19 +138,29 @@
                         <div class="row">
                             <div class="form-group col-md-3">
                                 <label for="program_name">{{__('SuperAdmin/backend.program_name')}}:</label>
-                                <input value="{{$course->program_name}}" class="form-control" type="text" name="program_name" placeholder="@lang('SuperAdmin/backend.program_name')">
+                                <div class="english">
+                                    <input value="{{$course->program_name}}" class="form-control" type="text" name="program_name" placeholder="{{__('SuperAdmin/backend.program_name')}}">
+                                </div>
+                                <div class="arabic">
+                                    <input value="{{$course->program_name_ar}}" class="form-control" type="text" name="program_name_ar" placeholder="{{__('SuperAdmin/backend.program_name')}}">
+                                </div> 
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="program_level_required">{{__('SuperAdmin/backend.level_required')}}:</label>
-                                <input value="{{$course->program_level}}" class="form-control" type="text" name="program_level" placeholder="program level required">
+                                <div class="english">
+                                    <input value="{{$course->program_level}}" class="form-control" type="text" name="program_level" placeholder="{{__('SuperAdmin/backend.level_required')}}">
+                                </div>
+                                <div class="arabic">
+                                    <input value="{{$course->program_level_ar}}" class="form-control" type="text" name="program_level_ar" placeholder="{{__('SuperAdmin/backend.level_required')}}">
+                                </div>
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="lessons_per_week">{{__('SuperAdmin/backend.lessons_per_week')}}:</label>
-                                <input value="{{$course->lessons_per_week}}" class="form-control" type="number" name="lessons_per_week" placeholder="lessons per week">
+                                <input value="{{$course->lessons_per_week}}" class="form-control" type="number" name="lessons_per_week" placeholder="{{__('SuperAdmin/backend.lessons_per_week')}}">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="hours_per_week">{{__('SuperAdmin/backend.hours_per_week')}}:</label>
-                                <input value="{{$course->hours_per_week}}" class="form-control" type="number" name="hours_per_week" placeholder="hours per week">
+                                <input value="{{$course->hours_per_week}}" class="form-control" type="number" name="hours_per_week" placeholder="{{__('SuperAdmin/backend.hours_per_week')}}">
                             </div>
                         </div>
 

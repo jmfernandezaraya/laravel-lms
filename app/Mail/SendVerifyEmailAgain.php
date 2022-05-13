@@ -17,6 +17,7 @@ class SendVerifyEmailAgain extends Mailable
      * @return void
      */
     public $user;
+    
     public function __construct($id)
     {
         return  $this->user = $id;

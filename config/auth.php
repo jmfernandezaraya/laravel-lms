@@ -55,6 +55,7 @@ return [
             'driver' => 'session',
             'provider' => 'branch_admin',
         ],
+
         'api' => [
             'driver' => 'token',
             'provider' => 'users',
@@ -85,7 +86,6 @@ return [
             'model' => App\Models\User::class,
         ],
 
-
         'schooladmin' => [
             'driver' => 'eloquent',
             'model' => App\Models\SchoolAdminUser::class,
@@ -100,10 +100,6 @@ return [
             'driver' => 'eloquent',
             'model' => \App\Models\BranchAdmin\User::class,
         ],
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*
@@ -142,5 +138,4 @@ return [
     */
 
     'password_timeout' => 10800,
-
 ];

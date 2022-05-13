@@ -1,13 +1,15 @@
 <?php
 
 namespace App\Mail;
+
 use App\Models\User;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class SendMessageToSuperAdminRelatedToCourse extends Mailable implements ShouldQueue
+class ContactCenterAdmin extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -21,8 +23,8 @@ class SendMessageToSuperAdminRelatedToCourse extends Mailable implements ShouldQ
 
     public function __construct(User $user, array $request, array $file)
     {
-        $this->request = $request;
         $this->user = $user;
+        $this->request = $request;
         $this->file = $file;
     }
 
@@ -35,7 +37,7 @@ class SendMessageToSuperAdminRelatedToCourse extends Mailable implements ShouldQ
     public function build()
     {
         $data = $this->request;
-        $mails = $this->markdown('mail/send_message_to_super_admin_related_to_course', ['data' => $data])->to($this->request['to_email'])->subject($this->request['subject']);
+        $mails = $this->markdown('mail/contact_center_admin', ['data' => $data])->to($this->request['to_email'])->subject($this->request['subject']);
 
         if (!empty($this->file)) {
             foreach ($this->file as $files) {

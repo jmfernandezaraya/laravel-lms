@@ -514,7 +514,7 @@
                         </div>
 
                         <div class="form-group col-md-4">
-                            <label for="input">{{__('Frontend.airtport_name')}}:</label>
+                            <label for="input">{{__('Frontend.airport_name')}}:</label>
                             <select name="airport_name" class="form-control" id="airport_name">
                                 <option value="">{{__('Frontend.select')}}</option>
                             </select>

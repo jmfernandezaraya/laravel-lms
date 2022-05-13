@@ -1,6 +1,5 @@
 @component('mail::message')
 {{$data->subject}}
-
 {{$data->message}}
 
 @component('mail::button', ['url' => url('/')])

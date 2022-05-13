@@ -1,6 +1,11 @@
 <?php
 
 return [
+    'subject' => 'Subject',
+    'message' => 'Message',
+    'thank_you' => 'Thank you',
+    'thanks' => 'Thanks',
+
     'course_booked' => [
         'subject' => 'Registration Confirmation "Link for Study Abroad"',
         'dear' => 'Dear',

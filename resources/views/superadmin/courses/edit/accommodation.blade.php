@@ -61,15 +61,30 @@
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label for="type">{{__('SuperAdmin/backend.type')}}:</label>
-                                        <input value="{{ $accommodation->type }}" class="form-control" type="text" name="type[]" placeholder="{{__('SuperAdmin/backend.type')}}">
+                                        <div class="english">
+                                            <input value="{{ $accommodation->type }}" class="form-control" type="text" name="type[]" placeholder="{{__('SuperAdmin/backend.type')}}">
+                                        </div>
+                                        <div class="arabic">
+                                            <input value="{{ $accommodation->type_ar }}" class="form-control" type="text" name="type_ar[]" placeholder="{{__('SuperAdmin/backend.type')}}">
+                                        </div>
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label>{{__('SuperAdmin/backend.room_type')}}:</label>
-                                        <input class="form-control" value="{{ $accommodation->room_type }}" type="text" name="room_type[]" placeholder="{{__('SuperAdmin/backend.room_type')}}">
+                                        <div class="english">
+                                            <input class="form-control" value="{{ $accommodation->room_type }}" type="text" name="room_type[]" placeholder="{{__('SuperAdmin/backend.room_type')}}">
+                                        </div>
+                                        <div class="arabic">
+                                            <input class="form-control" value="{{ $accommodation->room_type_ar }}" type="text" name="room_type_ar[]" placeholder="{{__('SuperAdmin/backend.room_type')}}">
+                                        </div>
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label>{{__('SuperAdmin/backend.meal')}}:</label>
-                                        <input class="form-control" type="text"  value="{{ $accommodation->meal }}" name="meal[]" placeholder="{{__('SuperAdmin/backend.meal')}}">
+                                        <div class="english">
+                                            <input class="form-control" type="text" value="{{ $accommodation->meal }}" name="meal[]" placeholder="{{__('SuperAdmin/backend.meal')}}">
+                                        </div>
+                                        <div class="arabic">
+                                            <input class="form-control" type="text" value="{{ $accommodation->meal_ar }}" name="meal_ar[]" placeholder="{{__('SuperAdmin/backend.meal')}}">
+                                        </div>
                                     </div>
                                 </div>
 

@@ -1,12 +1,6 @@
 @component('mail::message')
     {{$subject}}
-
-
-
-
-{{$message}}
-
-
+    {{$message}}
 
 <br>
 Thanks,<br>
