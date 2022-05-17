@@ -1,5 +1,9 @@
 @extends('superadmin.layouts.app')
 
+@section('title')
+    {{__('SuperAdmin/backend.add_accommodation_under_age')}}
+@endsection
+
 @section('content')
     @include('superadmin.courses.scripts')
     

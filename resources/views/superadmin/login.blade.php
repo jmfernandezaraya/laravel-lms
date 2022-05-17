@@ -55,12 +55,6 @@
     </div>
     <!-- End login Section -->
 
-
-    <!-- Button trigger modal -->
-    <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-      Launch demo modal
-    </button> -->
-
     <!-- Modal -->
     <div class="modal fade" id="forgotPasssword" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <form method = "post" action="{{route('forgot-password-post')}}">

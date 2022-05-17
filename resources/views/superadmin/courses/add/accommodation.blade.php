@@ -1,5 +1,9 @@
 @extends('superadmin.layouts.app')
 
+@section('title')
+    {{__('SuperAdmin/backend.accommodation_cost')}}
+@endsection
+
 @section('content')
     @include('superadmin.courses.scripts')
 

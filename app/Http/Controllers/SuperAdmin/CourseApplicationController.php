@@ -10,6 +10,7 @@ use App\Mail\UpdatedUserCourseBooked;
 use App\Services\SuperAdminEditUserCourse;
 
 use App\Models\Calculator;
+use App\Models\UserCourseBookedDetails;
 use App\Models\SchoolAdmin\ReplyToSendSchoolMessage;
 use App\Models\SuperAdmin\CourseAccommodation;
 use App\Models\SuperAdmin\CourseAirport;
@@ -19,28 +20,30 @@ use App\Models\SuperAdmin\SendMessageToStudentCourse;
 use App\Models\SuperAdmin\SendSchoolMessage;
 use App\Models\SuperAdmin\TransactionRefund;
 use App\Models\SuperAdmin\UserCourseBookedDetailsApproved;
-use App\Models\UserCourseBookedDetails;
 
+use PDF;
+use Storage;
 
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use TelrGateway\Transaction;
 
 /**
- * Class ManageStudentController
+ * Class CourseApplicationController
  * @package App\Http\Controllers\SuperAdmin
  */
-class ManageStudentController extends Controller
+class CourseApplicationController extends Controller
 {
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function index()
     {
-        $data['booked_details'] = UserCourseBookedDetails::with('userBookDetailsApproved')->get();
+        $data['booked_details'] = UserCourseBookedDetails::with('User', 'userBookDetailsApproved')->get();
 
-        return view('superadmin.manage_student_application.index', $data);
+        return view('superadmin.course_application.index', $data);
     }
 
     /**
@@ -129,13 +132,12 @@ class ManageStudentController extends Controller
 
                 $success = __('SuperAdmin/backend.data_updated');
             }
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             $success = 'error';
             $data['message'] = $e->getMessage();
-
         }
         $data['success'] = $success;
+        
         return response($data);
     }
 
@@ -147,75 +149,10 @@ class ManageStudentController extends Controller
      */
     public function edit($id)
     {
-        $bookeddetails = UserCourseBookedDetails::with('course')->whereId($id)->firstOrFail();
+        $data = getCourseApplicationPrintData($id);
+        $test = '';
 
-        $userSchool = [];
-
-        if ($bookeddetails->course->school->userSchool != null) {
-            $userSchool = $bookeddetails->course->school->userSchool->user;
-        }
-        $chatMessage = [];
-        if (!empty($userSchool)) {
-            $chatMessage = ReplyToSendSchoolMessage::where('user_id', $userSchool->id)->get();
-        }
-        $studentMessage = SendMessageToStudentCourse::where('user_id', $bookeddetails->User->id)->get();
-        $nation_option = ["Saudi Arabian", "Emirati", "Bahraini", "Kuwaiti", "Omani", "Qatari",
-            "Afghan", "Albanian", "Algerian", "American", "Andorran", "Angolan", "Anguillan",
-            "Argentine", "Armenian", "Australian", "Austrian", "Azerbaijani", "Bahamian",
-            "Bangladeshi", "Barbadian", "Belarusian", "Belgian", "Belizean", "Beninese",
-            "Bermudian", "Bhutanese", "Bolivian", "Botswanan", "Brazilian", "British",
-            "British Virgin Islander", "Bruneian", "Bulgarian", "Burkinan", "Burmese",
-            "Burundian", "Cambodian", "Cameroonian", "Canadian", "Cape Verdean",
-            "Cayman Islander", "Central African", "Chadian", "Chilean", "Chinese",
-            "Citizen of Antigua and Barbuda", "Citizen of Bosnia and Herzegovina",
-            "Citizen of Guinea-Bissau", "Citizen of Kiribati", "Citizen of Seychelles",
-            "Citizen of the Dominican Republic", "Citizen of Vanuatu", "Colombian", "Comoran",
-            "Congolese (Congo)", "Congolese (DRC)", "Cook Islander", "Costa Rican", "Croatian",
-            "Cuban", "Cymraes", "Cymro", "Cypriot", "Czech", "Danish", "Djiboutian", "Dominican",
-            "Dutch", "East Timorese", "Ecuadorean", "Egyptian", "English", "Equatorial Guinean",
-            "Eritrean", "Estonian", "Ethiopian", "Faroese", "Fijian", "Filipino", "Finnish",
-            "French", "Gabonese", "Gambian", "Georgian", "German", "Ghanaian", "Gibraltarian",
-            "Greek", "Greenlandic", "Grenadian", "Guamanian", "Guatemalan", "Guinean",
-            "Guyanese", "Haitian", "Honduran", "Hong Konger", "Hungarian", "Icelandic",
-            "Indian", "Indonesian", "Iranian", "Iraqi", "Irish", "Italian", "Ivorian",
-            "Jamaican", "Japanese", "Jordanian", "Kazakh", "Kenyan", "Kittitian", "Kosovan",
-            "Kyrgyz", "Lao", "Latvian", "Lebanese", "Liberian", "Libyan", "Liechtenstein citizen",
-            "Lithuanian", "Luxembourger", "Macanese", "Macedonian", "Malagasy", "Malawian",
-            "Malaysian", "Maldivian", "Malian", "Maltese", "Marshallese", "Martiniquais",
-            "Mauritanian", "Mauritian", "Mexican", "Micronesian", "Moldovan", "Monegasque",
-            "Mongolian", "Montenegrin", "Montserratian", "Moroccan", "Mosotho", "Mozambican",
-            "Namibian", "Nauruan", "Nepalese", "New Zealander", "Nicaraguan", "Nigerian",
-            "Nigerien", "Niuean", "North Korean", "Northern Irish", "Norwegian", "Pakistani",
-            "Palauan", "Palestinian", "Panamanian", "Papua New Guinean", "Paraguayan",
-            "Peruvian", "Pitcairn Islander", "Polish", "Portuguese", "Prydeinig", "Puerto Rican",
-            "Romanian", "Russian", "Rwandan", "Salvadorean", "Sammarinese", "Samoan",
-            "Sao Tomean", "Scottish", "Senegalese", "Serbian", "Sierra Leonean", "Singaporean",
-            "Slovak", "Slovenian", "Solomon Islander", "Somali", "South African", "South Korean",
-            "South Sudanese", "Spanish", "Sri Lankan", "St Helenian", "St Lucian", "Stateless",
-            "Sudanese", "Surinamese", "Swazi", "Swedish", "Swiss", "Syrian", "Taiwanese", "Tajik",
-            "Tanzanian", "Thai", "Togolese", "Tongan", "Trinidadian", "Tristanian", "Tunisian",
-            "Turkish", "Turkmen", "Turks and Caicos Islander", "Tuvaluan", "Ugandan", "Ukrainian",
-            "Uruguayan", "Uzbek", "Vatican citizen", "Venezuelan", "Vietnamese", "Vincentian",
-            "Wallisian", "Welsh", "Yemeni", "Zambian", "Zimbabwean"];
-
-        sort($nation_option);
-        $totalrefund = 0;
-        $transaction_refund = [];
-
-        if ($bookeddetails->transaction) {
-            $transaction_refund = TransactionRefund::where('transaction_id', $bookeddetails->transaction->order_id)->get();
-            foreach ($transaction_refund as $allrefund) {
-                $totalrefund += $allrefund->amount_refunded;
-            }
-        }
-
-        $amountdue = 0;
-        if ($transaction = $bookeddetails->transaction) {
-            $amountdue += $transaction->amount - $bookeddetails->totalfees;
-        }
-        $transaction_details = new TransactionCalculator($bookeddetails);
-
-        return view('superadmin.manage_student_application.edit', compact('transaction_details', 'totalrefund', 'studentMessage', 'bookeddetails', 'nation_option', 'chatMessage', 'userSchool', 'transaction_refund', 'amountdue'));
+        return view('superadmin.course_application.edit', $data, compact('test'));
     }
 
     /**
@@ -357,5 +294,44 @@ class ManageStudentController extends Controller
         \Mail::send(new UpdatedUserCourseBooked($usercoursebook->email));
 
         return redirect(route('superadmin.manage_application.index'));
+    }    
+
+    public function print(Request $request)
+    {
+        $rules = [
+            'id' => 'required',
+            'section' => 'required',
+        ];
+        $validate = Validator::make($request->all(), $rules);
+        
+        $data['success'] = true;
+        if ($validate->fails()) {
+            $data['success'] = false;
+            $data['errors'] = $validate->errors();
+            return response($data);
+        } else {
+            $pdf_data = getCourseApplicationPrintData($request->id);
+            $pdf_data['logo'] = asset('public/frontend/assets/img/logo.png');
+            
+            if ($request->section == 'reservation') {
+                $pdf = PDF::loadView('pdf.course_application.reservation', $pdf_data);
+                Storage::disk('public')->put('pdf/course_application/reservation_' . $request->id . '.pdf', $pdf->output());
+                $pdf_file = storage_path('app/public/pdf/course_application/reservation_' . $request->id  . '.pdf');
+            } else if ($request->section == 'registration') {
+                $pdf = PDF::loadView('pdf.course_application.registration', $pdf_data);
+                Storage::disk('public')->put('pdf/course_application/registration_' . $request->id . '.pdf', $pdf->output());
+                $pdf_file = storage_path('app/public/pdf/course_application/registration_' . $request->id  . '.pdf');
+            } else if ($request->section == 'registration_cancellation') {
+                $pdf = PDF::loadView('pdf.course_application.registration_cancellation', $pdf_data);
+                Storage::disk('public')->put('pdf/course_application/registration_cancellation_' . $request->id . '.pdf', $pdf->output());
+                $pdf_file = storage_path('app/public/pdf/course_application/registration_cancellation_' . $request->id  . '.pdf');
+            } else if ($request->section == 'payments_refunds') {
+                $pdf = PDF::loadView('pdf.course_application.payments_refunds', $pdf_data);
+                Storage::disk('public')->put('pdf/course_application/payments_refunds_' . $request->id . '.pdf', $pdf->output());
+                $pdf_file = storage_path('app/public/pdf/course_application/payments_refunds_' . $request->id  . '.pdf');
+            }
+        }
+
+        return response()->download($pdf_file);
     }
 }

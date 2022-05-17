@@ -484,7 +484,6 @@ class CourseCreateService
         return true;
     }
 
-
     /**
      * @param Request $request
      * @return bool|\Illuminate\Support\MessageBag

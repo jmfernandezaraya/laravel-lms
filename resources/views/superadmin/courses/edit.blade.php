@@ -1,5 +1,9 @@
 @extends('superadmin.layouts.app')
 
+@section('title')
+    {{__('SuperAdmin/backend.edit_course')}}
+@endsection
+
 @section('content')
     @include('superadmin.courses.scripts')
 

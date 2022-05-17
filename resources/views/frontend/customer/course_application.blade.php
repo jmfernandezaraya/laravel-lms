@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-    <style>    
+    <style>
         table thead {
             background-color: #97d0db;
             color: white;
@@ -600,7 +600,19 @@
                                         @elseif ($course_booked_detail->status == 'refunded')
                                             {{__('Frontend.amount_refunded')}}
                                         @elseif ($course_booked_detail->status == 'completed')
-                                            {{__('Frontend.completed')}}
+                                            {{__('Frontend.application_procedure_completed')}}
+                                        @elseif ($course_booked_detail->status == 'studying')
+                                            {{__('Frontend.studying')}}
+                                        @elseif ($course_booked_detail->status == 'course_extension')
+                                            {{__('Frontend.customer_request_course_extension')}}
+                                        @elseif ($course_booked_detail->status == 'request_cancellation')
+                                            {{__('Frontend.customer_request_cancellation')}}
+                                        @elseif ($course_booked_detail->status == 'amount_refunded')
+                                            {{__('Frontend.amount_refunded')}}
+                                        @elseif ($course_booked_detail->status == 'application_cancelled')
+                                            {{__('Frontend.application_cancelled')}}
+                                        @elseif ($course_booked_detail->status == 'end')
+                                            {{__('Frontend.course_end')}}
                                         @endif
                                     </p>
                                 </div>
@@ -776,7 +788,7 @@
                                         <input hidden name="to_email" value="{{ $course_booked_detail->User->email }}" />
                                         <input hidden name="user_id" value="{{ $course_booked_detail->user_id }}" />
 
-                                        <button type="button" onclick="sendMessage('contact_center_admin');" class="btn btn-primary px-3">{{__('Frontend.send')}}</button>
+                                        <button type="button" onclick="submitFormAction('contact_center_admin');" class="btn btn-primary px-3">{{__('Frontend.send')}}</button>
                                     </form>
                                 </div>
                             </div>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\BranchAdmin;
+namespace App\Http\Controllers\SchoolAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SchoolAdminManageStudentRequest;
@@ -14,13 +14,13 @@ use App\Models\User;
 use App\Models\UserCourseBookedDetails;
 
 /**
- * Class ManageStudentController
+ * Class CourseApplicationController
  * @package App\Http\Controllers\SchoolAdmin
  */
-class ManageStudentController extends Controller
+class CourseApplicationController extends Controller
 {
     /**
-     * ManageStudentController constructor.
+     * CourseApplicationController constructor.
      */
     public function __construct()
     {
@@ -36,16 +36,16 @@ class ManageStudentController extends Controller
     {
         $course_id = [];
 
-        if (auth('branch_admin')->user()->userSchool()->count() > 0 && isset(auth('branch_admin')->user()->userSchool->school->courses)) {
-            $collect = collect(auth('branch_admin')->user()->userSchool->school->courses);
+        if (auth('schooladmin')->user()->userSchool()->count() > 0 && isset(auth('schooladmin')->user()->userSchool->school->courses)) {
+            $collect = collect(auth('schooladmin')->user()->userSchool->school->courses);
             $course_id = $collect->pluck('unique_id');
+
         }
 
         $data['booked_details'] = UserCourseBookedDetails::with('userBookDetailsApproved')->whereIn('course_id', $course_id)->get();
 
-        return view('branchadmin.manage_student_application.index', $data);
+        return view('schooladmin.course_application.index', $data);
     }
-
 
     /**
      * @param $id
@@ -75,7 +75,7 @@ class ManageStudentController extends Controller
     {
         $data['chatMessage'] = SendSchoolMessage::whereUserId(auth()->id())->whereId($id)->first();
 
-        return view('branchadmin.manage_student_application.view_message', $data);
+        return view('schooladmin.course_application.view_message', $data);
     }
 
     /**
@@ -90,6 +90,7 @@ class ManageStudentController extends Controller
         if ($request->has("attachment")) {
             foreach ($request->attachment as $attachments) {
                 $attachment[] = $move = $attachments->getClientOriginalName();
+
                 $attachments->move('public/attachments', $move);
                 $sendfile[] = $move;
             }

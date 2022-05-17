@@ -1,5 +1,9 @@
 @extends('superadmin.layouts.app')
 
+@section('title')
+    {{__('SuperAdmin/backend.add_airport_medical_fee')}}
+@endsection
+
 @section('content')
     @include('superadmin.courses.scripts')
 

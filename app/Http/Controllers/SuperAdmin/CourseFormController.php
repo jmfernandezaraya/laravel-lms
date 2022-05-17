@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
+
 use App\Models\SuperAdmin\Choose_Accommodation_Age_Range;
 use App\Models\SuperAdmin\Choose_Accommodation_Under_Age;
 use App\Models\SuperAdmin\Choose_Custodian_Under_Age;
@@ -14,6 +15,8 @@ use App\Models\SuperAdmin\Choose_Start_Day;
 use App\Models\SuperAdmin\Choose_Study_Mode;
 use App\Models\SuperAdmin\Choose_Study_Time;
 use App\Models\SuperAdmin\Choose_Classes_Day;
+use App\Models\SuperAdmin\Course;
+
 use Illuminate\Http\Request;
 
 class CourseFormController extends Controller
@@ -52,12 +55,19 @@ class CourseFormController extends Controller
 
     public function deleteLanguage(Request $request)
     {
-        \DB::transaction(function () use ($request) {
+        $language_ids = $request->ids;
+        $course_language_ids = [];
+        $courses = Course::where('deleted', false)->get();
+        foreach ($courses as $course) {
+            $course_language_ids = array_unique(array_merge($course_language_ids, $course->language));
+        }
+        $language_ids = array_diff($language_ids, $course_language_ids);
+        \DB::transaction(function () use ($language_ids) {
             $locale = get_language();
-            Choose_Language::whereIn('unique_id', $request->ids)->delete();
+            Choose_Language::whereIn('unique_id', $language_ids)->delete();
             $switch_locale = $locale == 'en' ? 'ar' : 'en';
             app()->setLocale($switch_locale);
-            Choose_Language::whereIn('unique_id', $request->ids)->delete();
+            Choose_Language::whereIn('unique_id', $language_ids)->delete();
             app()->setLocale($locale);
         });
 

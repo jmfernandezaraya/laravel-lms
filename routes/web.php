@@ -170,10 +170,11 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => '
         return redirect()->route('superadmin.dashboard');
     });
 
-    Route::post('updateBookedUserCourse', 'ManageStudentController@updateBookedUserCourse')->name('updateBookedUserCourse');
-    Route::get('editUserCourse/{course_id}/{user_course_booked_id}/edit/{school_id}', 'ManageStudentController@editCourse')->name('manage_application.editCourse');
+    Route::post('updateBookedUserCourse', 'CourseApplicationController@updateBookedUserCourse')->name('updateBookedUserCourse');
+    Route::get('editUserCourse/{course_id}/{user_course_booked_id}/edit/{school_id}', 'CourseApplicationController@editCourse')->name('manage_application.editCourse');
 
-    Route::resource('manage_application', ManageStudentController::class);
+    Route::post('/manage_application/print', 'CourseApplicationController@print')->name('manage_application.print');
+    Route::resource('manage_application', CourseApplicationController::class);
 
     Route::post('programagerangeupdate', 'CourseController@update')->name('course.programagerangeupdate');
     Route::get('update_airport_page', 'CourseController@viewAirportForUpdate')->name('update_airport_page');
@@ -239,7 +240,7 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => '
     Route::post('school/save/program/session', 'CourseController@programSessionSave')->name('course.session_store_for_program');
 
     Route::post('language', [CourseFormController::class, 'addLanguage'])->name('language.add');
-    Route::delete('language', [CourseFormController::class, 'deleteLanguage'])->name('language.delete');    
+    Route::delete('language', [CourseFormController::class, 'deleteLanguage'])->name('language.delete');
     Route::post('study_mode', [CourseFormController::class, 'addStudyMode'])->name('study_mode.add');
     Route::delete('study_mode', [CourseFormController::class, 'deleteStudyMode'])->name('study_mode.delete');
     Route::post('program_type', [CourseFormController::class, 'addProgramType'])->name('program_type.add');
@@ -299,7 +300,7 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => '
 
     Route::resource('course', CourseController::class);
 
-    Route::resource('manage_app', ManageStudentController::class);
+    Route::resource('manage_app', CourseApplicationController::class);
     Route::resource('payment_received', PaymentController::class);
 
     Route::post('school_admin/update/{id}', 'SchoolAdminController@update')->name('school_admins.update');
@@ -317,7 +318,7 @@ Route::group(['namespace' => 'SchoolAdmin', 'prefix' => 'schooladmin', 'middlewa
 
     Route::resource('branch_admin', 'BranchAdminController');
 
-    Route::get('manage_application/approve/{id}/{value}', 'ManageStudentController@approve')->name('manage_application.approve');
+    Route::get('manage_application/approve/{id}/{value}', 'CourseApplicationController@approve')->name('manage_application.approve');
 
     Route::get('dashboard', [\App\Http\Controllers\SchoolAdmin\DashboardController::class, 'index'])->name('dashboard');
     Route::post('course_update', 'CourseControllerSchoolAdmin@courseUpdate')->name('course_update');
@@ -367,10 +368,10 @@ Route::group(['namespace' => 'SchoolAdmin', 'prefix' => 'schooladmin', 'middlewa
 
     Route::post('school/save/program/session', 'CourseControllerSchoolAdmin@programSessionSave')->name('course.session_store_for_program');
 
-    Route::get('manage_application', 'ManageStudentController@index')->name('manage_application.index');
-    Route::get('manage_application/view_message/{id}', 'ManageStudentController@viewMessage')->name('manage_application.view_message');
+    Route::get('manage_application', 'CourseApplicationController@index')->name('manage_application.index');
+    Route::get('manage_application/view_message/{id}', 'CourseApplicationController@viewMessage')->name('manage_application.view_message');
     Route::resource('payment_received', PaymentController::class);
-    Route::post('manage_application/send_message_to_super_admin', 'ManageStudentController@sendMessageToSuperAdmin')->name('manage_application.send_message_to_super_admin');
+    Route::post('manage_application/send_message_to_super_admin', 'CourseApplicationController@sendMessageToSuperAdmin')->name('manage_application.send_message_to_super_admin');
 
     Route::post('add_program_under_age_range', [CourseFormController::class, 'addProgramUnderAge'])->name('add_program_under_age_range');
     Route::post('delete_program_under_age_range', [CourseFormController::class, 'deleteProgramUnderAge'])->name('delete_program_under_age_range');
@@ -390,7 +391,7 @@ Route::group(['namespace' => 'BranchAdmin', 'prefix' => 'branch_admin', 'middlew
         return redirect()->route('branch_admin.dashboard');
     });
 
-    Route::get('manage_application/approve/{id}/{value}', 'ManageStudentController@approve')->name('manage_application.approve');
+    Route::get('manage_application/approve/{id}/{value}', 'CourseApplicationController@approve')->name('manage_application.approve');
 
     Route::get('dashboard', [\App\Http\Controllers\BranchAdmin\DashboardController::class, 'index'])->name('dashboard');
     Route::post('course_update', 'CourseControllerSchoolAdmin@courseUpdate')->name('course_update');
@@ -440,10 +441,10 @@ Route::group(['namespace' => 'BranchAdmin', 'prefix' => 'branch_admin', 'middlew
 
     Route::post('school/save/program/session', 'CourseControllerSchoolAdmin@programSessionSave')->name('course.session_store_for_program');
 
-    Route::get('manage_application', 'ManageStudentController@index')->name('manage_application.index');
-    Route::get('manage_application/view_message/{id}', 'ManageStudentController@viewMessage')->name('manage_application.view_message');
+    Route::get('manage_application', 'CourseApplicationController@index')->name('manage_application.index');
+    Route::get('manage_application/view_message/{id}', 'CourseApplicationController@viewMessage')->name('manage_application.view_message');
     Route::resource('payment_received', PaymentController::class);
-    Route::post('manage_application/send_message_to_super_admin', 'ManageStudentController@sendMessageToSuperAdmin')->name('manage_application.send_message_to_super_admin');
+    Route::post('manage_application/send_message_to_super_admin', 'CourseApplicationController@sendMessageToSuperAdmin')->name('manage_application.send_message_to_super_admin');
 
     Route::post('add_program_under_age_range', [CourseFormController::class, 'addProgramUnderAge'])->name('add_program_under_age_range');
     Route::post('delete_program_under_age_range', [CourseFormController::class, 'deleteProgramUnderAge'])->name('delete_program_under_age_range');

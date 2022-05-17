@@ -1,4 +1,9 @@
 @extends('superadmin.layouts.app')
+
+@section('title')
+    {{__('SuperAdmin/backend.add_under_age_fee_text_book_fee')}}
+@endsection
+
 @section('content')
     @include('superadmin.courses.scripts')
     <div class="col-12 grid-margin stretch-card">

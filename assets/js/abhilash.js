@@ -2463,7 +2463,7 @@ function getContent(texteditorId, inputId) {
     }
 }
 
-function sendMessage(id) {
+function submitFormAction(id) {
     $("#loader").show();
     var data = new FormData($('#' + id)[0]);
     var urlname = $("#" + id).attr('action');

@@ -1,5 +1,9 @@
 @extends('superadmin.layouts.app')
 
+@section('title')
+    {{__('SuperAdmin/backend.course_application_details')}}
+@endsection
+
 @section('content')
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
@@ -12,6 +16,7 @@
                         <tr>
                             <th>#</th>
                             <td>{{__('SuperAdmin/backend.course_application_details')}}</td>
+                            <th>{{__('SuperAdmin/backend.user_name')}}</th>
                             <th>{{__('SuperAdmin/backend.name')}}</th>
                             <th>{{__('SuperAdmin/backend.email')}}</th>
                             <th>{{__('SuperAdmin/backend.mobile')}}</th>
@@ -32,6 +37,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $details->created_at }}</td>
+                                <td>{{ get_language() == 'en' ? ucwords($details->User->first_name_en) : ucwords($details->User->first_name_ar) }} {{ get_language() == 'en' ? ucwords($details->User->last_name_en) : ucwords($details->User->last_name_ar) }}</td>
                                 <td>{{ ucwords($details->fname) }} {{ucwords($details->lname) }}</td>
                                 <td>{{ ucwords($details->userBookDetailsApproved->email ?? $details->email) }}</td>
                                 <td>{{ ucwords($details->userBookDetailsApproved->mobile ?? $details->mobile) }}</td>

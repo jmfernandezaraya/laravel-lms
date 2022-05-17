@@ -1,4 +1,9 @@
 @extends('superadmin.layouts.app')
+
+@section('title')
+    {{__('SuperAdmin/backend.deleted_course_details')}}
+@endsection
+
 @section('content')
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
