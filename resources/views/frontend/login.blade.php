@@ -12,9 +12,9 @@
             <p>{{__('Frontend.login_description')}}</p>
         </div>
     </div>
-    <!-- End Breadcrumbs -->
+    <!-- ======= End Breadcrumbs ======= -->
 
-    <!-- ======= login Section ======= -->
+    <!-- ======= Login Section ======= -->
     <div class="container mt-5 mb-5">
         <form id="login-form" method = "post" action = "{{route('user_login_post')}}">
             @csrf
@@ -56,25 +56,25 @@
             </div>
         </form>
     </div>
-    <!-- End login Section -->
+    <!-- ======= End Login Section ======= -->
 
     <!-- Modal -->
     <div class="modal fade" id="forgotPasssword" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <form method = "post" action="{{route('forgot-password-post')}}">
+        <form method="post" action="{{ route('forgot-password-post') }}">
             @csrf
             
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">{{__('Frontend.recovery_email')}}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="{{__('Frontend.close')}}">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
                             <label>{{__('Frontend.email_phone')}}</label>
-                            <input type="text" name="email" class="form-control" placeholder="{{__('Frontend.email_phone')}}">
+                            <input type="text" name="email" class="form-control" placeholder="{{__('Frontend.email_phone')}}" />
                         </div>
                     </div>
                     <div class="mb-3 text-center">

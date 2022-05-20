@@ -5,19 +5,19 @@
         <div class="card">
             <div class="card-body table table-responsive">
                 <div style="text-align: center;">
-                    <h1 class="card-title">@lang('SuperAdmin/backend.medical_details')</h1>
+                    <h1 class="card-title">{{__('SuperAdmin/backend.medical_details')}}</h1>
                 </div>
 
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th> @lang('SuperAdmin/backend.medical_fees_per_week') </th>
-                            <th> @lang('SuperAdmin/backend.medical_start_week') </th>
-                            <th> @lang('SuperAdmin/backend.medical_end_week') </th>
-                            <th> {{ucwords( __('SuperAdmin/backend.medical_insurance_note')) }} </th>
-                            <th> @lang("SuperAdmin/backend.created_on") </th>
-                            <th> @lang("SuperAdmin/backend.action") </th>
+                            <th> {{__('SuperAdmin/backend.medical_fees_per_week')}} </th>
+                            <th> {{__('SuperAdmin/backend.medical_start_week')}} </th>
+                            <th> {{__('SuperAdmin/backend.medical_end_week')}} </th>
+                            <th> {{ ucwords( __('SuperAdmin/backend.medical_insurance_note')) }} </th>
+                            <th> {{__("SuperAdmin/backend.created_on")}} </th>
+                            <th> {{__("SuperAdmin/backend.action")}} </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,45 +41,46 @@
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel5">@lang('SuperAdmin/backend.update_medical_fees')</h5>
-                                            <button type="button" id="close_this" class="close" data-dismiss="modal" aria-label="Close">
+                                            <h5 class="modal-title" id="exampleModalLabel5">{{__('SuperAdmin/backend.update_medical_fees')}}</h5>
+                                            <button type="button" id="close_this" class="close" data-dismiss="modal" aria-label="{{__('SuperAdmin/backend.close')}}">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
+
                                         <form method="post"  action="{{route('superadmin.medical_update')}}">
                                             @csrf
                                             <div class="modal-body">
                                                 <div class="form-group">
-                                                    <label>@lang('SuperAdmin/backend.medical_insurance_note') @lang('SuperAdmin/backend.in_english')</label>
+                                                    <label>{{__('SuperAdmin/backend.medical_insurance_note')}} {{__('SuperAdmin/backend.in_english')}}</label>
                                                 <input hidden name="id" value="{{$medical->id}}">
                                                     <textarea id="textarea_medical_insurance_note_en" name="medical_insurance_note_en" class="form-control">{{$medical->medical_insurance_note_en}}</textarea>
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label>@lang('SuperAdmin/backend.medical_insurance_note') @lang('SuperAdmin/backend.in_arabic')</label>
+                                                    <label>{{__('SuperAdmin/backend.medical_insurance_note') {{__('SuperAdmin/backend.in_arabic')}}</label>
                                                     <textarea id="textarea_medical_insurance_note_ar" class="form-control">{{$medical->medical_insurance_note_ar}}</textarea>
                                                 </div>
 
                                                 <input hidden name="medical_insurance_note_ar" id="input_medical_insurance_note_ar" value="">
                                                 <input hidden name="medical_insurance_note_en" value="" id="input_medical_insurance_note_en">
                                                 <div class="form-group">
-                                                    <label>@lang('SuperAdmin/backend.medical_fees_per_week')</label>
+                                                    <label>{{__('SuperAdmin/backend.medical_fees_per_week')}}</label>
                                                     <input type="number" value="{{$medical->medical_fees_per_week}}" name="medical_fees_per_week" class="form-control">
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label>@lang('SuperAdmin/backend.medical_start_week')</label>
+                                                    <label>{{__('SuperAdmin/backend.medical_start_week')}}</label>
                                                     <input type="number" name="medical_start_date" value="{{$medical->medical_start_date}}" class="form-control">
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label>@lang('SuperAdmin/backend.medical_end_week')</label>
+                                                    <label>{{__('SuperAdmin/backend.medical_end_week')}}</label>
                                                     <input type="number" name="medical_end_date" value="{{$medical->medical_end_date}}" class="form-control">
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">@lang('SuperAdmin/backend.close') </button>
-                                                <button onclick  ="getContent('textarea_medical_insurance_note_en', 'input_medical_insurance_note_en'); getContent('textarea_medical_insurance_note_ar', 'input_medical_insurance_note_ar') " type="submit" class="btn btn-primary">@lang('SuperAdmin/backend.update_changes')</button>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('SuperAdmin/backend.close')}}</button>
+                                                <button onclick  ="getContent('textarea_medical_insurance_note_en', 'input_medical_insurance_note_en'); getContent('textarea_medical_insurance_note_ar', 'input_medical_insurance_note_ar')" type="submit" class="btn btn-primary">{{__('SuperAdmin/backend.update_changes')}}</button>
                                             </div>
                                         </form>
                                     </div>

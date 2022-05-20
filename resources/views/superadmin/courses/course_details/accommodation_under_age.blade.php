@@ -13,16 +13,16 @@
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body table table-responsive">
-                <div style="text-align: center;"><h1 class="card-title">@lang('SuperAdmin/backend.course_accommodation_underage_details')</h1></div>
+                <div style="text-align: center;"><h1 class="card-title">{{__('SuperAdmin/backend.course_accommodation_underage_details')}}</h1></div>
 
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th> @lang('SuperAdmin/backend.accommodation_underage') </th>
-                            <th>{{ucwords(__('SuperAdmin/backend.under_age_fee_per_week'))}} </th>
-                            <th> @lang("SuperAdmin/backend.created_on") </th>
-                            <th> @lang("SuperAdmin/backend.action") </th>
+                            <th>{{__('SuperAdmin/backend.accommodation_underage')}}</th>
+                            <th>{{ucwords(__('SuperAdmin/backend.under_age_fee_per_week'))}}}}</th>
+                            <th>{{__("SuperAdmin/backend.created_on")}}</th>
+                            <th>{{__("SuperAdmin/backend.action")}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -48,8 +48,8 @@
                                         <form method="POST" action="{{route('superadmin.course_accommodation_underage_edit')}}">
                                             @csrf
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">@lang('SuperAdmin/backend.edit_course_program_price')</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <h5 class="modal-title" id="exampleModalLabel">{{__('SuperAdmin/backend.edit_course_program_price')}}</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="{{__('SuperAdmin/backend.close')}}">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
@@ -71,7 +71,7 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" data-dismiss="modal" class="btn btn-info">Close</button>
+                                                <button type="button" data-dismiss="modal" class="btn btn-info">{{__('SuperAdmin/backend.close')}}</button>
                                                 <input type="hidden" id="getvalue" name="formvalue">
                                                 <button type="submit" class="btn btn-success">{{__('SuperAdmin/backend.submit')}}</button>
                                             </div>

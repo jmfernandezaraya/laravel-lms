@@ -277,7 +277,8 @@ function getCourseApplicationPrintData($id)
         }
     }
     $amount_paid = ($course_booked_detail->transaction)->amount ?? $course_booked_detail->paid_amount + $data['transaction_details']->amountAdded() ?? 0;
-    $data['amount_due'] = $data['transaction_details']->amountDue($course_booked_detail->total_balance);
+    //$data['amount_due'] = $data['transaction_details']->amountDue($course_booked_detail->total_balance);
+    $data['amount_due'] = $course_booked_detail->total_cost - $amount_paid + $amount_refunded;
 
     $calculator_values = getCurrencyConvertedValues($course_booked_detail->course_id,
         [

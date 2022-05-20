@@ -58,9 +58,10 @@
                 <h2>{{__('Frontend.register')}}</h2>
                 <p>{{__('Frontend.register_description')}}</p>
             </div>
-        </div><!-- End Breadcrumbs -->
+        </div>
+        <!-- ======= End Breadcrumbs ======= -->
 
-        <!-- ======= login Section ======= -->
+        <!-- ======= Register Section ======= -->
         <div class="container mt-5 mb-5">
             <div class="register-area ptb-100">
                 <div class="container">
@@ -84,7 +85,7 @@
                                         </ul>
                                     </div>
                                 @endif
-                                <form method="post" action = "{{route('user_register_post')}}">
+                                <form method="post" action="{{ route('user_register_post') }}">
                                     @csrf
                                     <div class="row">
                                         <div class="col-lg-12 col-md-12">
@@ -123,14 +124,14 @@
                                         </div>
                                     </div>
                                 </form>
-                                <h4>@lang('Frontend.are_you_member')? <a href="{{route('login')}}">{{__('Frontend.login_now')}}!</a></h4>
+                                <h4>{{__('Frontend.are_you_member')}}? <a href="{{route('login')}}">{{__('Frontend.login_now')}}!</a></h4>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- End login Section -->
+        <!-- ======= End Register Section ======= -->
 
         <!-- Modal -->
         <div class="modal fade" id="mobilePhoneVerificationModal" tabindex="-1" role="dialog" aria-labelledby="MobilePhoneVerificationLabel" aria-hidden="true">

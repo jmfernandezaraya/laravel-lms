@@ -12,9 +12,6 @@
 					fieldName: "video_url[]"
 				});
 			});
-			var addschoolurl = "{{route('superadmin.school.store')}}";
-			var in_arabic =  "{{__('SuperAdmin/backend.in_arabic')}}";
-			var in_english = "{{__('SuperAdmin/backend.in_english')}}";
 		</script>
 	@endsection
 
@@ -23,9 +20,14 @@
 			<div class="card-body">
 				<div class="row">
 					<div class="form-group col-md-12">
+						<h1 class="card-title">{{__('SuperAdmin/backend.add_school')}}</h1>
 						<center>
-							<h1 class="card-title">{{__('SuperAdmin/backend.add_school')}}</h1>
-							<change>{{__('SuperAdmin/backend.in_english')}}</change>
+							<div class="english">
+								{{__('SuperAdmin/backend.in_english')}}
+							</div>
+							<div class="arabic">
+								{{__('SuperAdmin/backend.in_arabic')}}
+							</div>
 						</center>
 					</div>
 				</div>
@@ -182,7 +184,7 @@
 						<div class="alert alert-danger">{{$errors->first('address')}}</div>
 					@endif
 
-					<input hidden name="en" value = '1'>
+					<input hidden name="en" value='1'>
 
 					<div class="row">
 						<div class="form-group col-md-12">
@@ -225,7 +227,7 @@
 						<div class="alert alert-danger">{{$errors->first('multiple_photos')}}</div>
 					@endif
 
-					<a class="btn btn-light" href = "{{url()->previous()}}">{{__('SuperAdmin/backend.cancel')}}</a>
+					<a class="btn btn-light" href="{{url()->previous()}}">{{__('SuperAdmin/backend.cancel')}}</a>
 				</form>
 
 				<form id="form2" class="forms-sample" enctype="multipart/form-data" action  = "{{route('superadmin.school.store')}}" method = "post">
@@ -370,10 +372,10 @@
 						<div class="alert alert-danger">{{$errors->first('video_url')}}</div>
 					@endif
 
-					<input hidden name="ar" value = '1'>
+					<input hidden name="ar" value='1'>
 
-					<button  type="button" onclick="submitForm(addschoolurl)" class="btn btn-gradient-primary mr-2">{{__('SuperAdmin/backend.submit')}}</button>
-					<a class="btn btn-light" href = "{{url()->previous()}}">{{__('SuperAdmin/backend.cancel')}}</a>
+					<button type="button" onclick="submitForm(addschoolurl)" class="btn btn-gradient-primary mr-2">{{__('SuperAdmin/backend.submit')}}</button>
+					<a class="btn btn-light" href="{{url()->previous()}}">{{__('SuperAdmin/backend.cancel')}}</a>
 				</form>
 			</div>
 		</div>

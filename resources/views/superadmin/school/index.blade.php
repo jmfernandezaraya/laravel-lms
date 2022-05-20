@@ -39,7 +39,7 @@
                                 <td>{{ $school->created_at->diffForHumans() }}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <a href  = "{{route('superadmin.school.edit', $school->id)}}" class="btn btn-info btn-sm fa fa-pencil"></a>
+                                        <a href="{{route('superadmin.school.edit', $school->id)}}" class="btn btn-info btn-sm fa fa-pencil"></a>
                                         <form action="{{route('superadmin.school.destroy', $school->id)}}" method="post">
                                             @csrf
                                             {{ method_field('delete') }}

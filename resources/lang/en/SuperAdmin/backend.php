@@ -365,16 +365,29 @@ return [
     'text_book_fee_note' => 'Text Book Fee Note',
 
     'manage_blogs' => 'Manage Blogs',
-    'add_blog' => 'Add Blog Here',
-    'edit_blog' => 'Edit Blog Here',
+    'add_blog' => 'Add Blog',
+    'edit_blog' => 'Edit Blog',
     'blog_details' => 'Blog Details',
     'blog_title' => ' Blog Title',
     'blog_image' => 'Blog Image',
     'blog_description' => 'Blog Description',
 
+    'customers' => 'Customers',
+    'manage_customers' => 'Manage Customers',
+    'add_customer' => 'Add Customer',
+    'edit_customer' => 'Edit Customer',
+    'customer_number' => 'Customer Number',
+
+    'are_you_sure_you_wanna_bulk_action' => 'Are You Sure You Wanna Bulk Action',
+    'are_you_sure_you_wanna_restore' => 'Are You Sure You Wanna Restore',
+    'are_you_sure_you_wanna_clone' => 'Are You Sure You Wanna Clone',
+    'are_you_sure_you_wanna_pause' => 'Are You Sure You Wanna Pause',
+    'are_you_sure_you_wanna_play' => 'Are You Sure You Wanna Play',
+    'are_you_sure_you_wanna_delete' => 'Are You Sure You Wanna Delete',
+
     'errors' => [
-        'blog_title_in_arabic' => 'Blog Title in Arabic Required',
         'blog_title_in_english' => 'Blog Title in English Required',
+        'blog_title_in_arabic' => 'Blog Title in Arabic Required',
         'description_en_required' => 'Description in English Required',
         'description_ar_required' => 'Description In Arabic Required',
         'image_required' => 'Image Required',
@@ -387,7 +400,12 @@ return [
         'contact_required' => 'Contact Required',
         'email_required' => 'Email Required',
         'success' => 'Success',
-        'failed' => 'Failed'
+        'failed' => 'Failed',
+        'customer_first_name_in_english' => 'Customer First Name in English Required',
+        'customer_first_name_in_arabic' => 'Customer First Name in Arabic Required',
+        'customer_last_name_in_english' => 'Customer Last Name in English Required',
+        'customer_last_name_in_arabic' => 'Customer Last Name in Arabic Required',
+        'customer_email_english' => 'Customer Email Required'
     ],
     'read_more' => 'Read More',
     'rating' => 'Rating',
@@ -458,6 +476,7 @@ return [
     'update_airport_fees' => 'Update Airport Fees',
     'update_changes' => 'Update Changes',
     'close' => 'Close',
+    'save_changes' => 'Save Changes',
 
     'medical' => 'Medical',
     'medical_details' => 'Medical Details',
@@ -669,4 +688,9 @@ return [
     'add_attachments' => 'Add Attachments',
     'contact_center_school' => 'Contact Center - School',
     'no_school_admin_found' => 'No School Admin Found',
+    
+    'application_center' => 'Application Center',
+    'type_of_visa' => 'Type Of Visa',
+    'to_travel' => 'To Travel',
+    'image_uploaded_successfully' => 'Image uploaded successfully',
 ];

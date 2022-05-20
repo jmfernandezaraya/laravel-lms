@@ -12,9 +12,8 @@
         <link rel="stylesheet" href="{{asset('assets/vendors/mdi/css/materialdesignicons.min.css')}}">
         <link rel="stylesheet" href="{{asset('assets/vendors/css/vendor.bundle.base.css')}}">
 
-
         <!-- End layout styles -->
-        <link rel="shortcut icon" href="{{asset('assets/images/logo (1).png')}}" />
+        <link rel="shortcut icon" href="{{asset('assets/images/logo.png')}}" />
         <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="{{asset('assets/datatables/datatables.min.css')}}">
         <link rel="stylesheet"href="//cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css">    

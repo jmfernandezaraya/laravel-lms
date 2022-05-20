@@ -14,12 +14,12 @@
                 <div style="text-align: center;">
                 <h1 class="card-title">{{__('SuperAdmin/backend.add_accommodation_under_age')}}</h1>
                     <change>
-                        @if(app()->getLocale() == 'en')
+                        <div class="english">
                             {{__('SuperAdmin/backend.in_english')}}
-                        @endif
-                        @if(app()->getLocale() == 'ar')
+                        </div>
+                        <div class="arabic">
                             {{__('SuperAdmin/backend.in_arabic')}}
-                        @endif
+                        </div>
                     </change>
                 </div>
 

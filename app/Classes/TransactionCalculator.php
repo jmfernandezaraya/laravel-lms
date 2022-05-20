@@ -47,7 +47,7 @@ class TransactionCalculator implements TransactionCalculatorInterface
      */
     public function amountAdded()
     {
-        $transactionRefunded = TransactionRefund::where('transaction_id',$this->transactionrefundId)->first();
+        $transactionRefunded = TransactionRefund::where('transaction_id', $this->transactionrefundId)->first();
 
         if ($transactionRefunded && $transactionRefunded->getTransactionAdded()) {
             return (float)$transactionRefunded->getTransactionAdded();
@@ -60,9 +60,8 @@ class TransactionCalculator implements TransactionCalculatorInterface
      */
     public function amountRefunded()
     {
-        $transactionRefunded = TransactionRefund::where('transaction_id',$this->transactionrefundId)->first();
+        $transactionRefunded = TransactionRefund::where('transaction_id', $this->transactionrefundId)->first();
         if ($transactionRefunded &&  $transactionRefunded->getTransactionRefunded()) {
-
             return (float)$transactionRefunded->getTransactionRefunded();
         }
         return 0;

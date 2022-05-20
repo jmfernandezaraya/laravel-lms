@@ -229,6 +229,8 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => '
     Route::post('blogs/image_upload', 'BlogController@upload')->name('blogs.upload');
     Route::resource('blogs', 'BlogController');
 
+    Route::resource('customers', 'CustomerController');
+
     Route::group(['prefix' => 'school', 'as' => 'school.'], function () {
         Route::post('country', 'CourseController@getSchoolCountryList')->name('country.list');
         Route::post('city', 'CourseController@getSchoolCityList')->name('city.list');

@@ -313,7 +313,7 @@ class FormRender {
         if (['checkbox', 'radio'].includes(input.type)) {
           input.checked = false
         } else {
-          input.value = ''
+          input.value=''
         }
       })
     })

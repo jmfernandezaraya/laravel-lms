@@ -36,7 +36,7 @@
                             ?>
 
                             <td>{{ucwords(str_replace("_", " ", $other_field->name))}}</td>
-                            <td>{!!  $exp ?  "<a href = ".asset('storage/app/visa_related_files/'. (string)$other_field->value)."> Click Here  </a>"  : $other_field->value !!}</td>
+                            <td>{!!  $exp ?  "<a href=".asset('storage/app/visa_related_files/'. (string)$other_field->value)."> Click Here  </a>"  : $other_field->value !!}</td>
 
                         </tr>
                         @endif

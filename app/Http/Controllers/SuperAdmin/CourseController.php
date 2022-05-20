@@ -197,7 +197,7 @@ class CourseController extends Controller
     function getSchoolCountryList(Request $r)
     {
         $school = School::find($r->id);
-        $country_list = "<option value = ''>" . __('SuperAdmin/backend.select_option') . "</option>";
+        $country_list = "<option value=''>" . __('SuperAdmin/backend.select_option') . "</option>";
         foreach ($school->getCountries() as $country) {
             if ($country) $country_list .= "<option value='$country'>$country</option>";
         }
@@ -212,7 +212,7 @@ class CourseController extends Controller
     function getSchoolCityList(Request $r)
     {
         $school = School::find($r->id);
-        $city_list  = "<option value = ''>" . __('SuperAdmin/backend.select_option') . "</option>";
+        $city_list  = "<option value=''>" . __('SuperAdmin/backend.select_option') . "</option>";
         foreach ($school->getCitiesByCountry($r->country) as $city) {
             if ($city) $city_list .= "<option value='$city'>$city</option>";
         }
@@ -227,7 +227,7 @@ class CourseController extends Controller
     function getSchoolBranchList(Request $r)
     {
         $school = School::find($r->id);
-        $branch_list = "<option value = ''>" . __('SuperAdmin/backend.select_option') . "</option>";
+        $branch_list = "<option value=''>" . __('SuperAdmin/backend.select_option') . "</option>";
         foreach ($school->getBranchesByCountryCity($r->country, $r->city) as $branch) {
             if ($branch) $branch_list .= "<option value='$branch'>$branch</option>";
         }
@@ -313,15 +313,6 @@ class CourseController extends Controller
         return back();
     }
 
-    /*
-     * function couse edit
-     *
-     * @param $id
-     *
-     * @return view
-     *
-     *
-     * */
     /**
      * @param $id
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
@@ -579,7 +570,7 @@ class CourseController extends Controller
         $accommodation_age_ranges = Choose_Accommodation_Age_Range::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
 
         return view('superadmin.courses.add.accommodation', compact('course_id','custodian_under_ages','accommodation_age_ranges'));
-    }    
+    }
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View

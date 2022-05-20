@@ -13,12 +13,12 @@
                 <div style="text-align: center;">
                     <h1 class="card-title">{{__('SuperAdmin/backend.accommodation_cost')}}</h1>
                     <change>
-                        @if(app()->getLocale() == 'en')
+                        <div class="english">
                             {{__('SuperAdmin/backend.in_english')}}
-                        @endif
-                        @if(app()->getLocale() == 'ar')
+                        </div>
+                        <div class="arabic">
                             {{__('SuperAdmin/backend.in_arabic')}}
-                        @endif
+                        </div>
                     </change>
                 </div>
 
@@ -169,10 +169,10 @@
                                     <div class="form-group col-md-12">
                                         <label>{{__('SuperAdmin/backend.special_diet_note')}}:</label>
                                         <div class="english">
-                                            <textarea class="form-control" name="special_diet_note[]" placeholder="{{__('SuperAdmin/backend.special_diet_note')}}" id="special_diet_note{{ $loop->iteration - 1 }}">{!! $accommodation->special_diet_note !!}</textarea>
+                                            <textarea class="form-control ckeditor-input" name="special_diet_note[]" placeholder="{{__('SuperAdmin/backend.special_diet_note')}}" id="special_diet_note{{ $loop->iteration - 1 }}">{!! $accommodation->special_diet_note !!}</textarea>
                                         </div>
                                         <div class="arabic">
-                                            <textarea class="form-control" name="special_diet_note_ar[]" placeholder="{{__('SuperAdmin/backend.special_diet_note')}}" id="special_diet_note_ar{{ $loop->iteration - 1 }}">{!! $accommodation->special_diet_note_ar !!}</textarea>
+                                            <textarea class="form-control ckeditor-input" name="special_diet_note_ar[]" placeholder="{{__('SuperAdmin/backend.special_diet_note')}}" id="special_diet_note_ar{{ $loop->iteration - 1 }}">{!! $accommodation->special_diet_note_ar !!}</textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -437,10 +437,10 @@
                                     <div class="form-group col-md-12">
                                         <label>{{__('SuperAdmin/backend.special_diet_note')}}:</label>
                                         <div class="english">
-                                            <textarea class="form-control" name="special_diet_note[]" placeholder="{{__('SuperAdmin/backend.special_diet_note')}}" id="special_diet_note0"></textarea>
+                                            <textarea class="form-control ckeditor-input" name="special_diet_note[]" placeholder="{{__('SuperAdmin/backend.special_diet_note')}}" id="special_diet_note0"></textarea>
                                         </div>
                                         <div class="arabic">
-                                            <textarea class="form-control" name="special_diet_note_ar[]" placeholder="{{__('SuperAdmin/backend.special_diet_note')}}" id="special_diet_note_ar0"></textarea>
+                                            <textarea class="form-control ckeditor-input" name="special_diet_note_ar[]" placeholder="{{__('SuperAdmin/backend.special_diet_note')}}" id="special_diet_note_ar0"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -598,7 +598,7 @@
                         
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <button class="btn btn-primary" type="button" onclick="getAccommodationContents(); submitAccommodationForm($(this))">{{__('SuperAdmin/backend.submit')}}</button>
+                                <button class="btn btn-primary" type="button" onclick="submitAccommodationForm($(this))">{{__('SuperAdmin/backend.submit')}}</button>
                             </div>
                             <div class="form-group col-md-6">
                                 <a href="{{route('superadmin.course.accomm_under_age.edit')}}" class="btn btn-primary pull-right" type="button">{{__('SuperAdmin/backend.next')}}</a>

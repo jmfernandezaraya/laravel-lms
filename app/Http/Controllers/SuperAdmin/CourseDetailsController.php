@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
+
 use App\Models\SuperAdmin\CourseAccommodation;
 use App\Models\SuperAdmin\CourseAirport;
 use App\Models\SuperAdmin\Course;
@@ -11,6 +12,7 @@ use App\Models\SuperAdmin\CourseMedicalFee;
 use App\Models\SuperAdmin\CourseProgram;
 use App\Models\SuperAdmin\CourseProgramUnderAgeFee;
 use App\Services\AssignCoursePermissionToUserService;
+
 use Illuminate\Http\Request;
 
 class CourseDetailsController extends Controller
@@ -57,11 +59,9 @@ class CourseDetailsController extends Controller
      *
      * @param course_program_id
      *
-     *
      * @return view
      *
      * */
-
     public function courseProgramUnderAgeDetails($program_id)
     {
         $programs = CourseProgramUnderAgeFee::where('course_program_id', $program_id)->get();
@@ -101,9 +101,7 @@ class CourseDetailsController extends Controller
      *
      * @return back
      *
-     *
      * */
-
     public function giveAccessToSchoolAdminCourseProgramUnderAge($id)
     {
         $to_be_updated = CourseProgramUnderAgeFee::find($id);
@@ -138,7 +136,6 @@ class CourseDetailsController extends Controller
     *
     * @return back with success message
     *
-    *
     * */
     public function courseProgramDelete($id)
     {
@@ -153,7 +150,6 @@ class CourseDetailsController extends Controller
     * @param Request $request
     *
     * @return back with success message
-    *
     *
     * */
     public function courseUpdate(Request $request)
@@ -226,14 +222,12 @@ class CourseDetailsController extends Controller
         return back();
     }
 
-
     /*
     * function for delete course accomodation under age
     *
     * @param $id
     *
     * @return back with success message
-    *
     *
     * */
     public function courseAccommodationUnderAgeDelete($id)
@@ -272,7 +266,6 @@ class CourseDetailsController extends Controller
     *
     * @return back with success message
     *
-    *
     * */
     public function medicalUpdate(Request $request)
     {
@@ -291,7 +284,6 @@ class CourseDetailsController extends Controller
     *
     * @return back with success message
     *
-    *
     * */
     public function courseProgramUpdate(Request $request)
     {
@@ -308,7 +300,6 @@ class CourseDetailsController extends Controller
     * @param Request $request
     *
     * @return back with success message
-    *
     *
     * */
     public function courseAccommodationUnderAgeUpdate(Request $request)

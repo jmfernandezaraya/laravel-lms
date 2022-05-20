@@ -372,6 +372,14 @@ return [
     'blog_image' => 'صورة المدونة',
     'blog_description' => 'ملعومات المدونة',
 
+    'customers' => 'Customers',
+    'manage_customers' => 'Manage Customers',
+    'add_customer' => 'Add Customer',
+    'edit_customer' => 'Edit Customer',
+    'customer_number' => 'Customer Number',
+
+    'are_you_sure_you_wanna_bulk_action' => 'Are You Sure You Wanna Bulk Action',
+
     'errors' => [
         'blog_title_in_arabic' => 'عنوان المدونة مطلوب ( عربي )',
         'blog_title_in_english' => 'عنوان المدونة مطلوب ( انجليزي )',
@@ -387,7 +395,12 @@ return [
         'contact_required' => 'يرجى ادخال رقم للتواصل  ',
         'email_required' => 'يرجى اضافة البريد الالكتروني',
         'success' => 'Success',
-        'failed' => 'Failed'
+        'failed' => 'Failed',
+        'customer_first_name_in_english' => 'Customer First Name in English Required',
+        'customer_first_name_in_arabic' => 'Customer First Name in Arabic Required',
+        'customer_last_name_in_english' => 'Customer Last Name in English Required',
+        'customer_last_name_in_arabic' => 'Customer Last Name in Arabic Required',
+        'customer_email_english' => 'Customer Email Required'
     ],
     'read_more' => 'تفاصيل إضافية',
     'rating' => 'تقييمات العملاء',
@@ -458,6 +471,7 @@ return [
     'update_airport_fees' => 'تحديث رسوم المواصلات',
     'update_changes' => 'Update Changes',
     'close' => 'اغلاق',
+    'save_changes' => 'Save Changes',
 
     'medical' => 'التأمين الطبي',
     'medical_details' => 'تفاصيل التأمين الطبي',
@@ -669,4 +683,9 @@ return [
     'add_attachments' => 'Add Attachments',
     'contact_center_school' => 'Contact Center - School',
     'no_school_admin_found' => 'No School Admin Found',
+    
+    'application_center' => 'Application Center',
+    'type_of_visa' => 'Type Of Visa',
+    'to_travel' => 'To Travel',
+    'image_uploaded_successfully' => 'Image uploaded successfully',
 ];

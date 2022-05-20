@@ -99,17 +99,17 @@
                     <div class ="form-group">
                         <div class="form-check">
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <input  {{$users->editCoursePermission->add == 1 ? 'checked' : ''}} name="can_add_course" type="checkbox" class="form-check-input" id="exampleInputEmail3" value = '1'>
+                            <input  {{$users->editCoursePermission->add == 1 ? 'checked' : ''}} name="can_add_course" type="checkbox" class="form-check-input" id="exampleInputEmail3" value='1'>
                             <label for="exampleInputEmail3">@lang('SuperAdmin/backend.can_add_course')</label>
                         </div>
                         <div class="form-check">
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <input {{$users->editCoursePermission->edit == 1 ? 'checked' : ''}} name="can_edit_course" type="checkbox" class="form-check-input" id="exampleInputEmail3" value = '1'>
+                            <input {{$users->editCoursePermission->edit == 1 ? 'checked' : ''}} name="can_edit_course" type="checkbox" class="form-check-input" id="exampleInputEmail3" value='1'>
                             <label for="exampleInputEmail3">@lang('SuperAdmin/backend.can_edit_course')</label>
                         </div>
                         <div class="form-check">
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <input {{$users->editCoursePermission->delete == 1 ? 'checked' : ''}} name="can_delete_course" type="checkbox" class="form-check-input" id="exampleInputEmail3" value = '1'>
+                            <input {{$users->editCoursePermission->delete == 1 ? 'checked' : ''}} name="can_delete_course" type="checkbox" class="form-check-input" id="exampleInputEmail3" value='1'>
                             <label for="exampleInputEmail3">@lang('SuperAdmin/backend.can_delete_course')</label>
                         </div>
                     </div>

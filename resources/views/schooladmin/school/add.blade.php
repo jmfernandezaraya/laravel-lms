@@ -178,7 +178,7 @@
 <div class="alert alert-danger">{{$errors->first('address')}}</div>
 @endif
 
-<input hidden name="en" value = '1'>
+<input hidden name="en" value='1'>
 <div class="form-group">
 <label for="exampleInputName1">{{__('SuperAdmin/backend.accreditations_logos')}}</label>
 <input name="logos[]" multiple type="file" class="form-control" id="exampleInputName1" accept = "image/*" >
@@ -219,7 +219,7 @@
 @endif
 <!-- onclick="submitForm('forms-sample', addschoolurl) -->
 
-<a class="btn btn-light" href = "{{url()->previous()}}">{{__('SuperAdmin/backend.cancel')}}</a>
+<a class="btn btn-light" href="{{url()->previous()}}">{{__('SuperAdmin/backend.cancel')}}</a>
 </form>
 
 
@@ -231,7 +231,7 @@
 <label for="exampleInputName1">{{__('SuperAdmin/backend.school_name')}}</label>
 <input name="name" type="text" class="form-control" id="exampleInputName1" placeholder="{{__('SuperAdmin/backend.school_name')}}" value="{{old('name')}}">
 </div>
-<input type="hidden" name="ar" value = '1'>
+<input type="hidden" name="ar" value='1'>
 @if($errors->has('name'))
 <div class="alert alert-danger">{{$errors->first('name')}}</div>
 @endif
@@ -360,11 +360,11 @@
 
 
 
-<input hidden name="ar" value = '1'>
+<input hidden name="ar" value='1'>
 
 <!-- onclick="submitForm('forms-sample', addschoolurl) -->
-<button  type="button" onclick="submitForm($(this).parents().find('#form2'))" class="btn btn-gradient-primary mr-2">{{__('SuperAdmin/backend.submit')}}</button>
-<a class="btn btn-light" href = "{{url()->previous()}}">{{__('SuperAdmin/backend.cancel')}}</a>
+<button type="button" onclick="submitForm($(this).parents().find('#form2'))" class="btn btn-gradient-primary mr-2">{{__('SuperAdmin/backend.submit')}}</button>
+<a class="btn btn-light" href="{{url()->previous()}}">{{__('SuperAdmin/backend.cancel')}}</a>
 </form>
 
 

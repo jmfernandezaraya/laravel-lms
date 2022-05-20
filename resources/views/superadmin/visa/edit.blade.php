@@ -152,7 +152,7 @@
                     <select id="nationality_select" name="nationality" class="form-control">
                         <option value=''>@lang('SuperAdmin/backend.select_option') </option>
                         @foreach (\App\Models\SuperAdmin\addNationality::all() as $nationality)
-                        <option {{$nationality->id == $visaforms->getNationality->id ? 'selected' : ''}} value = '{{$nationality->id}}'>{{$nationality->{'nationality_' . get_language() } }} </option>
+                        <option {{$nationality->id == $visaforms->getNationality->id ? 'selected' : ''}} value='{{$nationality->id}}'>{{$nationality->{'nationality_' . get_language() } }} </option>
                         @endforeach
                     </select>
                 </div>
@@ -164,7 +164,7 @@
                     <select name="to_travel" class="form-control" id="to_travel">
                         <option value=''>@lang('SuperAdmin/backend.select_option') </option>
                         @foreach (\App\Models\SuperAdmin\AddWhereToTravel::all() as $travel)
-                            <option {{$travel->id == $visaforms->whereToTravel->id ? 'selected' : ''}} value = '{{$travel->id}}'>{{$travel->{'travel_' . get_language() } }} </option>
+                            <option {{$travel->id == $visaforms->whereToTravel->id ? 'selected' : ''}} value='{{$travel->id}}'>{{$travel->{'travel_' . get_language() } }} </option>
                         @endforeach
                     </select>
                 </div>
@@ -178,22 +178,20 @@
                     <select name="type_of_visa" class="form-control" id="type_of_visa">
                         <option value=''>@lang('SuperAdmin/backend.select_option') </option>
                         @foreach (\App\Models\SuperAdmin\AddTypeOfVisa::all() as $travel)
-                            <option {{$travel->id == $visaforms->TypeOfVisa->id ? 'selected' : ''}} value = '{{$travel->id}}'>{{$travel->{'visa_'. get_language()} }}</option>
+                            <option {{$travel->id == $visaforms->TypeOfVisa->id ? 'selected' : ''}} value='{{$travel->id}}'>{{$travel->{'visa_'. get_language()} }}</option>
                         @endforeach
 
                     </select>
                 </div>
                 <div class="form-group col-md-6 mt-3">
                     <label for="inputvisa4">Visa information and requirement {{__('SuperAdmin/backend.in_english')}}</label>
-                    <textarea name="" class="form-control" id="requirement" rows="3">{!! $visaforms->visa_information_en !!}</textarea>
+                    <textarea name="visa_information_en" class="form-control ckeditor-input " id="requirement" rows="3">{!! $visaforms->visa_information_en !!}</textarea>
                 </div>
                 <div class="form-group col-md-6 mt-3">
                     <label for="inputvisa4">Visa information and requirement {{__('SuperAdmin/backend.in_arabic')}} </label>
-                    <textarea name="" class="form-control" id="requirement_ar" rows="3">{!! $visaforms->visa_information_ar !!}</textarea>
+                    <textarea name="visa_information_ar" class="form-control ckeditor-input" id="requirement_ar" rows="3">{!! $visaforms->visa_information_ar !!}</textarea>
                 </div>
             </div>
-            <input hidden name="visa_information_en" id="input_en" val="{{$visaforms->visa_information_en}}">
-            <input hidden name="visa_information_ar" id="input_ar" val="{{$visaforms->visa_information_ar}}">
 
             <div class="form-row">
                 <div class="form-group col-md-6">
@@ -275,7 +273,7 @@
 
                 </div>
                 <div class="pull-right">
-                    <button onclick="getContent('requirement', 'input_en'); getContent('requirement_ar', 'input_ar');  submitVisaApplication($(this))" type="button" class="btn btn-primary btn-sm">{{__('SuperAdmin/backend.submit')}}</button>
+                    <button onclick="submitVisaApplication($(this))" type="button" class="btn btn-primary btn-sm">{{__('SuperAdmin/backend.submit')}}</button>
                 </div>
             </div>
         </div>

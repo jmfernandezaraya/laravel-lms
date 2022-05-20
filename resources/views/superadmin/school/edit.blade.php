@@ -5,27 +5,7 @@
         <script src="{{asset('assets/js/tag/js/tag-it.js')}}" type="text/javascript" charset="utf-8"></script>
         <script src="{{asset('assets/js/ckeditor/ckeditor.js')}}" type="text/javascript"></script>
         <script>
-            function initCkeditor(editor_id = 'facilities_textarea') {
-                CKEDITOR.replace('facilities_textarea');
-                CKEDITOR.replace('facilities_ar_textarea');
-                CKEDITOR.replace('about_textarea');
-                CKEDITOR.replace('about_ar_textarea');
-            }
-
-            function getCKEDITORdata() {
-                var facilities_textarea = CKEDITOR.instances.facilities_textarea.getData();
-                $("#facilities_textarea").text(facilities_textarea);
-                var facilities_ar_textarea = CKEDITOR.instances.facilities_ar_textarea.getData();
-                $("#facilities_ar_textarea").text(facilities_ar_textarea);
-                var about_textarea = CKEDITOR.instances.about_textarea.getData();
-                $("#about_textarea").text(about_textarea);
-                var about_ar_textarea = CKEDITOR.instances.about_ar_textarea.getData();
-                $("#about_ar_textarea").text(about_ar_textarea);
-            }
-
-            $(document).ready(function () {
-                initCkeditor();
-                
+            $(document).ready(function () {                
                 $('#menu ul li a').click(function (ev) {
                     $('#menu ul li').removeClass('selected');
                     $(ev.currentTarget).parent('li').addClass('selected');
@@ -33,12 +13,6 @@
                 $("#videoUrl").tagit({
                     fieldName: "video_url[]"
                 });
-
-                @if (app()->getLocale() == 'en')
-                    $('.arabic').hide();
-                @else
-                    $('.english').hide();
-                @endif
             });
             var addschoolurl = "{{route('superadmin.school.store')}}";
             var in_arabic = "{{__('SuperAdmin/backend.in_arabic')}}";
@@ -150,10 +124,10 @@
                         <div class="form-group col-md-12">
                             <label for="facilities">{{__('SuperAdmin/backend.facilities')}}</label>
                             <div class="english">
-                                <textarea name="facilities" class="form-control" id="facilities_textarea" rows="4">{!! $schools->facilities !!}</textarea>
+                                <textarea name="facilities" class="form-control ckeditor-input" id="facilities_textarea" rows="4">{!! $schools->facilities !!}</textarea>
                             </div>
                             <div class="arabic">
-                                <textarea name="facilities_ar" class="form-control" id="facilities_ar_textarea" rows="4">{!! $schools->facilities_ar !!}</textarea>
+                                <textarea name="facilities_ar" class="form-control ckeditor-input" id="facilities_ar_textarea" rows="4">{!! $schools->facilities_ar !!}</textarea>
                             </div>
                             @if($errors->has('facilities'))
                                 <div class="alert alert-danger">{{$errors->first('facilities')}}</div>
@@ -187,10 +161,10 @@
                         <div class="form-group col-md-12">
                             <label for="about_the_school">{{__('SuperAdmin/backend.about_the_school')}}</label>
                             <div class="english">
-                                <textarea name="about" class="form-control" id="about_textarea" rows="4">{!! $schools->about !!}</textarea>
+                                <textarea name="about" class="form-control ckeditor-input" id="about_textarea" rows="4">{!! $schools->about !!}</textarea>
                             </div>
                             <div class="arabic">
-                                <textarea name="about_ar" class="form-control" id="about_ar_textarea" rows="4">{!! $schools->about_ar !!}</textarea>
+                                <textarea name="about_ar" class="form-control ckeditor-input" id="about_ar_textarea" rows="4">{!! $schools->about_ar !!}</textarea>
                             </div>
                             @if($errors->has('about'))
                                 <div class="alert alert-danger">{{$errors->first('about')}}</div>
@@ -287,7 +261,7 @@
                         </div>
                     </div>
 
-                    <button type="button" onclick="getCKEDITORdata(); submitForm($(this).parents().find('#form2store'))" class="btn btn-gradient-primary mr-2">{{__('SuperAdmin/backend.submit')}}</button>
+                    <button type="button" onclick="submitForm($(this).parents().find('#form2store'))" class="btn btn-gradient-primary mr-2">{{__('SuperAdmin/backend.submit')}}</button>
                     <a class="btn btn-light" href="{{url()->previous()}}">{{__('SuperAdmin/backend.cancel')}}</a>
                 </form>
             </div>

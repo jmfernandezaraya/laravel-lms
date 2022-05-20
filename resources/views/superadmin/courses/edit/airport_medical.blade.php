@@ -13,12 +13,12 @@
                 <div style="text-align: center;">
                     <h1 class="card-title">{{__('SuperAdmin/backend.add_airport_medical_fee')}}</h1>
                     <change>
-                        @if(app()->getLocale() == 'en')
+                        <div class="english">
                             {{__('SuperAdmin/backend.in_english')}}
-                        @endif
-                        @if(app()->getLocale() == 'ar')
+                        </div>
+                        <div class="arabic">
                             {{__('SuperAdmin/backend.in_arabic')}}
-                        @endif
+                        </div>
                     </change>
                 </div>
 
@@ -145,10 +145,10 @@
                                     <div class="form-group col-md-12">
                                         <label>{{__('SuperAdmin/backend.airport_insurance_note')}}:</label>
                                         <div class="english">
-                                            <textarea class="form-control" name="airport_note[]" placeholder="{{__('SuperAdmin/backend.airport_insurance_note')}}" id="airport_note{{$loop->iteration - 1}}">{!! $airport->note !!}</textarea>
+                                            <textarea class="form-control ckeditor-input" name="airport_note[]" placeholder="{{__('SuperAdmin/backend.airport_insurance_note')}}" id="airport_note{{$loop->iteration - 1}}">{!! $airport->note !!}</textarea>
                                         </div>
                                         <div class="arabic">
-                                            <textarea class="form-control" name="airport_note_ar[]" placeholder="{{__('SuperAdmin/backend.airport_insurance_note')}}" id="airport_note_ar{{$loop->iteration - 1}}">{!! $airport->note_ar !!}</textarea>
+                                            <textarea class="form-control ckeditor-input" name="airport_note_ar[]" placeholder="{{__('SuperAdmin/backend.airport_insurance_note')}}" id="airport_note_ar{{$loop->iteration - 1}}">{!! $airport->note_ar !!}</textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -205,10 +205,10 @@
                                     <div class="form-group col-md-12">
                                         <label>{{__('SuperAdmin/backend.airport_insurance_note')}}:</label>
                                         <div class="english">
-                                            <textarea class="form-control" name="airport_note[]" placeholder="{{__('SuperAdmin/backend.airport_insurance_note')}}" id="airport_note0"></textarea>
+                                            <textarea class="form-control ckeditor-input" name="airport_note[]" placeholder="{{__('SuperAdmin/backend.airport_insurance_note')}}" id="airport_note0"></textarea>
                                         </div>
                                         <div class="arabic">
-                                            <textarea class="form-control" name="airport_note_ar[]" placeholder="{{__('SuperAdmin/backend.airport_insurance_note')}}" id="airport_note_ar0"></textarea>
+                                            <textarea class="form-control ckeditor-input" name="airport_note_ar[]" placeholder="{{__('SuperAdmin/backend.airport_insurance_note')}}" id="airport_note_ar0"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -308,10 +308,10 @@
                                     <div class="form-group col-md-12">
                                         <label>{{__('SuperAdmin/backend.medical_insurance_note')}}:</label>
                                         <div class="english">
-                                            <textarea class="form-control" name="medical_note[]" placeholder="{{__('SuperAdmin/backend.medical_insurance_note')}}" id="medical_note{{$loop->iteration - 1}}">{!! $medical->note !!}</textarea>
+                                            <textarea class="form-control ckeditor-input" name="medical_note[]" placeholder="{{__('SuperAdmin/backend.medical_insurance_note')}}" id="medical_note{{$loop->iteration - 1}}">{!! $medical->note !!}</textarea>
                                         </div>
                                         <div class="arabic">
-                                            <textarea class="form-control" name="medical_note_ar[]" placeholder="{{__('SuperAdmin/backend.medical_insurance_note')}}" id="medical_note_ar{{$loop->iteration - 1}}">{!! $medical->note_ar !!}</textarea>
+                                            <textarea class="form-control ckeditor-input" name="medical_note_ar[]" placeholder="{{__('SuperAdmin/backend.medical_insurance_note')}}" id="medical_note_ar{{$loop->iteration - 1}}">{!! $medical->note_ar !!}</textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -377,10 +377,10 @@
                                     <div class="form-group col-md-12">
                                         <label>{{__('SuperAdmin/backend.medical_insurance_note')}}:</label>
                                         <div class="english">
-                                            <textarea class="form-control" name="medical_note[]" placeholder="{{__('SuperAdmin/backend.medical_insurance_note')}}" id="medical_note0"></textarea>
+                                            <textarea class="form-control ckeditor-input" name="medical_note[]" placeholder="{{__('SuperAdmin/backend.medical_insurance_note')}}" id="medical_note0"></textarea>
                                         </div>
                                         <div class="arabic">
-                                            <textarea class="form-control" name="medical_note_ar[]" placeholder="{{__('SuperAdmin/backend.medical_insurance_note')}}" id="medical_note_ar0"></textarea>
+                                            <textarea class="form-control ckeditor-input" name="medical_note_ar[]" placeholder="{{__('SuperAdmin/backend.medical_insurance_note')}}" id="medical_note_ar0"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -398,7 +398,7 @@
 
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <button type="button" onclick="getAirpotMedicalContents(); submitAirportMedicalForm($(this))" class="btn btn-primary">{{__('SuperAdmin/backend.submit')}}</button>
+                                <button type="button" onclick="submitAirportMedicalForm($(this))" class="btn btn-primary">{{__('SuperAdmin/backend.submit')}}</button>
                             </div>
                             <div class="form-group col-md-6">
                                 <a href="{{route('superadmin.course.index')}}" class="btn btn-primary pull-right" type="button" name="####">{{__('SuperAdmin/backend.back')}}</a>

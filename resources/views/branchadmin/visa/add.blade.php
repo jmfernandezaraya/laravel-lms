@@ -416,7 +416,7 @@
                                 <div class="col-md-4">
                                     <label>@lang('SuperAdmin/backend.free_week'):</label>
                                     <select class="form-control" name="how_many_week_free[]">
-                                        <!--<option value = ''>{{__('SuperAdmin/backend.select')}} </option>-->
+                                        <!--<option value=''>{{__('SuperAdmin/backend.select')}} </option>-->
                                         <option value='1'>{{__('SuperAdmin/backend.1_week_free')}} </option>
                                         <option value='2'>{{__('SuperAdmin/backend.2_week_free')}}</option>
                                         <option value='3'>{{__('SuperAdmin/backend.3_week_free')}}</option>

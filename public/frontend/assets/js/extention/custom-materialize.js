@@ -7813,7 +7813,7 @@ $jscomp.polyfill = function (e, r, p, m) {
           this.addChip({
             tag: this.$input[0].value
           });
-          this.$input[0].value = '';
+          this.$input[0].value='';
 
           // delete or left
         } else if ((e.keyCode === 8 || e.keyCode === 37) && this.$input[0].value === '' && this.chipsData.length) {
@@ -7885,7 +7885,7 @@ $jscomp.polyfill = function (e, r, p, m) {
           _this46.addChip({
             tag: val
           });
-          _this46.$input[0].value = '';
+          _this46.$input[0].value='';
           _this46.$input[0].focus();
         };
 

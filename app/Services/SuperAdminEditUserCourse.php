@@ -176,7 +176,7 @@ class SuperAdminEditUserCourse
             $option = "<option value= ''>$select</option>";
             foreach ($accoms as $accom) {
                 $selected = $r->has('accom_id') && $r->accom_id == $accom->unique_id ? 'selected' : '';
-                $option .= "<option  value = '$accom->unique_id' $selected >$accom->type</option>";
+                $option .= "<option  value='$accom->unique_id' $selected >$accom->type</option>";
             }
 
             $data['accomodations'] = $option;

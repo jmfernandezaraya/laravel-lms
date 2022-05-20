@@ -22,12 +22,13 @@
                         </div>
                         <div class="form-group col-md-3">
                             <input name="ids" type="hidden" value="" />
-                            <button class="btn btn-primary btn-sm" onclick="return (confirm('Are You Sure You Wanna Bulk Action') && DoBulkAction())">Bluk Action</button>
+                            <button class="btn btn-primary btn-sm" onclick="return (confirm('{{__('SuperAdmin/backend.are_you_sure_you_wanna_bulk_action')}}') && DoBulkAction())">Bluk Action</button>
                         </div>
                     </div>
                 </form>
                 <a href="{{route('superadmin.course.create')}}" type="button" class="btn btn-primary btn-sm pull-right">
-                    <i class="fa fa-plus"></i>&nbsp;{{__('SuperAdmin/backend.add')}}</a>
+                    <i class="fa fa-plus"></i>&nbsp;{{__('SuperAdmin/backend.add')}}
+                </a>
                 <table class="table table-hover table-bordered table-filtered">
                     <thead>
                         <tr>
@@ -80,12 +81,12 @@
                                         <a class="btn btn-primary btn-sm fa fa-pencil" href="{{route('superadmin.course.edit', $course->unique_id)}}"></a>
                                         <form method="post" action="{{route('superadmin.course.restore', $course->unique_id)}}">
                                             @csrf
-                                            <button onclick="return confirm('Are You Sure You Wanna Restore')" class="btn btn-success btn-sm fa fa-undo"></button>
+                                            <button onclick="return confirm('{{__('SuperAdmin/backend.language')}}')" class="btn btn-success btn-sm fa fa-undo"></button>
                                         </form>
                                         <form method="post" action="{{route('superadmin.course.destroy', $course->unique_id)}}">
                                             @csrf
                                             @method('DELETE')
-                                            <button onclick="return confirm('Are You Sure You Wanna Delete')" class="btn btn-danger btn-sm fa fa-trash"></button>
+                                            <button onclick="return confirm('{{__('SuperAdmin/backend.are_you_sure_you_wanna_delete')}}')" class="btn btn-danger btn-sm fa fa-trash"></button>
                                         </form>
                                     </div>
                                 </td>

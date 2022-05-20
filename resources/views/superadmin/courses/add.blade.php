@@ -12,12 +12,12 @@
                 <div style="text-align: center;">
                     <h1 class="card-title">{{__('SuperAdmin/backend.add_course')}}</h1>
                     <change>
-                        @if(app()->getLocale() == 'en')
+                        <div class="english">
                             {{__('SuperAdmin/backend.in_english')}}
-                        @endif
-                        @if(app()->getLocale() == 'ar')
+                        </div>
+                        <div class="arabic">
                             {{__('SuperAdmin/backend.in_arabic')}}
-                        @endif
+                        </div>
                     </change>
                 </div>
 
@@ -224,10 +224,10 @@
                             <div class="form-group col-md-12">
                                 <label>{{__('SuperAdmin/backend.program_information')}}:</label>
                                 <div class="english">
-                                    <textarea class="form-control" name="program_information" placeholder="{{__('SuperAdmin/backend.program_information')}}" id="program_information"></textarea>
+                                    <textarea class="form-control ckeditor-input" name="program_information" placeholder="{{__('SuperAdmin/backend.program_information')}}" id="program_information"></textarea>
                                 </div>
                                 <div class="arabic">
-                                    <textarea class="form-control" name="program_information_ar" placeholder="{{__('SuperAdmin/backend.program_information')}}" id="program_information_ar"></textarea>
+                                    <textarea class="form-control ckeditor-input" name="program_information_ar" placeholder="{{__('SuperAdmin/backend.program_information')}}" id="program_information_ar"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -305,10 +305,10 @@
                                 <div class="form-group col-md-12">
                                     <label>{{__('SuperAdmin/backend.about_courier')}}:</label>
                                     <div class="english">
-                                        <textarea class="form-control" name="about_courier[]" placeholder="{{__('SuperAdmin/backend.about_courier')}}" id="about_courier0"></textarea>
+                                        <textarea class="form-control ckeditor-input" name="about_courier[]" placeholder="{{__('SuperAdmin/backend.about_courier')}}" id="about_courier0"></textarea>
                                     </div>
                                     <div class="arabic">
-                                        <textarea class="form-control" name="about_courier_ar[]" placeholder="{{__('SuperAdmin/backend.about_courier')}}" id="about_courier_ar0"></textarea>
+                                        <textarea class="form-control ckeditor-input" name="about_courier_ar[]" placeholder="{{__('SuperAdmin/backend.about_courier')}}" id="about_courier_ar0"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -477,13 +477,13 @@
                                     <button class="btn btn-primary fa fa-plus" type="button" onclick="addCourseProgram($(this))"></button>
                                 </div>
                                 <div class="pull-right">
-                                    <button class="btn btn-danger fa fa-minus"  type="button" onclick="removeCourseProgram($(this))"></button>
+                                    <button class="btn btn-danger fa fa-minus" type="button" onclick="removeCourseProgram($(this))"></button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <a onclick="getCourseProgramContents(); submitCourseForm($(this));" class="btn btn-primary pull-right">{{__('SuperAdmin/backend.submit')}}</a>
+                    <a onclick="submitCourseForm($(this));" class="btn btn-primary pull-right">{{__('SuperAdmin/backend.submit')}}</a>
                 </form>
             </div>
         </div>

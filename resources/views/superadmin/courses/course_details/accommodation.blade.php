@@ -4,52 +4,52 @@
         <div class="card">
             <div class="card-body table table-responsive">
                 <div style="text-align: center;">
-                    <h1 class="card-title">@lang('SuperAdmin/backend.accommodation_details')</h1>
+                    <h1 class="card-title">{{__('SuperAdmin/backend.accommodation_details')}}</h1>
                 </div>
 
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th> @lang('SuperAdmin/backend.accommodation_type') </th>
-                            <th> @lang('SuperAdmin/backend.room_type') </th>
-                            <th> @lang('SuperAdmin/backend.meal_type') </th>
-                            <th> @lang('SuperAdmin/backend.age_range') </th>
-                            <th> @lang('SuperAdmin/backend.accommodation_placement_fee') </th>
-                            <th> @lang('SuperAdmin/backend.program_duration') </th>
+                            <th> {{__('SuperAdmin/backend.accommodation_type')}} </th>
+                            <th> {{__('SuperAdmin/backend.room_type')}} </th>
+                            <th> {{__('SuperAdmin/backend.meal_type')}} </th>
+                            <th> {{__('SuperAdmin/backend.age_range')}} </th>
+                            <th> {{__('SuperAdmin/backend.accommodation_placement_fee')}} </th>
+                            <th> {{__('SuperAdmin/backend.program_duration')}} </th>
 
-                            <th> @lang('SuperAdmin/backend.accommodation_deposit_fee') </th>
-                            <th> @lang('SuperAdmin/backend.accommodation_custodian_fee') </th>
-                            <th> @lang('SuperAdmin/backend.custodian_age_range') </th>
-                            <th> @lang('SuperAdmin/backend.special_diet_fee') </th>
-                            <th> @lang('SuperAdmin/backend.special_diet_note') </th>
-                            <th> @lang('SuperAdmin/backend.accommodation_fee') </th>
+                            <th> {{__('SuperAdmin/backend.accommodation_deposit_fee')}} </th>
+                            <th> {{__('SuperAdmin/backend.accommodation_custodian_fee')}} </th>
+                            <th> {{__('SuperAdmin/backend.custodian_age_range')}} </th>
+                            <th> {{__('SuperAdmin/backend.special_diet_fee')}} </th>
+                            <th> {{__('SuperAdmin/backend.special_diet_note')}} </th>
+                            <th> {{__('SuperAdmin/backend.accommodation_fee')}} </th>
 
-                            <th> @lang('SuperAdmin/backend.accommodation_start_week') </th>
+                            <th> {{__('SuperAdmin/backend.accommodation_start_week')}} </th>
 
-                            <th> @lang('SuperAdmin/backend.accommodation_end_week') </th>
-                            <th> @lang('SuperAdmin/backend.accommodation_start_date')</th>
-                            <th> @lang('SuperAdmin/backend.accommodation_end_date')</th>
+                            <th> {{__('SuperAdmin/backend.accommodation_end_week')}} </th>
+                            <th> {{__('SuperAdmin/backend.accommodation_start_date')}} </th>
+                            <th> {{__('SuperAdmin/backend.accommodation_end_date')}} </th>
 
-                            <th> @lang('SuperAdmin/backend.discount_per_week') </th>
-                            <th> @lang('SuperAdmin/backend.discount_start_date') </th>
+                            <th> {{__('SuperAdmin/backend.discount_per_week')}} </th>
+                            <th> {{__('SuperAdmin/backend.discount_start_date')}} </th>
 
-                            <th> @lang('SuperAdmin/backend.discount_end_date') </th>
-                            <th> @lang('SuperAdmin/backend.summer_fee_per_week') </th>
-                            <th> @lang('SuperAdmin/backend.summer_fee_start_date') </th>
-                            <th> @lang('SuperAdmin/backend.summer_fee_end_date') </th>
-                            <th> @lang('SuperAdmin/backend.peak_time_fee_per_week') </th>
-                            <th> @lang('SuperAdmin/backend.peak_time_start_date') </th>
+                            <th> {{__('SuperAdmin/backend.discount_end_date')}} </th>
+                            <th> {{__('SuperAdmin/backend.summer_fee_per_week')}} </th>
+                            <th> {{__('SuperAdmin/backend.summer_fee_start_date')}} </th>
+                            <th> {{__('SuperAdmin/backend.summer_fee_end_date')}} </th>
+                            <th> {{__('SuperAdmin/backend.peak_time_fee_per_week')}} </th>
+                            <th> {{__('SuperAdmin/backend.peak_time_start_date')}} </th>
 
-                            <th> @lang('SuperAdmin/backend.peak_time_end_date') </th>
+                            <th> {{__('SuperAdmin/backend.peak_time_end_date')}} </th>
 
-                            <th> @lang('SuperAdmin/backend.christmas_fee_per_week') </th>
-                            <th> @lang('SuperAdmin/backend.christmas_start_date')</th>
+                            <th> {{__('SuperAdmin/backend.christmas_fee_per_week')}} </th>
+                            <th> {{__('SuperAdmin/backend.christmas_start_date')}} </th>
 
-                            <th> @lang('SuperAdmin/backend.christmas_end_date')</th>
-                            <th> @lang("SuperAdmin/backend.created_on") </th>
-                            <th> @lang('SuperAdmin/backend.accommodation_underage') </th>
-                            <th> @lang("SuperAdmin/backend.action") </th>
+                            <th> {{__('SuperAdmin/backend.christmas_end_date')}} </th>
+                            <th> {{__("SuperAdmin/backend.created_on")}} </th>
+                            <th> {{__('SuperAdmin/backend.accommodation_underage')}} </th>
+                            <th> {{__("SuperAdmin/backend.action")}} </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -92,7 +92,7 @@
                                 <td>{{$accomodation->created_at->diffForHumans()}}</td>
                                 <td>
                                     @if(!($accomodation->AccommodationUnderAges()->get()->isEmpty()))
-                                        <a type="button" href="{{route('superadmin.accomodation_underage_details', $accomodation->unique_id)}}" class="btn btn-sm btn-primary">@lang('SuperAdmin/backend.click_here')</a>
+                                        <a type="button" href="{{route('superadmin.accomodation_underage_details', $accomodation->unique_id)}}" class="btn btn-sm btn-primary">{{__('SuperAdmin/backend.click_here')}}</a>
                                     @else
                                         {{__('SuperAdmin/backend.no_details_available')}}
                                     @endif
@@ -118,8 +118,8 @@
                                         <form method="POST" action="{{route('superadmin.accommodation_update')}}">
                                             @csrf
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">@lang('SuperAdmin/backend.update_accommodation_price')</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <h5 class="modal-title" id="exampleModalLabel">{{__('SuperAdmin/backend.update_accommodation_price')}}</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="{{__('SuperAdmin/backend.close')}}">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
@@ -286,7 +286,7 @@
                                             </div>
                                             
                                             <div class="modal-footer">
-                                                <button type="button" data-dismiss="modal" class="btn btn-info">Close</button>
+                                                <button type="button" data-dismiss="modal" class="btn btn-info">{{__('SuperAdmin/backend.close')}}</button>
                                                 <input type="hidden" id="getvalue" name="formvalue">
                                                 <button onclick="getContent('textarea_ar', 'input_ar'); getContent('textarea_en', 'input_en')" type="submit" class="btn btn-success">{{__('SuperAdmin/backend.submit')}}</button>
                                             </div>

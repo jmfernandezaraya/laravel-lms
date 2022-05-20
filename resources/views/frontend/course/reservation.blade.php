@@ -365,7 +365,7 @@
 
     <script>
         function backRegister(object) {
-            window.location.href = '{{ route("course.register.detail") }}';
+            window.location.href='{{ route("course.register.detail") }}';
         }
         function doReservation(object) {
             var formData = new FormData($(object).parents().find('#course_reversation')[0]);
@@ -385,7 +385,7 @@
                     if (data.success == true) {
                         document.documentElement.scrollTop = 0;
 
-                        window.location.href = '{{ route("course.reservation_confirm.detail") }}';
+                        window.location.href='{{ route("course.reservation_confirm.detail") }}';
                     }
                 }
             });

@@ -5,7 +5,7 @@
             <div class="card-body table table-responsive">
 
                 <center><h1 class="card-title">{{__('SuperAdmin/backend.branch_admin_details')}}</h1></center>
-                <a href = "{{route('schooladmin.branch_admin.create')}}" type="button" class="btn btn-primary btn-sm pull-right"><i class="fa fa-plus"></i>&nbsp;{{__('SuperAdmin/backend.add')}}</a>
+                <a href="{{route('schooladmin.branch_admin.create')}}" type="button" class="btn btn-primary btn-sm pull-right"><i class="fa fa-plus"></i>&nbsp;{{__('SuperAdmin/backend.add')}}</a>
                 <table class="table table-hover table-bordered">
                     <thead>
                     <tr>

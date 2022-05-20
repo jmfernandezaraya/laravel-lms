@@ -9,7 +9,7 @@
         <div class="card">
             <div class="card-body table table-responsive">
                 <div style="text-align: center;">
-                    <h1 class="card-title">@lang('SuperAdmin/backend.course_details')</h1>
+                    <h1 class="card-title">{{__('SuperAdmin/backend.course_details')}}</h1>
                 </div>
                 
                 <form method="post" action="{{route('superadmin.course.bulk')}}">
@@ -25,7 +25,7 @@
                         </div>
                         <div class="form-group col-md-3">
                             <input name="ids" type="hidden" value="" />
-                            <button class="btn btn-primary btn-sm" onclick="return (confirm('Are You Sure You Wanna Bulk Action') && DoBulkAction())">Bluk Action</button>
+                            <button class="btn btn-primary btn-sm" onclick="return (confirm('{{__('SuperAdmin/backend.are_you_sure_you_wanna_restore')}}') && DoBulkAction())">Bluk Action</button>
                         </div>
                     </div>
                 </form>
@@ -36,26 +36,26 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th data-filter="checkbox"> @lang('SuperAdmin/backend.select') </th>
-                            <th data-filter="select" data-select="{{implode(",", $choose_fields["languages"])}}"> @lang('SuperAdmin/backend.language') </th>
-                            <th data-filter="select" data-select="{{implode(",", $choose_fields["program_types"])}}"> @lang('SuperAdmin/backend.program_type') </th>
-                            <th data-filter="select" data-select="{{implode(",", $choose_fields["study_modes"])}}"> @lang('SuperAdmin/backend.study_mode') </th>
-                            <th data-filter="select" data-select="{{implode(",", $choose_fields["school_names"])}}"> @lang('SuperAdmin/backend.school_name') </th>
-                            <th data-filter="select" data-select="{{implode(",", $choose_fields["school_cities"])}}"> @lang('SuperAdmin/backend.city') </th>
-                            <th data-filter="select" data-select="{{implode(",", $choose_fields["school_countries"])}}"> @lang('SuperAdmin/backend.country') </th>
-                            <th data-filter="select" data-select="{{implode(",", $choose_fields["branch_names"])}}"> @lang('SuperAdmin/backend.school_branch_name') </th>
-                            <th data-filter="select" data-select="{{implode(",", $choose_fields["currencies"])}}"> @lang('SuperAdmin/backend.currency') </th>
+                            <th data-filter="checkbox">{{__('SuperAdmin/backend.select')}}</th>
+                            <th data-filter="select" data-select="{{implode(",", $choose_fields["languages"])}}">{{__('SuperAdmin/backend.language')}}</th>
+                            <th data-filter="select" data-select="{{implode(",", $choose_fields["program_types"])}}">{{__('SuperAdmin/backend.program_type')}}</th>
+                            <th data-filter="select" data-select="{{implode(",", $choose_fields["study_modes"])}}">{{__('SuperAdmin/backend.study_mode')}}</th>
+                            <th data-filter="select" data-select="{{implode(",", $choose_fields["school_names"])}}">{{__('SuperAdmin/backend.school_name')}}</th>
+                            <th data-filter="select" data-select="{{implode(",", $choose_fields["school_cities"])}}">{{__('SuperAdmin/backend.city')}}</th>
+                            <th data-filter="select" data-select="{{implode(",", $choose_fields["school_countries"])}}">{{__('SuperAdmin/backend.country')}}</th>
+                            <th data-filter="select" data-select="{{implode(",", $choose_fields["branch_names"])}}">{{__('SuperAdmin/backend.school_branch_name')}}</th>
+                            <th data-filter="select" data-select="{{implode(",", $choose_fields["currencies"])}}">{{__('SuperAdmin/backend.currency')}}</th>
 
-                            <th> @lang('SuperAdmin/backend.program_name') </th>
-                            <th> @lang('SuperAdmin/backend.program_level') </th>
-                            <th> @lang('SuperAdmin/backend.lessons_per_week') </th>
-                            <th> @lang('SuperAdmin/backend.hours_per_week') </th>
-                            <th> @lang('SuperAdmin/backend.study_time') </th>
-                            <th> @lang('SuperAdmin/backend.start_dates') </th>
+                            <th>{{__('SuperAdmin/backend.program_name')}}</th>
+                            <th>{{__('SuperAdmin/backend.program_level')}}</th>
+                            <th>{{__('SuperAdmin/backend.lessons_per_week')}}</th>
+                            <th>{{__('SuperAdmin/backend.hours_per_week')}}</th>
+                            <th>{{__('SuperAdmin/backend.study_time')}}</th>
+                            <th>{{__('SuperAdmin/backend.start_dates')}}</th>
 
-                            <th> @lang("SuperAdmin/backend.action") </th>
-                            <th> @lang("SuperAdmin/backend.created_on") </th>
-                            <th> @lang("SuperAdmin/backend.updated_on") </th>
+                            <th>{{__("SuperAdmin/backend.action")}}</th>
+                            <th>{{__("SuperAdmin/backend.created_on")}}</th>
+                            <th>{{__("SuperAdmin/backend.updated_on")}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -83,23 +83,25 @@
                                         <a class="btn btn-primary btn-sm fa fa-pencil" href="{{route('superadmin.course.edit', $course->unique_id)}}"></a>
                                         <form method="post" action="{{route('superadmin.course.clone', $course->unique_id)}}">
                                             @csrf
-                                            <button onclick="return confirm('Are You Sure You Wanna Clone')" class="btn btn-info btn-sm fa fa-clone"></button>
+                                            <button onclick="return confirm('{{__('SuperAdmin/backend.are_you_sure_you_wanna_clone')}}')" class="btn btn-info btn-sm fa fa-clone"></button>
                                         </form>
+
                                         @if($course->display)
                                             <form method="post" action="{{route('superadmin.course.pause', $course->unique_id)}}">
                                                 @csrf
-                                                <button onclick="return confirm('Are You Sure You Wanna Pause')" class="btn btn-secondary btn-sm fa fa-pause"></button>
+                                                <button onclick="return confirm('{{__('SuperAdmin/backend.are_you_sure_you_wanna_pause')}}')" class="btn btn-secondary btn-sm fa fa-pause"></button>
                                             </form>
                                         @else
                                             <form method="post" action="{{route('superadmin.course.play', $course->unique_id)}}">
                                                 @csrf
-                                                <button onclick="return confirm('Are You Sure You Wanna Play')" class="btn btn-success btn-sm fa fa-play"></button>
+                                                <button onclick="return confirm('{{__('SuperAdmin/backend.are_you_sure_you_wanna_play')}}')" class="btn btn-success btn-sm fa fa-play"></button>
                                             </form>
                                         @endif
+                                        
                                         <form method="post" action="{{route('superadmin.course.delete', $course->unique_id)}}">
                                             @csrf
                                             @method('DELETE')
-                                            <button onclick="return confirm('Are You Sure You Wanna Delete')" class="btn btn-danger btn-sm fa fa-trash"></button>
+                                            <button onclick="return confirm('{{__('SuperAdmin/backend.are_you_sure_you_wanna_delete')}}')" class="btn btn-danger btn-sm fa fa-trash"></button>
                                         </form>
                                     </div>
                                 </td>

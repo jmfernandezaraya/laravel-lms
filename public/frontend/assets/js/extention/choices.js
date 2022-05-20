@@ -1159,7 +1159,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'clearInput',
 	    value: function clearInput() {
 	      if (this.input.value) {
-	        this.input.value = '';
+	        this.input.value='';
 	      }
 	      if (!this.isSelectOneElement) {
 	        this._setInputWidth();

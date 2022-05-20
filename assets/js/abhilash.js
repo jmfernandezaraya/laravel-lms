@@ -1,18 +1,40 @@
 /*
 * Init tinymce
 */
-function initCkeditor(editor_id = 'textarea_en') {
-    var option = {
-        removePlugins: 'toolbar',
-        allowedContent: 'p h1 h2 strong em; a[!href]; img[!src,width,height];'
+function initCkeditor(editor_id) {
+    if (editor_id) {
+        var option = {
+            removePlugins: 'toolbar',
+            allowedContent: 'p h1 h2 strong em; a[!href]; img[!src,width,height];'    
+        };
+        CKEDITOR.replace(editor_id, option);
+    }
+}
 
+function initCkeditors() {
+    var option = {
+        allowedContent: 'p h1 h2 strong em; a[!href]; img[!src,width,height];'
     };
-    CKEDITOR.replace(editor_id, option);
+    var textareas = $('textarea.ckeditor-input');
+    for (var textarea_index = 0; textarea_index < textareas.length; textarea_index++) {
+        if ($(textareas[textarea_index]).attr('id')) {
+            CKEDITOR.replace($(textareas[textarea_index]).attr('id'), option);
+        }
+    }
 }
 
 function getCkEditorData(textareaid, value) {
     var text = CKEDITOR.instances.textareaid.getData();
     $("#" + value).val(text);
+}
+
+function getCkEditorsData() {
+    var textareas = $('textarea.ckeditor-input');
+    for (var textarea_index = 0; textarea_index < textareas.length; textarea_index++) {
+        if ($(textareas[textarea_index]).attr('id')) {
+            $("#" + $(textareas[textarea_index]).attr('id')).val(CKEDITOR.instances[$(textareas[textarea_index]).attr('id')].getData());
+        }
+    }
 }
 
 function getCKEDITORdataSchool(textareaid, value) {
@@ -254,9 +276,10 @@ function confirmDelete() {
 
 function submitCourseForm(object) {
     $("#loader").show();
+    getCkEditorsData();
+
     var formurl = $(object).parents().find('#form1').attr('action');
     var formData = new FormData($(object).parents().find('#form1')[0]);
-
     $.ajax({
         type: 'POST',
         url: formurl,
@@ -301,6 +324,8 @@ function submitCourseForm(object) {
 
 function updateCourseForm(object) {
     $("#loader").show();
+    getCkEditorsData();
+
     var urlname = $(object).parents().find('#form1').attr('action');
     var formData = new FormData($(object).parents().find('#form1')[0]);
     $.ajax({
@@ -346,6 +371,7 @@ function updateCourseForm(object) {
 
 function submitCommonForBlogForm(urlname, typeMethod = "POST") {
     $("#loader").show();
+    getCkEditorsData();
 
     $.ajaxSetup({
         headers: {
@@ -357,7 +383,6 @@ function submitCommonForBlogForm(urlname, typeMethod = "POST") {
     if (typeMethod == 'PUT') {
         formData.append('_method', 'PUT');
     }
-
     $.ajax({
         type: "POST",
         url: urlname,
@@ -394,9 +419,9 @@ function submitCommonForBlogForm(urlname, typeMethod = "POST") {
 
 function submitSchoolAdminForm(urlname, method = 'POST') {
     $("#loader").show();
+    getCkEditorsData();
 
     var formData = new FormData($("#form_to_be_submitted")[0]);
-
     $.ajax({
         type: 'POST',
         url: urlname,
@@ -431,6 +456,7 @@ function submitSchoolAdminForm(urlname, method = 'POST') {
 
 function submitForm(object, method = 'POST') {
     $("#loader").show();
+    getCkEditorsData();
 
     var formData = new FormData($(object)[0]);
 
@@ -1061,11 +1087,13 @@ $(document).ready(function() {
 });
 
 function submitAccommodationForm(object) {
+    $('#loader').show();
+    getCkEditorsData();
+
     var urlfor = $(object).parents().find('#courseform').attr('action');
     var accommodationForm = $(object).parents().find('#courseform');
 
     var formData = new FormData($(accommodationForm)[0]);
-    $('#loader').show();
     $.ajax({
         type: 'POST',
         url: urlfor,
@@ -1105,11 +1133,12 @@ function submitAccommodationForm(object) {
 }
 
 function submitAirportMedicalForm(object, reload = false) {
+    $("#loader").show();
+    getCkEditorsData();
+
     var urlname = $(object).parents().find('#courseform').attr('action');
     var form = $(object).parents().find('#courseform');
     var formData = new FormData($(form)[0]);
-
-    $("#loader").show();
     $.ajax({
         type: 'POST',
         url: urlname,
@@ -1146,11 +1175,12 @@ function submitAirportMedicalForm(object, reload = false) {
 }
 
 function submitAccommodationUnderAgeForm(object, reload = false) {
+    $('#loader').show();
+    getCkEditorsData();
+
     var urlname = (object.parents().find('#accommodation_under_age_form').attr('action'));
     var form = $(object).parents().find('#accommodation_under_age_form');
     var formData = new FormData($(form)[0]);
-
-    $('#loader').show();
     $.ajax({
         type: 'POST',
         url: urlname,
@@ -1187,11 +1217,12 @@ function submitAccommodationUnderAgeForm(object, reload = false) {
 }
 
 function submitCourseProgramForm(this_object) {
+    $('#loader').show();
+    getCkEditorsData();
+
     var form1 = $(this_object).parents().find('#courseform');
     var url_submit = $(form1).attr('action');
     var form = new FormData($(form1)[0]);
-
-    $('#loader').show();
     $.ajax({
         type: 'POST',
         url: url_submit,
@@ -1230,9 +1261,10 @@ function submitCourseProgramForm(this_object) {
 * */
 function submitVisaApplication(object) {
     $("#loader").show();
+    getCkEditorsData();
+
     var urlname = ($(object).parents().find('#visa-form').attr('action'));
     var formobject = new FormData($(object).parents().find('#visa-form')[0]);
-
     $.ajax({
         type: 'POST',
         url: urlname,
@@ -2465,9 +2497,10 @@ function getContent(texteditorId, inputId) {
 
 function submitFormAction(id) {
     $("#loader").show();
+    getCkEditorsData();
+
     var data = new FormData($('#' + id)[0]);
     var urlname = $("#" + id).attr('action');
-
     $.ajax({
         type: "post",
         url: urlname,
@@ -2511,6 +2544,17 @@ function initRating() {
     }
 }
 
+function initLanguageSection() {
+    if ($('html').attr('lang') == 'en') {
+        $('.arabic').hide();
+    } else {        
+        $('.english').hide();
+    }
+}
+
 $(document).ready(function() {
     initRating();
+    initCkeditor();
+    initCkeditors();
+    initLanguageSection();
 });

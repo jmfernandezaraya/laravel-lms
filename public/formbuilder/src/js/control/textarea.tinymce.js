@@ -57,7 +57,7 @@ export default class controlTinymce extends controlTextarea {
    * @return {Object} DOM Element to be injected into the form.
    */
   build() {
-    const { value = '', ...attrs } = this.config
+    const { value='', ...attrs } = this.config
     this.field = this.markup('textarea', this.parsedHtml(value), attrs)
     // Make the editor read only if disabled is set on the textarea
     if (attrs.disabled) {

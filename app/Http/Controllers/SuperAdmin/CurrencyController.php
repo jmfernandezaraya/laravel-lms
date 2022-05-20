@@ -8,8 +8,12 @@ use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 
 use App\Http\Requests\SuperAdmin\CurrencyRequest;
+
 use App\Models\SuperAdmin\CurrencyExchangeRate;
 use App\Models\SuperAdmin\Choose_Language;
+use App\Models\SuperAdmin\Course;
+use App\Models\SuperAdmin\TransactionRefund;
+use App\Models\UserCourseBookedDetails;
 
 /**
  * Class CurrencyController
@@ -91,12 +95,37 @@ class CurrencyController extends Controller
         $currency = CurrencyExchangeRate::find($id);
         $rules = [
             'name' => 'required',
-            'exchange_rate' => 'required',
+            'exchange_rate' => 'required|numeric|min:0|not_in:0',
         ];
         $this->validate($request, $rules);
         $currency->name = $request->name;
         $currency->exchange_rate = $request->exchange_rate;
         $currency->save();
+
+        $currency_ratio = $currency->exchange_rate / $request->exchange_rate;
+
+        $course_ids = Course::where('currency', $id)->pluck('unique_id')->toArray();
+        for ($course_index = 0; $course_index < count($course_ids); $course_index++) {
+            $course_ids[$course_index] = '' . $course_ids[$course_index];
+        }        
+        $user_course_booked_details = UserCourseBookedDetails::whereIn('course_id', $course_ids)->get();
+        foreach ($user_course_booked_details as $user_course_booked_detail) {
+            if ($user_course_booked_detail->status == 'application_cancelled' || $user_course_booked_detail->status == 'completed' || $user_course_booked_detail->paid_amount == $user_course_booked_detail->total_balance) {
+                $user_course_booked_detail->total_cost = $user_course_booked_detail->total_cost * $currency_ratio;
+            }
+            $user_course_booked_detail->paid_amount = $user_course_booked_detail->paid_amount * $currency_ratio;
+            $user_course_booked_detail->save();
+            $user_course_booked_detail->transaction->amount = $user_course_booked_detail->transaction->amount * $currency_ratio;
+            $user_course_booked_detail->transaction->amount_added = $user_course_booked_detail->transaction->amount_added * $currency_ratio;
+            $user_course_booked_detail->transaction->save();
+            $transaction_refunds = TransactionRefund::where('transaction_id', $user_course_booked_detail->transaction->order_id)->get();
+            foreach ($transaction_refunds as $transaction_refund) {
+                if ($transaction_refund->amount_refunded) {
+                    $transaction_refund->amount_refunded = $transaction_refund->amount_refunded * $currency_ratio;
+                    $transaction_refund->save();
+                }
+            }
+        }
 
         return redirect()->route('superadmin.currency.index');
     }

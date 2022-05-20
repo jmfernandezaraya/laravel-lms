@@ -64,8 +64,8 @@ export default class controlAutocomplete extends control {
               // Don't allow a value not in the list
               if (this.config.requireValidOption) {
                 if (!this.isOptionValid(list, e.target.value)) {
-                  e.target.value = ''
-                  e.target.nextSibling.value = ''
+                  e.target.value=''
+                  e.target.nextSibling.value=''
                 }
               }
             }
@@ -109,8 +109,8 @@ export default class controlAutocomplete extends control {
         if (this.config.requireValidOption) {
           const list = evt.target.nextSibling.nextSibling
           if (!this.isOptionValid(list, evt.target.value)) {
-            evt.target.value = ''
-            evt.target.nextSibling.value = ''
+            evt.target.value=''
+            evt.target.nextSibling.value=''
           }
         }
       },

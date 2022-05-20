@@ -12,12 +12,12 @@
                 <div style="text-align: center;">
                     <h1 class="card-title">{{__('SuperAdmin/backend.add_under_age_fee_text_book_fee')}}</h1>
                     <change>
-                        @if(app()->getLocale() == 'en')
+                        <div class="english">
                             {{__('SuperAdmin/backend.in_english')}}
-                        @endif
-                        @if(app()->getLocale() == 'ar')
+                        </div>
+                        <div class="arabic">
                             {{__('SuperAdmin/backend.in_arabic')}}
-                        @endif
+                        </div>
                     </change>
                 </div>
 
@@ -113,10 +113,10 @@
                                 <div class="form-group col-md-12">
                                     <label>{{__('SuperAdmin/backend.note')}}:</label>
                                     <div class="english">
-                                        <textarea class="form-control" name="text_book_note[]" placeholder="{{__('SuperAdmin/backend.note')}}" id="text_book_note0"></textarea>
+                                        <textarea class="form-control ckeditor-input" name="text_book_note[]" placeholder="{{__('SuperAdmin/backend.note')}}" id="text_book_note0"></textarea>
                                     </div>
                                     <div class="arabic">
-                                        <textarea class="form-control" name="text_book_note_ar[]" placeholder="{{__('SuperAdmin/backend.note')}}" id="text_book_note_ar0"></textarea>
+                                        <textarea class="form-control ckeditor-input" name="text_book_note_ar[]" placeholder="{{__('SuperAdmin/backend.note')}}" id="text_book_note_ar0"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -126,7 +126,7 @@
                                     <button class="btn btn-primary fa fa-plus" type="button" onclick="addTextBookFee($(this))"></button>
                                 </div>
                                 <div class="pull-right">
-                                    <button class="btn btn-danger fa fa-minus"  type="button" onclick="removeTextBookFee($(this))"></button>
+                                    <button class="btn btn-danger fa fa-minus" type="button" onclick="removeTextBookFee($(this))"></button>
                                 </div>
                             </div>
                         </div>
@@ -139,7 +139,7 @@
                             <a type="button" href="{{route('superadmin.course.accommodation')}}" class="btn btn-primary pull-right">{{__('SuperAdmin/backend.next')}}</a>
                         @endif
                     @endif
-                    <button type="button" onclick="getProgramTextBookContents(); submitCourseProgramForm($(this))" class="btn btn-primary pull-left">{{__('SuperAdmin/backend.submit')}}</button>
+                    <button type="button" onclick="submitCourseProgramForm($(this))" class="btn btn-primary pull-left">{{__('SuperAdmin/backend.submit')}}</button>
                 </form>
             </div>
         </div>

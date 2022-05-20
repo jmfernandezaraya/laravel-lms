@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\SuperAdmin\BlogRequest;
+use App\Http\Requests\SuperAdmin\CustomerRequest;
 
-use App\Models\Blog;
+use App\Models\User;
+
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator;
@@ -14,10 +15,10 @@ use Image;
 use Intervention\Image\Exception\NotReadableException;
 
 /**
- * Class BlogController
+ * Class CustomerController
  * @package App\Http\Controllers\SuperAdmin
  */
-class BlogController extends Controller
+class CustomerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -26,9 +27,9 @@ class BlogController extends Controller
      */
     public function index()
     {
-        $blogs = Blog::all();
+        $customers = User::where('user_type', 'user')->get();
 
-        return view('superadmin.blogs.index', compact('blogs'));
+        return view('superadmin.customers.index', compact('customers'));
     }
 
     /**
@@ -38,7 +39,7 @@ class BlogController extends Controller
      */
     public function create()
     {
-        return view('superadmin.blogs.add');
+        return view('superadmin.customers.add');
     }
 
     /**
@@ -47,12 +48,12 @@ class BlogController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(BlogRequest $request)
+    public function store(CustomerRequest $request)
     {
         try {
-            (new Blog($request->validated()))->save();
+            (new User($request->validated()))->save();
             $saved = __('SuperAdmin/backend.data_saved');
-            return redirect(route('superadmin.blogs.index'));
+            return redirect(route('superadmin.customers.index'));
         } catch (ValidationException $e) {
             return response()->json(['errors' => $e->errors()]);
         } catch (NotReadableException $e) {
@@ -66,12 +67,12 @@ class BlogController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param Blog $blog
+     * @param User $customer
      * @return \Illuminate\Http\Response
      */
-    public function edit(Blog $blog)
+    public function edit(User $customer)
     {
-        return view('superadmin.blogs.edit', compact('blog'));
+        return view('superadmin.customers.edit', compact('customer'));
     }
 
     /**
@@ -82,30 +83,31 @@ class BlogController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $blogs = Blog::find($id);
+        $customers = User::find($id);
 
         $rules = [
-            'title_en' => 'required',
-            'title_ar' => 'required',
-            'description_ar' => 'required',
-            'description_en' => 'required',
+            'first_name_en' => 'required',
+            'first_name_ar' => 'required',
+            'last_name_en' => 'required',
+            'last_name_ar' => 'required',
+            'email' => 'required',
         ];
 
-
         $validate = Validator::make($request->all(), $rules, [
-            'title_ar.required' => __('SuperAdmin/backend.errors.blog_title_in_arabic'),
-            'title_en.required' => __('SuperAdmin/backend.errors.blog_title_in_english'),
-            'description_en.required' => __('SuperAdmin/backend.errors.description_en_required'),
-            'description_ar.required' => __('SuperAdmin/backend.errors.description_ar_required'),
+            'first_name_en.required' => __('SuperAdmin/backend.errors.customer_first_name_in_english'),
+            'first_name_ar.required' => __('SuperAdmin/backend.errors.customer_first_name_in_arabic'),
+            'last_name_en.required' => __('SuperAdmin/backend.errors.customer_last_name_in_english'),
+            'last_name_ar.required' => __('SuperAdmin/backend.errors.customer_last_name_in_arabic'),
+            'email.required' => __('SuperAdmin/backend.errors.customer_email'),
         ]);
         if ($validate->fails()) {
             return response()->json(['errors' => $validate->errors()]);
         }
         $save = $validate->validated();
 
-        $blogs->fill($save)->save();
+        $customers->fill($save)->save();
         $saved = __('SuperAdmin/backend.data_saved');
-        return response()->json(['data' => $saved]);
+        return response()->json(['success' => true, 'data' => $saved]);
     }
 
     /**
@@ -116,7 +118,7 @@ class BlogController extends Controller
      */
     public function destroy($id)
     {
-        $delete = Blog::findorFail($id);
+        $delete = User::findorFail($id);
         $deleted = __('SuperAdmin/backend.data_deleted');
 
         if ($delete->image != '' && $delete->image != null && file_exists($delete->image)) {
@@ -139,14 +141,13 @@ class BlogController extends Controller
             $extension = $request->file('upload')->getClientOriginalExtension();
             $fileName = $fileName . '_' . time() . '.' . 'webp';
 
-            $interventionImage = Image::make($originName)->resize(150, 150, function($constrained){
-
-              $constrained->aspectRatio();
+            $interventionImage = Image::make($originName)->resize(150, 150, function($constrained) {
+                $constrained->aspectRatio();
             })->encode('webp');
-            file_put_contents(public_path('images/blog_images/' .$fileName), $interventionImage);
+            file_put_contents(public_path('images/customer_images/' .$fileName), $interventionImage);
             $CKEditorFuncNum = $request->input('CKEditorFuncNum');
-            $url = asset('public/images/blog_images/' . $fileName);
-            $msg = 'Image uploaded successfully';
+            $url = asset('public/images/customer_images/' . $fileName);
+            $msg = __('SuperAdmin/backend.image_uploaded_successfully');
             $response = "<script>window.parent.CKEDITOR.tools.callFunction($CKEditorFuncNum, '$url', '$msg')</script>";
 
             @header('Content-type: text/html; charset=utf-8');

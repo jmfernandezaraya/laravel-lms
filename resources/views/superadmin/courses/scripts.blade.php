@@ -185,37 +185,6 @@
             initYearDatePicker();
         }
 
-        function getCourseProgramContents() {
-            if (typeof (tinymce) !== 'undefined') {
-                var program_information = $('[name="program_information"]');
-                if (tinymce.get('program_information')) {
-                    var program_information_content = tinymce.get('program_information').getContent();
-                    program_information.text(program_information_content);
-                }
-                var program_information = $('[name="program_information_ar"]');
-                if (tinymce.get('program_information_ar')) {
-                    var program_information_content = tinymce.get('program_information_ar').getContent();
-                    program_information.text(program_information_content);
-                }
-                var about_couriers = $('[name="about_courier[]"]');
-                for (var about_courier_index = 0; about_courier_index < about_couriers.length; about_courier_index++) {
-                    var about_courier_id = $(about_couriers[about_courier_index]).attr('id');
-                    if (tinymce.get(about_courier_id)) {
-                        var about_courier_content = tinymce.get(about_courier_id).getContent();
-                        $(about_couriers[about_courier_index]).text(about_courier_content);
-                    }
-                }
-                var about_couriers = $('[name="about_courier_ar[]"]');
-                for (var about_courier_index = 0; about_courier_index < about_couriers.length; about_courier_index++) {
-                    var about_courier_id = $(about_couriers[about_courier_index]).attr('id');
-                    if (tinymce.get(about_courier_id)) {
-                        var about_courier_content = tinymce.get(about_courier_id).getContent();
-                        $(about_couriers[about_courier_index]).text(about_courier_content);
-                    }
-                }
-            }
-        }
-
         /*
         * function for Program Under Age
         * */
@@ -326,27 +295,6 @@
             $('#textbookfeeincrement').val(program_text_book_clone);
         }
 
-        function getProgramTextBookContents() {
-            if (typeof (tinymce) !== 'undefined') {
-                var program_text_book_notes = $('[name="text_book_note[]"]');
-                for (var program_text_book_note_index = 0; program_text_book_note_index < program_text_book_notes.length; program_text_book_note_index++) {
-                    var program_text_book_note_id = $(program_text_book_notes[program_text_book_note_index]).attr('id');
-                    if (tinymce.get(program_text_book_note_id)) {
-                        var program_text_book_note_content = tinymce.get(program_text_book_note_id).getContent();
-                        $(program_text_book_notes[program_text_book_note_index]).text(program_text_book_note_content);
-                    }
-                }
-                var program_text_book_notes = $('[name="text_book_note_ar[]"]');
-                for (var program_text_book_note_index = 0; program_text_book_note_index < program_text_book_notes.length; program_text_book_note_index++) {
-                    var program_text_book_note_id = $(program_text_book_notes[program_text_book_note_index]).attr('id');
-                    if (tinymce.get(program_text_book_note_id)) {
-                        var program_text_book_note_content = tinymce.get(program_text_book_note_id).getContent();
-                        $(program_text_book_notes[program_text_book_note_index]).text(program_text_book_note_content);
-                    }
-                }
-            }
-        }
-
         /*
         * function for Accommodation
         * */
@@ -436,10 +384,8 @@
 
             new_clone_form.insertAfter($(clone_accommodation_form));
 
-            tinymce.init({ selector: '#special_diet_note' + (accommodation_clone_index + 1) });
-            tinymce.get('special_diet_note' + (accommodation_clone_index + 1)).show();
-            tinymce.init({ selector: '#special_diet_note_ar' + (accommodation_clone_index + 1) });
-            tinymce.get('special_diet_note_ar' + (accommodation_clone_index + 1)).show();
+            initCkeditor('special_diet_note' + (accommodation_clone_index + 1));
+            initCkeditor('special_diet_note_ar' + (accommodation_clone_index + 1));
             
             initYearDatePicker();
         }
@@ -467,27 +413,6 @@
             accommodation_clone--;
             
             initYearDatePicker();
-        }
-
-        function getAccommodationContents() {
-            if (typeof (tinymce) !== 'undefined') {
-                var special_diet_notes = $('[name="special_diet_note[]"]');
-                for (var special_diet_note_index = 0; special_diet_note_index < special_diet_notes.length; special_diet_note_index++) {
-                    var special_diet_note_id = $(special_diet_notes[special_diet_note_index]).attr('id');
-                    if (tinymce.get(special_diet_note_id)) {
-                        var special_diet_note_content = tinymce.get(special_diet_note_index).getContent();
-                        $(special_diet_notes[special_diet_note_index]).text(special_diet_note_content);
-                    }
-                }
-                var special_diet_notes = $('[name="special_diet_note_ar[]"]');
-                for (var special_diet_note_index = 0; special_diet_note_index < special_diet_notes.length; special_diet_note_index++) {
-                    var special_diet_note_id = $(special_diet_notes[special_diet_note_index]).attr('id');
-                    if (tinymce.get(special_diet_note_id)) {
-                        var special_diet_note_content = tinymce.get(special_diet_note_index).getContent();
-                        $(special_diet_notes[special_diet_note_index]).text(special_diet_note_content);
-                    }
-                }
-            }
         }
 
         /*
@@ -596,11 +521,9 @@
             $(new_clone_form).find('[name="airport_note_ar[]"]').text('');
             $(new_clone_form).find('.tox.tox-tinymce').remove();
             new_clone_form.insertAfter($(clone_airport_form));
-
-            tinymce.init({ selector: '#airport_note' + (airport_clone_index + 1) });
-            tinymce.get('airport_note' + (airport_clone_index + 1)).show();
-            tinymce.init({ selector: '#airport_note_ar' + (airport_clone_index + 1) });
-            tinymce.get('airport_note_ar' + (airport_clone_index + 1)).show();
+            
+            initCkeditor('airport_note' + (airport_clone_index + 1));
+            initCkeditor('airport_note_ar' + (airport_clone_index + 1));
         }
         
         function deleteAirportForm(object) {
@@ -721,11 +644,9 @@
             $(new_clone_form).find('.tox.tox-tinymce').remove();
 
             new_clone_form.insertAfter($(clone_medical_form));
-
-            tinymce.init({ selector: '#medical_note' + (medical_clone_index + 1) });
-            tinymce.get('medical_note' + (medical_clone_index + 1)).show();
-            tinymce.init({ selector: '#medical_note_ar' + (medical_clone_index + 1) });
-            tinymce.get('medical_note_ar' + (medical_clone_index + 1)).show();
+            
+            initCkeditor('medical_note' + (medical_clone_index + 1));
+            initCkeditor('medical_note_ar' + (medical_clone_index + 1));
         }
         
         function deleteMedicalForm(object) {
@@ -788,43 +709,6 @@
             var medical_fee_clone = parseInt($(clone_medical_form).find('[name="medicalfeeincrement[]"]').val());
             medical_fee_clone--;
             $(clone_medical_form).find('[name="medicalfeeincrement[]"]').val(medical_fee_clone);
-        }
-
-        function getAirpotMedicalContents() {
-            if (typeof (tinymce) !== 'undefined') {
-                var airport_notes = $('[name="airport_note[]"]');
-                for (var airport_note_index = 0; airport_note_index < airport_notes.length; airport_note_index++) {
-                    var airport_note_id = $(airport_notes[airport_note_index]).attr('id');
-                    if (tinymce.get(airport_note_id)) {
-                        var airport_note_content = tinymce.get(airport_note_id).getContent();
-                        $(airport_notes[airport_note_index]).text(airport_note_content);
-                    }
-                }
-                var airport_notes = $('[name="airport_note_ar[]"]');
-                for (var airport_note_index = 0; airport_note_index < airport_notes.length; airport_note_index++) {
-                    var airport_note_id = $(airport_notes[airport_note_index]).attr('id');
-                    if (tinymce.get(airport_note_id)) {
-                        var airport_note_content = tinymce.get(airport_note_id).getContent();
-                        $(airport_notes[airport_note_index]).text(airport_note_content);
-                    }
-                }
-                var medical_notes = $('[name="medical_note[]"]');
-                for (var mecial_note_index = 0; mecial_note_index < medical_notes.length; mecial_note_index++) {
-                    var medical_note_id = $(medical_notes[mecial_note_index]).attr('id');
-                    if (tinymce.get(medical_note_id)) {
-                        var medical_note_content = tinymce.get(medical_note_id).getContent();
-                        $(medical_notes[mecial_note_index]).text(medical_note_content);
-                    }
-                }
-                var medical_notes = $('[name="medical_note_ar[]"]');
-                for (var mecial_note_index = 0; mecial_note_index < medical_notes.length; mecial_note_index++) {
-                    var medical_note_id = $(medical_notes[mecial_note_index]).attr('id');
-                    if (tinymce.get(medical_note_id)) {
-                        var medical_note_content = tinymce.get(medical_note_id).getContent();
-                        $(medical_notes[mecial_note_index]).text(medical_note_content);
-                    }
-                }
-            }
         }
 
         $(document).ready(function () {

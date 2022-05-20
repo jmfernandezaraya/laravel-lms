@@ -24,9 +24,9 @@ class AddVisaFieldsController extends Controller
 
         $select = __('SuperAdmin/backend.select_option');
         $data['success'] = true;
-        $data['option'] = "<select name = 'applying_from' class='form-control' id='applying_from'><option value = ''>$select</option>";
+        $data['option'] = "<select name = 'applying_from' class='form-control' id='applying_from'><option value=''>$select</option>";
         foreach (ApplyFrom::all() as $applyform) {
-            $data['option'] .= "<option value = '$applyform->id'>".$applyform->{'apply_from_'.  get_language() }." </option>";
+            $data['option'] .= "<option value='$applyform->id'>".$applyform->{'apply_from_'.  get_language() }." </option>";
         }
 
         $data['option'] .="</select>";
@@ -40,9 +40,9 @@ class AddVisaFieldsController extends Controller
 
         $select = __('SuperAdmin/backend.select_option');
         $data['success'] = true;
-        $data['option'] = "<select name = 'applying_from' class='form-control' id='applying_from'><option value = ''>$select</option>";
+        $data['option'] = "<select name = 'applying_from' class='form-control' id='applying_from'><option value=''>$select</option>";
         foreach (ApplyFrom::all() as $applyform) {
-            $data['option'] .= "<option value = '$applyform->id'>".$applyform->{'apply_from_'.  get_language() }." </option>";
+            $data['option'] .= "<option value='$applyform->id'>".$applyform->{'apply_from_'.  get_language() }." </option>";
         }
 
         $data['option'] .="</select>";
@@ -56,9 +56,9 @@ class AddVisaFieldsController extends Controller
 
         $select = __('SuperAdmin/backend.select_option');
         $data['success'] = true;
-        $data['option'] = "<select name = 'applying_from' class='form-control' id='application_center'><option value = ''>$select</option>";
+        $data['option'] = "<select name = 'applying_from' class='form-control' id='application_center'><option value=''>$select</option>";
         foreach (VisaApplicationCenter::all() as $applyform) {
-            $data['option'] .= "<option value = '$applyform->id'>".$applyform->{'application_center_'.  get_language() }." </option>";
+            $data['option'] .= "<option value='$applyform->id'>".$applyform->{'application_center_'.  get_language() }." </option>";
         }
 
 
@@ -73,9 +73,9 @@ class AddVisaFieldsController extends Controller
 
         $select = __('SuperAdmin/backend.select_option');
         $data['success'] = true;
-        $data['option'] = "<option value = ''>$select</option>";
+        $data['option'] = "<option value=''>$select</option>";
         foreach (VisaApplicationCenter::all() as $applyform) {
-            $data['option'] .= "<option value = '$applyform->id'>".$applyform->{'application_center_'.  get_language() }." </option>";
+            $data['option'] .= "<option value='$applyform->id'>".$applyform->{'application_center_'.  get_language() }." </option>";
         }
 
         $data['data'] = __('SuperAdmin/backend.data_removed_successfully');
@@ -88,9 +88,9 @@ class AddVisaFieldsController extends Controller
 
         $select = __('SuperAdmin/backend.select_option');
         $data['success'] = true;
-        $data['option'] = "<option value = ''>$select</option>";
+        $data['option'] = "<option value=''>$select</option>";
         foreach(AddNationality::all() as $options){
-            $data['option'] .= "<option value = '$options->id'>".$options->{'nationality_'.  get_language() }." </option>";
+            $data['option'] .= "<option value='$options->id'>".$options->{'nationality_'.  get_language() }." </option>";
         }
 
         $data['data'] = __('SuperAdmin/backend.errors.success');
@@ -103,9 +103,9 @@ class AddVisaFieldsController extends Controller
 
         $select = __('SuperAdmin/backend.select_option');
         $data['success'] = true;
-        $data['option'] = "<option value = ''>$select</option>";
+        $data['option'] = "<option value=''>$select</option>";
         foreach(AddNationality::all() as $applyform){
-            $data['option'] .= "<option value = '$applyform->id'>".$applyform->{'nationality_'.  get_language() }." </option>";
+            $data['option'] .= "<option value='$applyform->id'>".$applyform->{'nationality_'.  get_language() }." </option>";
         }
 
         $data['data'] = __('SuperAdmin/backend.data_removed_successfully');
@@ -118,9 +118,9 @@ class AddVisaFieldsController extends Controller
 
         $select = __('SuperAdmin/backend.select_option');
         $data['success'] = true;
-        $data['option'] = "<option value = ''>$select</option>";
+        $data['option'] = "<option value=''>$select</option>";
         foreach(AddWhereToTravel::all() as $options){
-            $data['option'] .= "<option value = '$options->id'>".$options->{'travel_'.  get_language() }." </option>";
+            $data['option'] .= "<option value='$options->id'>".$options->{'travel_'.  get_language() }." </option>";
         }
 
         $data['data'] = __('SuperAdmin/backend.errors.success');
@@ -133,9 +133,9 @@ class AddVisaFieldsController extends Controller
 
         $select = __('SuperAdmin/backend.select_option');
         $data['success'] = true;
-        $data['option'] = "<option value = ''>$select</option>";
+        $data['option'] = "<option value=''>$select</option>";
         foreach(AddNationality::all() as $applyform){
-            $data['option'] .= "<option value = '$applyform->id'>".$applyform->{'nationality_'.  get_language() }." </option>";
+            $data['option'] .= "<option value='$applyform->id'>".$applyform->{'nationality_'.  get_language() }." </option>";
         }
 
         $data['data'] = __('SuperAdmin/backend.data_removed_successfully');
@@ -148,9 +148,9 @@ class AddVisaFieldsController extends Controller
 
         $select = __('SuperAdmin/backend.select_option');
         $data['success'] = true;
-        $data['option'] = "<option value = ''>$select</option>";
+        $data['option'] = "<option value=''>$select</option>";
         foreach(AddTypeOfVisa::all() as $options){
-            $data['option'] .= "<option value = '$options->id'>".$options->{'visa_'.  get_language() }." </option>";
+            $data['option'] .= "<option value='$options->id'>".$options->{'visa_'.  get_language() }." </option>";
         }
 
         $data['data'] = __('SuperAdmin/backend.errors.success');
@@ -163,9 +163,9 @@ class AddVisaFieldsController extends Controller
 
         $select = __('SuperAdmin/backend.select_option');
         $data['success'] = true;
-        $data['option'] = "<option value = ''>$select</option>";
+        $data['option'] = "<option value=''>$select</option>";
         foreach(AddTypeOfVisa::all() as $applyform){
-            $data['option'] .= "<option value = '$applyform->id'>".$applyform->{'visa_'.  get_language() }." </option>";
+            $data['option'] .= "<option value='$applyform->id'>".$applyform->{'visa_'.  get_language() }." </option>";
         }
 
         $data['data'] = __('SuperAdmin/backend.data_removed_successfully');

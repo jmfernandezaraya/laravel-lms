@@ -5,7 +5,6 @@
                 <div class="nav-profile-image">
                     <img src="{{asset('assets/images/user.png')}}" alt="profile">
                     <span class="login-status online"></span>
-                    <!--change to offline or busy as needed-->
                 </div>
                 <div class="nav-profile-text d-flex flex-column">
                     <span class="font-weight-bold mb-2">David Grey. H</span>
@@ -30,6 +29,20 @@
                 <ul class="nav flex-column sub-menu">
                     <li class="nav-item">
                         <a class="nav-link {{(request()->is('superadmin/blogs/*')) ? 'active' : ''}}" href="{{route('superadmin.blogs.index')}}">{{__('SuperAdmin/dashboard.view')}}</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item {{(request()->is('superadmin/customers/*')) ? 'active' : ''}}">
+            <a class="nav-link" data-toggle="collapse"  href="#customers" aria-expanded="false" aria-controls="customers">
+                <span class="menu-title">{{__('SuperAdmin/backend.customers')}}</span>
+                <i class="menu-arrow"></i>
+                <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+            </a>
+            <div class="collapse {{(request()->is('superadmin/customers/*')) ? 'show' : ''}}" id="customers">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item">
+                        <a class="nav-link {{(request()->is('superadmin/customers/*')) ? 'active' : ''}}" href="{{route('superadmin.customers.index')}}">{{__('SuperAdmin/dashboard.view')}}</a>
                     </li>
                 </ul>
             </div>

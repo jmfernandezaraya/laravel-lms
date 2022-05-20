@@ -442,7 +442,7 @@
                                             value="add another program cost"></button>
                                 </div>
                                 <div class="pull-right">
-                                    <button class="btn btn-danger fa fa-minus"  type="button" name="####"
+                                    <button class="btn btn-danger fa fa-minus" type="button" name="####"
                                             id="remove_program_button0"  onclick="removeAnotherProgramCost($(this))"
                                             value="add another program cost"></button>
                                 </div>
