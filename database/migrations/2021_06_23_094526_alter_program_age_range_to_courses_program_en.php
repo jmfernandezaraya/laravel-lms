@@ -13,7 +13,7 @@ class AlterProgramAgeRangeToCoursesProgramEn extends Migration
      */
     public function up()
     {
-        Schema::table('courses_program_en', function (Blueprint $table) {
+        Schema::table('course_programs', function (Blueprint $table) {
             $table->longText('program_age_range')->change();
         });
     }
@@ -25,7 +25,7 @@ class AlterProgramAgeRangeToCoursesProgramEn extends Migration
      */
     public function down()
     {
-        Schema::table('courses_program_en', function (Blueprint $table) {
+        Schema::table('course_programs', function (Blueprint $table) {
             //
         });
     }

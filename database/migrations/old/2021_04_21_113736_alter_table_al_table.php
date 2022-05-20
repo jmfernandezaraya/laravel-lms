@@ -16,7 +16,7 @@ class AlterTableAlTable extends Migration
         Schema::table('course_program_under_age_fees', function(Blueprint $blueprint) {
             $blueprint->boolean('can_edit_by_school_admin')->default(0);
         });
-        Schema::table('courses_program_en', function(Blueprint $blueprint) {
+        Schema::table('course_programs', function(Blueprint $blueprint) {
             $blueprint->boolean('can_edit_by_school_admin')->default(0);
         });
         Schema::table('course_accommodations_en', function(Blueprint $blueprint) {

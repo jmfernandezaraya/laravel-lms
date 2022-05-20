@@ -40,24 +40,13 @@ class BirthdayNotification extends Command
      */
     public function handle()
     {
-
         $now = now()->format('Y-m-d');
         $coursemodal = UserCourseBookedDetails::where('dob', $now)->get();
 
-
-
         if(!$coursemodal->isEmpty()){
-
-
             foreach ($coursemodal as $values) {
-
-
                 $values->notify(new \App\Notifications\BirthdayNotification($values));
-
-
-
             }
-
         }
         return 0;
     }

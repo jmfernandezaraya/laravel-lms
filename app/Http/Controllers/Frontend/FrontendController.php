@@ -65,7 +65,7 @@ class FrontendController extends Controller
      */
     public function index()
     {
-        $schools = School::all();
+        $schools = School::where('is_active', true)->get();
         $study_modes = Choose_Study_Mode::all();
 
         return view('frontend.index', compact('schools', 'study_modes'));

@@ -12,10 +12,10 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th> {{__('SuperAdmin/backend.school_name')}}</th>
-                            <th> {{__('SuperAdmin/backend.school_email_address')}}</th>
-                            <th> {{__('SuperAdmin/backend.school_contact_number')}}</th>
-                            <th> {{__('SuperAdmin/backend.school_branch_name')}}</th>
+                            <th> {{__('SuperAdmin/backend.name')}}</th>
+                            <th> {{__('SuperAdmin/backend.email_address')}}</th>
+                            <th> {{__('SuperAdmin/backend.contact_number')}}</th>
+                            <th> {{__('SuperAdmin/backend.branch_name')}}</th>
                             <th>{{__('SuperAdmin/backend.city')}}</th>
                             <th>{{__('SuperAdmin/backend.country')}}</th>
                             <th>{{__('SuperAdmin/backend.created_on')}}</th>

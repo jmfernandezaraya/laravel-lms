@@ -101,16 +101,16 @@
                 </ul>
             </div>
         </li>
-        <li class="nav-item {{(request()->is('superadmin/rating/*')) ? 'active' : ''}}">
-            <a class="nav-link" data-toggle="collapse" href="#rating" aria-expanded="false" aria-controls="school_admin">
-                <span class="menu-title">{{__('SuperAdmin/backend.rating')}}</span>
+        <li class="nav-item {{(request()->is('superadmin/review/*')) ? 'active' : ''}}">
+            <a class="nav-link" data-toggle="collapse" href="#review" aria-expanded="false" aria-controls="school_admin">
+                <span class="menu-title">{{__('SuperAdmin/backend.rating_review')}}</span>
                 <i class="menu-arrow"></i>
                 <i class="mdi mdi-crosshairs-gps menu-icon"></i>
             </a>
-            <div class="collapse {{(request()->is('superadmin/rating/*')) ? 'show' : ''}}" id="rating">
+            <div class="collapse {{(request()->is('superadmin/review/*')) ? 'show' : ''}}" id="review">
                 <ul class="nav flex-column sub-menu">
                     <li class="nav-item">
-                        <a class="nav-link {{(request()->is('superadmin/rating/*')) ? 'active' : ''}}" href="{{route('superadmin.rating.index')}}">{{__('SuperAdmin/dashboard.view')}}</a>
+                        <a class="nav-link {{(request()->is('superadmin/review/*')) ? 'active' : ''}}" href="{{route('superadmin.review.index')}}">{{__('SuperAdmin/dashboard.view')}}</a>
                     </li>
                 </ul>
             </div>

@@ -20,7 +20,7 @@ class BirthdayNotification extends Notification
      */
     public function __construct($values)
     {
-     $this->values  = $values;
+        $this->values = $values;
     }
 
     /**
@@ -43,9 +43,9 @@ class BirthdayNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                ->line('Wish You Many More Happy Returns of The Day.')
-                ->action('Notification Action', url('/'))
-                ->line('Thank you for using our application!');
+            ->line('Wish You Many More Happy Returns of The Day.')
+            ->action('Notification Action', url('/'))
+            ->line('Thank you for using our application!');
     }
 
     /**

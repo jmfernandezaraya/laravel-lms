@@ -143,13 +143,13 @@ class SchoolController extends Controller
         if (!empty($school->logo)) {
             Storage::delete('public/school_images/' . $school->logo);
         }
-        if (!empty($school->school_video)) {
-            if (is_array($school->school_video)) {
-                foreach ($school->school_video as $videos) {
-                    Storage::delete('public/school_video/' . $videos);
+        if (!empty($school->video)) {
+            if (is_array($school->video)) {
+                foreach ($school->video as $videos) {
+                    Storage::delete('public/video/' . $videos);
                 }
             } else {
-                Storage::delete('public/school_video/' . $school->school_video);
+                Storage::delete('public/video/' . $school->video);
             }
         }
 

@@ -279,3 +279,7 @@ i.fa.fa-trash {
 .highlight {
     color: #ff3333;
 }
+
+.ui-igtrialwatermark {
+    display: none;
+}

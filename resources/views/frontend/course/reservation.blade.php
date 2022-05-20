@@ -72,7 +72,7 @@
                 <table class="table table-bordered">
                     <tbody>
                         <tr>
-                            <td>{{__('Frontend.school_name')}}</td>
+                            <td>{{__('Frontend.name')}}</td>
                             <td>{{ app()->getLocale() == 'en' ? ($school->name . ($school->branch_name ? $school->branch_name : '')) : ($school->name_ar . ($school->branch_name_ar ? $school->branch_name_ar : '')) }}</td>
                         </tr>
                         <tr>

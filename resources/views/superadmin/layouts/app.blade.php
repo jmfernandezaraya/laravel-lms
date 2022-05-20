@@ -14,6 +14,10 @@
                 - {{__('SuperAdmin/backend.site_name')}}
         </title>
 
+        <!-- Ignite UI for jQuery Required Combined CSS Files -->
+        <link href="https://cdn-na.infragistics.com/igniteui/latest/css/themes/infragistics/infragistics.theme.css" rel="stylesheet"></link>
+        <link href="https://cdn-na.infragistics.com/igniteui/latest/css/structure/infragistics.css" rel="stylesheet"></link>
+        
         <link rel="stylesheet" href="{{asset('assets/vendors/mdi/css/materialdesignicons.min.css')}}">
         <link rel="stylesheet" href="{{asset('assets/vendors/css/vendor.bundle.base.css')}}">
 
@@ -32,6 +36,8 @@
         @livewireStyles
         @yield('css')
 
+        <script src="{{asset('assets/vendors/js/vendor.bundle.base.js')}}"></script>
+        
         <style>
             label {
                 color: black;

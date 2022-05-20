@@ -12,10 +12,13 @@
 
 @livewireScripts
 
-<script src="{{asset('assets/vendors/js/vendor.bundle.base.js')}}"></script>
 <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js" integrity="sha256-eTyxS0rkjpLEo16uXTS0uVCS4815lc40K2iVpWDvdSY=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.7.1/tinymce.min.js" integrity="sha512-RnlQJaTEHoOCt5dUTV0Oi0vOBMI9PjCU7m+VHoJ4xmhuUNcwnB5Iox1es+skLril1C3gHTLbeRepHs1RpSCLoQ==" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+
+<!-- Ignite UI for jQuery Required Combined JavaScript Files -->
+<script src="https://cdn-na.infragistics.com/igniteui/latest/js/infragistics.core.js"></script>
+<script src="https://cdn-na.infragistics.com/igniteui/latest/js/infragistics.lob.js"></script>
 
 <script src="{{asset('assets/js/ckeditor/ckeditor.js')}}"></script>
 <script src="{{asset('assets/js/cloneData.js')}}" type="text/javascript"></script>
@@ -37,6 +40,7 @@
 <script>
     var token = "{{csrf_token()}}";
     var delete_on_confirm = "{{__('SuperAdmin/backend.confirm_delete')}}";
+    var clone_on_confirm = "{{__('SuperAdmin/backend.confirm_clone')}}";
     
     if ($('table') && $('table').length) {
         for (var table_index = 0; table_index < $('table').length; table_index++) {
@@ -121,10 +125,26 @@
                                 $(cell).html('<p></p>');
                             }
                         });
-                    }
+                    },
+                    lengthMenu: table_el.data('length') ? [
+                        table_el.data('length').split(":")[0].split(","),
+                        table_el.data('length').split(":")[1].split(","),
+                    ] : [
+                        [10, 25, 50, 100, -1],
+                        [10, 25, 50, 100, 'All']
+                    ]
                 });
             } else {
-                table_el.DataTable();
+                if (table_el.data('length')) {                    
+                    table_el.DataTable({
+                        lengthMenu: [
+                            table_el.data('length').split(":")[0].split(","),
+                            table_el.data('length').split(":")[1].split(","),
+                        ]
+                    });
+                } else {
+                    table_el.DataTable();
+                }
             }
         }
     }

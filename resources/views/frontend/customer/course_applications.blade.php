@@ -20,7 +20,7 @@
                             <th>{{ __("Frontend.name") }}</th>
                             <th>{{ __("Frontend.email") }}</th>
                             <th>{{ __("Frontend.mobile") }}</th>
-                            <th>{{ __("Frontend.school_name") }}</th>
+                            <th>{{ __("Frontend.name") }}</th>
                             <th>{{ __("Frontend.city") }}</th>
                             <th>{{ __("Frontend.country") }}</th>
                             <th>{{ __("Frontend.program_name") }}</th>

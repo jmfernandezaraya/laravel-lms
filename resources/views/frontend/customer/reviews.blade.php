@@ -46,7 +46,7 @@
                                         </p>
                                         <p>
                                             <label>
-                                                {{__('Frontend.school_name')}}:
+                                                {{__('Frontend.name')}}:
                                                 @if (app()->getLocale() == 'en')
                                                     {{ $course_booked_detail->school->name }}
                                                 @else
@@ -76,18 +76,20 @@
                                         </p>
                                     </div>
                                     <div class="review-actions col-md-3">
-                                        @if ($course_booked_detail->review)
-                                            <a href="{{route('dashboard.review', $course_booked_detail->id)}}">
-                                                <button type="button" class="btn btn-primary float-right px-3">
-                                                    {{__('Frontend.edit_the_review')}}
-                                                </button>
-                                            </a>
-                                        @else
-                                            <a href="{{route('dashboard.review', $course_booked_detail->id)}}">
-                                                <button type="button" class="btn btn-primary float-right px-3">
-                                                    {{__('Frontend.rate_write_a_review')}}
-                                                </button>
-                                            </a>
+                                        @if ($course_booked_detail->status != 'cancelled' && $course_booked_detail->status != 'request_cancellation' && $course_booked_detail->status != 'application_cancelled')
+                                            @if ($course_booked_detail->review)
+                                                <a href="{{route('dashboard.review', $course_booked_detail->id)}}">
+                                                    <button type="button" class="btn btn-primary float-right px-3">
+                                                        {{__('Frontend.edit_the_review')}}
+                                                    </button>
+                                                </a>
+                                            @else
+                                                <a href="{{route('dashboard.review', $course_booked_detail->id)}}">
+                                                    <button type="button" class="btn btn-primary float-right px-3">
+                                                        {{__('Frontend.rate_write_a_review')}}
+                                                    </button>
+                                                </a>
+                                            @endif
                                         @endif
                                     </div>
                                 </div>

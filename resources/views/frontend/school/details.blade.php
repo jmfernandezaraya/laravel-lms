@@ -198,13 +198,13 @@
                         <div class="row pb-2">
                             <div id="carouselExampleIndicators2" class="carousel slide" data-ride="carousel">
                                 <ol class="carousel-indicators">
-                                    @foreach ((array)$school->school_video as $videos)
+                                    @foreach ((array)$school->video as $videos)
                                         <li data-target="#carouselExampleIndicators2"
                                             data-slide-to="{{$loop->iteration - 1}}" class="{{$loop->iteration - 1 == 0 ? 'active' : ''}}"></li>
                                     @endforeach
                                 </ol>
                                 <div class="carousel-inner">
-                                    @foreach ((array)$school->school_video as $videos)
+                                    @foreach ((array)$school->video as $videos)
                                         <div class="carousel-item {{$loop->iteration == 1 ? "active" : ""}}">
                                             {!!  $videos !!}
                                         </div>
@@ -269,7 +269,7 @@
                                             </tr>
                                             <tr>
                                                 <th scope="row">School Capacity</th>
-                                                <td>{{$school->school_capacity}}</td>
+                                                <td>{{$school->capacity}}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Class Size</th>

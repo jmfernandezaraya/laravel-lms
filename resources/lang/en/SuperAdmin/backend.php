@@ -22,7 +22,10 @@ return [
     'pause' => 'Pause',
     'delete' => 'Delete',
     'restore' => 'Restore',
+    'destroy' => 'Destroy',
     'default' => 'Default',
+    'success' => 'Success',
+    'failed' => 'Failed',
 
     'study_mode' => 'Study Mode',
 
@@ -55,6 +58,7 @@ return [
     'language' => 'Language',
 
     /* Choose School Starts */
+    'customer_registered_with_this_school' => 'Customer registered with this school!',
     'add_branch' => 'Add Branch',
     'course_week' => 'Course Per Week',
 
@@ -93,7 +97,18 @@ return [
     'total_amount_due' => 'Total Amount Due',
 
     'payment_received' => 'Payment Received',
-    'program_features' => 'Program features',    
+
+    'order_id' => 'Order Id',
+    'description' => 'Description',
+    'billing_address' => 'Billing Address',
+    'billing_city' => 'Billing City',
+    'billing_region' => 'Billing Region',
+    'billing_country' => 'Billing Country',
+    'billing_zip' => 'Billing Zip',
+    'billing_email' => 'Billing Email',
+    'dated' => 'Dated',
+
+    'program_features' => 'Program features',
     'program_name' => 'Program Name',
 
     'level_required' => 'Level required',
@@ -257,11 +272,20 @@ return [
     'arabic' => 'Arabic',
 
     'school_name' => 'School Name',
-    'school_email_address' => 'School Email address',
+    'school_email_address' => 'School Email Address',
     'school_contact_number' => 'School Contact Number',
     'school_emergency_number' => 'School Emergency Number',
     'school_branch_name' => 'School Branch Name',
     
+    
+    'school_cloned_successfully' => 'School Cloned Successfully',
+    'school_restored_successfully' => 'School Restored Successfully',
+    'school_paused_successfully' => 'School Paused Successfully',
+    'school_played_successfully' => 'School Played Successfully',
+    'school_removed_successfully' => 'School Removed Successfully',
+    'school_deleted_successfully' => 'School Deleted Successfully',
+    'school_destroyed_successfully' => 'School Destroyed Successfully',
+
     'comments' => 'Comments',
     'user_name' => 'User Name',
     'rated' => 'Rated',
@@ -274,13 +298,19 @@ return [
     'save_form_name' => 'Save Form Name',
     'subject' => 'Subject',
     'message' => 'Message',
-    'school_capacity' => 'School Capacity',
+    
+    'contact_number' => 'Contact Number',
+    'branch_name' => 'Branch Name',
+    'emergency_number' => 'Emergency Number',
+    'opening_hours' => 'Opening Hours',
+    'number_of_classrooms' => 'Number of classrooms',
     'facilities' => 'Facilities',
     'class_size' => 'Class Size',
     'year_opened' => 'Year Opened',
     'about_the_school' => 'About the school',
     'about_the_school' => 'About the school',
-    'school_video' => 'School Video Link',
+    'capacity' => 'Capacity',
+    'video' => 'Video Link',
     'city' => 'City',
     'enter_city' => 'Enter City',
     'enter_country' => 'Enter Country',
@@ -288,8 +318,8 @@ return [
     'address' => 'Address',
     'address_map_location' => 'Address Map Location',
     'accreditations_logos' => 'Accreditations ( logos )',
-    'school_logo' => 'School Logo',
-    'school_photos' => 'School Photos',
+    'logo' => 'Logo',
+    'photos' => 'Photos',
     'cancel' => 'Cancel',
     'submit' => 'Submit',
     'data_saved' => 'Data Saved Successfully',
@@ -352,7 +382,6 @@ return [
     'airport_service' => 'Airport Service',
     'choose_study_mode' => 'Choose Study Mode',
     'choose_program_type' => 'Choose Program Type',
-    'data_removed_successfully' => 'Data Removed Successfully',
     'age_in_english' => 'Age In English',
     'age_in_arabic' => 'Age In Arabic',
 
@@ -384,6 +413,15 @@ return [
     'are_you_sure_you_wanna_pause' => 'Are You Sure You Wanna Pause',
     'are_you_sure_you_wanna_play' => 'Are You Sure You Wanna Play',
     'are_you_sure_you_wanna_delete' => 'Are You Sure You Wanna Delete',
+    'are_you_sure_you_wanna_destroy' => 'Are You Sure You Wanna Destroy',
+    
+    'data_cloned_successfully' => 'Data Cloned Successfully',
+    'data_restored_successfully' => 'Data Restored Successfully',
+    'data_paused_successfully' => 'Data Paused Successfully',
+    'data_played_successfully' => 'Data Played Successfully',
+    'data_removed_successfully' => 'Data Removed Successfully',
+    'data_deleted_successfully' => 'Data Deleted Successfully',
+    'data_destroyed_successfully' => 'Data Destroyed Successfully',
 
     'errors' => [
         'blog_title_in_english' => 'Blog Title in English Required',
@@ -460,7 +498,7 @@ return [
     'airport' => 'Airport',
     'click_here' => 'Click Here',
 
-    'course_program_details' => 'Course Program Details',    
+    'course_program_details' => 'Course Program Details',
     'course_program_update' => 'Update Course Program',
     'edit_course_program_price' => 'Edit Course Program Under Age Price',
 
@@ -569,7 +607,7 @@ return [
     'add_exchange_rate' => 'Add Exchange Rates',
     'update_exchange_rate' => 'Update Exchange Rates',
     'website_link' => 'Website Link',
-    'course_application' => 'Course Application',    
+    'course_application' => 'Course Application',
     'course_application_details' => 'Course Application Details',
     'date_created' => 'Date Created',
     'mobile' => 'Mobile',
@@ -693,4 +731,37 @@ return [
     'type_of_visa' => 'Type Of Visa',
     'to_travel' => 'To Travel',
     'image_uploaded_successfully' => 'Image uploaded successfully',
+
+    'please_leave_review_rating_on_course' => 'Please leave review and rating on your course!',
+    'leave_review_rating' => 'Leave review and rating',
+    'you_booked_course_at' => 'You booked course at',
+    'customer_doesnt_leave_review_rating' => 'Customer does not leave the review and rating',
+    'send_email' => 'Send Email',
+
+    'rating_review' => 'Rating & Review',
+    'edit_rating_review' => 'Edit Rating & Review',
+    'add_rating_review' => 'Add Rating & Review',
+
+    'reviews' => 'Reviews',
+    'edit_review' => 'Edit Review',
+    'add_review' => 'Add Review',
+    'rate_write_a_review' => 'Rate & Write A Review',
+    'write_a_review' => 'Write A Review',
+    'review_approved' => 'Review has been approved',
+    'review_disapproved' => 'Review has been disapproved',
+    'created_at' => 'Created At',
+    'school_and_teaching' => 'School & Teaching',
+    'quality_of_teaching' => 'Quality of teaching',
+    'school_facilities' => 'School facilities',
+    'social_activities' => 'Social activities',
+    'school_location' => 'School Location',
+    'satisfied_teaching' => 'How satisfied are you with the Teaching for the money paid',
+    'level_of_cleanliness' => 'Level of cleanliness',
+    'distance_accommodation_school' => 'The distance between the Accommodation and the School',
+    'satisfied_accommodation' => 'How satisfied are you with the Accommodation for the money paid',
+    'others' => 'Others',
+    'airport_transfer' => 'Airport Transfer',
+    'city_activities' => 'City activities',
+    'would_you_recommend_this_school' => 'Would you recommend this school',
+    'use_my_full_name_for_the_rating_and_review' => 'Use my full name for the rating and review',
 ];

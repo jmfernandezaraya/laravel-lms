@@ -22,9 +22,9 @@ class CreateSchoolsArTable extends Migration
             $table->string('emergency_number', 500)->nullable();
             $table->string('branch_name', 500)->nullable();
             $table->string('logo', 500)->nullable();
-            $table->string('school_video', 500)->nullable();
+            $table->string('video', 500)->nullable();
             $table->string('multiple_photos', 500)->nullable();
-            $table->string('school_capacity', 500)->nullable();
+            $table->string('capacity', 500)->nullable();
             $table->string('facilities', 500)->nullable();
             $table->string('class_size', 500)->nullable();
             $table->string('opened', 500)->nullable();

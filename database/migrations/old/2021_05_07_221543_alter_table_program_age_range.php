@@ -13,7 +13,7 @@ class AlterTableProgramAgeRange extends Migration
      */
     public function up()
     {
-        Schema::table('courses_program_en', function (Blueprint $table) {
+        Schema::table('course_programs', function (Blueprint $table) {
             $table->longText('program_age_range')->default(null)->change();
         });
 
@@ -29,7 +29,7 @@ class AlterTableProgramAgeRange extends Migration
      */
     public function down()
     {
-        Schema::table('courses_program_en', function (Blueprint $table) {
+        Schema::table('course_programs', function (Blueprint $table) {
             //
         });
     }

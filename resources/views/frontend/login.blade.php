@@ -16,7 +16,7 @@
 
     <!-- ======= Login Section ======= -->
     <div class="container mt-5 mb-5">
-        <form id="login-form" method = "post" action = "{{route('user_login_post')}}">
+        <form id="login-form" method="post" action = "{{route('user_login_post')}}">
             @csrf
             <div class="heading">{{__('Frontend.login')}}</div>
 

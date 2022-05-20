@@ -10,7 +10,7 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th> @lang('SuperAdmin/backend.school_name')</th>
+                            <th> @lang('SuperAdmin/backend.name')</th>
                             <th> @lang('SuperAdmin/backend.comments')</th>
                             <th> @lang('SuperAdmin/backend.user_name')</th>
                             <th>{{__('SuperAdmin/backend.rated')}}</th>

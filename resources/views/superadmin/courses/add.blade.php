@@ -103,8 +103,8 @@
 
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label for="school_name">{{__('SuperAdmin/backend.choose_school')}}:</label>
-                                <select onchange="changeCourseSchool()" class="form-control" id="school_name" name="school_id">
+                                <label for="name">{{__('SuperAdmin/backend.choose_school')}}:</label>
+                                <select onchange="changeCourseSchool()" class="form-control" id="name" name="school_id">
                                     <option value="">{{__('SuperAdmin/backend.select_school')}}</option>
                                     @foreach($schools as $school)
                                         <option value="{{$school->id}}">{{get_language() == 'en' ?  $school->name : $school->name_ar}}</option>

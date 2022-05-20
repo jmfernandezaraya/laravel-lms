@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('command:courseautosendreminder')->everyMinute();
         $schedule->command('command:birthday_notification')->daily();
-
+        $schedule->command('command:applicationsendreminder')->daily();
     }
 
     /**

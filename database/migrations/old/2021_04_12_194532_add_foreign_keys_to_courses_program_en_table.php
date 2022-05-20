@@ -13,7 +13,7 @@ class AddForeignKeysToCoursesProgramEnTable extends Migration
      */
     public function up()
     {
-        Schema::table('courses_program_en', function (Blueprint $table) {
+        Schema::table('course_programs', function (Blueprint $table) {
             $table->foreign('course_unique_id')->references('unique_id')->on('courses_en')->onUpdate('RESTRICT')->onDelete('CASCADE');
         });
     }
@@ -25,8 +25,8 @@ class AddForeignKeysToCoursesProgramEnTable extends Migration
      */
     public function down()
     {
-        Schema::table('courses_program_en', function (Blueprint $table) {
-            $table->dropForeign('courses_program_en_course_unique_id_foreign');
+        Schema::table('course_programs', function (Blueprint $table) {
+            $table->dropForeign('course_programs_course_unique_id_foreign');
         });
     }
 }

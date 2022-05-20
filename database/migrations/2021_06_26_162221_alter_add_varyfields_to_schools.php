@@ -16,9 +16,9 @@ class AlterAddVaryfieldsToSchools extends Migration
         Schema::table('schools', function (Blueprint $table) {
             $table->longText('logos')->change();
             $table->longText('multiple_photos')->change();
-            $table->longText('school_video')->change();
+            $table->longText('video')->change();
             $table->longText('logo')->change();
-            $table->longText('school_video')->change();
+            $table->longText('video')->change();
         });
     }
 

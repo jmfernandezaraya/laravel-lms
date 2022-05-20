@@ -19,7 +19,7 @@
 <div class="col-12 grid-margin stretch-card">
 
 	<div class="card">
-        <form id="form_to_be_submitted" class="forms-sample" method = "post">
+        <form id="form_to_be_submitted" class="forms-sample" method="post">
             {{csrf_field()}}
             <div id="form1">
 		<div class="card-body">

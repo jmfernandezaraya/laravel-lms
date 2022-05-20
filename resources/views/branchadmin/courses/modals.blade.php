@@ -278,7 +278,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="form_apply" method = "post" action  = "{{route('superadmin.add_applying_from')}}">
+            <form id="form_apply" method="post" action="{{route('superadmin.add_applying_from')}}">
                 {{csrf_field()}}
                 <div class="modal-body">
                     <div class="form-group">
@@ -309,7 +309,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method = "post" id="application_form" action = "{{route('superadmin.add_application_center')}}">
+            <form method="post" id="application_form" action = "{{route('superadmin.add_application_center')}}">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
@@ -334,7 +334,7 @@
 <div class="modal fade" id="nationality_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form id = 'add_nationailty_form' method = "post" action = "{{route('superadmin.add_nationality')}}">
+            <form id = 'add_nationailty_form' method="post" action = "{{route('superadmin.add_nationality')}}">
                 @csrf
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel3">Modal title</h5>

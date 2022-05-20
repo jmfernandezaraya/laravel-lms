@@ -224,6 +224,10 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => '
     Route::get('rating/approve/{id}', [\App\Http\Controllers\RatingController::class, 'approve'])->name('rating.approve');
 
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    Route::post('review/approve/{id}', 'ReviewController@approve')->name('review.approve');
+    Route::post('review/disapprove/{id}', 'ReviewController@disapprove')->name('review.disapprove');
+    Route::resource('review', ReviewController::class);
 
     Route::post('blogs/update/{id}', 'BlogController@update')->name('blogs.update');
     Route::post('blogs/image_upload', 'BlogController@upload')->name('blogs.upload');
@@ -235,7 +239,11 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => '
         Route::post('country', 'CourseController@getSchoolCountryList')->name('country.list');
         Route::post('city', 'CourseController@getSchoolCityList')->name('city.list');
         Route::post('branch', 'CourseController@getSchoolBranchList')->name('branch.list');
-        Route::post('update/{id}', 'SchoolController@update')->name('school.update');
+        Route::post('clone/{id}', 'SchoolController@clone')->name('clone');
+        Route::post('clone/{id}', 'SchoolController@clone')->name('clone');
+        Route::post('pause/{id}', 'SchoolController@pause')->name('pause');
+        Route::post('play/{id}', 'SchoolController@play')->name('play');
+        Route::post('bulk', 'SchoolController@bulk')->name('bulk');
     });
     Route::resource('school', 'SchoolController');
 

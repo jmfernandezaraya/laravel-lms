@@ -46,7 +46,8 @@
       }
     });
     var token = "{{csrf_token()}}";
-    var delete_on_confirm= "{{__('SuperAdmin/backend.confirm_delete')}}";    	
+    var delete_on_confirm= "{{__('SuperAdmin/backend.confirm_delete')}}";
+    var clone_on_confirm = "{{__('SuperAdmin/backend.confirm_clone')}}";
 </script>
 <!-- End custom js for this page -->
 @yield('js')

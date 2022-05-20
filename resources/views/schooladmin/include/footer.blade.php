@@ -32,7 +32,9 @@
 <script src="{{asset('assets/js/dashboard.js')}}"></script>
 <script src="{{asset('assets/js/todolist.js')}}"></script>
 <script src="{{asset('assets/datatables/datatables.min.js')}}"></script>
+
 @livewireScripts
+
 <script>
     $(document).ready(function() {
         if($('table').length) {
@@ -41,6 +43,7 @@
     });
     var token = "{{csrf_token()}}";
     var delete_on_confirm = "{{__('SuperAdmin/backend.confirm_delete')}}";
+    var clone_on_confirm = "{{__('SuperAdmin/backend.confirm_clone')}}";
 </script>
 <!-- End custom js for this page -->
 @yield('js')

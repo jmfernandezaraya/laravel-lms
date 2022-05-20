@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Frontend\Review;
+use App\Models\Review;
 
 use App\Models\SuperAdmin\CourseAccommodation;
 use App\Models\SuperAdmin\CourseAirport;

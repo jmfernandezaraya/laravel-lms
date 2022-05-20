@@ -52,27 +52,27 @@
 
 <div id="show_form"></div>
 
-<form id="form1" class="forms-sample" enctype="multipart/form-data" action  = "{{route('school.store')}}" method = "post">
+<form id="form1" class="forms-sample" enctype="multipart/form-data" action="{{route('school.store')}}" method="post">
 {{csrf_field()}}
 <div class="form-group">
-<label for="exampleInputName1">{{__('SuperAdmin/backend.school_name')}}</label>
-<input name="name" type="text" class="form-control" id="exampleInputName1" placeholder="{{__('SuperAdmin/backend.school_name')}}" value="{{old('name')}}">
+<label for="exampleInputName1">{{__('SuperAdmin/backend.name')}}</label>
+<input name="name" type="text" class="form-control" id="exampleInputName1" placeholder="{{__('SuperAdmin/backend.name')}}" value="{{old('name')}}">
 </div>
 
 @if($errors->has('name'))
 <div class="alert alert-danger">{{$errors->first('name')}}</div>
 @endif
 <div class="form-group">
-<label for="exampleInputEmail3">{{__('SuperAdmin/backend.school_email_address')}}</label>
-<input value="{{old('email')}}" name="email" type="text" class="form-control" id="exampleInputEmail3" placeholder="{{__('SuperAdmin/backend.school_email_address')}}">
+<label for="exampleInputEmail3">{{__('SuperAdmin/backend.email_address')}}</label>
+<input value="{{old('email')}}" name="email" type="text" class="form-control" id="exampleInputEmail3" placeholder="{{__('SuperAdmin/backend.email_address')}}">
 </div>
 @if($errors->has('email'))
 <div class="alert alert-danger">{{$errors->first('email')}}</div>
 @endif
 
 <div class="form-group">
-<label for="exampleSelectGender">{{__('SuperAdmin/backend.school_contact_number')}}</label>
-<input value="{{old('contact')}}" name="contact" class="form-control" id="exampleSelectGender" placeholder = "{{__('SuperAdmin/backend.school_contact_number')}}" type="text">
+<label for="exampleSelectGender">{{__('SuperAdmin/backend.contact_number')}}</label>
+<input value="{{old('contact')}}" name="contact" class="form-control" id="exampleSelectGender" placeholder = "{{__('SuperAdmin/backend.contact_number')}}" type="text">
 
 </div>
 @if($errors->has('contact'))
@@ -83,8 +83,8 @@
 
 
 <div class="form-group">
-<label for="exampleInputName1">{{__('SuperAdmin/backend.school_emergency_number')}}</label>
-<input name="emergency_number" type="text" class="form-control" id="exampleInputName1" placeholder="{{__('SuperAdmin/backend.school_emergency_number')}}" value="{{old('emergency_number')}}">
+<label for="exampleInputName1">{{__('SuperAdmin/backend.emergency_number')}}</label>
+<input name="emergency_number" type="text" class="form-control" id="exampleInputName1" placeholder="{{__('SuperAdmin/backend.emergency_number')}}" value="{{old('emergency_number')}}">
 </div>
 @if($errors->has('emergency_number'))
 <div class="alert alert-danger">{{$errors->first('emergency_number')}}</div>
@@ -93,7 +93,7 @@
 
 
 <div class="form-group">
-<label for="exampleInputName1">{{__('SuperAdmin/backend.school_branch_name')}}</label>
+<label for="exampleInputName1">{{__('SuperAdmin/backend.branch_name')}}</label>
 </div>
 
 <ul id="myTags1">
@@ -107,11 +107,11 @@
 
 
 <div class="form-group">
-<label for="exampleInputName1">{{__('SuperAdmin/backend.school_capacity')}}</label>
-<input name="school_capacity" type="text" class="form-control" id="exampleInputName1" placeholder="{{__('SuperAdmin/backend.school_capacity')}}" value="{{old('school_capacity')}}">
+<label for="exampleInputName1">{{__('SuperAdmin/backend.capacity')}}</label>
+<input name="capacity" type="text" class="form-control" id="exampleInputName1" placeholder="{{__('SuperAdmin/backend.capacity')}}" value="{{old('capacity')}}">
 </div>
-@if($errors->has('school_capacity'))
-<div class="alert alert-danger">{{$errors->first('school_capacity')}}</div>
+@if($errors->has('capacity'))
+<div class="alert alert-danger">{{$errors->first('capacity')}}</div>
 @endif
 
 
@@ -190,7 +190,7 @@
 
 
 <div class="form-group">
-<label for="exampleInputName1">{{__('SuperAdmin/backend.school_logo')}}</label>
+<label for="exampleInputName1">{{__('SuperAdmin/backend.logo')}}</label>
 <input name="logo" type="file" class="form-control" id="exampleInputName1" accept = "image/*">
 </div>
 @if($errors->has('logo'))
@@ -199,7 +199,7 @@
 
 <div class="form-group">
 
-<label for="exampleInputName1">{{__('SuperAdmin/backend.school_video')}}</label>
+<label for="exampleInputName1">{{__('SuperAdmin/backend.video')}}</label>
 <ul id="myTags">
 
 	</ul>
@@ -210,7 +210,7 @@
 @endif
 
 <div class="form-group">
-<label for="exampleInputName1">{{__('SuperAdmin/backend.school_photos')}}</label>
+<label for="exampleInputName1">{{__('SuperAdmin/backend.photos')}}</label>
 <input name="multiple_photos[]" multiple type="file" class="form-control" id="exampleInputName1" accept = "image/*">
 </div>
 
@@ -225,27 +225,27 @@
 
 
 
-<form id="form2" class="forms-sample" enctype="multipart/form-data" action  = "{{route('school.store')}}" method = "post">
+<form id="form2" class="forms-sample" enctype="multipart/form-data" action="{{route('school.store')}}" method="post">
 {{csrf_field()}}
 <div class="form-group">
-<label for="exampleInputName1">{{__('SuperAdmin/backend.school_name')}}</label>
-<input name="name" type="text" class="form-control" id="exampleInputName1" placeholder="{{__('SuperAdmin/backend.school_name')}}" value="{{old('name')}}">
+<label for="exampleInputName1">{{__('SuperAdmin/backend.name')}}</label>
+<input name="name" type="text" class="form-control" id="exampleInputName1" placeholder="{{__('SuperAdmin/backend.name')}}" value="{{old('name')}}">
 </div>
 <input type="hidden" name="ar" value='1'>
 @if($errors->has('name'))
 <div class="alert alert-danger">{{$errors->first('name')}}</div>
 @endif
 <div class="form-group">
-<label for="exampleInputEmail3">{{__('SuperAdmin/backend.school_email_address')}}</label>
-<input value="{{old('email')}}" name="email" type="text" class="form-control" id="exampleInputEmail3" placeholder="{{__('SuperAdmin/backend.school_email_address')}}">
+<label for="exampleInputEmail3">{{__('SuperAdmin/backend.email_address')}}</label>
+<input value="{{old('email')}}" name="email" type="text" class="form-control" id="exampleInputEmail3" placeholder="{{__('SuperAdmin/backend.email_address')}}">
 </div>
 @if($errors->has('email'))
 <div class="alert alert-danger">{{$errors->first('email')}}</div>
 @endif
 
 <div class="form-group">
-<label for="exampleSelectGender">{{__('SuperAdmin/backend.school_contact_number')}}</label>
-<input value="{{old('contact')}}" name="contact" class="form-control" id="exampleSelectGender" placeholder = "{{__('SuperAdmin/backend.school_contact_number')}}" type="text">
+<label for="exampleSelectGender">{{__('SuperAdmin/backend.contact_number')}}</label>
+<input value="{{old('contact')}}" name="contact" class="form-control" id="exampleSelectGender" placeholder = "{{__('SuperAdmin/backend.contact_number')}}" type="text">
 
 </div>
 @if($errors->has('contact'))
@@ -256,8 +256,8 @@
 
 
 <div class="form-group">
-<label for="exampleInputName1">{{__('SuperAdmin/backend.school_emergency_number')}}</label>
-<input name="emergency_number" type="text" class="form-control" id="exampleInputName1" placeholder="{{__('SuperAdmin/backend.school_emergency_number')}}" value="{{old('emergency_number')}}">
+<label for="exampleInputName1">{{__('SuperAdmin/backend.emergency_number')}}</label>
+<input name="emergency_number" type="text" class="form-control" id="exampleInputName1" placeholder="{{__('SuperAdmin/backend.emergency_number')}}" value="{{old('emergency_number')}}">
 </div>
 @if($errors->has('emergency_number'))
 <div class="alert alert-danger">{{$errors->first('emergency_number')}}</div>
@@ -266,7 +266,7 @@
 
 
 <div class="form-group" >
-<label for="exampleInputName1">{{__('SuperAdmin/backend.school_branch_name')}}</label>
+<label for="exampleInputName1">{{__('SuperAdmin/backend.branch_name')}}</label>
 
 </div>
 <ul id="myTags2">
@@ -279,11 +279,11 @@
 
 
 <div class="form-group">
-<label for="exampleInputName1">{{__('SuperAdmin/backend.school_capacity')}}</label>
-<input name="school_capacity" type="text" class="form-control" id="exampleInputName1" placeholder="{{__('SuperAdmin/backend.school_capacity')}}" value="{{old('school_capacity')}}">
+<label for="exampleInputName1">{{__('SuperAdmin/backend.capacity')}}</label>
+<input name="capacity" type="text" class="form-control" id="exampleInputName1" placeholder="{{__('SuperAdmin/backend.capacity')}}" value="{{old('capacity')}}">
 </div>
-@if($errors->has('school_capacity'))
-<div class="alert alert-danger">{{$errors->first('school_capacity')}}</div>
+@if($errors->has('capacity'))
+<div class="alert alert-danger">{{$errors->first('capacity')}}</div>
 @endif
 
 

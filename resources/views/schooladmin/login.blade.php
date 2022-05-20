@@ -12,7 +12,7 @@
 
     <!-- ======= login Section ======= -->
     <div class="container mt-5 mb-5">
-        <form id="login-form" method = "post" action = "{{route('school_admin_login_post')}}">
+        <form id="login-form" method="post" action = "{{route('school_admin_login_post')}}">
             @csrf
             <div class="heading">Login</div>
 
@@ -63,7 +63,7 @@
 
     <!-- Modal -->
     <div class="modal fade" id="forgotPasssword" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <form method = "post" action="{{route('forgot-password-post')}}">
+        <form method="post" action="{{route('forgot-password-post')}}">
             @csrf
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">

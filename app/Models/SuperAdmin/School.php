@@ -21,7 +21,7 @@ class School extends Model
     protected $casts = [
         'logos' => 'array',
         'multiple_photos' => 'array',
-        'school_video' => 'array',
+        'video' => 'array',
         'video_url' => 'array',
     ];
 
@@ -75,13 +75,13 @@ class School extends Model
             }
         }
 
-        if (!empty($this->school_video)) {
-            if (is_array($this->school_video)) {
-                foreach ($this->school_video as $videos) {
-                    Storage::delete('public/school_video/' . $videos);
+        if (!empty($this->video)) {
+            if (is_array($this->video)) {
+                foreach ($this->video as $videos) {
+                    Storage::delete('public/video/' . $videos);
                 }
             } else {
-                Storage::delete('public/school_video/' . $this->school_video);
+                Storage::delete('public/video/' . $this->video);
             }
         }
 

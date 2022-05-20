@@ -40,10 +40,10 @@
                             <th data-filter="select" data-select="{{implode(",", $choose_fields["languages"])}}">{{__('SuperAdmin/backend.language')}}</th>
                             <th data-filter="select" data-select="{{implode(",", $choose_fields["program_types"])}}">{{__('SuperAdmin/backend.program_type')}}</th>
                             <th data-filter="select" data-select="{{implode(",", $choose_fields["study_modes"])}}">{{__('SuperAdmin/backend.study_mode')}}</th>
-                            <th data-filter="select" data-select="{{implode(",", $choose_fields["school_names"])}}">{{__('SuperAdmin/backend.school_name')}}</th>
+                            <th data-filter="select" data-select="{{implode(",", $choose_fields["names"])}}">{{__('SuperAdmin/backend.name')}}</th>
                             <th data-filter="select" data-select="{{implode(",", $choose_fields["school_cities"])}}">{{__('SuperAdmin/backend.city')}}</th>
                             <th data-filter="select" data-select="{{implode(",", $choose_fields["school_countries"])}}">{{__('SuperAdmin/backend.country')}}</th>
-                            <th data-filter="select" data-select="{{implode(",", $choose_fields["branch_names"])}}">{{__('SuperAdmin/backend.school_branch_name')}}</th>
+                            <th data-filter="select" data-select="{{implode(",", $choose_fields["branch_names"])}}">{{__('SuperAdmin/backend.branch_name')}}</th>
                             <th data-filter="select" data-select="{{implode(",", $choose_fields["currencies"])}}">{{__('SuperAdmin/backend.currency')}}</th>
 
                             <th>{{__('SuperAdmin/backend.program_name')}}</th>

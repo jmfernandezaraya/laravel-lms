@@ -35,7 +35,6 @@ class CourseAutoSendNotification extends Command
     public function __construct()
     {
         parent::__construct();
-
     }
 
     /**
@@ -45,31 +44,17 @@ class CourseAutoSendNotification extends Command
      */
     public function handle()
     {
-
         $twoWeek = Carbon::now()->addWeeks(4)->format('Y-m-d');
-
-
         $oneWeek = Carbon::now()->addWeek()->format('Y-m-d');
-
-        $coursemodal = UserCourseBookedDetails::with('getCourseProgram')->join('courses_program_en', 'user_course_booked_details.course_program_id', 'courses_program_en.unique_id')
-            ->select('user_course_booked_details.*', 'courses_program_en.program_start_date AS psd')
-            ->where('courses_program_en.program_start_date', $twoWeek)->orWhere('courses_program_en.program_start_date', $oneWeek)
+        $coursemodal = UserCourseBookedDetails::with('getCourseProgram')->join('courses_programs', 'user_course_booked_details.course_program_id', 'course_programs.unique_id')
+            ->select('user_course_booked_details.*', 'courses_programs.program_start_date AS psd')
+            ->where('courses_programs.program_start_date', $twoWeek)->orWhere('courses_programs.program_start_date', $oneWeek)
             ->get();
 
-
-
         if(!$coursemodal->isEmpty()){
-
-
             foreach ($coursemodal as $values) {
-
-
                 $values->notify(new CourseNotificationToStudent($values));
-
-
-
             }
-
         }
         return 0;
     }

@@ -334,7 +334,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="form_apply" method = "post" action  = "{{route('superadmin.add_applying_from')}}">
+            <form id="form_apply" method="post" action="{{route('superadmin.add_applying_from')}}">
                 {{csrf_field()}}
                 <div class="modal-body">
                     <div class="form-group">
@@ -364,7 +364,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method = "post" id="application_form" action="{{route('superadmin.add_application_center')}}">
+            <form method="post" id="application_form" action="{{route('superadmin.add_application_center')}}">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">

@@ -31,7 +31,7 @@
                 <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
                     <a class="dropdown-item" href="#"><i class="mdi mdi-cached mr-2 text-success"></i> Activity Log </a>
                     <div class="dropdown-divider"></div>
-                    <form method = "post" action = "{{route('superadmin.superadmin-logout')}}">
+                    <form method="post" action = "{{route('superadmin.superadmin-logout')}}">
                         @csrf
                         <button type ="submit" class="dropdown-item">
                         <i class="mdi mdi-logout mr-2 text-primary"></i> Signout </button>

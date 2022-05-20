@@ -16,8 +16,7 @@ use Ghanem\Rating\Models\Rating;
 
 use App\Models\User;
 use App\Models\UserCourseBookedDetails;
-
-use App\Models\Frontend\Review;
+use App\Models\Review;
 
 use App\Models\SuperAdmin\Choose_Accommodation_Age_Range;
 use App\Models\SuperAdmin\Choose_Program_Age_Range;

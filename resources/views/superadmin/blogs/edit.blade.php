@@ -63,7 +63,7 @@
                     </div>
 
                     <a class="btn btn-light" href="{{url()->previous()}}">{{__('SuperAdmin/backend.cancel')}}</a>
-                    <button type="button" onclick="submitForm($(this).parents().find('#blogForm'))" class="btn btn-primary">@lang('SuperAdmin/backend.submit') </button>
+                    <button type="button" onclick="submitForm($(this).parents().find('#blogForm'))" class="btn btn-primary">{{__('SuperAdmin/backend.submit')}}</button>
                 </div>
             </div>
         </form>

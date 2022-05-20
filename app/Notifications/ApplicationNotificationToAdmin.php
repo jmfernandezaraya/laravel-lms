@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class CourseNotificationToStudent extends Notification
+class ApplicationNotificationToAdmin extends Notification
 {
     use Queueable;
 
@@ -15,11 +15,11 @@ class CourseNotificationToStudent extends Notification
      *
      * @return void
      */
-    public $date;
+    public $data;
 
-    public function __construct($date)
+    public function __construct($data)
     {
-        return $this->date = $date;
+        return $this->data = $data;
     }
 
     /**
@@ -41,13 +41,11 @@ class CourseNotificationToStudent extends Notification
      */
     public function toMail($notifiable)
     {
-        $date = $this->date->getCourseProgram->program_start_date;
         return (new MailMessage)
-            ->line('Your Course starts on' . $date)
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+            ->greeting(__('SuperAdmin/backend.customer_doesnt_leave_review_rating'))
+            ->action(__('SuperAdmin/backend.send_email'), route('superadmin.manage_application.edit', $this->data->id));
     }
-
+    
     /**
      * Get the array representation of the notification.
      *

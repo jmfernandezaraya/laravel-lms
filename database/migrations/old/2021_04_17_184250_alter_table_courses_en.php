@@ -13,10 +13,10 @@ class AlterTableCoursesEn extends Migration
      */
     public function up()
     {
-        Schema::table('courses_en', function (Blueprint $table) {
+        Schema::table('courses', function (Blueprint $table) {
             $table->longText('about_program')->change();
         });
-        Schema::table('courses_program_en', function (Blueprint $table) {
+        Schema::table('course_programs', function (Blueprint $table) {
             $table->longText('about_courier')->change();
         });
     }
@@ -28,7 +28,7 @@ class AlterTableCoursesEn extends Migration
      */
     public function down()
     {
-        Schema::table('courses_en', function (Blueprint $table) {
+        Schema::table('courses', function (Blueprint $table) {
             //
         });
     }

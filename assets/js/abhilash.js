@@ -274,6 +274,14 @@ function confirmDelete() {
     return false;
 }
 
+function confirmClone() {
+    if (confirm(clone_on_confirm)) {
+        return true;
+    }
+
+    return false;
+}
+
 function submitCourseForm(object) {
     $("#loader").show();
     getCkEditorsData();

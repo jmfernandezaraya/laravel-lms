@@ -13,7 +13,7 @@ class AlterTableCourseProgram extends Migration
      */
     public function up()
     {
-        Schema::table('courses_program_en', function (Blueprint $table) {
+        Schema::table('course_programs', function (Blueprint $table) {
             /* 
                 $table->foreign('course_unique_id')->references('unique_id')->on('courses_en')
                 ->onDelete('cascade');

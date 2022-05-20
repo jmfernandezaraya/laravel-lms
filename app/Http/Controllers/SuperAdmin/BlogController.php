@@ -82,7 +82,7 @@ class BlogController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $blogs = Blog::find($id);
+        $blog = Blog::find($id);
 
         $rules = [
             'title_en' => 'required',
@@ -90,8 +90,6 @@ class BlogController extends Controller
             'description_ar' => 'required',
             'description_en' => 'required',
         ];
-
-
         $validate = Validator::make($request->all(), $rules, [
             'title_ar.required' => __('SuperAdmin/backend.errors.blog_title_in_arabic'),
             'title_en.required' => __('SuperAdmin/backend.errors.blog_title_in_english'),
@@ -103,7 +101,7 @@ class BlogController extends Controller
         }
         $save = $validate->validated();
 
-        $blogs->fill($save)->save();
+        $blog->fill($save)->save();
         $saved = __('SuperAdmin/backend.data_saved');
         return response()->json(['data' => $saved]);
     }

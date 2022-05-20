@@ -36,7 +36,7 @@ class AddSchoolRequest extends FormRequest
             'logos.*' => 'mimes:jpg,jpeg,png,bmp,pdf,svg',
 
             'multiple_photos.*' => 'mimes:jpg,jpeg,png,bmp,pdf',
-            'school_capacity' => 'required',
+            'capacity' => 'required',
             'facilities' => 'required',
             'class_size' => 'required',
             'opened' => 'required',

@@ -14,7 +14,7 @@ class AddForeignKeysToCourseProgramTextBookFeeTable extends Migration
     public function up()
     {
         Schema::table('course_program_text_book', function (Blueprint $table) {
-            $table->foreign('program_id')->references('unique_id')->on('courses_program_en')->onUpdate('RESTRICT')->onDelete('CASCADE');
+            $table->foreign('program_id')->references('unique_id')->on('course_programs')->onUpdate('RESTRICT')->onDelete('CASCADE');
         });
     }
 

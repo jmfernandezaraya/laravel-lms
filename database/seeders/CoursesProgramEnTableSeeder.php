@@ -13,9 +13,9 @@ class CoursesProgramEnTableSeeder extends Seeder
      */
     public function run()
     {
-        \DB::table('courses_program_en')->delete();
+        \DB::table('courses_programs')->delete();
 
-        \DB::table('courses_program_en')->insert(array (
+        \DB::table('courses_programs')->insert(array (
             0 =>
             array (
                 'unique_id' => '16181450928',

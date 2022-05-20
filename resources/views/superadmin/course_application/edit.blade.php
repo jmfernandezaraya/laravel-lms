@@ -95,7 +95,7 @@
                         <table class="table table-bordered">
                             <tbody>
                                 <tr>
-                                    <td>{{__('SuperAdmin/backend.school_name')}}</td>
+                                    <td>{{__('SuperAdmin/backend.name')}}</td>
                                     <td>{{ app()->getLocale() == 'en' ? ($course_booked_detail->course->school->name . ($course_booked_detail->course->school->branch_name ? $course_booked_detail->course->school->branch_name : '')) : ($course_booked_detail->course->school->name_ar . ($course_booked_detail->course->school->branch_name_ar ? $course_booked_detail->course->school->branch_name_ar : '')) }}</td>
                                 </tr>
                                 <tr>

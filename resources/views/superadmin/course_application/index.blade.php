@@ -20,7 +20,7 @@
                             <th>{{__('SuperAdmin/backend.name')}}</th>
                             <th>{{__('SuperAdmin/backend.email')}}</th>
                             <th>{{__('SuperAdmin/backend.mobile')}}</th>
-                            <th>{{__('SuperAdmin/backend.school_name')}}</th>
+                            <th>{{__('SuperAdmin/backend.name')}}</th>
                             <th>{{__('SuperAdmin/backend.city')}}</th>
                             <th>{{__('SuperAdmin/backend.country')}}</th>
                             <th>{{__('SuperAdmin/backend.programme_name')}}</th>

@@ -16,7 +16,7 @@ class AddCourseProgramIdToUserCourseBookedDetails extends Migration
         Schema::table('user_course_booked_details', function (Blueprint $table) {
             $table->foreignId('course_program_id')->after('course_id');
             $table->foreign('course_program_id')->references('unique_id')
-                ->on('courses_program_en')->cascadeOnDelete();
+                ->on('course_programs')->cascadeOnDelete();
         });
     }
 

@@ -13,9 +13,9 @@ class CreateCoursesProgramEnTable extends Migration
      */
     public function up()
     {
-        Schema::create('courses_program_en', function (Blueprint $table) {
+        Schema::create('course_programs', function (Blueprint $table) {
             $table->unsignedBigInteger('unique_id')->primary();
-            $table->unsignedBigInteger('course_unique_id')->index('courses_program_en_course_unique_id_foreign');
+            $table->unsignedBigInteger('course_unique_id')->index('course_programs_course_unique_id_foreign');
             $table->longText('program_name');
             $table->string('program_registration_fee', 500)->nullable();
             $table->string('program_duration', 200)->nullable();
@@ -51,6 +51,6 @@ class CreateCoursesProgramEnTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('courses_program_en');
+        Schema::dropIfExists('course_programs');
     }
 }

@@ -14,7 +14,7 @@ class AddForeignKeysToCourseProgramUnderAgeFeesTable extends Migration
     public function up()
     {
         Schema::table('course_program_under_age_fees', function (Blueprint $table) {
-            $table->foreign('course_program_id')->references('unique_id')->on('courses_program_en')->onUpdate('RESTRICT')->onDelete('CASCADE');
+            $table->foreign('course_program_id')->references('unique_id')->on('course_programs')->onUpdate('RESTRICT')->onDelete('CASCADE');
         });
     }
 

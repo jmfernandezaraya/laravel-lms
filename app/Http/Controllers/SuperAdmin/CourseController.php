@@ -425,7 +425,7 @@ class CourseController extends Controller
     {
         $coursecreate = new CourseCreateService();
         if ($coursecreate->cloneCourse($course_id)) {
-            toastr()->success(__('SuperAdmin/backend.data_removed_successfully'));
+            toastr()->success(__('SuperAdmin/backend.data_cloned_successfully'));
         }
         return back();
     }
@@ -445,7 +445,7 @@ class CourseController extends Controller
             }
         });
         if ($db) {
-            toastr()->success(__('SuperAdmin/backend.data_removed_successfully'));
+            toastr()->success(__('SuperAdmin/backend.data_paused_successfully'));
         }
         return back();
     }
@@ -465,7 +465,7 @@ class CourseController extends Controller
             }
         });
         if ($db) {
-            toastr()->success(__('SuperAdmin/backend.data_removed_successfully'));
+            toastr()->success(__('SuperAdmin/backend.data_played_successfully'));
         }
         return back();
     }

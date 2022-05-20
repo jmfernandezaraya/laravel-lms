@@ -100,7 +100,7 @@
         <div class="study">
             <table class="table table-bordered">
                 <tr>
-                    <td>{{__('Mail.course_booked.school_name')}}</td>
+                    <td>{{__('Mail.course_booked.name')}}</td>
                     <td>{{ $locale == 'en' ? ($school->name . ($school->branch_name ? ' - ' . $school->branch_name : '')) : ($school->branch_name_ar . ($school->branch_name_ar ? ' - ' . $school->branch_name_ar : '')) }}</td>
                 </tr>
                 <tr>

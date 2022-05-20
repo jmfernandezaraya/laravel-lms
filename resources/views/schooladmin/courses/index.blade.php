@@ -19,8 +19,8 @@
                             <th> @lang('SuperAdmin/backend.language') </th>
                             <th> @lang('SuperAdmin/backend.program_type') </th>
                             <th> @lang('SuperAdmin/backend.study_mode') </th>
-                            <th> @lang('SuperAdmin/backend.school_name') </th>
-                            <th> @lang('SuperAdmin/backend.school_branch_name') </th>
+                            <th> @lang('SuperAdmin/backend.name') </th>
+                            <th> @lang('SuperAdmin/backend.branch_name') </th>
                             <th> @lang('SuperAdmin/backend.currency') </th>
 
                             <th> @lang('SuperAdmin/backend.program_name') </th>
@@ -143,7 +143,7 @@
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label class="">{{__('SuperAdmin/backend.school_name')}}</label>
+                                                    <label class="">{{__('SuperAdmin/backend.name')}}</label>
                                                     <select name="school_id" class="form-control">
                                                         @foreach(\App\Models\SuperAdmin\School::all() as $schools)
                                                             <option value="{{$schools->id}}" {{in_array($schools->id, (array)$course->school_id) ? 'selected' : ''}} >{{$schools->name }}</option>
@@ -152,7 +152,7 @@
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label class="">{{__('SuperAdmin/backend.school_branch_name')}}</label>
+                                                    <label class="">{{__('SuperAdmin/backend.branch_name')}}</label>
                                                     <select name="branch[]" multiple="multiple" class="form-control">
                                                         @if(isset($course->school->branch_name))
                                                             @foreach($course->school->branch_name as $branches)

@@ -22,7 +22,10 @@ return [
     'pause' => 'ايقاف',
     'delete' => 'حذف',
     'restore' => 'استعادة',
+    'destroy' => 'Destroy',
     'default' => 'افتراضي',
+    'success' => 'Success',
+    'failed' => 'Failed',
 
     'study_mode' => 'نظام الدراسة',
 
@@ -55,6 +58,7 @@ return [
     'language' => 'اللغة',
 
     /* Choose School Starts */
+    'customer_registered_with_this_school' => 'Customer registered with this school!',
     'add_branch' => 'أضف فرع',
     'course_week' => 'Course Per Week',
 
@@ -93,6 +97,17 @@ return [
     'total_amount_due' => 'Total Amount Due',
 
     'payment_received' => 'المدفوعات المستلمة',
+
+    'order_id' => 'Order Id',
+    'description' => 'Description',
+    'billing_address' => 'Billing Address',
+    'billing_city' => 'Billing City',
+    'billing_region' => 'Billing Region',
+    'billing_country' => 'Billing Country',
+    'billing_zip' => 'Billing Zip',
+    'billing_email' => 'Billing Email',
+    'dated' => 'Dated',
+    
     'program_features' => 'Program features',    
     'program_name' => 'اسم البرنامج',
 
@@ -262,6 +277,14 @@ return [
     'school_emergency_number' => 'رقم هاتف الطوارئ للمدرسة ',
     'school_branch_name' => 'اسم الفرع',
     
+    'school_cloned_successfully' => 'School Cloned Successfully',
+    'school_restored_successfully' => 'School Restored Successfully',
+    'school_paused_successfully' => 'School Paused Successfully',
+    'school_played_successfully' => 'School Played Successfully',
+    'school_removed_successfully' => 'School Removed Successfully',
+    'school_deleted_successfully' => 'School Deleted Successfully',
+    'school_destroyed_successfully' => 'School Destroyed Successfully',
+    
     'comments' => 'ملاحظة',
     'user_name' => 'اسم المستخدم',
     'rated' => 'تم التقييم',
@@ -274,13 +297,19 @@ return [
     'save_form_name' => 'حفظ اسم النموذج',
     'subject' => 'العنوان',
     'message' => 'الرسالة',
-    'school_capacity' => 'القدرة الاستيعابية للمدرسة',
+    
+    'contact_number' => 'Contact Number',
+    'branch_name' => 'Branch Name',
+    'emergency_number' => 'Emergency Number',
+    'opening_hours' => 'Opening Hours',
+    'number_of_classrooms' => 'Number of classrooms',
+    'capacity' => 'القدرة الاستيعابية للمدرسة',
     'facilities' => 'المرافق والخدمات',
     'class_size' => 'العدد الأقصى للطلاب في الفصل',
     'year_opened' => 'سنة افتتاح المدرسة',
     'about_the_school' => 'معلومات عن المدرسة',
     'about_the_school' => 'معلومات عن المدرسة',
-    'school_video' => 'رابط فيديو المدرسة',
+    'video' => 'رابط فيديو المدرسة',
     'city' => 'المدينة',
     'enter_city' => 'أضف المدينة',
     'enter_country' => 'أضف الدولة',
@@ -288,8 +317,8 @@ return [
     'address' => 'أضف لوكيشن المدرسة',
     'address_map_location' => 'لوكيشن المدرسة',
     'accreditations_logos' => 'الإعتمادات والعضويات',
-    'school_logo' => 'شعار المدرسة',
-    'school_photos' => 'صور المدرسة',
+    'logo' => 'شعار المدرسة',
+    'photos' => 'صور المدرسة',
     'cancel' => 'الغاء',
     'submit' => 'حفظ',
     'data_saved' => 'تم حفظ البيانات بنجاح',
@@ -352,7 +381,6 @@ return [
     'airport_service' => 'خدمة المواصلات',
     'choose_study_mode' => 'اختر طريقة الدراسة',
     'choose_program_type' => 'اختر نوع الدورة',
-    'data_removed_successfully' => 'تم حذف البيانات بنجاح',
     'age_in_english' => 'العمر بالانجليزي',
     'age_in_arabic' => 'العمر بالعربي ',
 
@@ -379,6 +407,20 @@ return [
     'customer_number' => 'Customer Number',
 
     'are_you_sure_you_wanna_bulk_action' => 'Are You Sure You Wanna Bulk Action',
+    'are_you_sure_you_wanna_restore' => 'Are You Sure You Wanna Restore',
+    'are_you_sure_you_wanna_clone' => 'Are You Sure You Wanna Clone',
+    'are_you_sure_you_wanna_pause' => 'Are You Sure You Wanna Pause',
+    'are_you_sure_you_wanna_play' => 'Are You Sure You Wanna Play',
+    'are_you_sure_you_wanna_delete' => 'Are You Sure You Wanna Delete',
+    'are_you_sure_you_wanna_destroy' => 'Are You Sure You Wanna Destroy',
+    
+    'data_cloned_successfully' => 'Data Cloned Successfully',
+    'data_restored_successfully' => 'Data Restored Successfully',
+    'data_paused_successfully' => 'Data Paused Successfully',
+    'data_played_successfully' => 'Data Played Successfully',
+    'data_removed_successfully' => 'تم حذف البيانات بنجاح',
+    'data_deleted_successfully' => 'Data Deleted Successfully',
+    'data_destroyed_successfully' => 'Data Destroyed Successfully',
 
     'errors' => [
         'blog_title_in_arabic' => 'عنوان المدونة مطلوب ( عربي )',
@@ -688,4 +730,37 @@ return [
     'type_of_visa' => 'Type Of Visa',
     'to_travel' => 'To Travel',
     'image_uploaded_successfully' => 'Image uploaded successfully',
+
+    'please_leave_review_rating_on_course' => 'Please leave review and rating on your course!',
+    'leave_review_rating' => 'Leave review and rating',
+    'you_booked_course_at' => 'You booked course at',
+    'customer_doesnt_leave_review_rating' => 'Customer does not leave the review and rating', 
+    'send_email' => 'Send Email',
+
+    'rating_review' => 'Rating & Review',
+    'edit_rating_review' => 'Edit Rating & Review',
+    'add_rating_review' => 'Add Rating & Review',
+    
+    'reviews' => 'Reviews',
+    'edit_review' => 'Edit Review',
+    'add_review' => 'Add Review',
+    'rate_write_a_review' => 'Rate & Write A Review',
+    'write_a_review' => 'Write A Review',
+    'review_approved' => 'Review has been approved',
+    'review_disapproved' => 'Review has been disapproved',
+    'created_at' => 'Created At',
+    'school_and_teaching' => 'School & Teaching',
+    'quality_of_teaching' => 'Quality of teaching',
+    'school_facilities' => 'School facilities',
+    'social_activities' => 'Social activities',
+    'school_location' => 'School Location',
+    'satisfied_teaching' => 'How satisfied are you with the Teaching for the money paid',
+    'level_of_cleanliness' => 'Level of cleanliness',
+    'distance_accommodation_school' => 'The distance between the Accommodation and the School',
+    'satisfied_accommodation' => 'How satisfied are you with the Accommodation for the money paid',
+    'others' => 'Others',
+    'airport_transfer' => 'Airport Transfer',
+    'city_activities' => 'City activities',
+    'would_you_recommend_this_school' => 'Would you recommend this school',
+    'use_my_full_name_for_the_rating_and_review' => 'Use my full name for the rating and review',
 ];

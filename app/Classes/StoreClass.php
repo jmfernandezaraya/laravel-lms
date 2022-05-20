@@ -148,7 +148,7 @@ class StoreClass {
 						'contact' => 'required',
 						'multiple_photos.*' => 'mimes:jpg,bmp,png,jpeg',
 						'logo' => 'mimes:jpg,bmp,png,jpeg',
-						'school_video.*' => 'mimes:mp4,asf,wmv,mpeg,3gp,avi,flv',
+						'video.*' => 'mimes:mp4,asf,wmv,mpeg,3gp,avi,flv',
 						'logos.*' => 'mimes:jpg,bmp,png,jpeg'
 					];
 					// return response()->json(['errors' => $this->request->all()]);
@@ -161,7 +161,7 @@ class StoreClass {
 						'contact' => 'required',
 						'multiple_photos.*' => 'mimes:jpg,bmp,png,jpeg',
 						'logo' => 'mimes:jpg,bmp,png,jpeg',
-						'school_video.*' => 'mimes:mp4,asf,wmv,mpeg,3gp,avi,flv',
+						'video.*' => 'mimes:mp4,asf,wmv,mpeg,3gp,avi,flv',
 						'logos.*' => 'mimes:jpg,bmp,png,jpeg'
 					];
 				}
@@ -259,7 +259,7 @@ class StoreClass {
 				
 				$input = $this->request->except('_token', 'ar');
 				$input['multiple_photos'] = Session::get('multiple_photos');
-				$input['school_video'] = Session::get('video');
+				$input['video'] = Session::get('video');
 				$input['logos'] = Session::get('logos');
 				$input['logo'] = Session::get('logo');
 				$input['unique_id'] = $unique_id;
