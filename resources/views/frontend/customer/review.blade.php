@@ -9,11 +9,13 @@
 @endsection
 
 @section('breadcrumbs')
-    @if ($review)
-        <h1>{{__('Frontend.edit_the_review')}}</h1>
-    @else
-        <h1>{{__('Frontend.rate_write_a_review')}}</h1>
-    @endif
+    <h1>
+        @if ($review)
+            {{__('Frontend.edit_the_review')}}
+        @else
+            {{__('Frontend.rate_write_a_review')}}
+        @endif
+    </h1>
 @endsection
 
 @section('content')

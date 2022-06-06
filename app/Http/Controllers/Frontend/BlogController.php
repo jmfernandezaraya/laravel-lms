@@ -7,30 +7,32 @@ use App\Models\Blog;
 
 class BlogController extends Controller
 {
-    public function index(){
-        $blogs = Blog::all();
-        $data['language'] = (string)get_language();
-        $blogrecents = Blog::latest()->take(4)->get();
-        return view('frontend.blog.index',$data, compact('blogs','blogrecents'));
+    public function index()
+    {
+        $blogs = Blog::where('display', true)->latest()->get();
+        return view('frontend.blog.index', compact('blogs'));
     }
 
-    public function show($id){
+    public function show($id)
+    {
         $blog = Blog::findorFail($id);
         return view('frontend.blog.detail', compact('blog'));
     }
 
     /*
-    *@param value
+    * @param value
     *
-    *@return search result
+    * @return search result
     * */
     public function search($value)
     {
-        $blog = Blog::where('title_en', 'LIKE', '%' . $value .'%')
+        $blogs = Blog::where('display', true)->where(function($query) use ($value) {
+            $query->where('title_en', 'LIKE', '%' . $value .'%')
             ->orWhere('title_ar', 'LIKE', '%' . $value .'%')
             ->orWhere('description_en', 'LIKE', '%' . $value .'%')
-            ->orWhere('description_ar', 'LIKE', '%' . $value .'%')->get();
-        $default = Blog::latest()->take(4)->get();
-        return response()->json(['result' => view('frontend.blog.search', compact('blog','default'))->render()]);
+            ->orWhere('description_ar', 'LIKE', '%' . $value .'%');
+        })->get();
+
+        return response()->json(['result' => view('frontend.blog.search', compact('blogs'))->render()]);
     }
 }

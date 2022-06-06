@@ -5,7 +5,17 @@
 @endsection
 
 @section('content')
-    <div class="col-lg-12 grid-margin stretch-card">
+    <div class="page-header">
+        <div class="card">
+            <div class="card-body">
+                <div style="text-align: center;">
+                    <h1 class="card-title">{{__('SuperAdmin/backend.course_application_details')}}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-content">
         <div class="card">
             <div class="card-body table table-responsive">
                 <div style="text-align: center;">
@@ -15,12 +25,11 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <td>{{__('SuperAdmin/backend.course_application_details')}}</td>
-                            <th>{{__('SuperAdmin/backend.user_name')}}</th>
+                            <td>{{__('SuperAdmin/backend.created_at')}}</td>
                             <th>{{__('SuperAdmin/backend.name')}}</th>
                             <th>{{__('SuperAdmin/backend.email')}}</th>
                             <th>{{__('SuperAdmin/backend.mobile')}}</th>
-                            <th>{{__('SuperAdmin/backend.name')}}</th>
+                            <th>{{__('SuperAdmin/backend.school_name')}}</th>
                             <th>{{__('SuperAdmin/backend.city')}}</th>
                             <th>{{__('SuperAdmin/backend.country')}}</th>
                             <th>{{__('SuperAdmin/backend.programme_name')}}</th>
@@ -38,12 +47,11 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $details->created_at }}</td>
                                 <td>{{ get_language() == 'en' ? ucwords($details->User->first_name_en) : ucwords($details->User->first_name_ar) }} {{ get_language() == 'en' ? ucwords($details->User->last_name_en) : ucwords($details->User->last_name_ar) }}</td>
-                                <td>{{ ucwords($details->fname) }} {{ucwords($details->lname) }}</td>
-                                <td>{{ ucwords($details->userBookDetailsApproved->email ?? $details->email) }}</td>
-                                <td>{{ ucwords($details->userBookDetailsApproved->mobile ?? $details->mobile) }}</td>
-                                <td>{{ ucwords(get_language() == 'en' ? $details->course->school->name : $details->course->school->name_ar) }}</td>
-                                <td>{{ ucwords( $details->course->school->city) }}</td>
-                                <td>{{ ucwords($details->course->school->country) }}</td>
+                                <td>{{ ucwords($details->User->email ?? $details->email) }}</td>
+                                <td>{{ ucwords($details->User->contact ?? $details->mobile) }}</td>
+                                <td>{{ ucwords($details->course->school && $details->course->school->name ? (get_language() == 'en' ? $details->course->school->name->name : $details->course->school->name->name_ar) : '') }}</td>
+                                <td>{{ ucwords($details->course->school && $details->course->school->city ? (get_language() == 'en' ? $details->course->school->city->name : $details->course->school->city->name_ar) : '') }}</td>
+                                <td>{{ ucwords($details->course->school && $details->course->school->country ? (get_language() == 'en' ? $details->course->school->country->name : $details->course->school->country->name_ar) : '') }}</td>
                                 <td>{{ ucwords($details->course->program_name) }}</td>
                                 <td>{{ ucwords($details->start_date) }}</td>
                                 <td>{{ ucwords($details->program_duration) }}</td>

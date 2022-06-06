@@ -109,8 +109,8 @@
                                         @if ($program_discount_fee['value'])
                                             <tr>
                                                 <td>{{__('Frontend.discount')}}</td>
-                                                <td class="highlight">-{{ toFixedNumber($program_discount_fee['value']) }}</td>
-                                                <td class="highlight">-{{ toFixedNumber($program_discount_fee['converted_value']) }}</td>
+                                                <td class="highlight-value">-{{ toFixedNumber($program_discount_fee['value']) }}</td>
+                                                <td class="highlight-value">-{{ toFixedNumber($program_discount_fee['converted_value']) }}</td>
                                             </tr>
                                         @endif
                                         <tr>
@@ -157,13 +157,6 @@
                                                     <td>{{ toFixedNumber($accommodation_deposit_fee['converted_value']) }}</td>
                                                 </tr>
                                             @endif
-                                            @if ($accommodation_custodian_fee['value'])
-                                                <tr>
-                                                    <td>{{__('Frontend.custodian_fee')}}</td>
-                                                    <td>{{ toFixedNumber($accommodation_custodian_fee['value']) }}</td>
-                                                    <td>{{ toFixedNumber($accommodation_custodian_fee['converted_value']) }}</td>
-                                                </tr>
-                                            @endif
                                             @if ($accommodation_summer_fee['value'])
                                                 <tr>
                                                     <td>{{__('Frontend.summer_fees')}}</td>
@@ -195,8 +188,8 @@
                                             @if ($accommodation_discount_fee['value'])
                                                 <tr>
                                                     <td>{{__('Frontend.discount')}}</td>
-                                                    <td class="highlight">-{{ toFixedNumber($accommodation_discount_fee['value']) }}</td>
-                                                    <td class="highlight">-{{ toFixedNumber($accommodation_discount_fee['converted_value']) }}</td>
+                                                    <td class="highlight-value">-{{ toFixedNumber($accommodation_discount_fee['value']) }}</td>
+                                                    <td class="highlight-value">-{{ toFixedNumber($accommodation_discount_fee['converted_value']) }}</td>
                                                 </tr>
                                             @endif
                                             <tr>
@@ -252,8 +245,8 @@
                                         </tr>
                                         <tr>
                                             <th>{{__('Frontend.total_discount')}}</th>
-                                            <th class="highlight">-{{ toFixedNumber($total_discount['value']) }} {{ $currency['cost'] }}</th>
-                                            <th class="highlight">-{{ toFixedNumber($total_discount['converted_value']) }} {{ $currency['converted'] }}</th>
+                                            <th class="highlight-value">-{{ toFixedNumber($total_discount['value']) }} {{ $currency['cost'] }}</th>
+                                            <th class="highlight-value">-{{ toFixedNumber($total_discount['converted_value']) }} {{ $currency['converted'] }}</th>
                                         </tr>
                                         <tr>
                                             <th>{{__('Frontend.total_cost')}}</th>
@@ -269,8 +262,8 @@
                                         @endif
                                         <tr>
                                             <th>{{__('Frontend.total_balance_due')}}</th>
-                                            <th class="highlight">{{ toFixedNumber($total_balance['value']) }} {{ $currency['cost'] }}</th>
-                                            <th class="highlight">{{ toFixedNumber($total_balance['converted_value']) }} {{ $currency['converted'] }}</th>
+                                            <th class="highlight-value">{{ toFixedNumber($total_balance['value']) }} {{ $currency['cost'] }}</th>
+                                            <th class="highlight-value">{{ toFixedNumber($total_balance['converted_value']) }} {{ $currency['converted'] }}</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -363,7 +356,7 @@
                                             <div class="form-group">
                                                 <label for="fname" class="col-form-label">{{__('Frontend.upload_passport_copy')}}</label>
                                                 @if ($course_booked_detail->passport_copy)
-                                                    <img src="public/images/user_booked_details/{{ $course_booked_detail->passport_copy }}" />
+                                                    <img src="{{ $course_booked_detail->passport_copy }}" class="img-fluid" />
                                                 @endif
                                             </div>
                                         </div>
@@ -405,7 +398,7 @@
                                             <div class="form-group">
                                                 <label for="nat" class="col-form-label">{{__('Frontend.upload_financial_gurantee')}}</label>
                                                 @if ($course_booked_detail->financial_guarantee)
-                                                    <img src="public/images/user_booked_details/{{ $course_booked_detail->financial_guarantee }}" />
+                                                    <img src="{{ $course_booked_detail->financial_guarantee }}" class="img-fluid" />
                                                 @endif
                                             </div>
                                         </div>
@@ -413,7 +406,7 @@
                                             <div class="form-group">
                                                 <label for="nat" class="col-form-label">{{__('Frontend.upload_bank_statement')}}</label>
                                                 @if ($course_booked_detail->bank_statement)
-                                                    <img src="public/images/user_booked_details/{{ $course_booked_detail->bank_statement }}" />
+                                                    <img src="{{ $course_booked_detail->bank_statement }}"  class="img-fluid" />
                                                 @endif
                                             </div>
                                         </div>

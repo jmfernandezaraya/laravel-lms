@@ -2,8 +2,9 @@
 
 namespace App\Models\SuperAdmin;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Classes\BindsDynamically;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Course extends Model
@@ -73,6 +74,16 @@ class Course extends Model
         return $this->medicals->where('medical_start_date', '<=', $value)->where('medical_end_date', '>=', $value)->first()['medical_fees_per_week'];
     }
 
+    public function custodian()
+    {
+        return $this->hasOne('App\Models\SuperAdmin\CourseCustodian', 'course_unique_id');
+    }
+
+    public function custodians()
+    {
+        return $this->hasMany('App\Models\SuperAdmin\CourseCustodian', 'course_unique_id')->orderBy('order', 'asc');
+    }
+
     public function school()
     {
         return $this->belongsTo(School::class, 'school_id', 'id');
@@ -86,5 +97,10 @@ class Course extends Model
     public function schoolForBranchAdmin()
     {
         return $this->belongsTo(School::class, 'school_id', 'id')->whereIn("branch_name", getBranchesForBranchAdmin());
+    }
+
+    public function userCourseBookedDetails()
+    {
+        return $this->hasMany(\App\Models\UserCourseBookedDetails::class, 'course_id', 'id');
     }
 }

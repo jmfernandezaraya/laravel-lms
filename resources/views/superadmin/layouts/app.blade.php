@@ -63,13 +63,12 @@
             @toastr_render
 
             <div class="container-fluid page-body-wrapper">
-            @include('superadmin.include.sidebar')
-            <div class="main-panel">
-                <div class="content-wrapper">
-                    <br><br>
-                    @yield('content')
-                </div>
-            @include('superadmin.include.footer')
+                @include('superadmin.include.sidebar')
+                <div class="main-panel">
+                    <div class="content-wrapper">
+                        @yield('content')
+                    </div>
+                @include('superadmin.include.footer')
     </body>
     <div id="loading"></div>
 </html>

@@ -17,9 +17,7 @@
                             <th> @lang('SuperAdmin/backend.program_duration') </th>
 
                             <th> @lang('SuperAdmin/backend.accommodation_deposit_fee') </th>
-                            <th> @lang('SuperAdmin/backend.accommodation_custodian_fee') </th>
 
-                            <th> @lang('SuperAdmin/backend.custodian_age_range') </th>
                             <th> @lang('SuperAdmin/backend.special_diet_fee') </th>
                             <th> @lang('SuperAdmin/backend.special_diet_note') </th>
 
@@ -61,8 +59,6 @@
                                 <td>{{$accomodation->placement_fee}}</td>
                                 <td>{{$accomodation->program_duration}}</td>
                                 <td>{{$accomodation->deposit_fee}}</td>
-                                <td>{{$accomodation->custodian_fee}}</td>
-                                <td>{{is_null($accomodation->custodian_age_range) ? '' : implode(", ", $accomodation->custodian_age_range) ?? $accomodation->custodian_age_range}}</td>
                                 <td>{{$accomodation->special_diet_fee}}</td>
                                 <td>{!!$accomodation->special_diet_note!!}</td>
                                 <td>{{$accomodation->fee_per_week}}</td>
@@ -158,20 +154,6 @@
                                                 <div class="form-group">
                                                     <label class="">{{__('SuperAdmin/backend.accommodation_deposit_fee')}}</label>
                                                     <input type="text" class="form-control" name='deposit_fee' value="{{$accomodation->deposit_fee}}">
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label class="">{{__('SuperAdmin/backend.accommodation_custodian_fee')}}</label>
-                                                    <input type="text" class="form-control" name='custodian_fee' value="{{$accomodation->custodian_fee}}">
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label class="">{{__('SuperAdmin/backend.custodian_age_range')}}</label>
-                                                    <select name="custodian_age_range[]" multiple="multiple" class="form-control" >
-                                                        @foreach(\App\Models\SuperAdmin\Choose_Custodian_Under_Age::all() as $custodian)
-                                                            <option multiple="" value="{{$custodian->age}}" {{in_array($custodian->age , (array) $accomodation->custodian_age_range) ? 'selected' : ''}} >{{ $custodian->age}}</option>
-                                                        @endforeach
-                                                    </select>
                                                 </div>
 
                                                 <div class="form-group">

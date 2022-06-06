@@ -3,6 +3,7 @@
 namespace App\Models\SuperAdmin;
 
 use App\Models\UserCourseBookedDetails;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

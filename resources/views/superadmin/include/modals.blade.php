@@ -124,7 +124,7 @@
                     <input type="name" class="form-control" id="study_time_english" placeholder="{{__('SuperAdmin/backend.name_in_english')}}">
                 </div>
                 <div class="form-group">
-                    <label for="study_time_arabic">{{__('SuperAdmin/backend.name_in_arabic')</label>
+                    <label for="study_time_arabic">{{__('SuperAdmin/backend.name_in_arabic')}}</label>
                     <input type="name" class="form-control" id="study_time_arabic" placeholder="{{__('SuperAdmin/backend.name_in_arabic')}}">
                 </div>
             </div>
@@ -232,7 +232,7 @@
                     <input type="number" class="form-control" id="program_under_age_english" placeholder="{{__('SuperAdmin/backend.age_in_english')}}">
                 </div>
                 <div class="form-group">
-                    <label for="program_under_age_arabic">{{__('SuperAdmin/backend.age_in_arabic')</label>
+                    <label for="program_under_age_arabic">{{__('SuperAdmin/backend.age_in_arabic')}}</label>
                     <input type="number" class="form-control" id="program_under_age_arabic" placeholder="{{__('SuperAdmin/backend.age_in_arabic')}}">
                 </div>
             </div>
@@ -265,33 +265,6 @@
             </div>
             <div class="modal-footer pt-0">
                 <button type="button" onclick="addAccommAgeRange($('#accom_age_english').val(), $('#accom_age_arabic').val())" class="btn btn-primary">{{__('SuperAdmin/backend.submit')}}</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-{{--Choose Accommodation Custodian Age Range Modal--}}
-<div class="modal fade" id="CustodianAgeRangeAcoomModal" tabindex="-1" role="dialog" aria-labelledby="CustodianAgeRangeAcoomModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="CustodianAgeRangeAcoomModalLabel">{{__('SuperAdmin/backend.add')}}</h5>
-                <button type="button" id="custodian_age_range_close" class="close" data-dismiss="modal" aria-label="{{__('SuperAdmin/backend.close')}}">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="custodian_age_range_english">{{__('SuperAdmin/backend.age_in_english')}}</label>
-                    <input type="number" class="form-control" id="custodian_age_range_english" placeholder="{{__('SuperAdmin/backend.age_in_english')}}">
-                </div>
-                <div class="form-group">
-                    <label for="custodian_age_range_arabic">{{__('SuperAdmin/backend.age_in_arabic')}}</label>
-                    <input type="number" class="form-control" id="custodian_age_range_arabic" placeholder="{{__('SuperAdmin/backend.age_in_arabic')}}">
-                </div>
-            </div>
-            <div class="modal-footer pt-0">
-                <button type="button" onclick="addAccommCustodianAgeRange($(this).parent().parent().find('input[id=custodian_age_range_english]').val(), $(this).parent().parent().find('input[id=custodian_age_range_arabic]').val())" class="btn btn-primary">{{__('SuperAdmin/backend.submit')}}</button>
             </div>
         </div>
     </div>
@@ -355,6 +328,34 @@
     </div>
 </div>
 
+{{--Choose Custodian Age Range Modal--}}
+<div class="modal fade" id="CustodianAgeRangeModal" tabindex="-1" role="dialog" aria-labelledby="CustodianAgeRangeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="CustodianAgeRangeModalLabel">{{__('SuperAdmin/backend.add')}}</h5>
+                <button type="button" id="custodian_age_range_close" class="close" data-dismiss="modal" aria-label="{{__('SuperAdmin/backend.close')}}">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="custodian_age_range_english">{{__('SuperAdmin/backend.age_in_english')}}</label>
+                    <input type="number" class="form-control" id="custodian_age_range_english" placeholder="{{__('SuperAdmin/backend.age_in_english')}}">
+                </div>
+                <div class="form-group">
+                    <label for="custodian_age_range_arabic">{{__('SuperAdmin/backend.age_in_arabic')}}</label>
+                    <input type="number" class="form-control" id="custodian_age_range_arabic" placeholder="{{__('SuperAdmin/backend.age_in_arabic')}}">
+                </div>
+            </div>
+            <div class="modal-footer pt-0">
+                <button type="button" onclick="addCustodianAgeRange($(this).parent().parent().find('input[id=custodian_age_range_english]').val(), $(this).parent().parent().find('input[id=custodian_age_range_arabic]').val())" class="btn btn-primary">{{__('SuperAdmin/backend.submit')}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Application From Modal --}}
 <div class="modal fade" id="application_center_modal" tabindex="-1" role="dialog" aria-labelledby="ApplicationFromModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -385,10 +386,11 @@
     </div>
 </div>
 
+{{-- Nationality From Modal --}}
 <div class="modal fade" id="nationality_modal" tabindex="-1" role="dialog" aria-labelledby="NationalityFromModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form id = 'add_nationailty_form' method="post" action="{{route('superadmin.add_nationality')}}">
+            <form id='add_nationailty_form' method="post" action="{{route('superadmin.add_nationality')}}">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="NationalityFromModalLabel">{{__('SuperAdmin/backend.nationality')}}</h5>
@@ -415,6 +417,7 @@
     </div>
 </div>
 
+{{-- To Travel Modal Label --}}
 <div class="modal fade" id="to_travel_modal" tabindex="-1" role="dialog" aria-labelledby="ToTravelModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -445,6 +448,7 @@
     </div>
 </div>
 
+{{-- Type Visa Modal Label --}}
 <div class="modal fade" id="type_of_visa_modal" tabindex="-1" role="dialog" aria-labelledby="TypeVisaModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -475,7 +479,7 @@
     </div>
 </div>
 
-{{-- Visa Create modal --}}
+{{-- Visa Modal Label --}}
 <div class="modal fade" id="formsaveModal" tabindex="-1" role="dialog" aria-labelledby="VisaModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -511,4 +515,33 @@
         </div>
     </div>
 </div>
-{{--All Modal Ends Here--}}
+
+{{--School Nationality Modal--}}
+<div class="modal fade" id="SchoolNationalityModal" tabindex="-1" role="dialog" aria-labelledby="SchoolNationalityModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="add_school_nationailty_form" method="post" action="{{route('superadmin.school.nationality.add')}}">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="SchoolNationalityModalLabel">{{__('SuperAdmin/backend.add')}}</h5>
+                    <button type="button" id="close_school_nationality" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nationality_in_english">{{__('SuperAdmin/backend.name_in_english')}}</label>
+                        <input type="name" class="form-control" id="nationality_in_english" placeholder="{{__('SuperAdmin/backend.name_in_english')}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="nationality_in_arabic">{{__('SuperAdmin/backend.name_in_arabic')}}</label>
+                        <input type="name" class="form-control" id="nationality_in_arabic" placeholder="{{__('SuperAdmin/backend.name_in_arabic')}}">
+                    </div>
+                </div>
+                <div class="modal-footer pt-0">
+                    <button onclick="addSchoolNationality($('#nationality_in_english').val(), $('#nationality_in_arabic').val())" type="button" class="btn btn-primary">{{__('SuperAdmin/backend.submit')}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

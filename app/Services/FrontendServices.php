@@ -5,67 +5,75 @@ namespace App\Services;
 use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\CourseProgram;
 use App\Models\SuperAdmin\Choose_Program_Age_Range;
+use App\Models\SuperAdmin\Choose_Study_Time;
 
 use Illuminate\Http\Request;
 
 class FrontendServices {
     public static function getPrograms(Request $request)
     {
-        $courses = Course::where('school_id', $request->id)
+        $courses = Course::with('coursePrograms')->where('school_id', $request->id)
             ->where('display', true)
             ->where('deleted', false)
+            ->where('language', 'LIKE', '%"' . $request->language . '"%')
             ->where('study_mode', 'LIKE', '%"' . $request->study_mode . '"%')
+            ->whereHas('coursePrograms', function ($query) use ($request) {
+                $query->where('program_age_range', 'LIKE', '%"' . $request->age . '"%');
+            })
             ->get();
 
         $output_html = '';
         foreach($courses as $course) {
-            $course_programs = CourseProgram::where('course_unique_id', '' . $course->unique_id)->count();
-            // where(function($q) {
-            //     $q->whereNotNull('courier_fee')->where('courier_fee', '<>', '');
-            // })->
-            if ($course_programs) {
+            if ($course->coursePrograms && count($course->coursePrograms)) {
                 $program_name = ucwords($course->program_name);
                 $agevalues = getCourseMinMaxAgeRange('' . $course->unique_id);
                 $minagevalue = $agevalues['min'];
                 $maxagevalue = $agevalues['max'];
                 $age = $minagevalue . " - " . $maxagevalue;
+
+                $course_study_time_names = '';
+                $course_study_times = Choose_Study_Time::whereIn('unique_id', $course->study_time)->get();
+                foreach ($course_study_times as $course_study_time) {
+                    if ($course_study_time_names) $course_study_time_names .= ' ';
+                    $course_study_time_names .= $course_study_time->name;
+                }
     
                 $url = route('course.single', ['school_id' => $course->school_id, 'program_id' => $course->unique_id]);
                 $output_html .= "<div class='sub-cources mt-3'>
                     <div class='row'>
                         <div class='col-md-2'>
-                            <h5> $program_name </h5>
+                            <h5>$program_name</h5>
                         </div>
                         <div class='col-md-8'>
                             <div class='row'>
                                 <div class='col-md-3 p-0'>
-                                    <ul class='degree-work p-0'>
+                                    <ul class='d-flex degree-work p-0'>
                                         <li><i class='fa fa-graduation-cap' aria-hidden='true'></i></li>
-                                        <li>" .  __('Frontend.lesson_week') . "<br><span>$course->lessons_per_week</span> </li>
+                                        <li>" . __('Frontend.lesson_week') . "<br><span>$course->lessons_per_week</span></li>
                                     </ul>
                                 </div>
                                 <div class='col-md-3 p-0'>
-                                    <ul class='degree-work p-0'>
+                                    <ul class='d-flex degree-work p-0'>
                                         <li><i class='fa fa-graduation-cap' aria-hidden='true'></i></li>
-                                        <li>" .  __('Frontend.hour_week') . "<br><span>$course->hours_per_week</span> </li>
+                                        <li>" . __('Frontend.hour_week') . "<br><span>$course->hours_per_week</span></li>
                                     </ul>
                                 </div>
                                 <div class='col-md-3 p-0'>
-                                    <ul class='degree-work p-0'>
+                                    <ul class='d-flex degree-work p-0'>
                                         <li><i class='fa fa-graduation-cap' aria-hidden='true'></i></li>
-                                        <li>" .  __('Frontend.required_level') . "<br><span>$course->program_level</span> </li>
+                                        <li>" . __('Frontend.required_level') . "<br><span>$course->program_level</span></li>
                                     </ul>
                                 </div>
                                 <div class='col-md-3 p-0'>
-                                    <ul class='degree-work p-0'>
+                                    <ul class='d-flex degree-work p-0'>
                                         <li><i class='fa fa-graduation-cap' aria-hidden='true'></i></li>
-                                        <li>" .  __('Frontend.age_range') . "<br><span>$age</span> </li>
+                                        <li>" . __('Frontend.study_time') . "<br><span>$course_study_time_names</span></li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                         <div class='col-md-2'>
-                            <a href='$url'><button type='button' class='btn btn-primary mt-1 choose'>" .  __('Frontend.choose_this_program') . "</button></a>
+                            <a href='$url'><button type='button' class='btn btn-primary mt-1 choose'>" . __('Frontend.choose_this_program') . "</button></a>
                         </div>
                     </div>
                 </div>";

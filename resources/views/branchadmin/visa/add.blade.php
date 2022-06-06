@@ -257,9 +257,9 @@
                             </label>
                             <select name="study_time[]" multiple="multiple" id="study_time_choose" class="3col active">
                                 <!--<option value="">{{__('SuperAdmin/backend.select')}}</option>-->
-                                <option value="Morning">{{__('SuperAdmin/backend.Morning')}}</option>
-                                <option value="Afternoon">{{__('SuperAdmin/backend.Afternoon')}}</option>
-                                <option value="Evening">{{__('SuperAdmin/backend.Evening')}}</option>
+                                <option value="Morning">{{__('SuperAdmin/backend.morning')}}</option>
+                                <option value="Afternoon">{{__('SuperAdmin/backend.afternoon')}}</option>
+                                <option value="Evening">{{__('SuperAdmin/backend.evening')}}</option>
                             </select>
                         </div>
 
@@ -616,25 +616,6 @@
                             </div>
                             <div class="col-md-4">
 
-                            </div>
-                            <div class="col-md-4"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-4 pt-3">
-                                <label>{{__('SuperAdmin/backend.accommodation_custodian_fee')}}:</label>
-                                <input class="form-control" type="text" name="custodian_fee[]" placeholder="{{__('SuperAdmin/backend.accommodation_custodian_fee')}}">
-                            </div>
-                            <div class="col-md-4">
-                                <label>{{__('SuperAdmin/backend.custodian_age_range')}} <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#CustodianAgeRangeAcoomModal" aria-hidden="true"></i><i onclick="DeleteAccomCustodianAgeRange()" class="fa fa-trash pl-3" aria-hidden="true"></i></label>
-
-                                <select name="age_range_for_custodian[]" id="custodian_age_range_choose" multiple="multiple" class="3col active">
-                                    @foreach(\App\Models\SuperAdmin\Choose_Custodian_Under_Age::all() as $option)
-                                    <option value="{{$option->age}}">"{{$option->age}}"</option>
-                                    @endforeach
-                                </select>
                             </div>
                             <div class="col-md-4"></div>
                         </div>

@@ -4,68 +4,6 @@
     {{__('SuperAdmin/backend.reservation_details')}}
 @endsection
 
-@section('css')
-    <style>
-        .study {
-            box-shadow: 0px 0px 2px 1px #ccc;
-            padding: 15px 15px;
-        }
-        .accordion .card-header:after {
-            font-family: 'FontAwesome';
-            content: "\f068";
-            float: right;
-        }
-        .accordion .card-header.collapsed:after {
-            content: "\f067";
-            cursor: pointer;
-        }
-        .table {
-            border: 1px solid #ccc;
-            box-shadow: 0px -1px 4px 1px #ece7e7;
-            background: #fff;
-        }
-        .table-bordered {
-            border: 1px solid #dee2e6;
-        }
-        table thead {
-            background-color: #97d0db;
-            color: white;
-        }
-        .table td, .table th {
-            padding: 0.75rem;
-            vertical-align: top;
-            border-top: 1px solid #dee2e6;
-        }
-        .content-wrapper {
-            background: #ffffff;
-            border: 1px solid #ccc;
-        }
-        .diff-tution {
-            color: #b94443;
-        }
-        .form-check {
-            position: relative;
-            display: block;
-            padding-left: 1.25rem;
-        }
-        .form-check-input {
-            position: absolute;
-            margin-top: .3rem;
-            margin-left: -1.25rem;
-        }
-        .best {
-            font-size: 16px;
-            font-weight: 600;
-        }
-        .registration-form {
-            padding: 0 15px;
-        }
-        .col-form-label {
-            font-weight: bold;
-        }
-    </style>
-@endsection
-
 @section('content')
     <h3>{{__('SuperAdmin/backend.reservation_details')}}</h3>
     <table class="table table-bordered">
@@ -96,15 +34,19 @@
                             <tbody>
                                 <tr>
                                     <td>{{__('SuperAdmin/backend.name')}}</td>
-                                    <td>{{ app()->getLocale() == 'en' ? ($course_booked_detail->course->school->name . ($course_booked_detail->course->school->branch_name ? $course_booked_detail->course->school->branch_name : '')) : ($course_booked_detail->course->school->name_ar . ($course_booked_detail->course->school->branch_name_ar ? $course_booked_detail->course->school->branch_name_ar : '')) }}</td>
+                                    <td>
+                                        {{ $course_booked_detail->course->school && $course_booked_detail->course->school->name ? (app()->getLocale() == 'en' ? $course_booked_detail->course->school->name->name : $course_booked_detail->course->school->name->name_ar) : ''}}
+                                        &nbsp;
+                                        {{ app()->getLocale() == 'en' ? $course_booked_detail->course->school->branch_name : $course_booked_detail->course->school->branch_name_ar }}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>{{__('SuperAdmin/backend.city')}}</td>
-                                    <td>{{ app()->getLocale() == 'en' ? $course_booked_detail->course->school->city : $course_booked_detail->course->school->city_ar }}</td>
+                                    <td>{{ $course_booked_detail->course->school && $course_booked_detail->course->school->city ? (app()->getLocale() == 'en' ? $course_booked_detail->course->school->city->name : $course_booked_detail->course->school->city->name_ar) : '' }}</td>
                                 </tr>
                                 <tr>
                                     <td>{{__('SuperAdmin/backend.country')}}</td>
-                                    <td>{{ app()->getLocale() == 'en' ? $course_booked_detail->course->school->country : $course_booked_detail->course->school->country_ar }}</td>
+                                    <td>{{ $course_booked_detail->course->school && $course_booked_detail->course->school->country ? (app()->getLocale() == 'en' ? $course_booked_detail->course->school->country->name : $course_booked_detail->course->school->country->name_ar) : '' }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -169,8 +111,8 @@
                                 @if ($program_discount_fee['value'])
                                     <tr>
                                         <td>{{__('SuperAdmin/backend.discount')}}</td>
-                                        <td class="highlight">-{{ toFixedNumber($program_discount_fee['value']) }}</td>
-                                        <td class="highlight">-{{ toFixedNumber($program_discount_fee['converted_value']) }}</td>
+                                        <td class="highlight-value">-{{ toFixedNumber($program_discount_fee['value']) }}</td>
+                                        <td class="highlight-value">-{{ toFixedNumber($program_discount_fee['converted_value']) }}</td>
                                     </tr>
                                 @endif
                                 <tr>
@@ -217,13 +159,6 @@
                                             <td>{{ toFixedNumber($accommodation_deposit_fee['converted_value']) }}</td>
                                         </tr>
                                     @endif
-                                    @if ($accommodation_custodian_fee['value'])
-                                        <tr>
-                                            <td>{{__('SuperAdmin/backend.custodian_fee')}}</td>
-                                            <td>{{ toFixedNumber($accommodation_custodian_fee['value']) }}</td>
-                                            <td>{{ toFixedNumber($accommodation_custodian_fee['converted_value']) }}</td>
-                                        </tr>
-                                    @endif
                                     @if ($accommodation_summer_fee['value'])
                                         <tr>
                                             <td>{{__('SuperAdmin/backend.summer_fees')}}</td>
@@ -255,8 +190,8 @@
                                     @if ($accommodation_discount_fee['value'])
                                         <tr>
                                             <td>{{__('SuperAdmin/backend.discount')}}</td>
-                                            <td class="highlight">-{{ toFixedNumber($accommodation_discount_fee['value']) }}</td>
-                                            <td class="highlight">-{{ toFixedNumber($accommodation_discount_fee['converted_value']) }}</td>
+                                            <td class="highlight-value">-{{ toFixedNumber($accommodation_discount_fee['value']) }}</td>
+                                            <td class="highlight-value">-{{ toFixedNumber($accommodation_discount_fee['converted_value']) }}</td>
                                         </tr>
                                     @endif
                                     <tr>
@@ -299,6 +234,15 @@
                                             <td>{{ toFixedNumber($medical_insurance_fee['converted_value']) }}</td>
                                         </tr>
                                     @endif
+                                    @if ($custodian)
+                                        <tr>
+                                            <td>
+                                                {{__('SuperAdmin/backend.custodian_fee')}}<br />
+                                            </td>
+                                            <td>{{ toFixedNumber($custodian_fee['value']) }}</td>
+                                            <td>{{ toFixedNumber($custodian_fee['converted_value']) }}</td>
+                                        </tr>
+                                    @endif
                                 </tbody>
                             </table>
                         @endif
@@ -312,8 +256,8 @@
                                 </tr>
                                 <tr>
                                     <th>{{__('SuperAdmin/backend.total_discount')}}</th>
-                                    <th class="highlight">-{{ toFixedNumber($total_discount['value']) }} {{ $currency['cost'] }}</th>
-                                    <th class="highlight">-{{ toFixedNumber($total_discount['converted_value']) }} {{ $currency['converted'] }}</th>
+                                    <th class="highlight-value">-{{ toFixedNumber($total_discount['value']) }} {{ $currency['cost'] }}</th>
+                                    <th class="highlight-value">-{{ toFixedNumber($total_discount['converted_value']) }} {{ $currency['converted'] }}</th>
                                 </tr>
                                 <tr>
                                     <th>{{__('SuperAdmin/backend.total_cost')}}</th>
@@ -322,15 +266,15 @@
                                 </tr>
                                 @if (!isset($course_register_details->financial_guarantee))
                                     <tr>
-                                        <th>{{__('SuperAdmin/backend.amount_to_pay_now_deposit')}}</th>
-                                        <th>{{ toFixedNumber($deposit_price['value']) }} {{ $currency['cost'] }}</th>
-                                        <th>{{ toFixedNumber($deposit_price['converted_value']) }} {{ $currency['converted'] }}</th>
+                                        <th>{{__('SuperAdmin/backend.total_amount_paid')}}</th>
+                                        <th>{{ toFixedNumber($amount_paid['value']) }} {{ $currency['cost'] }}</th>
+                                        <th>{{ toFixedNumber($amount_paid['converted_value']) }} {{ $currency['converted'] }}</th>
                                     </tr>
                                 @endif
                                 <tr>
                                     <th>{{__('SuperAdmin/backend.total_balance_due')}}</th>
-                                    <th class="highlight">{{ toFixedNumber($total_balance['value']) }} {{ $currency['cost'] }}</th>
-                                    <th class="highlight">{{ toFixedNumber($total_balance['converted_value']) }} {{ $currency['converted'] }}</th>
+                                    <th class="highlight-value">{{ toFixedNumber($total_balance['value']) }} {{ $currency['cost'] }}</th>
+                                    <th class="highlight-value">{{ toFixedNumber($total_balance['converted_value']) }} {{ $currency['converted'] }}</th>
                                 </tr>
                             </thead>
                         </table>
@@ -424,7 +368,7 @@
                                     <div class="form-group">
                                         <label for="fname" class="col-form-label">{{__('SuperAdmin/backend.upload_passport_copy')}}</label>
                                         @if ($course_booked_detail->passport_copy)
-                                            <img src="public/images/user_booked_details/{{ $course_booked_detail->passport_copy }}" />
+                                            <img src="{{ $course_booked_detail->passport_copy }}" class="img-fluid" />
                                         @endif
                                     </div>
                                 </div>
@@ -466,7 +410,7 @@
                                     <div class="form-group">
                                         <label for="nat" class="col-form-label">{{__('SuperAdmin/backend.upload_financial_gurantee')}}</label>
                                         @if ($course_booked_detail->financial_guarantee)
-                                            <img src="public/images/user_booked_details/{{ $course_booked_detail->financial_guarantee }}" />
+                                            <img src="{{ $course_booked_detail->financial_guarantee }}" class="img-fluid" />
                                         @endif
                                     </div>
                                 </div>
@@ -474,7 +418,7 @@
                                     <div class="form-group">
                                         <label for="nat" class="col-form-label">{{__('SuperAdmin/backend.upload_bank_statement')}}</label>
                                         @if ($course_booked_detail->bank_statement)
-                                            <img src="public/images/user_booked_details/{{ $course_booked_detail->bank_statement }}" />
+                                            <img src="{{ $course_booked_detail->bank_statement }}" class="img-fluid" />
                                         @endif
                                     </div>
                                 </div>

@@ -19,8 +19,6 @@
                             <th> {{__('SuperAdmin/backend.program_duration')}} </th>
 
                             <th> {{__('SuperAdmin/backend.accommodation_deposit_fee')}} </th>
-                            <th> {{__('SuperAdmin/backend.accommodation_custodian_fee')}} </th>
-                            <th> {{__('SuperAdmin/backend.custodian_age_range')}} </th>
                             <th> {{__('SuperAdmin/backend.special_diet_fee')}} </th>
                             <th> {{__('SuperAdmin/backend.special_diet_note')}} </th>
                             <th> {{__('SuperAdmin/backend.accommodation_fee')}} </th>
@@ -62,9 +60,6 @@
                                 <td>{{ is_null($accomodation->age_range) ? '-' : implode(", ", $accomodation->age_range) ?? $accomodation->age_range}}</td>
                                 <td>{{$accomodation->placement_fee}}</td>
                                 <td>{{$accomodation->program_duration}}</td>
-                                <td>{{$accomodation->deposit_fee}}</td>
-                                <td>{{$accomodation->custodian_fee}}</td>
-                                <td>{{is_null($accomodation->custodian_age_range) ? '' : implode(", ", $accomodation->custodian_age_range) ?? $accomodation->custodian_age_range}}</td>
                                 <td>{{$accomodation->special_diet_fee}}</td>
                                 <td>{!! get_language() == 'en' ? $accomodation->special_diet_note : $accomodation->special_diet_note_ar  !!}</td>
                                 <td>{{$accomodation->fee_per_week}}</td>
@@ -168,11 +163,6 @@
                                                 <div class="form-group">
                                                     <label class="">{{__('SuperAdmin/backend.accommodation_deposit_fee')}}</label>
                                                     <input type="text" class="form-control" name='deposit_fee' value="{{$accomodation->deposit_fee}}">
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label class="">{{__('SuperAdmin/backend.accommodation_custodian_fee')}}</label>
-                                                    <input type="text" class="form-control" name='custodian_fee' value="{{$accomodation->custodian_fee}}">
                                                 </div>
 
                                                 <div class="form-group">

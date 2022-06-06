@@ -14,7 +14,6 @@ class CourseAccommodation extends Model
     protected $casts = [
         'age_range' => 'array',
         'accommodation_under_age' => 'array',
-        'custodian_age_range' => 'array'
     ];
 
     protected $primaryKey = 'unique_id';

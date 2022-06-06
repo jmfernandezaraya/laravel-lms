@@ -2,10 +2,10 @@
 
 namespace App\Models\SuperAdmin;
 
+use App\Models\SuperAdmin\Choose_Language;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
-use App\Models\SuperAdmin\Choose_Language;
 
 class CurrencyExchangeRate extends Model
 {

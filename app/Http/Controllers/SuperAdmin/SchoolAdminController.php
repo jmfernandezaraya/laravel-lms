@@ -67,10 +67,8 @@ class SchoolAdminController extends Controller
 
             $filename = time() . rand(00, 99) . \Str::random(10) . '.webp';
             Image::make($image)->resize(400, 400, function ($constraint) {
-
                 $constraint->aspectRatio();
-            })
-                ->encode('webp', 90)->save(public_path('images/user_images/' . $filename));
+            })->encode('webp', 90)->save(public_path('images/user_images/' . $filename));
             $image_name = 'public/images/user_images/' . $filename;
         }
         $requested_save['country'] = $request->country;
@@ -78,12 +76,8 @@ class SchoolAdminController extends Controller
         $requested_save['branch'] = $request->branch;
         \DB::transaction(function () use ($request, $requested_save, $image_name, $user_type) {
             $user = User::create($requested_save + ['user_type' => $user_type, 'image' => $image_name]);
-
-            $user->userSchool()
-                ->create(['user_id' => $user->id, 'school_id' => $request->school_id]);
-
-            $user->editCoursePermission()
-                ->create(['delete' => $request->can_delete_course ?? 0, 'add' => $request->can_add_course ?? 0, 'edit' => $request->can_edit_course ?? 0]);
+            $user->userSchool()->create(['user_id' => $user->id, 'school_id' => $request->school_id]);
+            $user->editCoursePermission()->create(['delete' => $request->can_delete_course ?? 0, 'add' => $request->can_add_course ?? 0, 'edit' => $request->can_edit_course ?? 0]);
         });
 
         $saved = __('SuperAdmin/backend.data_saved');
@@ -153,10 +147,8 @@ class SchoolAdminController extends Controller
 
             $filename = time() . rand(00, 99) . \Str::random(10) . '.webp';
             Image::make($image)->resize(400, 400, function ($constraint) {
-
                 $constraint->aspectRatio();
-            })
-                ->encode('webp', 90)->save(public_path('images/user_images/' . $filename));
+            })->encode('webp', 90)->save(public_path('images/user_images/' . $filename));
             $image_name = 'public/images/user_images/' . $filename;
         }
         $course['can_add_course'] = $request->can_add_course;

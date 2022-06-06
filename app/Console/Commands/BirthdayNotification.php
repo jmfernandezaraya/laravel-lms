@@ -3,7 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Models\UserCourseBookedDetails;
+
 use App\Notifications\CourseNotificationToStudent;
+
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 

@@ -11,13 +11,13 @@ class AccommodationCalculator extends FrontendCalculator
     private
         $airport_pickup_fee = 0,
         $medical_insurance_fee = 0,
+        $custodian_fee = 0,
         
         $duration,
         $fee = 0,
         $placement_fee = 0,
         $special_diet_fee = 0,
         $deposit = 0,
-        $custodian_fee = 0,
         $summer_fee = 0,
         $christmas_fee = 0,
         $under_age_fee = 0,
@@ -67,6 +67,23 @@ class AccommodationCalculator extends FrontendCalculator
     {
         $this->medical_insurance_fee = $medical_insurance_fee;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCustodianFee()
+    {
+        return $this->custodian_fee;
+    }
+
+    /**
+     * @param mixed $custodian_fee
+     */
+    public function setCustodianFee($custodian_fee)
+    {
+        $this->custodian_fee = $custodian_fee;
+    }
+
 
     /**
      * @param mixed $christmas_start_date
@@ -162,22 +179,6 @@ class AccommodationCalculator extends FrontendCalculator
     public function setAccommodationDeposit($deposit)
     {
         $this->deposit = $deposit;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAccommodationCustodianFee()
-    {
-        return $this->custodian_fee;
-    }
-
-    /**
-     * @param mixed $custodian_fee
-     */
-    public function setAccommodationCustodianFee($custodian_fee)
-    {
-        $this->custodian_fee = $custodian_fee;
     }
 
     public function getAccommodationPeakFee()
@@ -315,7 +316,6 @@ class AccommodationCalculator extends FrontendCalculator
             $this->under_age_fee +
             $this->christmas_fee +
             $this->special_diet_fee +
-            $this->custodian_fee +
             $this->peak_fee;
 
         insertCalculationIntoDB('accommodation_total', $total);
@@ -331,13 +331,13 @@ class AccommodationCalculator extends FrontendCalculator
     public function resultAccommodationDiscount()
     {
         $discount_total = 0;
-        if ($this->checkBetweenDate($this->x_week_start_date, $this->x_week_end_date, Carbon::now()->format('Y-m-d'))) {
+        if (checkBetweenDate($this->x_week_start_date, $this->x_week_end_date, Carbon::now()->format('Y-m-d'))) {
             if ($this->x_week_selected) {
                 $discount_total = $this->fee_per_week * (int)((int)$this->duration / (int)$this->x_week_selected) * $this->how_many_week_free;
             } else {
                 $discount_total = 0;
             }
-        } else if ($this->checkBetweenDate($this->discount_start_date, $this->discount_end_date, Carbon::now()->format('Y-m-d'))) {
+        } else if (checkBetweenDate($this->discount_start_date, $this->discount_end_date, Carbon::now()->format('Y-m-d'))) {
             $get_symbol = explode(" ", $this->discount);
 
             // We are calculating discount based on % or - here

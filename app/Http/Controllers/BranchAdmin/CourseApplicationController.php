@@ -9,11 +9,11 @@ use App\Mail\SendMailToSuperAdminUserCourseApproveStatus;
 use App\Mail\SendMailToUserCourseApproveStatus;
 use App\Mail\SendMessageToSuperAdminRelatedToCourse;
 
+use App\Models\User;
+use App\Models\UserCourseBookedDetails;
 use App\Models\SchoolAdmin\ReplyToSendSchoolMessage;
 use App\Models\SuperAdmin\SendSchoolMessage;
 use App\Models\SuperAdmin\UserCourseBookedDetailsApproved;
-use App\Models\User;
-use App\Models\UserCourseBookedDetails;
 
 /**
  * Class CourseApplicationController

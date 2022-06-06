@@ -200,7 +200,7 @@
                         </div>
                     </div>
                     
-                    <button type="button" onclick="getContent('medical_insurance_note', 'medical_insurance_note_value'); submitAirportMedicalForm($(this))" class="btn btn-primary">@lang('SuperAdmin/backend.submit')</button>
+                    <button type="button" onclick="getContent('medical_insurance_note', 'medical_insurance_note_value'); submitOtherServiceForm($(this))" class="btn btn-primary">@lang('SuperAdmin/backend.submit')</button>
                 </form>
             </div>
         </div>

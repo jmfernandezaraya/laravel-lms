@@ -54,7 +54,6 @@ function reloadInsertCalculationIntoDB()
     $inpu['accommodation_placement_fee'] = 0;
     $inpu['accommodation_special_diet_fee'] = 0;
     $inpu['accommodation_deposit'] = 0;
-    $inpu['accommodation_custodian_fee'] = 0;
     $inpu['accommodation_summer_fee'] = 0;
     $inpu['accommodation_christmas_fee'] = 0;
     $inpu['accommodation_under_age_fee'] = 0;
@@ -68,6 +67,27 @@ function reloadInsertCalculationIntoDB()
     $inpu['total'] = 0;
 
     return $calculator->fill($inpu)->save();
+}
+
+/*
+*
+* @param start_date
+* @param end_date
+* @param compare_with_which date
+*
+*
+* @return boolean (true or false)
+* */
+function checkBetweenDate($start, $end, $compare_with)
+{
+    if ($start == null || $end == null) {
+        return  false;
+    }
+    $startDate = Carbon\Carbon::createFromFormat('Y-m-d', $start)->format('d-m-Y');
+    $endDate = Carbon\Carbon::createFromFormat('Y-m-d', $end)->format('d-m-Y');
+
+    $check = Carbon\Carbon::create($compare_with)->between($startDate, $endDate);
+    return $check ? true : false;
 }
 
 /**
@@ -109,9 +129,6 @@ function getCurrencyDetails($course_id, $total, $which = null)
 }
 
 /**
- * @param $course_id
- * @param $values
- * @param null $which
  * @return mixed
  */
 function getDefaultCurrency()
@@ -119,6 +136,194 @@ function getDefaultCurrency()
     $default_currency = (new \App\Classes\FrontendCalculator())->GetDefaultCurrency();
 
     return $default_currency;
+}
+
+/**
+ * @return mixed
+ */
+function getGetDefaultCurrencyName()
+{
+    $default_currency_name = (new \App\Classes\FrontendCalculator())->GetDefaultCurrencyName();
+
+    return $default_currency_name;
+}
+
+/**
+ * @param $country_id
+ * @param null $which
+ * @return mixed
+ */
+function getSchoolCountryName($country_id)
+{
+    $country = \App\Models\Country::where('id', $country_id)->first();
+    if ($country) {
+        if (app()->getLocale() == 'en') {
+            return $country->name;
+        } else {
+            return $country->name_ar;
+        }
+    }
+    return '';
+}
+
+function getSchoolTopReviewCourseBookedDetails($school_id, $count = 3) {
+    $top_course_booked_details = [];
+    $school_user_course_booked_details = \App\Models\UserCourseBookedDetails::with('review')->where('school_id', $school_id)->get();
+    foreach ($school_user_course_booked_details as $school_user_course_booked_detail) {
+        if ($school_user_course_booked_detail->review) {
+            $top_course_booked_details[] = $school_user_course_booked_detail;
+        }
+    }
+    usort($top_course_booked_details, function($first, $second) {
+        return ($first->review->quality_teaching + $first->review->school_facilities + $first->review->social_activities + $first->review->school_location + $first->review->satisfied_teaching + $first->review->level_cleanliness + $first->review->distance_accommodation_school + $first->review->satisfied_accommodation + $first->review->airport_transfer + $first->review->city_activities)
+             < ($second->review->quality_teaching + $second->review->school_facilities + $second->review->social_activities + $second->review->school_location + $second->review->satisfied_teaching + $second->review->level_cleanliness + $second->review->distance_accommodation_school + $second->review->satisfied_accommodation + $second->review->airport_transfer + $second->review->city_activities);
+    });
+
+    return array_slice($top_course_booked_details, 0, $count);
+}
+
+function getSchoolRating($school_id) {
+    $school_ratings = 0;
+    $school_rating_count = 0;
+    $school_user_course_booked_details = \App\Models\UserCourseBookedDetails::with('review')->where('school_id', $school_id)->get();
+    if ($school_user_course_booked_details) {
+        foreach ($school_user_course_booked_details as $course_booked_detail) {
+            if ($course_booked_detail->review) {
+                $school_ratings = ($course_booked_detail->review->quality_teaching + $course_booked_detail->review->school_facilities + $course_booked_detail->review->social_activities + 
+                    $course_booked_detail->review->school_location + $course_booked_detail->review->satisfied_teaching + $course_booked_detail->review->level_cleanliness + 
+                    $course_booked_detail->review->distance_accommodation_school + $course_booked_detail->review->satisfied_accommodation + $course_booked_detail->review->airport_transfer + 
+                    $course_booked_detail->review->city_activities) / 10;
+                $school_rating_count += 1;
+            }
+        }
+    }
+
+    return $school_ratings;
+}
+
+function getCourseRating($course_id) {
+    $course_ratings = 0;
+    $course_rating_count = 0;
+    $course_user_course_booked_details = \App\Models\UserCourseBookedDetails::with('review')->where('course_id', $course_id)->get();
+    if ($course_user_course_booked_details) {
+        foreach ($course_user_course_booked_details as $course_booked_detail) {
+            if ($course_booked_detail->review) {
+                $course_ratings = ($course_booked_detail->review->quality_teaching + $course_booked_detail->review->school_facilities + $course_booked_detail->review->social_activities + 
+                    $course_booked_detail->review->school_location + $course_booked_detail->review->satisfied_teaching + $course_booked_detail->review->level_cleanliness + 
+                    $course_booked_detail->review->distance_accommodation_school + $course_booked_detail->review->satisfied_accommodation + $course_booked_detail->review->airport_transfer + 
+                    $course_booked_detail->review->city_activities) / 10;
+                $course_rating_count += 1;
+            }
+        }
+    }
+
+    return $course_ratings;
+}
+
+/**
+ * @param $course_id
+ * @param $values
+ * @param null $which
+ * @return mixed
+ */
+function getDiscountedValue($price, $discount)
+{
+    $discounted_price = $price;
+    $discounts = explode(" ", $discount);
+    if (count($discounts) >= 2) {
+        if ($discounts[1] == '%') {
+            $discounted_price = $price - $price * (float)$discounts[0] / 100;
+        } else {
+            $discounted_price = $price - (float)$discounts[0];
+        }
+    }
+    return $discounted_price;
+}
+
+/**
+ * @param $course_id
+ * @param $value
+ * @param null $which
+ * @return mixed
+ */
+function getCurrencyConverted($course_id, $value)
+{
+    $currency_value = (new \App\Classes\FrontendCalculator())->CurrencyConverted($course_id, $value);
+
+    return $currency_value;
+}
+
+/**
+ * @param $course_id
+ * @param $value
+ * @param null $which
+ * @return mixed
+ */
+function getCurrencyConvertedValue($course_id, $value)
+{
+    $currency_value = (new \App\Classes\FrontendCalculator())->CurrencyConvertedValue($course_id, $value);
+
+    return $currency_value;
+}
+
+/**
+ * @param $program_age_range
+ * @param null $which
+ * @return mixed
+ */
+function getCourseProgramAgeRange($program_age_range)
+{
+    $age_ranges = is_array($program_age_range) ? $program_age_range : [];
+    $min_age = ''; $max_age = '';
+    $program_age_ranges = \App\Models\SuperAdmin\Choose_Program_Age_Range::whereIn('unique_id', $age_ranges)->orderBy('age', 'asc')->pluck('age')->toArray();
+    if (!empty($program_age_ranges) && count($program_age_ranges)) {
+        $min_age = $program_age_ranges[0];
+        $max_age = $program_age_ranges[count($program_age_ranges) - 1];
+    }
+    return [
+        'min_age' => $min_age,
+        'max_age' => $max_age,
+    ];
+}
+
+/**
+ * @param $program_age_range
+ * @param null $which
+ * @return mixed
+ */
+function getCourseAccommodationAgeRange($course_accommodation_age_range)
+{
+    $age_ranges = is_array($course_accommodation_age_range) ? $course_accommodation_age_range : [];
+    $min_age = ''; $max_age = '';
+    $course_accommodation_age_ranges = \App\Models\SuperAdmin\Choose_Accommodation_Age_Range::whereIn('unique_id', $age_ranges)->orderBy('age', 'asc')->pluck('age')->toArray();
+    if (!empty($course_accommodation_age_ranges) && count($course_accommodation_age_ranges)) {
+        $min_age = $course_accommodation_age_ranges[0];
+        $max_age = $course_accommodation_age_ranges[count($course_accommodation_age_ranges) - 1];
+    }
+    return [
+        'min_age' => $min_age,
+        'max_age' => $max_age,
+    ];
+}
+
+/**
+ * @param $program_age_range
+ * @param null $which
+ * @return mixed
+ */
+function getCourseCustodianAgeRange($course_custodian_age_range)
+{
+    $age_ranges = is_array($course_custodian_age_range) ? $course_custodian_age_range : [];
+    $min_age = ''; $max_age = '';
+    $course_custodian_age_ranges = \App\Models\SuperAdmin\Choose_Custodian_Under_Age::whereIn('unique_id', $age_ranges)->orderBy('age', 'asc')->pluck('age')->toArray();
+    if (!empty($course_custodian_age_ranges) && count($course_custodian_age_ranges)) {
+        $min_age = $course_custodian_age_ranges[0];
+        $max_age = $course_custodian_age_ranges[count($course_custodian_age_ranges) - 1];
+    }
+    return [
+        'min_age' => $min_age,
+        'max_age' => $max_age,
+    ];
 }
 
 /**
@@ -141,7 +346,7 @@ function getCurrencyConvertedValues($course_id, $values)
  */
 function programEndDateExcludingLastWeekend($start_date, $weeks)
 {
-    return Carbon\CarbonCarbon\Carbon::programEndDateExcludingLastWeekend($start_date, $weeks);
+    return Carbon\Carbon::programEndDateExcludingLastWeekend($start_date, $weeks);
 }
 
 function getCourseAgeRanges($course_id)
@@ -248,6 +453,7 @@ function getCourseApplicationPrintData($id)
     $data['accommodation'] = isset($course_booked_detail->accommodation_id) ? \App\Models\SuperAdmin\CourseAccommodation::where('unique_id', '' . $course_booked_detail->accommodation_id)->first() : '';
     $data['airport'] = isset($course_booked_detail->airport_id) ? \App\Models\SuperAdmin\CourseAirport::where('unique_id', $course_booked_detail->airport_id)->first() : null;
     $data['medical'] = isset($course_booked_detail->medical_id) ? \App\Models\SuperAdmin\CourseMedical::where('unique_id', $course_booked_detail->medical_id)->first() : null;
+    $data['custodian'] = isset($course_booked_detail->custodian_id) ? \App\Models\SuperAdmin\CourseCustodian::where('unique_id', $course_booked_detail->medical_id)->first() : null;
 
     $age_ranges = $data['accommodation'] ? $data['accommodation']->age_range : [];
     $data['accommodation_min_age'] = ''; $data['accommodation_max_age'] = '';
@@ -298,12 +504,12 @@ function getCourseApplicationPrintData($id)
             $course_booked_detail->accommodation_summer_fee,
             $course_booked_detail->accommodation_christmas_fee,
             $course_booked_detail->accommodation_under_age_fee,
-            $course_booked_detail->accommodation_custodian_fee,
             $course_booked_detail->accommodation_peak_fee,
             $course_booked_detail->accommodation_discount_fee,
             $course_booked_detail->accommodation_total,
             $course_booked_detail->airport_pickup_fee,
             $course_booked_detail->medical_insurance_fee,
+            $course_booked_detail->custodian_fee,
             $course_booked_detail->total_discount,
             $course_booked_detail->sub_total,
             $course_booked_detail->total_cost,
@@ -330,12 +536,12 @@ function getCourseApplicationPrintData($id)
     $data['accommodation_summer_fee'] = [ 'value' => (float)($course_booked_detail->accommodation_summer_fee), 'converted_value' => $calculator_values['values'][13] ];
     $data['accommodation_christmas_fee'] = [ 'value' => (float)($course_booked_detail->accommodation_christmas_fee), 'converted_value' => $calculator_values['values'][14] ];
     $data['accommodation_under_age_fee'] = [ 'value' => (float)($course_booked_detail->accommodation_under_age_fee), 'converted_value' => $calculator_values['values'][15] ];
-    $data['accommodation_custodian_fee'] = [ 'value' => (float)($course_booked_detail->accommodation_custodian_fee), 'converted_value' => $calculator_values['values'][16] ];
-    $data['accommodation_peak_fee'] = [ 'value' => (float)($course_booked_detail->accommodation_peak_fee), 'converted_value' => $calculator_values['values'][17] ];
-    $data['accommodation_discount_fee'] = [ 'value' => (float)($course_booked_detail->accommodation_discount_fee), 'converted_value' => $calculator_values['values'][18] ];
-    $data['accommodation_total'] = [ 'value' => (float)($course_booked_detail->accommodation_total), 'converted_value' => $calculator_values['values'][19] ];
-    $data['airport_pickup_fee'] = [ 'value' => (float)$course_booked_detail->airport_pickup_fee, 'converted_value' => $calculator_values['values'][20] ];
-    $data['medical_insurance_fee'] = [ 'value' => (float)$course_booked_detail->medical_insurance_fee, 'converted_value' => $calculator_values['values'][21] ];
+    $data['accommodation_peak_fee'] = [ 'value' => (float)($course_booked_detail->accommodation_peak_fee), 'converted_value' => $calculator_values['values'][16] ];
+    $data['accommodation_discount_fee'] = [ 'value' => (float)($course_booked_detail->accommodation_discount_fee), 'converted_value' => $calculator_values['values'][17] ];
+    $data['accommodation_total'] = [ 'value' => (float)($course_booked_detail->accommodation_total), 'converted_value' => $calculator_values['values'][18] ];
+    $data['airport_pickup_fee'] = [ 'value' => (float)$course_booked_detail->airport_pickup_fee, 'converted_value' => $calculator_values['values'][19] ];
+    $data['medical_insurance_fee'] = [ 'value' => (float)$course_booked_detail->medical_insurance_fee, 'converted_value' => $calculator_values['values'][20] ];
+    $data['custodian_fee'] = [ 'value' => (float)($course_booked_detail->custodian_fee), 'converted_value' => $calculator_values['values'][21] ];
     $data['total_discount'] = [ 'value' => (float)$course_booked_detail->total_discount, 'converted_value' => $calculator_values['values'][22] ];
     $data['sub_total'] = [ 'value' => (float)$course_booked_detail->sub_total, 'converted_value' => $calculator_values['values'][23] ];
     $data['total_cost'] = [ 'value' => (float)$course_booked_detail->total_cost, 'converted_value' => $calculator_values['values'][24] ];

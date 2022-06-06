@@ -1,27 +1,24 @@
 @extends('frontend.layouts.app')
 
-@section('content')
-<!-- ======= Breadcrumbs ======= -->
-<div class="breadcrumbs" data-aos="fade-in">
-    <div class="container">
-        <h2> @lang('Frontend.blog_details') </h2>
-        <p>Est dolorum ut non facere possimus quibusdam eligendi voluptatem. Quia id aut similique quia voluptas sit quaerat debitis. Rerum omnis ipsam aperiam consequatur laboriosam nemo harum praesentium. </p>
-    </div>
-</div>
-<!-- End Breadcrumbs -->
+@section('title')
+    {!! app()->getLocale() == 'en' ? $blog->title_en : $blog->title_ar !!}
+@endsection
 
-<!-- ======= Cource Details Section ======= -->
-<section id="course-details" class="course-details">
+@section('breadcrumbs')
+    <h1>{!! app()->getLocale() == 'en' ? $blog->title_en : $blog->title_ar !!}<h1>
+@endsection
+
+@section('content')
+<!-- ======= Blog Details Section ======= -->
+<section id="blog-details" class="blog-details">
     <div class="container" data-aos="fade-up">
         <div class="row">
             <div class="col-lg-12">
-                <h3>{{$blog->{'title_'. get_language() } }}</h3>
-                <p>
-                    {!! $blog->{'description_'. get_language() } !!}
-                </p>
+                <h3>{!! app()->getLocale() == 'en' ? $blog->title_en : $blog->title_ar !!}</h3>
+                <p>{!! app()->getLocale() == 'en' ? $blog->description_en : $blog->description_ar !!}</p>
             </div>
         </div>
     </div>
 </section>
-<!-- End Cource Details Section -->
+<!-- End Blog Details Section -->
 @endsection

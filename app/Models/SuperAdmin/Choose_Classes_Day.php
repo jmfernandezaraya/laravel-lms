@@ -3,6 +3,7 @@
 namespace App\Models\SuperAdmin;
 
 use App\Classes\BindsDynamically;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

@@ -5,15 +5,22 @@
 @endsection
 
 @section('content')
-    <div class="col-lg-12 grid-margin stretch-card">
+    <div class="page-header">
         <div class="card">
-            <div class="card-body table table-responsive">
+            <div class="card-body">
                 <div style="text-align: center;">
                     <h1 class="card-title">{{__('SuperAdmin/backend.customers')}}</h1>
                 </div>
                 <a href="{{ route('superadmin.customers.create') }}" type="button" class="btn btn-primary btn-sm pull-right">
                     <i class="fa fa-plus"></i>&nbsp;{{__('SuperAdmin/backend.add')}}
                 </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-content">
+        <div class="card">
+            <div class="card-body table table-responsive">
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr>
@@ -52,32 +59,24 @@
             </div>
         </div>
     </div>
-
-    @section('css')
-        <style>
-            .show-read-more .more-text {
-                display: none;
-            }
-        </style>
-    @endsection
     
     @section('js')
-    <script>
-        var maxLength = 100;
-        $(".show-read-more").each(function() {
-            var myStr = $(this).text();
-            if ($.trim(myStr).length > maxLength) {
-                var newStr = myStr.substring(0, maxLength);
-                var removedStr = myStr.substring(maxLength, $.trim(myStr).length);
-                $(this).empty().html(newStr);
-                $(this).append('  < a href="javascript:void(0);" class = "read-more" > read more... < /a>');
-                $(this).append(' < span class = "more-text" > ' + removedStr + ' < /span>');
-            }
-        });
-        $(".read-more").click(function() {
-            $(this).siblings(".more-text").contents().unwrap();
-            $(this).remove();
-        });
-    </script>
+        <script>
+            var maxLength = 100;
+            $(".show-read-more").each(function() {
+                var myStr = $(this).text();
+                if ($.trim(myStr).length > maxLength) {
+                    var newStr = myStr.substring(0, maxLength);
+                    var removedStr = myStr.substring(maxLength, $.trim(myStr).length);
+                    $(this).empty().html(newStr);
+                    $(this).append('  < a href="javascript:void(0);" class = "read-more" > read more... < /a>');
+                    $(this).append(' < span class = "more-text" > ' + removedStr + ' < /span>');
+                }
+            });
+            $(".read-more").click(function() {
+                $(this).siblings(".more-text").contents().unwrap();
+                $(this).remove();
+            });
+        </script>
     @endsection
 @endsection

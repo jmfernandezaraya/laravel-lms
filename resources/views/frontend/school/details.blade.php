@@ -4,219 +4,58 @@
     {{__('Frontend.school_details')}}
 @endsection
 
-@section('css')
-    <style>
-        iframe{
-            width: 100% !important;
-            height:100 !important;
-        }
-
-        .about-school {
-            width: 100%;
-        }
-
-        .Facility.border-bottom {
-            width: 100%;
-        }
-
-        .dynamic_starli {
-            display: inline-block;
-            color: #F0F0F0;
-            text-shadow: 0 0 1px #666666;
-            font-size: 30px;
-            cursor: pointer;
-        }
-
-        .highlight,
-        .selected {
-            color: #F4B30A;
-            text-shadow: 0 0 1px #F48F0A;
-        }
-
-        .w-100 {
-            width: 100% !important;
-            height: 270px;
-        }
-
-        #carouselExampleIndicators2 {
-            width: 100%;
-            height: 270px;
-            background: #000;
-        }
-
-        #more {
-            display: none;
-        }
-
-        button#myBtn {
-            border: none;
-            background: none;
-            color: #97d0db;
-        }
-
-        .sub-cources {
-            padding: 10px 6px;
-            box-shadow: 0px 0px 2px 1px #ccc;
-        }
-
-        .sub-cources:hover {
-            box-shadow: 0px 0px 4px 2px #97d0db;
-        }
-
-        th {
-            border: 1px solid #dee2e6;
-        }
-
-        .city {
-            font-size: 12px;
-            font-weight: 400;
-            color: #868686;
-        }
-
-        .estd {
-            float: right;
-        }
-
-        i.fa.fa-star {
-            color: #edc25a;
-        }
-        p {
-            font-size: 14px;
-        }
-        #loader {
-            display: none;
-            position: fixed;
-            left: 0px;
-            top: 0px;
-            background-size: cover;
-            background: url('{{asset('assets/images/gif.gif')}}') 50% 50% no-repeat gray;
-            width: 100%;
-            height: 100%;
-            z-index: 9999;
-            opacity: .7;
-        }
-
-        .logo-right.custom {
-            padding: 0px!important;
-        }
-        .logo-right img{
-            max-width: 100%;
-            height: auto;
-            margin: auto;
-            max-height: 100%;
-            width: 100%;
-            object-fit: contain;
-        }
-        ul.custom{
-            padding-left: 0px!important;
-        }
-        .border-none{
-            border:none!important;
-        }
-        p{
-            word-break: break-word;
-        }
-        .slick-slide img{
-            width: 100%;
-            height: 70px;
-            object-fit: contain;
-        }
-        .other-branches{
-            margin: 30px 0px;
-        }
-        .other_branches_item .img{
-            padding: 10px;
-            border: 1px solid #f7f1f1;
-            padding-top: 30px;
-            margin-bottom: 12px;
-            box-shadow: 0px 0px 4px #f7f7f7;
-        }
-        .other_branches_item img{
-            width: 100%;
-            height: auto;
-            max-height: 100%;
-            object-fit: contain;
-        }
-        .other_branches_item .details h4{
-            font-size: 15px;
-            font-weight: bold;
-            color: #000;
-        }
-        .other_branches_item .details {
-            font-size: 10px;
-            font-weight: 600;
-            padding: 5px 0px;
-        }
-        .w-60{
-            width: 65%;
-            text-align: right;
-        }
-        .w-60 p{
-            font-size: 12px;
-        }
-        .w-40{
-            width: 35%;
-            color: gray;
-        }
-    </style>
-@endsection
-
 @section('after_header')
     <!-- slider -->
     <div class="container pt-5 mt-5">
         <div class="row">
             <div class="col-md-12">
                 <div id="tabsJustifiedContent" class="tab-content">
-                    <div id="profile1" class="tab-pane fade active show">
-                        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                    <div id="schoolPhotos" class="tab-pane fade active show">
+                        <div id="schoolPhotoCarousel" class="carousel slide" data-ride="carousel">
                             <ol class="carousel-indicators">
                                 @foreach((array)$school->multiple_photos as $photos)
-                                    <li data-target="#carouselExampleIndicators"
-                                        data-slide-to="{{$loop->iteration - 1}}" class="{{$loop->iteration - 1 == 0? 'active' : ''}}"></li>
+                                    <li data-target="#schoolPhotoCarousel" data-slide-to="{{$loop->iteration - 1}}" class="{{$loop->iteration - 1 == 0? 'active' : ''}}"></li>
                                 @endforeach
                             </ol>
                             <div class="carousel-inner">
                                 @foreach((array)$school->multiple_photos as $photos)
-                                    <div class="carousel-item {{$loop->iteration == 1 ?  "active" : '' }}">
+                                    <div class="carousel-item {{$loop->iteration == 1 ?  'active' : '' }}">
                                         <img class="d-block w-100" src="{{asset('storage/app/public/school_images/'. $photos)}}" alt="First slide">
                                     </div>
                                 @endforeach
                             </div>
-                            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button"
-                               data-slide="prev">
+                            <a class="carousel-control-prev" href="#schoolPhotoCarousel" role="button" data-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Previous</span>
+                                <span class="sr-only">{{__('Frontend.previous')}}</span>
                             </a>
-                            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button"
-                               data-slide="next">
+                            <a class="carousel-control-next" href="#schoolPhotoCarousel" role="button" data-slide="next">
                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Next</span>
+                                <span class="sr-only">{{__('Frontend.next')}}</span>
                             </a>
                         </div>
                     </div>
-                    <div id="messages1" class="tab-pane fade">
+                    <div id="schoolVideos" class="tab-pane fade">
                         <div class="row pb-2">
-                            <div id="carouselExampleIndicators2" class="carousel slide" data-ride="carousel">
+                            <div id="schoolVideoCarousel" class="carousel slide" data-ride="carousel">
                                 <ol class="carousel-indicators">
                                     @foreach ((array)$school->video as $videos)
-                                        <li data-target="#carouselExampleIndicators2"
-                                            data-slide-to="{{$loop->iteration - 1}}" class="{{$loop->iteration - 1 == 0 ? 'active' : ''}}"></li>
+                                        <li data-target="#schoolVideoCarousel" data-slide-to="{{$loop->iteration - 1}}" class="{{$loop->iteration - 1 == 0 ? 'active' : ''}}"></li>
                                     @endforeach
                                 </ol>
                                 <div class="carousel-inner">
                                     @foreach ((array)$school->video as $videos)
-                                        <div class="carousel-item {{$loop->iteration == 1 ? "active" : ""}}">
-                                            {!!  $videos !!}
+                                        <div class="carousel-item {{$loop->iteration == 1 ? 'active' : ''}}">
+                                            {!! $videos !!}
                                         </div>
                                     @endforeach
                                 </div>
-                                <a class="carousel-control-prev" href="#carouselExampleIndicators2" role="button" data-slide="prev">
+                                <a class="carousel-control-prev" href="#schoolVideoCarousel" role="button" data-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="sr-only">Previous</span>
+                                    <span class="sr-only">{{__('Frontend.previous')}}</span>
                                 </a>
-                                <a class="carousel-control-next" href="#carouselExampleIndicators2" role="button" data-slide="next">
+                                <a class="carousel-control-next" href="#schoolVideoCarousel" role="button" data-slide="next">
                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="sr-only">Next</span>
+                                    <span class="sr-only">{{__('Frontend.next')}}</span>
                                 </a>
                             </div>
                         </div>
@@ -224,10 +63,10 @@
                 </div>
                 <ul id="tabsJustified" class="nav nav-tabs nav-fill">
                     <li class="nav-item">
-                        <a href="" data-target="#profile1" data-toggle="tab" class="nav-link small text-uppercase active">Photos</a>
+                        <a href="" data-target="#schoolPhotos" data-toggle="tab" class="nav-link small text-uppercase active">{{__('Frontend.photos')}}</a>
                     </li>
                     <li class="nav-item">
-                        <a href="" data-target="#messages1" data-toggle="tab" class="nav-link small text-uppercase">Video</a>
+                        <a href="" data-target="#schoolVideos" data-toggle="tab" class="nav-link small text-uppercase">{{__('Frontend.video')}}</a>
                     </li>
                 </ul>
             </div>
@@ -245,8 +84,8 @@
                     <div class="main-right mt-5">
                         <div class="row">
                             <div class="col-md-4">
-                                <div class="logo-right custom">
-                                    <img src="{{$school->logo}}" class="img-fluid" alt="">
+                                <div class="school-logo">
+                                    <img src="{{ $school->logo }}" class="img-fluid" alt="">
                                 </div>
                             </div>
                             <div class="col-md-8">
@@ -255,9 +94,9 @@
                                         <tbody>
                                             <tr>
                                                 <th class="border-none" scope="row">
-                                                    {{ucfirst($school->name)}} - {{is_array($school->branch_name) ? implode(", ", $school->branch_name) : $school->branch_name}}<br>
-                                                    <span class="city">{{$school->city}},</span>
-                                                    <span class="country">{{$school->country}}</span><br>
+                                                    {{ucfirst($school->name ? (app()->getLocale() == 'en' ? $school->name->name : $school->name->name_ar) : '-')}}{{app()->getLocale() == 'en' ? ($school->branch_name ? ' - ' . $school->branch_name : '') : ($school->branch_name_ar ? ' - ' . $school->branch_name_ar : '')}}<br>
+                                                    <span class="city">{{$school->city ? (app()->getLocale() == 'en' ? $school->city->name : $school->city->name_ar) : '-'}},</span>
+                                                    <span class="country">{{$school->country ? (app()->getLocale() == 'en' ? $school->country->name : $school->country->name_ar) : '-'}}</span><br>
                                                     <ul class="custom">
                                                         @for($i = 1; $i <=5; $i ++)
                                                             <li data-toggle="modal" data-target="#myModal" class="dynamic_starli" onclick="save_rating({{$i}})" onmouseover="highlightStar(this);" onClick="addRating(this);" id="rating{{$i}}">★</li>
@@ -268,41 +107,80 @@
                                                 <td></td>
                                             </tr>
                                             <tr>
-                                                <th scope="row">School Capacity</th>
+                                                <th scope="row">{{__('Frontend.school_opening_hours')}}</th>
+                                                <td>{{app()->getLocale() == 'en' ? $school->opening_hours : $school->opening_hours_ar}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">{{__('Frontend.school_capacity')}}</th>
                                                 <td>{{$school->capacity}}</td>
                                             </tr>
                                             <tr>
-                                                <th scope="row">Class Size</th>
-                                                <td>{{$school->class_size}}</td>
+                                                <th scope="row">{{__('Frontend.number_of_classrooms')}}</th>
+                                                <td>{{$school->opening_hours}}</td>
                                             </tr>
                                             <tr>
-                                                <th scope="row">Year is Established</th>
+                                                <th scope="row">{{__('Frontend.class_size')}}</th>
+                                                <td>{{app()->getLocale() == 'en' ? $school->class_size : $school->class_size_ar}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">{{__('Frontend.year_is_established')}}</th>
                                                 <td>{{$school->opened}}</td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="about-school border-bottom pt-0">
-                                <h5 class="best">About the school</h5>
-                                <p class="m-0">{!! $school->about !!}</p>
-                            </div>
-
-                            <div class="Facility border-bottom">
-                                <h5 class="best">facilities</h5>
-                                {!! $school->facilities !!}
-                            </div>
-
-                            <section class="customer-logos slider">
-                                @if ($school->logos)
-                                    @foreach($school->logos as $logoss)
-                                        <div class="slide">
-                                            <img src="{{ asset('storage/app/public/school_images/' . $logoss) }}">
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                @if ($school->nationalities && count($school->nationalities))
+                                    <div class="nationality-mix border-bottom">
+                                        <h5 class="text-center best">{{__('Frontend.nationality_mix')}}</h5>
+                                        <div class="nationality-mix-chart">
+                                            <table class="table table-borderless">
+                                                <tbody>
+                                                    @foreach ($school->nationalities as $school_nationality)
+                                                        <tr>
+                                                            <td>{{ $school_nationality->nationality ? $school_nationality->nationality->name : '' }}</td>
+                                                            <td><div style="width: {{ $school_nationality->mix }}%"></div></td>
+                                                            <td>{{ $school_nationality->mix }}%</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
                                         </div>
-                                    @endforeach
+                                    </div>
                                 @endif
-                            </section>
+
+                                <div class="about-school border-bottom mt-2">
+                                    <h5 class="best">{{__('Frontend.last_updated')}}</h5>
+                                    <div class="m-0">{{ $school->updated_at->format('Y-m-d') }}</div>
+                                </div>
+
+                                <div class="about-school border-bottom mt-2">
+                                    <h5 class="best">{{__('Frontend.about_the_school')}}</h5>
+                                    <div class="m-0">{!! app()->getLocale() == 'en' ? $school->about : $school->about_ar !!}</div>
+                                </div>
+
+                                <div class="Facility border-bottom">
+                                    <h5 class="best">{{__('Frontend.facilities')}}</h5>
+                                    <div class="m-0">{!! app()->getLocale() == 'en' ? $school->facilities : $school->facilities_ar !!}</div>
+                                </div>
+
+                                @if ($school->logos)
+                                    <div class="accreditations_memberships border-bottom p-3">
+                                        <h5 class="best">{{__('Frontend.accreditations_memberships')}}</h5>
+                                        <section class="customer-logos slider">
+                                            @foreach($school->logos as $logoss)
+                                                <div class="slide">
+                                                    <img src="{{ asset('storage/app/public/school_images/' . $logoss) }}">
+                                                </div>
+                                            @endforeach
+                                        </section>
+                                    </div>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -310,16 +188,42 @@
 
             <div class="program-hd mt-3">
                 <div class="row">
-                    <div class="col-md-4">
-                        <h5>Programs</h5>
+                    <div class="col-md-12">
+                        <h5 class="text-center">{{__('Frontend.programs')}}</h5>
                     </div>
-                    <div class="col-md-8">
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
                         <div class="form-group row">
-                            <label for="staticEmail" class="col-sm-3 col-form-label text-right pr-0">{{__('SuperAdmin/backend.study_mode')}}</label>
-                            <div class="col-sm-9">
+                            <label for="staticEmail" class="col-sm-5 col-form-label text-right pr-0">{{__('Frontend.choose_language')}}</label>
+                            <div class="col-sm-7">
+                                <select onchange="get_program($(this).val())" name="choose_language" class="form-control" id="choose_language">
+                                    @foreach($languages as $language)
+                                        <option value="{{$language->unique_id}}">{{$language->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group row">
+                            <label for="staticEmail" class="col-sm-5 col-form-label text-right pr-0">{{__('Frontend.study_mode')}}</label>
+                            <div class="col-sm-7">
                                 <select onchange="get_program($(this).val())" name="study_mode" class="form-control" id="study_mode">
                                     @foreach($study_modes as $study_mode)
                                         <option value="{{$study_mode->unique_id}}">{{$study_mode->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group row">
+                            <label for="staticEmail" class="col-sm-5 col-form-label text-right pr-0">{{__('Frontend.your_age')}}</label>
+                            <div class="col-sm-7">
+                                <select onchange="get_program($(this).val())" name="your_age" class="form-control" id="your_age">
+                                    @foreach($age_ranges as $age_range)
+                                        <option value="{{$age_range->unique_id}}">{{$age_range->age}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -330,231 +234,373 @@
 
             <div class="program"></div>
 
-            <div class="review-section border-bottom mt-3">
-                <h5 class="best">Reviews</h5>
-                <p class="m-0">100% Recommend</p>
-                <i class="fa fa-star" aria-hidden="true"></i>
-                <i class="fa fa-star" aria-hidden="true"></i>
-                <i class="fa fa-star" aria-hidden="true"></i>
-                <i class="fa fa-star" aria-hidden="true"></i>
-                <i class="fa fa-star" aria-hidden="true"></i>
-                <span>based on 5 reviews</span>
+            <div class="school-reviews-overview border-bottom mt-3">
+                <h5 class="best">{{__('Frontend.reviews')}}</h5>
+                <p class="m-0">{{__('Frontend.100_recommend')}}</p>
+                @php
+                    $school_top_review_rating_count = 0;
+                    $school_top_review_ratings = 0;
+                    $school_top_review_quality_teachings = 0;
+                    $school_top_review_school_facilities = 0;
+                    $school_top_review_social_activities = 0;
+                    $school_top_review_school_locations = 0;
+                    $school_top_review_satisfied_teachings = 0;
+                    $school_top_review_five_scores = 0;
+                    $school_top_review_four_scores = 0;
+                    $school_top_review_three_scores = 0;
+                    $school_top_review_two_scores = 0;
+                    $school_top_review_one_scores = 0;
+                @endphp
+                @foreach ($school_top_review_course_booked_details as $school_top_review_course_booked_detail)
+                    @php
+                        $school_top_review_rating = ($school_top_review_course_booked_detail->review->quality_teaching + $school_top_review_course_booked_detail->review->school_facilities + $school_top_review_course_booked_detail->review->social_activities + 
+                            $school_top_review_course_booked_detail->review->school_location + $school_top_review_course_booked_detail->review->satisfied_teaching + $school_top_review_course_booked_detail->review->level_cleanliness + 
+                            $school_top_review_course_booked_detail->review->distance_accommodation_school + $school_top_review_course_booked_detail->review->satisfied_accommodation + $school_top_review_course_booked_detail->review->airport_transfer + 
+                            $school_top_review_course_booked_detail->review->city_activities) / 10;
+                        $school_top_review_ratings += $school_top_review_rating;
+                        $school_top_review_quality_teachings += $school_top_review_course_booked_detail->review->quality_teaching;
+                        $school_top_review_school_facilities += $school_top_review_course_booked_detail->review->school_facilities;
+                        $school_top_review_social_activities += $school_top_review_course_booked_detail->review->social_activities;
+                        $school_top_review_school_locations += $school_top_review_course_booked_detail->review->school_location;
+                        $school_top_review_satisfied_teachings += $school_top_review_course_booked_detail->review->satisfied_teaching;
+                        if ($school_top_review_rating == 5) $school_top_review_five_scores += 1;
+                        if ($school_top_review_rating < 5 && $school_top_review_rating >= 4) $school_top_review_four_scores += 1;
+                        if ($school_top_review_rating < 4 && $school_top_review_rating >= 3) $school_top_review_three_scores += 1;
+                        if ($school_top_review_rating < 3 && $school_top_review_rating >= 2) $school_top_review_two_scores += 1;
+                        if ($school_top_review_rating < 2 && $school_top_review_rating >= 1) $school_top_review_one_scores += 1;
+                    @endphp
+                @endforeach
+                @if ($school_top_review_course_booked_details && count($school_top_review_course_booked_details))
+                    @php
+                        $school_top_review_rating_count = count($school_top_review_course_booked_details);
+                        $school_top_review_ratings = $school_top_review_ratings / $school_top_review_rating_count;
+                        $school_top_review_quality_teachings = $school_top_review_quality_teachings / $school_top_review_rating_count;
+                        $school_top_review_school_facilities = $school_top_review_school_facilities / $school_top_review_rating_count;
+                        $school_top_review_social_activities = $school_top_review_social_activities / $school_top_review_rating_count;
+                        $school_top_review_school_locations = $school_top_review_school_locations / $school_top_review_rating_count;
+                        $school_top_review_satisfied_teachings = $school_top_review_satisfied_teachings / $school_top_review_rating_count;
+                    @endphp
+                @endif
+                <div class="score-wrap">
+                    <span class="stars" style="width: {{$school_top_review_ratings * 20}}%">
+                        <i class="fa fa-star" aria-hidden="true"></i>
+                        <i class="fa fa-star" aria-hidden="true"></i>
+                        <i class="fa fa-star" aria-hidden="true"></i>
+                        <i class="fa fa-star" aria-hidden="true"></i>
+                        <i class="fa fa-star" aria-hidden="true"></i>
+                    </span>
+                    <span>{{__('Frontend.based_on_five_reviews')}}</span>
+                </div>
                 <div class="row">
                     <div class="col-md-3">
-                        <p>5 Stars</p>
+                        <p>{{__('Frontend.five_stars')}}</p>
                     </div>
                     <div class="col-md-3">
                         <div class="progress">
-                            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar" role="progressbar" style="width: {{ $school_top_review_rating_count ? $school_top_review_five_scores / $school_top_review_rating_count * 100 :  0 }}%" aria-valuenow="{{ $school_top_review_rating_count ? $school_top_review_five_scores / $school_top_review_rating_count * 100 :  0 }}" aria-valuemin="0" aria-valuemax="100">{{ $school_top_review_five_scores }}</div>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <p>Quality of teaching</p>
+                        <p>{{__('Frontend.quality_of_teaching')}}</p>
                     </div>
                     <div class="col-md-3">
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
+                        <div class="score-wrap">
+                            <span class="stars" style="width: {{$school_top_review_quality_teachings * 20}}%">
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-3">
-                        <p>4 Stars</p>
+                        <p>{{__('Frontend.four_stars')}}</p>
                     </div>
                     <div class="col-md-3">
                         <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">5</div>
+                            <div class="progress-bar" role="progressbar" style="width: {{ $school_top_review_rating_count ? $school_top_review_four_scores / $school_top_review_rating_count * 100 :  0 }}%" aria-valuenow="{{ $school_top_review_rating_count ? $school_top_review_four_scores / $school_top_review_rating_count * 100 :  0 }}" aria-valuemin="0" aria-valuemax="100">{{ $school_top_review_four_scores }}</div>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <p>School facilities</p>
+                        <p>{{__('Frontend.school_facilities')}}</p>
                     </div>
                     <div class="col-md-3">
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
+                        <div class="score-wrap">
+                            <span class="stars" style="width: {{$school_top_review_school_facilities * 20}}%">
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-3">
-                        <p>3 Stars</p>
+                        <p>{{__('Frontend.three_stars')}}</p>
                     </div>
                     <div class="col-md-3">
                         <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">4</div>
+                            <div class="progress-bar" role="progressbar" style="width: {{ $school_top_review_rating_count ? $school_top_review_three_scores / $school_top_review_rating_count * 100 :  0 }}%" aria-valuenow="{{ $school_top_review_rating_count ? $school_top_review_three_scores / $school_top_review_rating_count * 100 :  0 }}" aria-valuemin="0" aria-valuemax="100">{{ $school_top_review_three_scores }}</div>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <p>Social activities</p>
+                        <p>{{__('Frontend.social_activities')}}</p>
                     </div>
                     <div class="col-md-3">
-                        <i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
+                        <div class="score-wrap">
+                            <span class="stars" style="width: {{$school_top_review_social_activities * 20}}%">
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-3">
-                        <p>2 Stars</p>
+                        <p>{{__('Frontend.two_stars')}}</p>
                     </div>
                     <div class="col-md-3">
                         <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">3
-                            </div>
+                            <div class="progress-bar" role="progressbar" style="width: {{ $school_top_review_rating_count ? $school_top_review_two_scores / $school_top_review_rating_count * 100 :  0 }}%" aria-valuenow="{{ $school_top_review_rating_count ? $school_top_review_two_scores / $school_top_review_rating_count * 100 :  0 }}" aria-valuemin="0" aria-valuemax="100">{{ $school_top_review_two_scores }}</div>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <p>School location</p>
+                        <p>{{__('Frontend.school_location')}}</p>
                     </div>
                     <div class="col-md-3">
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
+                        <div class="score-wrap">
+                            <span class="stars" style="width: {{$school_top_review_school_locations * 20}}%">
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-3">
-                        <p>1 Stars</p>
+                        <p>{{__('Frontend.one_stars')}}</p>
                     </div>
                     <div class="col-md-3">
                         <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">2</div>
+                            <div class="progress-bar" role="progressbar" style="width: {{ $school_top_review_rating_count ? $school_top_review_one_scores / $school_top_review_rating_count * 100 :  0 }}%" aria-valuenow="{{ $school_top_review_rating_count ? $school_top_review_one_scores / $school_top_review_rating_count * 100 :  0 }}" aria-valuemin="0" aria-valuemax="100">{{ $school_top_review_one_scores }}</div>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <p>School Location</p>
+                        <p>{{__('Frontend.satisfied_teaching')}}</p>
                     </div>
                     <div class="col-md-3">
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
+                        <div class="score-wrap">
+                            <span class="stars" style="width: {{$school_top_review_satisfied_teachings * 20}}%">
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="teacher-review mt-3 border-bottom">
-                <i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i
-                  class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i
-                  class="fa fa-star" aria-hidden="true"></i><span class="best">"Lorem Ipsum is simply dummy text of the printing and typesetting industry."</span>
-                <p class="city mb-0 mt-1">{{$school->city}}, {{$school->country}}</p>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum is simply dummy
-                    text of the printing and typesetting industry.Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry.</p>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-                    industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type
-                    and scrambled it to make a type specimen book.</p>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                <h6 class="best">MY RATINGS FOR THIS SCHOOL</h6>
-                <div class="row">
-                    <div class="col-md-3">
-                        <p>Quality of teaching</p>
+            <div class="school-reviews mt-3 border-bottom">
+                @foreach ($school_top_review_course_booked_details as $school_top_review_course_booked_detail)
+                    @php
+                        $school_top_review_rating = ($school_top_review_course_booked_detail->review->quality_teaching + $school_top_review_course_booked_detail->review->school_facilities + $school_top_review_course_booked_detail->review->social_activities + 
+                            $school_top_review_course_booked_detail->review->school_location + $school_top_review_course_booked_detail->review->satisfied_teaching + $school_top_review_course_booked_detail->review->level_cleanliness + 
+                            $school_top_review_course_booked_detail->review->distance_accommodation_school + $school_top_review_course_booked_detail->review->satisfied_accommodation + $school_top_review_course_booked_detail->review->airport_transfer + 
+                            $school_top_review_course_booked_detail->review->city_activities) / 10;
+                    @endphp
+                    <div class="score-wrap">
+                        <span class="stars" style="width: {{$school_top_review_rating * 20}}%">
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                        </span>
                     </div>
-                    <div class="col-md-3">
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
+                    <p class="city mb-0 mt-1">{{ $school->city ? (app()->getLocale() == 'en' ? $school->city->name : $school->city->name_ar) : '-'}}, {{$school->country ? (app()->getLocale() == 'en' ? $school->country->name : $school->country->name_ar) : '-' }}</p>
+                    <h6 class="best">{{__('Frontend.my_ratings_for_this_school')}}</h6>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <p>{{__('Frontend.quality_of_teaching')}}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="score-wrap">
+                                <span class="stars" style="width: {{$school_top_review_course_booked_detail->review->quality_teaching * 20}}%">
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <p>{{__('Frontend.duration_of_study')}}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p>{{ $school_top_review_course_booked_detail->program_duration }} {{__('Frontend.weeks')}}</p>
+                        </div>
                     </div>
-                    <div class="col-md-3">
-                        <p>DURATION OF STUDY</p>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <p>{{__('Frontend.school_facilities')}}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="score-wrap">
+                                <span class="stars" style="width: {{$school_top_review_course_booked_detail->review->school_facilities * 20}}%">
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <p>{{__('Frontend.date_of_study')}}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p>{{ $school_top_review_course_booked_detail->start_date->format('d M Y') }} - {{ $school_top_review_course_booked_detail->end_date->format('d M Y') }}</p>
+                        </div>
                     </div>
-                    <div class="col-md-3">
-                        <p>4 weeks</p>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <p>{{__('Frontend.social_activities')}}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="score-wrap">
+                                <span class="stars" style="width: {{$school_top_review_course_booked_detail->review->social_activities * 20}}%">
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <p>{{__('Frontend.would_you_recommend_this_school')}}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p>{{ $school_top_review_course_booked_detail->recommend_this_school ? __('Frontend.yes') : __('Frontend.no') }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3">
-                        <p>School facilities</p>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <p>{{__('Frontend.school_location')}}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="score-wrap">
+                                <span class="stars" style="width: {{$school_top_review_course_booked_detail->review->school_location * 20}}%">
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <p>{{__('Frontend.use_my_full_name_for_the_rating_and_review')}}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p>{{ $school_top_review_course_booked_detail->use_full_name ? __('Frontend.yes') : __('Frontend.no') }}</p>
+                        </div>
                     </div>
-                    <div class="col-md-3">
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                    </div>
-                    <div class="col-md-3">
-                        <p>DATE OF STUDY</p>
-                    </div>
-                    <div class="col-md-3">
-                        <p>3 Jun 2019 - 5 Jul 2019</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3">
-                        <p>Quality of teaching</p>
-                    </div>
-                    <div class="col-md-3">
-                        <i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i
-                          class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i
-                          class="fa fa-star" aria-hidden="true"></i>
-                    </div>
-                    <div class="col-md-3">
-                        <p>DURATION OF STUDY</p>
-                    </div>
-                    <div class="col-md-3">
-                        <p>3 Jun 2019 - 5 Jul 2019</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3">
-                        <p>Social activities</p>
-                    </div>
-                    <div class="col-md-3">
-                        <i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i
-                          class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i
-                          class="fa fa-star" aria-hidden="true"></i>
-                    </div>
-                    <div class="col-md-3">
-                        <p>WOULD YOU RECOMMEND THIS SCHOOL?</p>
-                    </div>
-                    <div class="col-md-3">
-                        <p>Yes</p>
-                    </div>
-                </div>
-                <p>This is a verified review. This student has booked a course at this school through Language
-                    International.</p>
+                @endforeach
+                <p>{{__('Frontend.verified_review_student_has_booked')}}</p>
             </div>
 
             <div class="row mt-4">
-                <!--Google map-->
-                <div id="map-container-google-2" class="z-depth-1-half map-container" style="height: 400px; width: 100%;">
-                    @if(str_contains($school->address, "<iframe"))
-                        {!! $school->address !!}
-                    @else
-                        <iframe src="{!! $school->address !!}" frameborder="0"  style="border:0; width: 100% !important; height: 400px;" allowfullscreen></iframe>
-                    @endif
+                <div class="col-md-12">
+                    <!--Google map-->
+                    <div id="map-container-google-2" class="z-depth-1-half map-container" style="height: 400px; width: 100%;">
+                        @if (str_contains($school->address, "<iframe"))
+                            {!! $school->address !!}
+                        @else
+                            <iframe src="{!! $school->address !!}" frameborder="0" style="border:0; width: 100% !important; height: 400px;" allowfullscreen></iframe>
+                        @endif
+                    </div>
+                    <!--Google Maps-->
                 </div>
-                <!--Google Maps-->
+            </div>
 
-                <!-- Other Branches -->
-                <section class="slider customer-logos">
-                    @foreach($school->getCityCountryState()->getCountry() as $countries)
-                        <div class="other_branches_item slide" style="">
-                            <div class="img">
-                                <img src="{{$school->logo}}">
-                            </div>
-                            <div class="details">
-                                <h4>{{$school->getBranchByCity($countries)}}</h4>
-                                <div class="d-flex">
-                                    <div class="w-40 float-left text-align-left">
-                                        {{$countries}},{{$school->getCityByCountries($countries)}}
+            <!-- ======= School Branches Section ======= -->
+            <section id="school-branches" class="school-branches" data-aos="fade-up">
+                <h5 class="best">{{__('Frontend.school_branches')}}</h5>
+
+                <div class="school-list schools-style-popular">
+                    @foreach($school_branches as $school_branch_index => $school_branch)
+                        @if ($school_branch_index % 3 == 0)
+                            <div class="row" data-aos="zoom-in" data-aos-delay="100" data-row-index="{{ $school_branch_index / 3 + 1 }}">
+                        @endif
+                        <div class="col-md-4 d-flex align-items-stretch mt-4 mt-md-0">
+                            <div class="school-item">
+                                <a href="{{route('school.details', $school->id)}}">
+                                    <div class="school-logo" style="background-image: url('{{ $school->logo }}')"></div>
+                                    <div class="school-content">
+                                        <div class="school-information">
+                                            <a href="{{route('school.details', $school->id)}}">
+                                                <div class="school-name-branch">{{ $school_branch->name ? (app()->getLocale() == 'en' ? $school_branch->name->name : $school_branch->name->name_ar) : '' }} / {{ app()->getLocale() == 'en' ? $school_branch->branch_name : $school_branch->branch_name_ar }}</div>
+                                                <div class="school-city">{{ $school_branch->city ? (app()->getLocale() == 'en' ? $school_branch->city->name : $school_branch->city->name_ar) : '' }}</div>
+                                                <div class="school-country">{{ $school_branch->country ? (app()->getLocale() == 'en' ? $school_branch->country->name : $school_branch->country->name_ar) : '' }}</div>
+                                            </a>
+                                        </div>
+                                        <div class="school-users-loves-likes">
+                                            <div class="school-users-loves">
+                                                <i class="bx bx-show"></i>&nbsp;{{$school_branch->viewed_count}}&nbsp;&nbsp;
+                                                @auth
+                                                    @if (!empty(auth()->user()->likedSchool))
+                                                        <i class="bx bxs-heart" data-school="{{ $school_branch->id }}" style="cursor:pointer" onclick="like_school($(this).attr('data-school'))"></i>&nbsp;{{ auth()->user()->likedSchool()->count() }}
+                                                    @else
+                                                        <i class="bx bx-heart" data-school="{{ $school_branch->id }}" style="cursor:pointer" onclick="like_school($(this).attr('data-school'))">&nbsp;{{ auth()->user()->likedSchool()->count() }}</i>
+                                                    @endif
+                                                @else
+                                                    <i class="bx bx-heart" data-school="{{ $school_branch->id }}" onclick="like_school($(this).attr('data-school'), true)" style="cursor:pointer">&nbsp;{{ \App\Models\Frontend\LikedSchool::count() }}</i>
+                                                @endauth
+                                            </div>
+                                            <div class="school-likes">
+                                                <i class="bx bxs-star"></i>
+                                                <i class="bx bxs-star"></i>
+                                                <i class="bx bxs-star"></i>
+                                                <i class="bx bxs-star"></i>
+                                                <i class="bx bxs-star-half"></i>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
+                                </a>
+                            </div> <!-- End School Item-->
+                        </div>
+                        @if ($school_branch_index % 3 == 2)
+                            </div>
+                        @endif
+                    @endforeach
+                    @if (count($school_branches) % 3 != 2)
+                        </div>
+                    @endif
+                    @if (count($school_branches) > 3)
+                        <div class="row" data-aos="zoom-in" data-aos-delay="100">
+                            <div class="col-md-12">
+                                <button onclick="loadMoreSchoolBranch()" class="btn btn-primary w-100">{{__('Frontend.more_branches')}}</button>
                             </div>
                         </div>
-                    @endforeach
-                </section>
-            </div>
+                    @endif
+                </div>
+            </section>
+            <!-- End School Branches Section -->
         </div>
     </div>
 
@@ -563,8 +609,8 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <form method="POST" action="{{route('rateSaved')}}">
-                @csrf
-                <!-- Modal Header -->
+                    @csrf
+                    <!-- Modal Header -->
                     <div class="modal-header">
                         <h4 class="modal-title">{{ucfirst($school->name)}}</h4>
                         <button type="button" class="close" id="close_modal" data-dismiss="modal">&times;</button>
@@ -573,16 +619,16 @@
                     <!-- Modal body -->
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="exampleFormControlTextarea1">Comments</label>
+                            <label for="exampleFormControlTextarea1">{{__('Frontend.comments')}}</label>
                             <textarea class="form-control" name="comments" id="exampleFormControlTextarea1" rows="3"></textarea>
                         </div>
                     </div>
 
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">{{__('Frontend.close')}}</button>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-success">Submit</button>
+                            <button type="submit" class="btn btn-success">{{__('Frontend.submit')}}</button>
                         </div>
                     </div>
                 </form>
@@ -675,16 +721,38 @@
             });
         }
 
-        function get_program(value) {
-            var urlname="{{route('school.programs')}}";
-            $.post(urlname, {study_mode: value, id: "{{$id}}", _token: "{{csrf_token()}}"}, function (data) {
-                $(".program").html(data.data)
-                $("#loader").hide()
+        function get_program() {
+            var urlname = "{{route('school.programs')}}";
+            $.post(
+                urlname, 
+                {
+                    id: "{{ $id }}",
+                    _token: "{{ csrf_token() }}",
+                    language: $('#choose_language').val(),
+                    study_mode: $('#study_mode').val(),
+                    age: $('#your_age').val()
+                },
+                function (data) {
+                    $(".program").html(data.data)
+                    $("#loader").hide()
+                }
+            );
+        }
+
+        var school_branch_page = 1;
+        function loadMoreSchoolBranch() {
+            $('#school-branches .school-list .row').each(function() {
+                if (parseInt($(this).data('row-index')) > school_branch_page) {
+                    $(this).hide();
+                } else {
+                    $(this).show();
+                }
             });
+            school_branch_page = school_branch_page + 1;
         }
 
         $(document).ready(function () {
-            get_program($('#study_mode').val());
+            get_program();
         });
     </script>
     <div id="loader"></div>

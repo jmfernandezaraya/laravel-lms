@@ -30,6 +30,20 @@ h6 {
   padding: 15px 15px;
 }
 
+i.fa.fa-star {  
+  color: #edc25a;
+}
+
+.score-wrap {
+  display: inline-block;
+}
+
+.score-wrap .stars {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 /*--------------------------------------------------------------
 # Back to top button
 --------------------------------------------------------------*/
@@ -223,7 +237,7 @@ h6 {
   position: relative;
 }
 
-.nav-menu .drop-down ul a {
+.nav-menu .drop-down ul li a {
   padding: 10px 20px;
   font-size: 14px;
   font-weight: 500;
@@ -231,9 +245,34 @@ h6 {
   color: #37423b;
 }
 
-.nav-menu .drop-down ul a:hover,
-.nav-menu .drop-down ul .active>a,
-.nav-menu .drop-down ul li:hover>a {
+.nav-menu .drop-down ul li a:hover,
+.nav-menu .drop-down ul li.active > a,
+.nav-menu .drop-down ul li:hover > a {
+  color: #97d0db;
+}
+
+.nav-menu .drop-down ul li form {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: none;
+  color: #37423b;
+}
+
+.nav-menu .drop-down ul li form button {
+  padding: 0px;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: none;
+  color: #37423b;
+}
+
+.nav-menu .drop-down ul li form:hover,
+.nav-menu .drop-down ul li.active > form,
+.nav-menu .drop-down ul li:hover > form,
+.nav-menu .drop-down ul li form:hover button,
+.nav-menu .drop-down ul li.active > form button,
+.nav-menu .drop-down ul li:hover > form button {
   color: #97d0db;
 }
 
@@ -565,9 +604,16 @@ section {
   }
 }
 
-.breadcrumbs h2 {
+.breadcrumbs h1 {
   font-size: 32px;
   font-weight: 500;
+  margin: 0;
+}
+
+.breadcrumbs h2 {
+  font-size: 30px;
+  font-weight: 500;
+  margin: 0;
 }
 
 .breadcrumbs p {
@@ -575,6 +621,17 @@ section {
   margin-bottom: 0;
 }
 
+.form-control {
+  height: 38px;
+}
+
+.content p img {
+  width: 100% !important;
+}
+
+.content {
+  padding: 0px 25px;
+}
 /*--------------------------------------------------------------
 # About
 --------------------------------------------------------------*/
@@ -627,13 +684,9 @@ section {
 /*--------------------------------------------------------------
 # Features
 --------------------------------------------------------------*/
-#popular-courses1 {
-  background: #ceedf3;
-}
-
 .features {
   padding-top: 60px;
-  background: #ceedf3;
+  background: #97d0db;
 }
 
 .features .icon-box {
@@ -672,135 +725,139 @@ section {
 }
 
 /*--------------------------------------------------------------
-# Courses
+# School
 --------------------------------------------------------------*/
-.courses .course-item {
+.school-item,
+.country-item {
   border-radius: 5px;
   border: 1px solid #6e9bca;
   margin: 12px;
-  height: 605px;
-}
-
-.courses .course-content {
-  padding: 8px;
-}
-
-.courses .course-content h3 {
-  font-weight: 700;
-  font-size: 20px;
-}
-
-.courses .course-content h3 a {
-  color: #37423b;
-  transition: 0.3s;
-}
-
-.courses .course-content h3 a:hover {
-  color: #97d0db;
-}
-
-.courses .course-content p {
   font-size: 14px;
-  color: #777777;
+  width: 100%;
 }
-
-.courses .course-content h4 {
-  font-size: 14px;
-  background: #97d0db;
-  padding: 7px 14px;
-  color: #fff;
-  margin: 0;
-}
-
-.courses .course-content .price {
-  margin: 0;
-  font-weight: 700;
-  font-size: 18px;
-  color: #37423b;
-}
-
-.courses .trainer {
-  padding-top: 15px;
-  border-top: 1px solid #eef0ef;
-}
-
-.courses .trainer .trainer-profile img {
-  max-width: 50px;
-  border-radius: 50px;
-}
-
-.courses .trainer .trainer-profile span {
-  padding-left: 10px;
-  font-weight: 600;
-  font-size: 16px;
-  color: #5a6c60;
-}
-
-.courses .trainer .trainer-rank {
-  font-size: 18px;
-  color: #657a6d;
-}
-
-/*--------------------------------------------------------------
-# Trainers
---------------------------------------------------------------*/
-.trainers .member {
-  text-align: center;
-  margin-bottom: 20px;
-  background: #fff;
-  border: 1px solid #eef0ef;
-}
-
-.trainers .member img {
-  margin: -1px -1px 30px -1px;
-}
-
-.trainers .member .member-content {
-  padding: 0 20px 30px 20px;
-}
-
-.trainers .member h4 {
-  font-weight: 700;
-  margin-bottom: 2px;
-  font-size: 18px;
-}
-
-.trainers .member span {
-  font-style: italic;
+.school-item > img,
+.country-item > img {
+  min-height: 314px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
   display: block;
-  font-size: 13px;
 }
-
-.trainers .member p {
+.school-item .school-logo,
+.country-item .school-logo {
+  width: 100%;
+  height: 300px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.school-item .school-content {
+  padding: 10px;
+}
+.school-item .school-content .school-users-loves-likes {
+  color: #37423b;
   padding-top: 10px;
-  font-size: 14px;
-  font-style: italic;
-  color: #aaaaaa;
+  display: flex!important;
+  align-items: center!important;
+  justify-content: space-between!important;
 }
-
-.trainers .member .social {
-  margin-top: 15px;
+.school-item .school-content .school-users-loves-likes .school-users-loves {
+  display: flex!important;
+  align-items: center!important;
 }
-
-.trainers .member .social a {
-  color: #7e9486;
-  transition: 0.3s;
-}
-
-.trainers .member .social a:hover {
-  color: #97d0db;
-}
-
-.trainers .member .social i {
-  font-size: 18px;
-  margin: 0 2px;
+.school-item .school-content .school-users-loves-likes .school-likes {
+  display: flex!important;
+  align-items: center!important;
 }
 
 /*--------------------------------------------------------------
-# Testimonials
+# School Promotion
 --------------------------------------------------------------*/
-.testimonials .testimonial-wrap {
-  padding-left: 50px;
+.schools-style-promotion .school-item .program-content {
+  color: #37423b;
+  padding: 10px;
+}
+.schools-style-promotion .school-item .program-content .price-discount {
+  text-align: center;
+}
+.schools-style-promotion .school-item .program-content .price-discount .price {
+  font-weight: bold;
+}
+.schools-style-promotion .school-item .program-content .price-discount .price .sale-price.discounted-value {
+  position: relative;
+}
+.schools-style-promotion .school-item .program-content .price-discount .price .sale-price.discounted-value:before {
+  position: absolute;
+  content: "";
+  left: 0;
+  top: 50%;
+  right: 0;
+  border-top: 1px solid;
+  border-color: inherit;  
+  -webkit-transform:rotate(5deg);
+  -moz-transform:rotate(5deg);
+  -ms-transform:rotate(5deg);
+  -o-transform:rotate(5deg);
+  transform:rotate(5deg);
+  border-color: #ff3333;
+}
+.schools-style-promotion .school-item .program-content .price-discount .discount {
+  color: #ff3333;
+}
+.schools-style-promotion .school-item .program-content .program-information .program-name {
+  background-color: #97d0db;
+  padding: 5px 15px;
+}
+.schools-style-promotion .school-item .program-content .program-information .program-name a,
+.schools-style-promotion .school-item .program-content .program-information .program-name a:hover,
+.schools-style-promotion .school-item .program-content .program-information .program-name a:focus,
+.schools-style-promotion .school-item .program-content .program-information .program-name a:active {
+  color: #444444;
+}
+.schools-style-promotion .school-item .school-content {
+  padding-top: 0px;
+}
+.schools-style-promotion .school-item .school-content .school-information {
+  color: #37423b;
+  padding-top: 10px;
+  border-top: 2px solid #000;
+  min-height: 54px;
+}
+.schools-style-promotion .school-item .school-content .school-information a,
+.schools-style-promotion .school-item .school-content .school-information a:hover,
+.schools-style-promotion .school-item .school-content .school-information a:focus,
+.schools-style-promotion .school-item .school-content .school-information a:active {
+  color: #444444;
+}
+
+/*--------------------------------------------------------------
+# Popular Country
+--------------------------------------------------------------*/
+.popular-country {
+  background: #97d0db;
+}
+.popular-country .country-item .country-content {
+  padding: 10px;
+}
+.popular-country .country-item .country-content .country-name {
+  text-align: center;
+  padding: 5px;
+  background-color: #97d0db;
+  color: #000000;
+}
+
+/*--------------------------------------------------------------
+# Popular School
+--------------------------------------------------------------*/
+.schools-style-popular .school-item .school-content .school-information {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #aaaaaa;
+}
+.schools-style-popular .school-item .school-content .school-information a {
+  color: #000000;
+}
+.schools-style-popular .school-item .school-content .school-information .school-name-branch {
+  padding: 5px;
+  background-color: #97d0db;
 }
 
 /*--------------------------------------------------------------
@@ -1207,6 +1264,96 @@ section {
 }
 
 /*--------------------------------------------------------------
+# Single Post
+--------------------------------------------------------------*/
+.single-blog-post {
+  position: relative;
+  margin-bottom: 30px;
+  overflow: hidden;
+  height: 300px !important;
+}
+
+.single-blog-post::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(47, 47, 47, .6);
+  z-index: 1;
+}
+
+.single-blog-post img {
+  -ms-transition: .4s;
+  -o-transition: .4s;
+  -moz-transition: .4s;
+  -webkit-transition: .4s;
+  transition: .4s;
+  -webkit-transform: scale(1);
+  transform: scale(1);
+  width: 100%;
+  height: 100%;
+}
+
+.single-blog-post:hover img {
+  -webkit-transform: scale(1.3);
+  transform: scale(1.3);
+}
+
+.single-blog-post .date {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  background: #97d0db;
+  color: #fff;
+  padding: 5px 10px;
+  font-weight: 400;
+  font-size: 20px;
+  -webkit-box-shadow: 7px 7px 0 0 rgb(230 12 62 / 50%);
+  box-shadow: 7px 7px 0 0 rgb(151 208 219 / 60%);
+  -ms-transition: .4s;
+  -o-transition: .4s;
+  -moz-transition: .4s;
+  -webkit-transition: .4s;
+  transition: .4s;
+  z-index: 1;
+}
+
+.single-blog-post .blog-post-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 25px;
+  z-index: 2;
+}
+
+.single-blog-post:hover .blog-post-content {
+  color: #97d0db;
+}
+
+.read-more:hover {
+  padding-left: 0;
+}
+
+.read-more:hover .left {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.recent-side {
+  box-shadow: 0px 0px 3px 1px #e2e0e0;
+  padding: 15px 15px;
+}
+
+.blog-img {
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  height: 90px;
+}
+
+/*--------------------------------------------------------------
 # Footer
 --------------------------------------------------------------*/
 #footer {
@@ -1379,7 +1526,7 @@ i.bx.bxs-star-half {
 }
 
 .test-1 {
-  background: #ceedf3;
+  background: #97d0db;
   padding: 60px 60px;
 }
 
@@ -1399,7 +1546,6 @@ i.bx.bxs-star-half {
 .testimonial .pic {
   width: 120px;
   height: 120px;
-  /*border: 3px solid #000;*/
   margin: 0 auto;
   position: absolute;
   top: -60px;
@@ -1423,18 +1569,6 @@ i.bx.bxs-star-half {
   margin-bottom: 20px;
   position: relative;
 }
-
-/*
-.testimonial .description:before{
-  content: "\f10d";
-  font-family: "FontAwesome";
-  font-size: 32px;
-  color: #77a9dd;
-  position: absolute;
-  top: -15px;
-  left: -35px;
-}
-*/
 
 .testimonial .testimonial-profile {
   position: relative;
@@ -1543,7 +1677,8 @@ i.bx.bxs-star-half {
   position: relative;
   top: 0;
   left: 0;
-  display: block;
+  align-items: center;
+  display: flex;
 }
 
 .slick-track:before,
@@ -1676,10 +1811,11 @@ h4 {
   list-style: none;
 }
 
-.logo-right {
-  padding: 63px 15px 0px 15px;
+.school-logo {
+  align-items: center;
+  justify-content: center;
+  display: flex;
   box-shadow: 0px 0px 3px 1px #e2e0e0;
-  height: 245px;
 }
 
 .admin {
@@ -1715,95 +1851,6 @@ ul.master li {
   font-weight: 600;
   color: #97d0db;
   margin-bottom: 10px;
-}
-
-.single-blog-post {
-  position: relative;
-  margin-bottom: 30px;
-  overflow: hidden;
-}
-
-.single-blog-post .blog-post-content {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  padding: 25px;
-  z-index: 2;
-}
-
-.single-blog-post .date {
-  position: absolute;
-  left: 20px;
-  top: 20px;
-  background: #97d0db;
-  color: #fff;
-  padding: 5px 10px;
-  font-weight: 400;
-  font-size: 20px;
-  -webkit-box-shadow: 7px 7px 0 0 rgb(230 12 62 / 50%);
-  box-shadow: 7px 7px 0 0 rgb(151 208 219 / 60%);
-  -ms-transition: .4s;
-  -o-transition: .4s;
-  -moz-transition: .4s;
-  -webkit-transition: .4s;
-  transition: .4s;
-  z-index: 1;
-}
-
-.single-blog-post:hover img {
-  -webkit-transform: scale(1.3);
-  transform: scale(1.3);
-}
-
-.single-blog-post img {
-  -ms-transition: .4s;
-  -o-transition: .4s;
-  -moz-transition: .4s;
-  -webkit-transition: .4s;
-  transition: .4s;
-  -webkit-transform: scale(1);
-  transform: scale(1);
-}
-
-.single-blog-post .blog-post-content p {
-  color: #fff;
-  margin-bottom: 15px;
-}
-
-.single-blog-post::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(47, 47, 47, .6);
-  z-index: 1;
-}
-
-.single-blog-post .blog-post-content .read-more:hover {
-  color: #fff;
-}
-
-.read-more:hover {
-  padding-left: 0;
-}
-
-.read-more:hover .left {
-  opacity: 0;
-  visibility: hidden;
-}
-
-.recent-side {
-  box-shadow: 0px 0px 3px 1px #e2e0e0;
-  padding: 15px 15px;
-}
-
-.blog-img {
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  height: 90px;
 }
 
 .btn-outline-success {
@@ -1846,6 +1893,33 @@ button#myBtn {
   border: none;
   background: none;
   color: #97d0db;
+}
+
+.other-branches{
+  margin: 30px 0px;
+}
+.other_branches_item .img{
+  padding: 10px;
+  border: 1px solid #f7f1f1;
+  padding-top: 30px;
+  margin-bottom: 12px;
+  box-shadow: 0px 0px 4px #f7f7f7;
+}
+.other_branches_item img{
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  object-fit: contain;
+}
+.other_branches_item .details h4{
+  font-size: 15px;
+  font-weight: bold;
+  color: #000;
+}
+.other_branches_item .details {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 5px 0px;
 }
 
 .sub-cources {
@@ -2015,11 +2089,16 @@ form#login-form {
 }
 
 .about-school {
+  width: 100%;
   padding: 15px 15px;
 }
 
 .Facility {
   padding: 15px 15px;
+}
+
+.Facility.border-bottom {
+  width: 100%;
 }
 
 .slick-slide {
@@ -2069,58 +2148,6 @@ form#login-form {
   -ms-transform: translate3d(0, 0, 0);
   -o-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
-}
-
-.slick-track {
-  position: relative;
-  top: 0;
-  left: 0;
-  display: block;
-}
-
-.slick-track:before,
-.slick-track:after {
-  display: table;
-  content: '';
-}
-
-.slick-track:after {
-  clear: both;
-}
-
-.slick-loading .slick-track {
-  visibility: hidden;
-}
-
-.slick-slide {
-  display: none;
-  float: left;
-  height: 100%;
-  min-height: 1px;
-}
-
-[dir='rtl'] .slick-slide {
-  float: right;
-}
-
-.slick-slide img {
-  display: block;
-}
-
-.slick-slide.slick-loading img {
-  display: none;
-}
-
-.slick-slide.dragging img {
-  pointer-events: none;
-}
-
-.slick-initialized .slick-slide {
-  display: block;
-}
-
-.slick-loading .slick-slide {
-  visibility: hidden;
 }
 
 .slick-vertical .slick-slide {
@@ -2181,7 +2208,7 @@ ul.degree-work span {
 
 @media only screen and (max-width: 425px) {
   .test-1 {
-    background: #ceedf3;
+    background: #97d0db;
     padding: 40px 0px;
   }
 
@@ -2246,6 +2273,9 @@ ul.degree-work span {
   display: block;
 }
 
+ul.custom {
+  padding-left: 0px!important;
+}
 
 .review-box {
   border: 1px solid #e9ecef;

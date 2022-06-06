@@ -88,7 +88,7 @@
 @endsection
 
 @section('content')
-    @include('superadmin.courses.modals')
+    @include('superadmin.include.modals')
     <div id="form_builder"></div>
 
     <div id="render-container"></div>

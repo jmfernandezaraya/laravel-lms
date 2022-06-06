@@ -185,7 +185,7 @@ class LoginController extends Controller
         $route = '/';
 
         if (auth('superadmin')->attempt($credentials)) {
-            if (auth('superadmin')->user()->isSuperAdmin() == true) {
+            if (auth('superadmin')->user()->user_type == 'super_admin') {
                 $request->session()->regenerate();
                 if (session()->has("previous_url")) {
                     $route = session()->get('previous_url');

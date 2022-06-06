@@ -3,13 +3,13 @@
 use App\Http\Controllers\Frontend\ApplyVisaController;
 use App\Http\Controllers\Frontend\BlogController;
 use App\Http\Controllers\Frontend\ContactController;
+use App\Http\Controllers\Frontend\CourseControllerFrontend;
 use App\Http\Controllers\Frontend\CustomerController;
 use App\Http\Controllers\Frontend\FrontendController;
-use App\Http\Controllers\Frontend\CourseControllerFrontend;
 
 use App\Http\Controllers\SuperAdmin\DashboardController;
-use App\Http\Controllers\SuperAdmin\CourseFormController;
 use App\Http\Controllers\SuperAdmin\CourseDetailsController;
+use App\Http\Controllers\SuperAdmin\CourseFormController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -31,7 +31,6 @@ Route::get('test_school', function() {
 });
 Route::get('tesetCourseSend', 'Frontend\FrontendController@testCourseNotification');
 Route::view('superamin/test_livewire', 'superadmin.test');
-// Route::get('superadmin/course/test', [CourseController::class, 'create_backup']);
 
 ///// Frontend Routes Start /////
 Route::post('visa_submit', [ApplyVisaController::class, 'applyForVisaPost'])->name('frontend.visa_submit')->middleware('paymentauth:visa_form');
@@ -56,6 +55,22 @@ Route::get('getTravel/{id}/{apply_id}', [ApplyVisaController::class, 'getTravel'
 Route::get('getApplicationCenter/{id}/{apply_id}', [ApplyVisaController::class, 'getApplicationCenter'])->name('frontend.getApplicationCenter');
 Route::get('getTypeOfVisa/{id}/{apply_id}', [ApplyVisaController::class, 'getTypeOfVisa'])->name('frontend.getTypeOfVisa');
 
+Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
+    Route::group(['prefix' => 'search', 'as' => 'search.'], function () {
+        Route::post('ages', [FrontendController::class, 'getAgeList'])->name('ages');
+        Route::post('countries', [FrontendController::class, 'getCountryList'])->name('countries');
+        Route::post('program_types', [FrontendController::class, 'getProgramTypeList'])->name('program_types');
+        Route::post('study_modes', [FrontendController::class, 'getStudyModeList'])->name('study_modes');
+        Route::post('cities', [FrontendController::class, 'getCityList'])->name('cities');
+        Route::post('program_names', [FrontendController::class, 'getProgramNameList'])->name('program_names');
+        Route::post('program_durations', [FrontendController::class, 'getProgramDurationList'])->name('program_durations');
+    
+        Route::post('course', [FrontendController::class, 'searchCourse'])->name('course');
+    });
+    
+    Route::get('course', [FrontendController::class, 'viewCourse'])->name('course');
+});
+
 Route::group(['prefix' => 'school', 'as' => 'school.'], function () {
     Route::get('{id}', [FrontendController::class, 'schoolDetails'])->name('details');
     Route::post('programs', [FrontendController::class, 'getPrograms'])->name('programs');
@@ -73,7 +88,7 @@ Route::group(['prefix' => 'course', 'as' => 'course.'], function () {
         Route::group(['prefix' => 'reset', 'as' => 'reset.'], function () {
             Route::get('program', [CourseControllerFrontend::class, 'resetProgram'])->name('program');
             Route::get('accommodation', [CourseControllerFrontend::class, 'resetAccommodation'])->name('accommodation');
-            Route::get('airport_medical', [CourseControllerFrontend::class, 'resetAirportMedical'])->name('airport_medical');
+            Route::get('other_service', [CourseControllerFrontend::class, 'resetOtherService'])->name('other_service');
         });
     });
 
@@ -85,21 +100,21 @@ Route::group(['prefix' => 'course', 'as' => 'course.'], function () {
     Route::post('medical/durations', [CourseControllerFrontend::class, 'getMedicalDurations'])->name('medical.durations');
     Route::post('medical/fee', [CourseControllerFrontend::class, 'setMedicalInsuranceFee'])->name('medical.fee');
     
-    Route::post('airport_medical/fee', [CourseControllerFrontend::class, 'setAirportMedicalFee'])->name('airport_medical.fee');
+    Route::post('other_service/fee', [CourseControllerFrontend::class, 'setOtherServiceFee'])->name('other_service.fee');
 
     Route::post('details/back', [FrontendController::class, 'backDetails'])->name('details.back');
-    Route::post('details', [FrontendController::class, 'registerDetail'])->name('details.save')->middleware('course.register');
+    Route::post('details', [FrontendController::class, 'viewRegister'])->name('details.save')->middleware('course.register');
 });
 
 ///// Frontend Middleware Starts //////
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'course', 'as' => 'course.'], function () {
-        Route::post('details', [FrontendController::class, 'registerDetail'])->name('details.save');
-        Route::get('register', [FrontendController::class, 'registerDetail'])->name('register.detail');
+        Route::post('details', [FrontendController::class, 'viewRegister'])->name('details.save');
+        Route::get('register', [FrontendController::class, 'viewRegister'])->name('register.detail');
         Route::post('register', [FrontendController::class, 'register'])->name('register');
-        Route::get('reservation', [FrontendController::class, 'reservationDetail'])->name('reservation.detail');
+        Route::get('reservation', [FrontendController::class, 'viewReservation'])->name('reservation.detail');
         Route::post('reservation', [FrontendController::class, 'reservation'])->name('reservation');
-        Route::get('reservation_confirm', [FrontendController::class, 'confirmReservationDetail'])->name('reservation_confirm.detail');
+        Route::get('reservation_confirm', [FrontendController::class, 'viewConfirmReservation'])->name('reservation_confirm.detail');
         Route::post('reservation_confirm', [FrontendController::class, 'confirmReservation'])->name('reservation_confirm');
         // Route::post('/telr-gateway', [FrontendController::class, 'paymentPost'])->name('payment-gateway');
     });
@@ -165,6 +180,7 @@ Route::get('/set_language/{locale}', function ($lang) {
     return redirect()->back();
 })->name('change_lang');
 
+///// Super Admin Routes /////
 Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => 'super_admin', 'namespace' => 'SuperAdmin'], function () {
     Route::get('/', function () {
         return redirect()->route('superadmin.dashboard');
@@ -231,19 +247,28 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => '
 
     Route::post('blogs/update/{id}', 'BlogController@update')->name('blogs.update');
     Route::post('blogs/image_upload', 'BlogController@upload')->name('blogs.upload');
+    Route::post('blogs/pause/{id}', 'BlogController@pause')->name('blogs.pause');
+    Route::post('blogs/play/{id}', 'BlogController@play')->name('blogs.play');
     Route::resource('blogs', 'BlogController');
 
     Route::resource('customers', 'CustomerController');
 
     Route::group(['prefix' => 'school', 'as' => 'school.'], function () {
-        Route::post('country', 'CourseController@getSchoolCountryList')->name('country.list');
-        Route::post('city', 'CourseController@getSchoolCityList')->name('city.list');
-        Route::post('branch', 'CourseController@getSchoolBranchList')->name('branch.list');
-        Route::post('clone/{id}', 'SchoolController@clone')->name('clone');
+        Route::post('image_upload', 'SchoolController@upload')->name('upload');
+        Route::post('country', 'SchoolController@getCountryList')->name('country.list');
+        Route::post('city_by_country', 'SchoolController@getCityByCountryList')->name('city_by_country.list');
+        Route::post('city', 'SchoolController@getCityList')->name('city.list');
+        Route::post('branch', 'SchoolController@getBranchList')->name('branch.list');
         Route::post('clone/{id}', 'SchoolController@clone')->name('clone');
         Route::post('pause/{id}', 'SchoolController@pause')->name('pause');
         Route::post('play/{id}', 'SchoolController@play')->name('play');
         Route::post('bulk', 'SchoolController@bulk')->name('bulk');
+        Route::get('country_city', 'SchoolController@viewCountryCityList')->name('country_city');
+        Route::post('country_city', 'SchoolController@updateCoutryCityList')->name('country_city.update');
+        Route::get('name', 'SchoolController@viewNameList')->name('name');
+        Route::post('name', 'SchoolController@updateNameList')->name('name.update');
+        Route::post('nationality', 'SchoolController@addNationality')->name('nationality.add');
+        Route::delete('nationality', 'SchoolController@deleteNationality')->name('nationality.delete');
     });
     Route::resource('school', 'SchoolController');
 
@@ -275,39 +300,42 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => '
     Route::delete('accomm_under_age', [CourseFormController::class, 'deleteAccommodationUnderAge'])->name('accomm_under_age.delete');
 
     // Course Routes
-    Route::get('course/deleted', 'CourseController@deleted')->name('course.deleted');
-    Route::delete('course/delete/{course_id}', 'CourseController@delete')->name('course.delete');
-    Route::post('course/restore/{course_id}', 'CourseController@restore')->name('course.restore');
-    Route::post('course/clone/{course_id}', 'CourseController@clone')->name('course.clone');
-    Route::post('course/pause/{course_id}', 'CourseController@pause')->name('course.pause');
-    Route::post('course/play/{course_id}', 'CourseController@play')->name('course.play');
-    Route::post('course/bulk', 'CourseController@bulk')->name('course.bulk');
-
-    Route::post('course/program_under_age/fetch', 'CourseController@fetchProgramUnderAgePage')->name('course.program_under_age.fetch');
-    Route::get('course/program_under_age/edit', 'CourseController@editProgramUnderAge')->name('course.program_under_age.edit');
-    Route::get('course/program_under_age', 'CourseController@programUnderAge')->name('course.program_under_age');
+    Route::group(['prefix' => 'course', 'as' => 'course.'], function () {
+        Route::get('deleted', 'CourseController@deleted')->name('deleted');
+        Route::delete('delete/{course_id}', 'CourseController@delete')->name('delete');
+        Route::post('restore/{course_id}', 'CourseController@restore')->name('restore');
+        Route::post('clone/{course_id}', 'CourseController@clone')->name('clone');
+        Route::post('pause/{course_id}', 'CourseController@pause')->name('pause');
+        Route::post('play/{course_id}', 'CourseController@play')->name('play');
+        Route::post('bulk', 'CourseController@bulk')->name('bulk');
     
-    Route::get('course/accommodation/edit', 'CourseController@editAccommodation')->name('course.accommodation.edit');
-    Route::get('course/accommodation/{course_unique_id}', 'CourseController@detailsAccommodation')->name('course.accommodation.details');
-    Route::get('course/accommodation', 'CourseController@accommodation')->name('course.accommodation');
-    Route::delete('course/accommodation/{id}', 'CourseDetailsController@deleteAccommodation')->name('course.accommodation.delete');
-
-    Route::post('course/accomm_under_age/fetch', 'CourseController@fetchAccommodationUnderAgePage')->name('course.accomm_under_age.fetch');
-    Route::get('course/accomm_under_age/edit', 'CourseController@editAccommodationUnderAge')->name('course.accomm_under_age.edit');
-    Route::get('course/accomm_under_age/{course_unique_id}', 'CourseController@detailsAccommodationUnderAge')->name('course.accomm_under_age.details');
-    Route::get('course/accomm_under_age', 'CourseController@accommodationUnderAge')->name('course.accomm_under_age');     
-    Route::delete('course/accomm_under_age/{id}', 'CourseDetailsController@deleteAccommodationUnderAge')->name('course.accomm_under_age.delete');
-
-    Route::get('course/airport_medical/edit', 'CourseController@editAirportMedical')->name('course.airport_medical.edit');
-    Route::get('course/airport_medical/{course_unique_id}', 'CourseController@detailsAirportMedical')->name('course.airport_medical.details');
-    Route::get('course/airport_medical', 'CourseController@airportMedical')->name('course.airport_medical');
-    Route::delete('course/airport_medical/{id}', 'CourseDetailsController@deleteAirportMedical')->name('course.airport_medical.delete');
+        Route::post('program_under_age/fetch', 'CourseController@fetchProgramUnderAgePage')->name('program_under_age.fetch');
+        Route::get('program_under_age/edit', 'CourseController@editProgramUnderAge')->name('program_under_age.edit');
+        Route::get('program_under_age', 'CourseController@viewProgramUnderAge')->name('program_under_age');
+        
+        Route::get('accommodation/edit', 'CourseController@editAccommodation')->name('accommodation.edit');
+        Route::get('accommodation/{course_unique_id}', 'CourseController@detailsAccommodation')->name('accommodation.details');
+        Route::get('accommodation', 'CourseController@viewAccommodation')->name('accommodation');
+        Route::delete('accommodation/{id}', 'CourseDetailsController@deleteAccommodation')->name('accommodation.delete');
     
-    Route::get('course/program/{course_unique_id}', 'CourseDetailsController@detailsProgram')->name('course.program.details');
-    Route::delete('course/program/{unique_id}', 'CourseDetailsController@deleteProgram')->name('course.program.delete');
-
-    Route::post('course/update', 'CourseDetailsController@courseUpdate')->name('course_update');
-
+        Route::post('accomm_under_age/fetch', 'CourseController@fetchAccommodationUnderAgePage')->name('accomm_under_age.fetch');
+        Route::get('accomm_under_age/edit', 'CourseController@editAccommodationUnderAge')->name('accomm_under_age.edit');
+        Route::get('accomm_under_age/{course_unique_id}', 'CourseController@detailsAccommodationUnderAge')->name('accomm_under_age.details');
+        Route::get('accomm_under_age', 'CourseController@viewAccommodationUnderAge')->name('accomm_under_age');
+        Route::delete('accomm_under_age/{id}', 'CourseDetailsController@deleteAccommodationUnderAge')->name('accomm_under_age.delete');
+    
+        Route::get('other_service/edit', 'CourseController@editOtherService')->name('other_service.edit');
+        Route::get('other_service/{course_unique_id}', 'CourseController@detailsOtherService')->name('other_service.details');
+        Route::get('other_service', 'CourseController@viewOtherService')->name('other_service');
+        Route::delete('other_service/{id}', 'CourseDetailsController@deleteOtherService')->name('other_service.delete');
+        
+        Route::get('program/{course_unique_id}', 'CourseDetailsController@detailsProgram')->name('program.details');
+        Route::delete('program/{unique_id}', 'CourseDetailsController@deleteProgram')->name('program.delete');
+    
+        Route::post('update', 'CourseDetailsController@courseUpdate')->name('course_update');
+    
+        Route::post('image_upload', 'CourseController@upload')->name('upload');
+    });
     Route::resource('course', CourseController::class);
 
     Route::resource('manage_app', CourseApplicationController::class);
@@ -318,9 +346,20 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => '
 
     Route::get('visa_application', 'VisaApplicationController@index');
     Route::get('visa_application/other_fields/{id}', 'VisaApplicationController@getOtherFields')->name('visa.otherfields');
+    
+    Route::group(['prefix' => 'front_page', 'as' => 'front_page.'], function () {
+        Route::get('home', 'FrontPageController@viewHomePage')->name('home');
+        Route::post('home', 'FrontPageController@updateHomePage')->name('home.update');
+        Route::post('image_upload', 'FrontPageController@upload')->name('upload');
+        Route::post('clone/{id}', 'FrontPageController@clone')->name('clone');
+        Route::post('pause/{id}', 'FrontPageController@pause')->name('pause');
+        Route::post('play/{id}', 'FrontPageController@play')->name('play');
+        Route::post('bulk', 'FrontPageController@bulk')->name('bulk');
+    });
+    Route::resource('front_page', FrontPageController::class);
 });
 
-///// School admin routes start /////
+///// School Admin Routes /////
 Route::group(['namespace' => 'SchoolAdmin', 'prefix' => 'schooladmin', 'middleware' => 'school_admin', 'as' => 'schooladmin.'], function () {
     Route::get('/', function () {
         return redirect()->route('schooladmin.dashboard');
@@ -370,9 +409,6 @@ Route::group(['namespace' => 'SchoolAdmin', 'prefix' => 'schooladmin', 'middlewa
     Route::view('rating', 'rating.index')->name('rating.index');
     Route::get('rating/approve/{id}', [\App\Http\Controllers\RatingController::class, 'approve'])->name('rating.approve');
 
-    /*Route::post('blogs/update/{id}', [\App\Http\Controllers\SuperAdmin\BlogController::class, 'update'])->name('sblogs.update');
-    Route::resource('blogs', \App\Http\Controllers\SuperAdmin\BlogController::class);*/
-
     Route::post('school/update/{id}', 'SchoolController@update')->name('school.update');
     Route::resource('school', 'SchoolController');
 
@@ -396,6 +432,7 @@ Route::group(['namespace' => 'SchoolAdmin', 'prefix' => 'schooladmin', 'middlewa
     Route::post('deleteaccomunderagefee', [CourseFormController::class, 'deleteAccommodationUnderAge'])->name('deleteaccomunderagefee');
 });
 
+///// Branch Admin Routes /////
 Route::group(['namespace' => 'BranchAdmin', 'prefix' => 'branch_admin', 'middleware' => 'branch_admin', 'as' => 'branch_admin.'], function () {
     Route::get('/', function () {
         return redirect()->route('branch_admin.dashboard');
@@ -442,9 +479,6 @@ Route::group(['namespace' => 'BranchAdmin', 'prefix' => 'branch_admin', 'middlew
 
     Route::view('rating', 'rating.index')->name('rating.index');
     Route::get('rating/approve/{id}', [\App\Http\Controllers\RatingController::class, 'approve'])->name('rating.approve');
-
-    /*Route::post('blogs/update/{id}', [\App\Http\Controllers\SuperAdmin\BlogController::class, 'update'])->name('sblogs.update');
-    Route::resource('blogs', \App\Http\Controllers\SuperAdmin\BlogController::class);*/
 
     Route::post('school/update/{id}', 'SchoolController@update')->name('school.update');
     Route::resource('school', 'SchoolController');

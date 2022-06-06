@@ -45,9 +45,7 @@
 @endsection
 
 @section('breadcrumbs')
-    <div class="container">
-        <h2>{{__('Frontend.registration_form')}}</h2>
-    </div>
+    <h1>{{__('Frontend.registration_form')}}</h1>
 @endsection
 
 @section('content')
@@ -61,6 +59,8 @@
             <input hidden name="max_age" value="{{ $max_age }}" />
             <input hidden name="accommodation_min_age" value="{{ $accommodation_min_age }}" />
             <input hidden name="accommodation_max_age" value="{{ $accommodation_max_age }}" />
+            <input hidden name="custodian_min_age" value="{{ $custodian_min_age }}" />
+            <input hidden name="custodian_max_age" value="{{ $custodian_max_age }}" />
 
             <h3>{{__('Frontend.personal_info')}}:</h3>
             <div class="study m-2">

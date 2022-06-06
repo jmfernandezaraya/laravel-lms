@@ -40,10 +40,6 @@
             background-color: #97d0db;
             color: white;
         }
-
-        .highlight {
-            color: #ff3333;
-        }
         
         @media (max-width: 400px) {
             #sig-canvas {
@@ -54,10 +50,8 @@
 @endsection
 
 @section('breadcrumbs')
-    <div class="container">
-        <h2>{{__('Frontend.reservation_details')}}</h2>
-        <p>{{__('Frontend.reservation_details_description')}}</p>
-    </div>
+    <h1>{{__('Frontend.reservation_details')}}</h1>
+    <p>{{__('Frontend.reservation_details_description')}}</p>
 @endsection
 
 @section('content')
@@ -154,8 +148,8 @@
                         @if ($program_discount_fee['value'])
                             <tr>
                                 <td>{{__('Frontend.discount')}}</td>
-                                <td class="highlight">-{{ toFixedNumber($program_discount_fee['value']) }}</td>
-                                <td class="highlight">-{{ toFixedNumber($program_discount_fee['converted_value']) }}</td>
+                                <td class="highlight-value">-{{ toFixedNumber($program_discount_fee['value']) }}</td>
+                                <td class="highlight-value">-{{ toFixedNumber($program_discount_fee['converted_value']) }}</td>
                                 <input type="hidden" value="{{$program_discount_fee['value']}}" name="discount_fee" />
                             </tr>
                         @endif
@@ -209,14 +203,6 @@
                                 <input type="hidden" value="{{$accommodation_deposit_fee['value']}}" name="accommodation_deposit_fee" />
                                 </tr>
                             @endif
-                            @if ($accommodation_custodian_fee['value'])
-                                <tr>
-                                    <td>{{__('Frontend.custodian_fee')}}</td>
-                                    <td>{{ toFixedNumber($accommodation_custodian_fee['value']) }}</td>
-                                    <td>{{ toFixedNumber($accommodation_custodian_fee['converted_value']) }}</td>
-                                <input type="hidden" value="{{$accommodation_custodian_fee['value']}}" name="accommodation_custodian_fee" />
-                                </tr>
-                            @endif
                             @if ($accommodation_summer_fee['value'])
                                 <tr>
                                     <td>{{__('Frontend.summer_fees')}}</td>
@@ -252,8 +238,8 @@
                             @if ($accommodation_discount_fee['value'])
                                 <tr>
                                     <td>{{__('Frontend.discount')}}</td>
-                                    <td class="highlight">-{{ toFixedNumber($accommodation_discount_fee['value']) }}</td>
-                                    <td class="highlight">-{{ toFixedNumber($accommodation_discount_fee['converted_value']) }}</td>
+                                    <td class="highlight-value">-{{ toFixedNumber($accommodation_discount_fee['value']) }}</td>
+                                    <td class="highlight-value">-{{ toFixedNumber($accommodation_discount_fee['converted_value']) }}</td>
                                 <input type="hidden" value="{{$accommodation_discount_fee['value']}}" name="accommodation_discount_fee" />
                                 </tr>
                             @endif
@@ -265,7 +251,7 @@
                     </table>
                 @endif
                 
-                @if ($airport || $medical)
+                @if ($airport || $medical || $custodian)
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -301,6 +287,17 @@
                                     <input type="hidden" value="{{$medical_insurance_fee['value']}}" name="medical_insurance_fee" />
                                 </tr>
                             @endif
+                            @if ($custodian)                            
+                                <tr>
+                                    <td>
+                                        {{__('Frontend.custodian')}}<br />
+                                        {{__('Frontend.age_range')}}: {{ $course_register_details->custodian_min_age ?? ''}} - {{ $course_register_details->custodian_max_age ?? ''}} {{__('Frontend.years')}}<br />
+                                    </td>
+                                    <td>{{ toFixedNumber($custodian_fee['value']) }}</td>
+                                    <td>{{ toFixedNumber($custodian_fee['converted_value']) }}</td>
+                                    <input type="hidden" value="{{$custodian_fee['value']}}" name="custodian_fee" />
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
                 @endif
@@ -315,8 +312,8 @@
                         </tr>
                         <tr>
                             <th>{{__('Frontend.total_discount')}}</th>
-                            <th class="highlight">-{{ toFixedNumber($total_discount['value']) }} {{ $currency['cost'] }}</th>
-                            <th class="highlight">-{{ toFixedNumber($total_discount['converted_value']) }} {{ $currency['converted'] }}</th>
+                            <th class="highlight-value">-{{ toFixedNumber($total_discount['value']) }} {{ $currency['cost'] }}</th>
+                            <th class="highlight-value">-{{ toFixedNumber($total_discount['converted_value']) }} {{ $currency['converted'] }}</th>
                             <input type="hidden" value="{{$total_discount['value']}}" name="total_discount" />
                         </tr>
                         <tr>
@@ -335,15 +332,15 @@
                         @endif
                         <tr>
                             <th>{{__('Frontend.total_balance_due')}}</th>
-                            <th class="highlight">{{ toFixedNumber($total_balance['value']) }} {{ $currency['cost'] }}</th>
-                            <th class="highlight">{{ toFixedNumber($total_balance['converted_value']) }} {{ $currency['converted'] }}</th>
+                            <th class="highlight-value">{{ toFixedNumber($total_balance['value']) }} {{ $currency['cost'] }}</th>
+                            <th class="highlight-value">{{ toFixedNumber($total_balance['converted_value']) }} {{ $currency['converted'] }}</th>
                             <input type="hidden" value="{{$total_balance['value']}}" name="total_balance" />
                         </tr>
                     </thead>
                 </table>
                 
                 <div class="row">
-                    <div class="col-md-12 highlight">
+                    <div class="col-md-12 highlight-value">
                         <p>{{__('Frontend.please_note')}}:</p>
                         <p>*{{__('Frontend.balance_final_payment')}}</p>
                         <p>*{{__('Frontend.tuition_fees_need_to_be_paid')}}</p>

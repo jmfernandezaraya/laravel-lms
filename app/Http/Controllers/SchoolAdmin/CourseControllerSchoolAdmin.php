@@ -178,7 +178,6 @@ class CourseControllerSchoolAdmin extends Controller
         $accomodation->placement_fee = $placement_fee;
         $accomodation->program_duration = $program_duration;
         $accomodation->deposit_fee = $deposit_fee;
-        $accomodation->custodian_fee = $custodian_fee;
         $accomodation->custodian_age_range = $age_range_for_custodian;
         $accomodation->special_diet_fee = $special_diet_fee;
         $accomodation->special_diet_note = $special_diet_note;

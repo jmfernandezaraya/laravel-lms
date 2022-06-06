@@ -5,9 +5,7 @@
 @endsection
 
 @section('content')
-    @include('superadmin.courses.scripts')
-    
-    <div class="col-12 grid-margin stretch-card">
+    <div class="page-header">
         <div class="card">
             <div class="card-body">
                 <div style="text-align: center;">
@@ -21,8 +19,6 @@
                         </div>
                     </change>
                 </div>
-
-                @include('superadmin.include.alert')
                 
                 <div id="menu">
                     <ul class="lang text-right">
@@ -35,6 +31,14 @@
                     </ul>
                 </div>
 
+                @include('superadmin.include.alert')
+            </div>
+        </div>
+    </div>
+
+    <div class="page-content">
+        <div class="card">
+            <div class="card-body">
                 <form class="forms-sample" method="POST" action="{{ route('superadmin.customers.update', $customer->id) }}" id="customerForm">
                     {{csrf_field()}}
                     @method('PUT')

@@ -55,7 +55,6 @@ class CourseController extends Controller
             $input['accommodation_fee'] = 0;
             $input['accommodation_placement_fee'] = 0;
             $input['accommodation_deposit'] = 0;
-            $input['accommodation_custodian_fee'] = 0;
             $input['accommodation_summer_fee'] = 0;
             $input['accommodation_under_age_fee'] = 0;
             $input['accommodation_christmas_fee'] = 0;
@@ -297,7 +296,7 @@ class CourseController extends Controller
         $data['discount_fee'] = $week_selected_discount;
         
         $date_set_format = Carbon::create($r->date_set)->format('Y-m-d');
-        if (($this->calculator->checkBetweenDate($program_getting->discount_start_date, $program_getting->discount_end_date, Carbon::now()->format('Y-m-d'))) ) {
+        if ((checkBetweenDate($program_getting->discount_start_date, $program_getting->discount_end_date, Carbon::now()->format('Y-m-d'))) ) {
             $this->calculator->setProgramStartDateFromFrontend($date_set_format);
             $this->calculator->setDiscountStartDateForWeekSelect($program_getting->x_week_start_date);
             $this->calculator->setDiscountEndDateForWeekSelect($program_getting->x_week_end_date);
@@ -338,10 +337,6 @@ class CourseController extends Controller
 
     public function calculateAccomodation(Request $request)
     {
-        if ($request->has('airport')) {
-            return $this->calculateAirport($request);
-        }
-
         if ($request->has('special_diet')) {
             return $this->calculateSpecialDiet($request);
         }
@@ -371,7 +366,6 @@ class CourseController extends Controller
             $this->calculator->setAccommodationPeakStartDate($accomodation->peak_time_fee_start_date);
             $this->calculator->setAccommodationPeakEndDate($accomodation->peak_time_fee_end_date);
             in_array($request->age, $accomodation->age_range) ? $this->calculator->setAccommodationUnderageFee($accomodation->under_age_fee_per_week * (int)$request->id) : 0;
-            in_array($request->age, $accomodation->custodian_age_range) ? $this->calculator->setAccommodationCustodianFee($accomodation->custodian_fee) : $this->calculator->setAccommodationCustodianFee(0);
             $this->calculator->setFrontEndDate($this->getEndDate($request->date_set, (int)$request->id));
             $this->calculator->setProgramStartDateFromFrontend(Carbon::create($request->date_set)->format('Y-m-d'));
             $this->calculator->setAccommodationSummerStartDate($accomodation->summer_fee_start_date);
@@ -394,7 +388,6 @@ class CourseController extends Controller
             $data['accom_summer_fee'] = $accom_summer_fee = $this->calculator->getAccommodationSummerFee();
             $data['christmas_fee'] = $christmas_fee = $this->calculator->getAccommodationChristmasFee();
             $data['under_age_fee'] = $under_age_fee = $this->calculator->getAccommodationUnderageFee();
-            $data['custodian_fee'] = $custodian_fee = $this->calculator->getAccommodationCustodianFee();
             $data['peak_fee'] = $peak_fee = $this->calculator->getAccommodationPeakFee();
             $this->calculator->calculateOnlyAccommodationTotal();
 
@@ -402,7 +395,6 @@ class CourseController extends Controller
             json_file('accommodation_placement_fee', $placement_fee);
             json_file('accommodation_special_diet_fee', $special_diet_fee);
             json_file('accommodation_deposit', $deposit_fee);
-            json_file('accommodation_custodian_fee', $custodian_fee);
             json_file('accommodation_summer_fee', $accom_summer_fee);
             json_file('accommodation_christmas_fee', $christmas_fee);
             json_file('accommodation_under_age_fee', $under_age_fee);
@@ -447,7 +439,6 @@ class CourseController extends Controller
         json_file('accommodation_placement_fee', 0);
         json_file('accommodation_special_diet_fee', 0);
         json_file('accommodation_deposit', 0);
-        json_file('accommodation_custodian_fee', 0);
         json_file('accommodation_summer_fee', 0);
         json_file('accommodation_christmas_fee', 0);
         json_file('accommodation_under_age_fee', 0);

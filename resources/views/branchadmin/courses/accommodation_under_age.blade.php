@@ -174,7 +174,7 @@
                             <button class="btn btn-primary" type="button" onclick="submitAccommodationUnderAgeForm($(this))" name="####">{{__('SuperAdmin/backend.submit')}}</button>
                         </div>
                         <div class="col-md-6">
-                            <a href="{{route('airport_medical')}}" class="btn btn-primary pull-right" type="button" name="####">{{__('SuperAdmin/backend.next')}}</a>
+                            <a href="{{route('other_service')}}" class="btn btn-primary pull-right" type="button" name="####">{{__('SuperAdmin/backend.next')}}</a>
                         </div>
                     </div>
                 </div>

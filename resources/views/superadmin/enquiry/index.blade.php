@@ -1,10 +1,19 @@
 @extends('superadmin.layouts.app')
+
 @section('content')
-    <div class="col-lg-12 grid-margin stretch-card">
+    <div class="page-header">
+        <div class="card">
+            <div class="card-body">
+                <div style="text-align: center;">
+                    <h1 class="card-title">@lang('SuperAdmin/backend.enquiry_details')</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-content">
         <div class="card">
             <div class="card-body table table-responsive">
-                <div style="text-align: center;"><h1 class="card-title">@lang('SuperAdmin/backend.enquiry_details')</h1></div>
-
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr>
@@ -44,7 +53,7 @@
                                         <form method="Post" action = "{{route('enquiry.store')}}">
                                             @csrf
                                             <div class="modal-header">
-                                                <center><h5 class="modal-title" id="exampleModalLabel">{{__('SuperAdmin/backend.reply_to_email')}}</h5> </center>
+                                                <h5 class="modal-title" id="exampleModalLabel">{{__('SuperAdmin/backend.reply_to_email')}}</h5>
 
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>

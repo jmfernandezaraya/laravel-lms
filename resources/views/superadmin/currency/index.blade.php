@@ -1,21 +1,22 @@
 @extends('superadmin.layouts.app')
 
 @section('content')
-    <div class="col-lg-12 grid-margin stretch-card">
+    <div class="page-header">
         <div class="card">
-            <div class="card-body table table-responsive">
-                <div class="row">
-                    <div class="form-group col-md-12">
-                        <center>
-                            <h1 class="card-title">{{__('SuperAdmin/backend.currencies')}}</h1>
-                        </center>
-                    </div>
+            <div class="card-body">
+                <div style="text-align: center;">
+                    <h1 class="card-title">{{__('SuperAdmin/backend.currencies')}}</h1>
                 </div>
-
                 <a href="{{route('superadmin.currency.create')}}" type="button" class="btn btn-primary btn-sm pull-right">
                     <i class="fa fa-plus"></i>&nbsp;{{__('SuperAdmin/backend.add')}}
                 </a>
+            </div>
+        </div>
+    </div>
 
+    <div class="page-content">
+        <div class="card">
+            <div class="card-body table table-responsive">
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr>
@@ -30,11 +31,11 @@
                     <tbody>
                         @foreach($currencies as $currency)
                             <tr>
-                                <td>{{$loop->iteration}}</td>
-                                <td>{{$currency->name}}</td>
-                                <td>{{$currency->exchange_rate}}</td>
-                                <td>{{$currency->is_default ? __('SuperAdmin/backend.default') : ''}}</td>
-                                <td>{{$currency->created_at->diffForHumans()}}</td>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $currency->name }}</td>
+                                <td>{{ $currency->exchange_rate }}</td>
+                                <td>{{ $currency->is_default ? __('SuperAdmin/backend.default') : '' }}</td>
+                                <td>{{ $currency->created_at->diffForHumans() }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <a href="{{route('superadmin.currency.edit', $currency->id)}}" class="btn btn-info btn-sm fa fa-pencil"></a>
@@ -58,14 +59,6 @@
             </div>
         </div>
     </div>
-
-    @section('css')
-        <style>
-            .show-read-more .more-text{
-                display: none;
-            }
-        </style>
-    @endsection
 
     @section('js')
         <script>

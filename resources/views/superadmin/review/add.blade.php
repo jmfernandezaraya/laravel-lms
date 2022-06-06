@@ -5,17 +5,23 @@
 @endsection
 
 @section('content')
-    <div class="col-12 grid-margin">
-        <form id="reviewForm" class="forms-sample" method="post" action="{{route('superadmin.review.store')}}">
-            {{csrf_field()}}
+    <div class="page-header">
+        <div class="card">
+            <div class="card-body">
+                <div style="text-align: center;">
+                    <h1 class="card-title">{{__('SuperAdmin/backend.add_rating_review')}}</h1>
+                </div>
 
-            <div class="card">
-                <div class="card-body">
-                    <div style="text-align: center;">
-                        <h1 class="card-title">{{__('SuperAdmin/backend.add_rating_review')}}</h1>
-                    </div>
+                @include('superadmin.include.alert')
+            </div>
+        </div>
+    </div>
 
-                    @include('superadmin.include.alert')
+    <div class="page-content">
+        <div class="card">
+            <div class="card-body">
+                <form id="reviewForm" class="forms-sample" method="post" action="{{route('superadmin.review.store')}}">
+                    {{csrf_field()}}
                     
                     <div class="row">
                         <div class="col-md-4">
@@ -124,8 +130,8 @@
 
                     <a class="btn btn-light" href="{{ url()->previous() }}">{{__('SuperAdmin/backend.cancel')}}</a>
                     <button type="button" onclick="submitForm($(this).parents().find('#reviewForm'))" class="btn btn-primary">{{__('SuperAdmin/backend.submit')}}</button>
-                </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 @endsection

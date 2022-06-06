@@ -1,52 +1,40 @@
 @extends('superadmin.layouts.app')
 
 @section('content')
-	@section('js')
-		<script src="{{asset('assets/js/tag/js/tag-it.js')}}" type="text/javascript" charset="utf-8"></script>
-		<script>
-			$(document).ready(function () {
-				$('#menu ul li a').click(function (ev) {
-					$('#menu ul li').removeClass('selected');
-					$(ev.currentTarget).parent('li').addClass('selected');
-				});
-				$("#myTags").tagit({
-					fieldName: "video_url[]"
-				});
-			});
-			var addschoolurl = "{{route('school.store')}}";
-			var in_arabic =  "{{__('SuperAdmin/backend.in_arabic')}}";
-			var in_english = "{{__('SuperAdmin/backend.in_english')}}";
-		</script>
-	@endsection
-
-	<div class="col-12 grid-margin stretch-card">
-		<div class="card">
-			<div class="card-body">
-				<h1 class="card-title">{{__('SuperAdmin/backend.add_school')}}</h1>
-				<change>
-					<div class="english">
-						{{__('SuperAdmin/backend.in_english')}}
-					</div>
-					<div class="arabic">
-						{{__('SuperAdmin/backend.in_arabic')}}
-					</div>
-				</change>
-
-				@include('superadmin.include.alert')
+    <div class="page-header">
+        <div class="card">
+            <div class="card-body">
+                <div style="text-align: center;">
+					<h1 class="card-title">{{__('SuperAdmin/backend.add_school')}}</h1>
+					<change>
+						<div class="english">
+							{{__('SuperAdmin/backend.in_english')}}
+						</div>
+						<div class="arabic">
+							{{__('SuperAdmin/backend.in_arabic')}}
+						</div>
+					</change>
+            	</div>
 
 				<div id="menu">
 					<ul class="lang text-right current_page_itemm">
-                        <li class="{{app()->getLocale() == 'en' ? 'current_page_item selected' : ''}}">
-                            <a onclick="changeLanguage('english', 'arabic')"><img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}</a>
-                        </li>
-                        <li class="{{app()->getLocale() == 'ar' ? 'current_page_item selected' : ''}}">
-                            <a onclick="changeLanguage('arabic', 'english')"><img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}</a>
-                        </li>
+						<li class="{{app()->getLocale() == 'en' ? 'current_page_item selected' : ''}}">
+							<a onclick="changeLanguage('english', 'arabic')"><img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}</a>
+						</li>
+						<li class="{{app()->getLocale() == 'ar' ? 'current_page_item selected' : ''}}">
+							<a onclick="changeLanguage('arabic', 'english')"><img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}</a>
+						</li>
 					</ul>
 				</div>
 
-				<div id="show_form"></div>
+				@include('superadmin.include.alert')
+            </div>
+        </div>
+    </div>
 
+    <div class="page-content">
+        <div class="card">
+            <div class="card-body">
 				<form id="form1" class="forms-sample" enctype="multipart/form-data" action="{{route('school.store')}}" method="post">
 					{{csrf_field()}}
 					

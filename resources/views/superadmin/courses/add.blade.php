@@ -5,8 +5,7 @@
 @endsection
 
 @section('content')
-    @include('superadmin.courses.scripts')
-    <div class="col-12 grid-margin stretch-card">
+    <div class="page-header">
         <div class="card">
             <div class="card-body">
                 <div style="text-align: center;">
@@ -20,8 +19,6 @@
                         </div>
                     </change>
                 </div>
-
-                @include('superadmin.include.alert')
                 
                 <div id="menu">
                     <ul class="lang text-right">
@@ -34,9 +31,15 @@
                     </ul>
                 </div>
 
-                <div id="show_form"></div>
+                @include('superadmin.include.alert')
+            </div>
+        </div>
+    </div>
 
-                <form class="forms-sample" method="POST" action="{{route("superadmin.course.store")}}" id="form1">
+    <div class="page-content">
+        <div class="card">
+            <div class="card-body">
+                <form class="forms-sample" method="POST" action="{{route('superadmin.course.store')}}" id="form1">
                     {{csrf_field()}}
 
                     <div class="first-form">
@@ -68,7 +71,7 @@
                                     <i class="fa fa-trash pl-3" onclick="deleteLanguage()" aria-hidden="true"></i>
                                 </label>
                                 <select name="language[]" multiple="multiple" id="language_choose" class="3col active">
-                                    @foreach($choose_languages as $choose_language)
+                                    @foreach ($choose_languages as $choose_language)
                                         <option value="{{$choose_language->unique_id}}">{{$choose_language->name}}</option>
                                     @endforeach
                                 </select>
@@ -81,7 +84,7 @@
                                     <i class="fa fa-trash pl-3" onclick="deleteStudyMode()" aria-hidden="true"></i>
                                 </label>
                                 <select name="study_mode[]" id="study_mode_choose" multiple="multiple" class="3col active">
-                                    @foreach($choose_study_modes as $study_mode)
+                                    @foreach ($choose_study_modes as $study_mode)
                                         <option value="{{$study_mode->unique_id}}">{{$study_mode->name}}</option>
                                     @endforeach
                                 </select>
@@ -94,7 +97,7 @@
                                     <i onclick="deleteProgramType()" class="fa fa-trash pl-3" aria-hidden="true"></i>
                                 </label>
                                 <select name="program_type[]" id="program_type_choose" multiple="multiple" class="3col active">
-                                    @foreach($choose_program_types as $program_type)
+                                    @foreach ($choose_program_types as $program_type)
                                         <option value="{{$program_type->unique_id}}">{{$program_type->name}}</option>
                                     @endforeach
                                 </select>
@@ -104,23 +107,23 @@
                         <div class="row">
                             <div class="form-group col-md-4">
                                 <label for="name">{{__('SuperAdmin/backend.choose_school')}}:</label>
-                                <select onchange="changeCourseSchool()" class="form-control" id="name" name="school_id">
+                                <select onchange="changeCourseSchool()" class="form-control" id="school_name" name="school_name">
                                     <option value="">{{__('SuperAdmin/backend.select_school')}}</option>
-                                    @foreach($schools as $school)
-                                        <option value="{{$school->id}}">{{get_language() == 'en' ?  $school->name : $school->name_ar}}</option>
+                                    @foreach ($choose_schools as $choose_school)
+                                        <option value="{{$choose_school}}">{{ $choose_school }}</option>
                                     @endforeach
                                 </select>  
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="country_name">{{__('SuperAdmin/backend.choose_country')}}:</label>
-                                <select onchange="changeCourseCountry()" class="form-control" id="country_name" name="country">
+                                <select onchange="changeCourseCountry()" class="form-control" id="country_name" name="country_id">
                                     <option value="">{{__('SuperAdmin/backend.select')}}</option>
                                 </select>
                             </div>
 
                             <div class="form-group col-md-4">
                                 <label for="city_name">{{__('SuperAdmin/backend.choose_city')}}:</label>
-                                <select onchange="changeCourseCity()" class="form-control" id="city_name" name="city">
+                                <select onchange="changeCourseCity()" class="form-control" id="city_name" name="city_id">
                                     <option value="">{{__('SuperAdmin/backend.select')}}</option>
                                 </select>
                             </div>
@@ -128,19 +131,16 @@
 
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label for="branch">{{__('SuperAdmin/backend.add_branch_if_applicable')}}
-                                    <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#BranchModal" aria-hidden="true"></i>
-                                    <i class="fa fa-trash pl-3" aria-hidden="true" onclick="deleteBranch()"></i>
-                                </label>
+                                <label for="branch">{{__('SuperAdmin/backend.add_branch_if_applicable')}}</label>
                                 <select class="form-control" name="branch" id="branch_choose">
                                     <option value="">{{__('SuperAdmin/backend.select')}}</option>
                                 </select>
                             </div>
-                            <div class="form-group col-md-4 mt-3">
+                            <div class="form-group col-md-4">
                                 <label for="choose_currency">{{__('SuperAdmin/backend.choose_currency')}}:</label>
                                 <select class="form-control" id="choose_currency" name="currency">
                                     <option value="">{{__('SuperAdmin/backend.select')}}</option>
-                                    @foreach($currencies as $currency)
+                                    @foreach ($currencies as $currency)
                                         <option value="{{$currency->id}}">{{$currency->name}}</option>
                                     @endforeach
                                 </select>
@@ -213,7 +213,7 @@
                                     <i onclick="deleteStartDate()" class="fa fa-trash pl-3" aria-hidden="true"></i>
                                 </label>
                                 <select name="start_date[]" id="start_date_choose" multiple="multiple" class="3col active">
-                                    @foreach($choose_start_days as $start_day)
+                                    @foreach ($choose_start_days as $start_day)
                                         <option value="{{$start_day->unique_id}}">{{$start_day->name}}</option>
                                     @endforeach
                                 </select>
@@ -285,7 +285,7 @@
                                         <i onclick="deleteProgramAgeRange()" class="fa fa-trash pl-3" aria-hidden="true"></i>
                                     </label>
                                     <select id="program_age_range_choose0" name="age_range[0][]" multiple="multiple" class="3col active">
-                                        @foreach($choose_program_age_ranges as $program_age_range)
+                                        @foreach ($choose_program_age_ranges as $program_age_range)
                                             <option value="{{$program_age_range->unique_id}}">{{$program_age_range->age}}</option>
                                         @endforeach
                                     </select>
@@ -489,5 +489,11 @@
         </div>
     </div>
 
-    @include('superadmin.courses.modals')
+    @include('superadmin.include.modals')
+
+    @section('js')
+        <script>
+            var uploadFileOption = "{{route('superadmin.course.upload', ['_token' => csrf_token() ])}}";
+        </script>
+    @endsection
 @endsection

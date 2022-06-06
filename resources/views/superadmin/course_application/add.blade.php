@@ -1,38 +1,20 @@
 @extends('superadmin.layouts.app')
 
 @section('content')
-	@section('js')
-		<script>
-			$(document).ready(function () {
-				$('#menu ul li a').click(function (ev) {
-					$('#menu ul li').removeClass('selected');
-					$(ev.currentTarget).parent('li').addClass('selected');
-				});
-				$("#myTags").tagit({
-					fieldName: "video_url[]"
-				});
-			});
-		</script>
-	@endsection
-
-	<div class="col-12 grid-margin stretch-card">
-		<div class="card">
-			<div class="card-body">
-				<div class="row">
-					<div class="form-group col-md-12">
+    <div class="page-header">
+        <div class="card">
+            <div class="card-body">
+                <div style="text-align: center;">
 						<h1 class="card-title">{{__('SuperAdmin/backend.add_school')}}</h1>
-						<center>
-							<div class="english">
-								{{__('SuperAdmin/backend.in_english')}}
-							</div>
-							<div class="arabic">
-								{{__('SuperAdmin/backend.in_arabic')}}
-							</div>
-						</center>
-					</div>
+                    <change>
+                        <div class="english">
+                            {{__('SuperAdmin/backend.in_english')}}
+                        </div>
+                        <div class="arabic">
+                            {{__('SuperAdmin/backend.in_arabic')}}
+                        </div>
+                    </change>
 				</div>
-
-				@include('superadmin.include.alert')
 
 				<div id="menu">
 					<ul class="lang text-right current_page_itemm">
@@ -49,8 +31,14 @@
 					</ul>
 				</div>
 
-				<div id="show_form"></div>
+				@include('superadmin.include.alert')
+            </div>
+        </div>
+    </div>
 
+    <div class="page-content">
+        <div class="card">
+            <div class="card-body">
 				<form id="form1" class="forms-sample" enctype="multipart/form-data" action="{{route('superadmin.school.store')}}" method="post">
 					{{csrf_field()}}
 

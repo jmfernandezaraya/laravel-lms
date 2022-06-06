@@ -5,9 +5,9 @@
 @endsection
 
 @section('content')
-    <div class="col-lg-12 grid-margin stretch-card">
+    <div class="page-header">
         <div class="card">
-            <div class="card-body table table-responsive">
+            <div class="card-body">
                 <div style="text-align: center;">
                     <h1 class="card-title">{{__('SuperAdmin/backend.school_details')}}</h1>
                 </div>
@@ -32,18 +32,24 @@
                 <a href="{{route('superadmin.school.create')}}" type="button" class="btn btn-primary btn-sm pull-right">
                     <i class="fa fa-plus"></i>&nbsp;{{__('SuperAdmin/backend.add')}}
                 </a>
+            </div>
+        </div>
+    </div>
 
+    <div class="page-content">
+        <div class="card">
+            <div class="card-body table table-responsive">
                 <table class="table table-hover table-bordered table-filtered" data-length="25,50,100,-1:25,50,100,All">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th data-filter="checkbox">{{__('SuperAdmin/backend.select')}}</th>
-                            <th data-filter="input"> {{__('SuperAdmin/backend.name')}} </th>
+                            <th data-filter="checkbox"> {{__('SuperAdmin/backend.select')}} </th>
+                            <th data-filter="select" data-select="{{implode(",", $choose_fields["names"])}}"> {{__('SuperAdmin/backend.name')}} </th>
                             <th> {{__('SuperAdmin/backend.email_address')}} </th>
                             <th> {{__('SuperAdmin/backend.contact_number')}} </th>
-                            <th> {{__('SuperAdmin/backend.branch_name')}} </th>
-                            <th data-filter="select" data-select="{{implode(",", $choose_fields["cities"])}}"> {{__('SuperAdmin/backend.city')}} </th>
                             <th data-filter="select" data-select="{{implode(",", $choose_fields["countries"])}}"> {{__('SuperAdmin/backend.country')}} </th>
+                            <th data-filter="select" data-select="{{implode(",", $choose_fields["cities"])}}"> {{__('SuperAdmin/backend.city')}} </th>                            
+                            <th> {{__('SuperAdmin/backend.branch_name')}} </th>
                             <th> {{__('SuperAdmin/backend.created_on')}} </th>
                             <th> {{__('SuperAdmin/backend.updated_on')}} </th>
                             <th> {{__('SuperAdmin/backend.action')}} </th>
@@ -54,12 +60,30 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td><input type="checkbox" data-id="{{$school->id}}" /></td>
-                                <td>{{ ucwords($school->name) }}</td>
+                                <td>
+                                    @if ($school->name)
+                                        {{ ucwords(app()->getLocale() == 'en' ? $school->name->name : $school->name->name_ar) }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
                                 <td>{{ $school->email }}</td>
                                 <td>{{ $school->contact }}</td>
+                                <td>
+                                    @if ($school->country)
+                                        {{ ucwords(app()->getLocale() == 'en' ? $school->country->name : $school->country->name_ar) }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($school->city)
+                                        {{ ucwords(app()->getLocale() == 'en' ? $school->city->name : $school->city->name_ar) }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
                                 <td>{{ is_array($school->branch_name) ? implode(", ", $school->branch_name) : $school->branch_name }}</td>
-                                <td>{{ ucwords($school->city) }}</td>
-                                <td>{{ ucwords($school->country) }}</td>
                                 <td>{{ $school->created_at->diffForHumans() }}</td>
                                 <td>
                                     @if ($school->updated_at)

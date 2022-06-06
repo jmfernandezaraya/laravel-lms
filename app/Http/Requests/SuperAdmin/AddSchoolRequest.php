@@ -28,35 +28,33 @@ class AddSchoolRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
+            'name_id' => 'required',
+            'country_id' => 'required',
+            'city_id' => 'required',
+
+            'email' => 'required',
             'contact' => 'required',
             'emergency_number' => 'required',
+            
+            // 'branch_name' => 'required',
+            // 'branch_name_ar' => 'required',
 
             'logo' => 'mimes:jpg,jpeg,png,bmp,pdf,svg',
             'logos.*' => 'mimes:jpg,jpeg,png,bmp,pdf,svg',
-
             'multiple_photos.*' => 'mimes:jpg,jpeg,png,bmp,pdf',
+            
             'capacity' => 'required',
             'facilities' => 'required',
+            'facilities_ar' => 'required',
             'class_size' => 'required',
+            'class_size_ar' => 'required',
             'opened' => 'required',
+            'opening_hours' => 'required',
+            'opening_hours_ar' => 'required',
+            'number_of_classrooms' => 'required',
             'about' => 'required',
             'address' => 'required',
-            'city' => 'required',
-
-            'country' => 'required',
             'video_url.*' => 'required',
-            'name_ar' => 'required',
-
-            'facilities_ar' => 'required',
-            'class_size_ar' => 'required',
-
-
-            'city_ar' => 'required',
-            'country_ar' => 'required',
-            'about_ar' => 'required',
-
-            'email' => 'required',
         ];
     }
 

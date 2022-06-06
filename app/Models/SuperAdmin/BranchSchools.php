@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Models\SuperAdmin;
 
 use App\Models\User;

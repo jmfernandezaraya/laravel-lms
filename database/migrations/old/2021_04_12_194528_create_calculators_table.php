@@ -31,7 +31,6 @@ class CreateCalculatorsTable extends Migration
             $table->decimal('placement_fee', 10)->default(0.00);
             $table->decimal('accommodation_special_diet_fee', 10)->default(0.00);
             $table->decimal('accommodation_deposit', 10)->default(0.00);
-            $table->decimal('accommodation_custodian_fee', 10)->default(0.00);
             $table->decimal('accommodation_summer_fee', 10)->default(0.00);
             $table->decimal('accommodation_christmas_fee', 10)->default(0.00);
             $table->decimal('accommodation_under_age_fee', 10)->default(0.00);
@@ -39,6 +38,7 @@ class CreateCalculatorsTable extends Migration
             $table->decimal('accommodation_peak_time_fee', 10)->default(0.00);
             $table->decimal('airport_pickup_fee', 10)->default(0.00);
             $table->decimal('medical_insurance_fee', 10)->default(0.00);
+            $table->decimal('custodian_fee', 10)->default(0.00);
             $table->decimal('airport_total', 10)->default(0.00);
             $table->double('accommodation_total', 10, 2);
             $table->timestamps();

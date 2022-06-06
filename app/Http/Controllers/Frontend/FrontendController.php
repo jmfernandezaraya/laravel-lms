@@ -15,30 +15,37 @@ use App\Mail\EnquiryMail;
 use App\Mail\CourseBooked;
 
 use App\Models\Calculator;
+use App\Models\City;
+use App\Models\Country;
+use App\Models\FrontPage;
+use App\Models\User;
 use App\Models\UserCourseBookedDetails;
 
 use App\Models\Frontend\AppliedForVisa;
 use App\Models\Frontend\Enquiry;
 
 use App\Models\SuperAdmin\Choose_Accommodation_Age_Range;
+use App\Models\SuperAdmin\Choose_Custodian_Under_Age;
+use App\Models\SuperAdmin\Choose_Language;
 use App\Models\SuperAdmin\Choose_Program_Age_Range;
+use App\Models\SuperAdmin\Choose_Program_Type;
 use App\Models\SuperAdmin\Choose_Program_Under_Age;
 use App\Models\SuperAdmin\Choose_Study_Mode;
 use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\CourseAccommodation;
 use App\Models\SuperAdmin\CourseAirport;
 use App\Models\SuperAdmin\CourseMedical;
+use App\Models\SuperAdmin\CourseCustodian;
 use App\Models\SuperAdmin\CourseProgram;
 use App\Models\SuperAdmin\CourseProgramTextBookFee;
 use App\Models\SuperAdmin\CourseProgramUnderAgeFee;
-use App\Models\User;
-
 use App\Models\SuperAdmin\School;
 
 use App\Services\FrontendServices;
 
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
@@ -65,10 +72,45 @@ class FrontendController extends Controller
      */
     public function index()
     {
-        $schools = School::where('is_active', true)->get();
-        $study_modes = Choose_Study_Mode::all();
+        $course_language_ids = [];
+        $course_age_range_ids = [];
+        $course_country_ids = [];
+        $course_program_type_ids = [];
+        $course_study_mode_ids = [];
+        $course_school_ids = [];
 
-        return view('frontend.index', compact('schools', 'study_modes'));
+        $now = Carbon::now()->format('Y-m-d');
+        $courses = Course::with('coursePrograms')->where('display', true)->where('deleted', false)->get();
+        foreach ($courses as $course) {
+            $course_programs = $course->coursePrograms;
+            $course_has_discount_program = false;
+            foreach ($course_programs as $course_program) {
+                $course_age_range_ids = array_merge($course_age_range_ids, $course_program->program_age_range);
+                if ($course_program->discount_per_week != ' -' && $course_program->discount_per_week != ' %' && 
+                    (($course_program->discount_start_date <= $now && $course_program->discount_end_date >= $now)
+                    || ($course_program->x_week_selected && $course_program->x_week_start_date <= $now && $course_program->x_week_end_date >= $now))) {
+                    $course_has_discount_program = true;
+                }
+            }
+            $course_language_ids = array_merge($course_language_ids, $course->language ?? []);
+            $course_country_ids[] = $course->country_id;
+            $course_program_type_ids = array_merge($course_program_type_ids, $course->program_type ?? []);
+            $course_study_mode_ids = array_merge($course_study_mode_ids, $course->study_mode ?? []);
+            if ($course_has_discount_program) $course_school_ids[] = $course->school_id;
+        }
+        $course_school_ids = array_unique($course_school_ids);
+        $course_age_range_ids = array_unique($course_age_range_ids);
+
+        $languages = Choose_Language::whereIn('unique_id', $course_language_ids)->orderBy('name', 'asc')->get();
+        $schools = School::with('courses.coursePrograms')->whereIn('id', $course_school_ids)->where('is_active', true)->get();
+
+        $content = [];
+        $front_page = FrontPage::where('slug', '/')->first();
+        if ($front_page) {
+            $content = unserialize($front_page->content);
+        }
+
+        return view('frontend.index', compact('content', 'schools', 'languages'));
     }
 
     /**
@@ -97,18 +139,33 @@ class FrontendController extends Controller
      */
     public function schoolDetails($id)
     {
-        $school = School::where('id', $id)->firstOrFail();
-        $school_courses = $school->availableCourses()->get();
+        $school = School::with('nationalities.nationality')->where('id', $id)->firstOrFail();
+        $language_ids = [];
         $study_mode_ids = [];
+        $program_age_range_ids = [];
+        $school_courses = $school->availableCourses()->get();
         foreach ($school_courses as $school_course) {
+            $language_ids = array_merge($language_ids, $school_course->language);
             $study_mode_ids = array_merge($study_mode_ids, $school_course->study_mode);
+            foreach ($school_course->coursePrograms as $school_course_program) {
+                $program_age_range_ids = array_merge($program_age_range_ids, $school_course_program->program_age_range);
+            }
         }
+        $languages = Choose_Language::whereIn('unique_id', $language_ids)->get();
         $study_modes = Choose_Study_Mode::whereIn('unique_id', $study_mode_ids)->get();
+        $age_ranges = Choose_Program_Age_Range::whereIn('unique_id', $program_age_range_ids)->get();
 
         $school->viewed_count += 1;
         $school->save();
 
-        return view('frontend.school.details', ['id' => $id], compact('school', 'study_modes'));
+        $school_top_review_course_booked_details = getSchoolTopReviewCourseBookedDetails($id);
+
+        $school_branches = [];
+        if ($school) {
+            $school_branches = School::where('name_id', $school->name_id)->where('id', '<>', $id)->get();
+        }
+
+        return view('frontend.school.details', ['id' => $id], compact('school', 'school_top_review_course_booked_details', 'languages', 'study_modes', 'age_ranges', 'school_branches'));
     }
 
     /**
@@ -155,7 +212,7 @@ class FrontendController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function registerDetail(Request $request)
+    public function viewRegister(Request $request)
     {
         if ($request->isMethod('post')) {
             if (\Session::has('course_details')) {
@@ -169,27 +226,25 @@ class FrontendController extends Controller
         $course_details = (object)\Session::get('course_details') ?? $request;
 
         $course = isset($course_details->program_id) ? Course::where('unique_id', '' . $course_details->program_id)->first() : '';
-        $course_country = $course ? $course->country : '';
+        $course_country = $course ? $course->country_id : '';
 
         $course_program = CourseProgram::where('unique_id', '' . $course_details->program_unique_id)->first();
         $age_ranges = $course_program ? $course_program->program_age_range : [];
-        $min_age = ''; $max_age = '';
-        $program_age_ranges = Choose_Program_Age_Range::whereIn('unique_id', $age_ranges)->orderBy('age', 'asc')->pluck('age')->toArray();
-        if (!empty($program_age_ranges) && count($program_age_ranges)) {
-            $min_age = $program_age_ranges[0];
-            $max_age = $program_age_ranges[count($program_age_ranges) - 1];
-        }
+        $program_age_range = getCourseProgramAgeRange($age_ranges);
+        $min_age = $program_age_range['min_age']; $max_age = $program_age_range['max_age'];
 
         $course_accommodation = CourseAccommodation::where('unique_id', '' . $course_details->accommodation_id)->first();
         $age_ranges = $course_accommodation ? $course_accommodation->age_range : [];
-        $accommodation_min_age = ''; $accommodation_max_age = '';
-        $accommodation_age_ranges = Choose_Accommodation_Age_Range::whereIn('unique_id', $age_ranges)->orderBy('age', 'asc')->pluck('age')->toArray();
-        if (!empty($accommodation_age_ranges) && count($accommodation_age_ranges)) {
-            $accommodation_min_age = $accommodation_age_ranges[0];
-            $accommodation_max_age = $accommodation_age_ranges[count($accommodation_age_ranges) - 1];
-        }
+        $course_accommodation_age_range = getCourseAccommodationAgeRange($age_ranges);
+        $accommodation_min_age = $course_accommodation_age_range['min_age']; $accommodation_max_age = $course_accommodation_age_range['max_age'];
+        
+        $custodian_under_age = Choose_Custodian_Under_Age::whereIn('age', $course_details->age_selected)->value('unique_id');
+        $course_custodian = CourseCustodian::where('course_unique_id', '' . $course_details->program_unique_id)->where('age_range', 'LIKE', '%' . $custodian_under_age . '%')->first();
+        $age_ranges = $course_custodian ? $course_custodian->age_range : [];
+        $course_custodian_age_range = getCourseAccommodationAgeRange($age_ranges);
+        $custodian_min_age = $course_custodian_age_range['min_age']; $custodian_max_age = $course_custodian_age_range['max_age'];        
 
-        return view('frontend.course.register', compact('course_details', 'course_country', 'min_age', 'max_age', 'accommodation_min_age', 'accommodation_max_age'));
+        return view('frontend.course.register', compact('course_details', 'course_country', 'min_age', 'max_age', 'accommodation_min_age', 'accommodation_max_age', 'custodian_min_age', 'custodian_max_age'));
     }
 
     /**
@@ -204,6 +259,8 @@ class FrontendController extends Controller
             'max_age' => 'sometimes',
             'accommodation_min_age' => 'sometimes',
             'accommodation_max_age' => 'sometimes',
+            'custodian_min_age' => 'sometimes',
+            'custodian_max_age' => 'sometimes',
             'fname' => 'required',
             'mname' => 'sometimes',
             'lname' => 'required',
@@ -249,7 +306,7 @@ class FrontendController extends Controller
             $data['errors'][] = "Age Not Eligible in Course";
             return response($data);
         }
-        if ($request->accommodation_min_age > $dob_age || $request->accommodation_max_age < $dob_age) {
+        if (($request->accommodation_min_age && $request->accommodation_min_age > $dob_age) || ($request->accommodation_max_age && $request->accommodation_max_age < $dob_age)) {
             $data['errors'][] = "Age Not Eligible in Accommodation";
             return response($data);
         }
@@ -265,17 +322,17 @@ class FrontendController extends Controller
             unset($to_be_saved['bank_statement']);
             if ($request->has('passport_copy')) {
                 $passport_image_name = time() . rand(00, 99) . "." . $request->file('passport_copy')->getClientOriginalExtension();
-                $to_be_saved['passport_copy'] = 'public/images/user_booked_details/' . $passport_image_name;
+                $to_be_saved['passport_copy'] = '/public/images/user_booked_details/' . $passport_image_name;
                 $request->passport_copy->move(public_path('images/user_booked_details'), $passport_image_name);
             }
             if ($request->has('financial_guarantee')) {
                 $finance_image = time() . rand(00, 99) . "." . $request->file('financial_guarantee')->getClientOriginalExtension();
-                $to_be_saved['financial_guarantee'] = 'public/images/user_booked_details/' . $finance_image;
+                $to_be_saved['financial_guarantee'] = '/public/images/user_booked_details/' . $finance_image;
                 $request->financial_guarantee->move(public_path('images/user_booked_details'), $finance_image);
             }
             if ($request->has('bank_statement')) {
                 $bank_statement_image = time() . rand(00, 99) . "." . $request->file('bank_statement')->getClientOriginalExtension();
-                $to_be_saved['bank_statement'] = 'public/images/user_booked_details/' . $bank_statement_image;
+                $to_be_saved['bank_statement'] = '/public/images/user_booked_details/' . $bank_statement_image;
                 $request->bank_statement->move(public_path('images/user_booked_details'), $bank_statement_image);
             }
             
@@ -283,7 +340,6 @@ class FrontendController extends Controller
             \Session::put('course_register_details', $to_be_saved);
             $data['url'] = route('course.reservation.detail');
         } catch(\Exception $e) {
-            debugErrorsByJsonFile(['message' => $e->getMessage(), 'line' => $e->getLine(), 'file' => $e->getFile()], 'apply.json');
             $data['errors'] = 'Something Went Wrong Check Log File';
             $data['success'] = false;
             return response()->json($data);
@@ -311,7 +367,7 @@ class FrontendController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function reservationDetail(Request $request)
+    public function viewReservation(Request $request)
     {
         \Session::forget('course_reservation_details');
 
@@ -324,6 +380,7 @@ class FrontendController extends Controller
 
         $program_age_ranges = Choose_Program_Age_Range::whereIn('unique_id', [$course_details->age_selected])->pluck('age')->toArray();
         $program_under_age = Choose_Program_Under_Age::whereIn('age', $program_age_ranges)->value('unique_id');
+        $custodian_under_age = Choose_Custodian_Under_Age::whereIn('age', $program_age_ranges)->value('unique_id');
 
         $data['program_start_date'] = Carbon::create($course_details->date_selected)->format('d-m-Y');
         $data['accommodation_start_date'] = $data['medical_start_date'] = Carbon::create($course_details->date_selected)->subDay()->format('d-m-Y');
@@ -340,6 +397,7 @@ class FrontendController extends Controller
         $data['accommodation'] = isset($course_details->accommodation_id) ? CourseAccommodation::where('unique_id', '' . $course_details->accommodation_id)->first() : '';
         $data['airport'] = isset($course_details->airport_provider) ? CourseAirport::where('course_unique_id', $course_details->program_id)->where('service_provider', $course_details->airport_provider)->first() : null;
         $data['medical'] = (isset($course_details->company_name) && isset($course_details->deductible_up_to)) ? CourseMedical::where('course_unique_id', $course_details->program_id)->where('company_name', $course_details->company_name)->where('deductible', $course_details->deductible_up_to)->first() : null;
+        $data['custodian'] = CourseCustodian::where('course_unique_id', $course_details->program_id)->where('age_range', 'LIKE', '%' . $custodian_under_age . '%')->first();
 
         $deposit_price = $program_registration_fee = $data['program']->program_registration_fee ?? 0;
         if (isset($course_register_details->financial_guarantee)) {
@@ -378,20 +436,20 @@ class FrontendController extends Controller
         $accommodation_summer_fee = readCalculationFromDB('accommodation_summer_fee') ?? 0;
         $accommodation_christmas_fee = readCalculationFromDB('accommodation_christmas_fee') ?? 0;
         $accommodation_under_age_fee = readCalculationFromDB('accommodation_under_age_fee') ?? 0;
-        $accommodation_custodian_fee = readCalculationFromDB('ccommodation_custodian_fee') ?? 0;
         $accommodation_peak_fee = readCalculationFromDB('accommodation_peak_time_fee') ?? 0;
         $accommodation_discount_fee = readCalculationFromDB('accommodation_discount') ?? 0;
         $accommodation_total = (readCalculationFromDB('accommodation_total') ?? 0) - $accommodation_discount_fee;
 
         $airport_pickup_fee = readCalculationFromDB('airport_pickup_fee') ?? 0;
         $medical_insurance_fee = readCalculationFromDB('medical_insurance_fee') ?? 0;
+        $custodian_fee = readCalculationFromDB('custodian_fee') ?? 0;
 
         $total_discount = $program_discount_fee + $accommodation_discount_fee;
-        $total_cost = (readCalculationFromDB('total') ?? 0) + (readCalculationFromDB('accommodation_total') ?? 0)
-                + (readCalculationFromDB('accommodation_special_diet_fee') ?? 0) + (readCalculationFromDB('airport_pickup_fee') ?? 0)
-                + (readCalculationFromDB('medical_insurance_fee') ?? 0) - (readCalculationFromDB('discount_fee') ?? 0)
-                - (readCalculationFromDB('accommodation_discount') ?? 0);
-        $sub_total = $total_cost + $total_discount;        
+        $total_cost = (readCalculationFromDB('total') ?? 0)
+                + (readCalculationFromDB('accommodation_total') ?? 0) + (readCalculationFromDB('accommodation_special_diet_fee') ?? 0)
+                + (readCalculationFromDB('airport_pickup_fee') ?? 0) + (readCalculationFromDB('medical_insurance_fee') ?? 0) + (readCalculationFromDB('custodian_fee') ?? 0)
+                - (readCalculationFromDB('discount_fee') ?? 0) - (readCalculationFromDB('accommodation_discount') ?? 0);
+        $sub_total = $total_cost + $total_discount;
         $total_balance = $total_cost - $deposit_price;
 
         $calculator_values = getCurrencyConvertedValues($course_details->program_id,
@@ -412,12 +470,12 @@ class FrontendController extends Controller
                 $accommodation_summer_fee,
                 $accommodation_christmas_fee,
                 $accommodation_under_age_fee,
-                $accommodation_custodian_fee,
                 $accommodation_peak_fee,
                 $accommodation_discount_fee,
                 $accommodation_total,
                 $airport_pickup_fee,
                 $medical_insurance_fee,
+                $custodian_fee,
                 $total_discount,
                 $sub_total,
                 $total_cost,
@@ -489,28 +547,28 @@ class FrontendController extends Controller
             'value' => (float)($accommodation_under_age_fee),
             'converted_value' => $calculator_values['values'][15]
         ];
-        $data['accommodation_custodian_fee'] = [
-            'value' => (float)($accommodation_custodian_fee),
-            'converted_value' => $calculator_values['values'][16]
-        ];
         $data['accommodation_peak_fee'] = [
             'value' => (float)($accommodation_peak_fee),
-            'converted_value' => $calculator_values['values'][17]
+            'converted_value' => $calculator_values['values'][16]
         ];
         $data['accommodation_discount_fee'] = [
             'value' => (float)($accommodation_discount_fee),
-            'converted_value' => $calculator_values['values'][18]
+            'converted_value' => $calculator_values['values'][17]
         ];
         $data['accommodation_total'] = [
             'value' => (float)($accommodation_total),
-            'converted_value' => $calculator_values['values'][19]
+            'converted_value' => $calculator_values['values'][18]
         ];
         $data['airport_pickup_fee'] = [
             'value' => (float)$airport_pickup_fee,
-            'converted_value' => $calculator_values['values'][20]
+            'converted_value' => $calculator_values['values'][19]
         ];
         $data['medical_insurance_fee'] = [
             'value' => (float)$medical_insurance_fee,
+            'converted_value' => $calculator_values['values'][20]
+        ];
+        $data['custodian_fee'] = [
+            'value' => (float)$custodian_fee,
             'converted_value' => $calculator_values['values'][21]
         ];
         $data['total_discount'] = [
@@ -545,7 +603,7 @@ class FrontendController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function confirmReservationDetail(Request $request)
+    public function viewConfirmReservation(Request $request)
     {
         $course_details = (object)(\Session::get('course_details') ?? []);
         $course_register_details = (object)(\Session::get('course_register_details') ?? []);
@@ -645,7 +703,6 @@ class FrontendController extends Controller
             $to_be_saved['accommodation_placement_fee'] = $course_reservation_details->accommodation_placement_fee ?? 0;
             $to_be_saved['accommodation_special_diet_fee'] = $course_reservation_details->accommodation_special_diet_fee ?? 0;
             $to_be_saved['accommodation_deposit_fee'] = $course_reservation_details->accommodation_deposit_fee ?? 0;
-            $to_be_saved['accommodation_custodian_fee'] = $course_reservation_details->accommodation_custodian_fee ?? 0;
             $to_be_saved['accommodation_summer_fee'] = $course_reservation_details->accommodation_summer_fee ?? 0;
             $to_be_saved['accommodation_peak_fee'] = $course_reservation_details->accommodation_peak_fee ?? 0;
             $to_be_saved['accommodation_christmas_fee'] = $course_reservation_details->accommodation_christmas_fee ?? 0;
@@ -654,6 +711,7 @@ class FrontendController extends Controller
             
             $to_be_saved['airport_pickup_fee'] = $course_reservation_details->airport_pickup_fee ?? 0;
             $to_be_saved['medical_insurance_fee'] = $course_reservation_details->medical_insurance_fee ?? 0;
+            $to_be_saved['custodian_fee'] = $course_reservation_details->custodian_fee ?? 0;
             
             $to_be_saved['sub_total'] = $course_reservation_details->sub_total ?? 0;
             $to_be_saved['total_discount'] = $course_reservation_details->total_discount ?? 0;
@@ -676,10 +734,10 @@ class FrontendController extends Controller
             $to_be_saved['passport_date_of_issue'] = $mail_pdf_data['passport_date_of_issue'] = $course_register_details->passport_date_of_issue ?? '';
             $to_be_saved['passport_date_of_expiry'] = $mail_pdf_data['passport_date_of_expiry'] = $course_register_details->passport_date_of_expiry ?? '';
             $to_be_saved['passport_copy'] = $mail_pdf_data['passport_copy'] = $course_register_details->passport_copy ?? '';
+            $to_be_saved['financial_guarantee'] = $course_register_details->financial_guarantee ?? '';
+            $to_be_saved['bank_statement'] = $course_register_details->bank_statement ?? '';
             $to_be_saved['level_of_language'] = $mail_pdf_data['level_of_language'] = $course_register_details->level_of_language ?? '';
             $to_be_saved['study_finance'] = $mail_pdf_data['study_finance'] = $course_register_details->study_finance ?? '';
-            // $to_be_saved['financial_guarantee'] = $course_register_details->financial_guarantee ?? '';
-            // $to_be_saved['bank_statement'] = $course_register_details->bank_statement ?? '';
             $to_be_saved['mobile'] = $mail_pdf_data['mobile'] = $course_register_details->mobile ?? '';
             $to_be_saved['telephone'] = $mail_pdf_data['telephone'] = $course_register_details->telephone ?? '';
             $to_be_saved['email'] = $mail_pdf_data['email'] = $course_register_details->email ?? '';
@@ -708,10 +766,6 @@ class FrontendController extends Controller
             Session::forget('course_register_details');
             Session::forget('course_reservation_details');
 
-            unset($to_be_saved['passport_copy']);
-            unset($to_be_saved['financial_guarantee']);
-            unset($to_be_saved['bank_statement']);
-
             $mail_pdf_data['program_start_date'] = Carbon::create($course_details->date_selected)->format('d-m-Y');
             $mail_pdf_data['accommodation_start_date'] = $mail_pdf_data['medical_start_date'] = Carbon::create($course_details->date_selected)->subDay()->format('d-m-Y');
             $mail_pdf_data['program_end_date'] = programEndDateExcludingLastWeekend(Carbon::create($course_details->date_selected), $course_details->program_duration);
@@ -723,12 +777,15 @@ class FrontendController extends Controller
             $mail_pdf_data['accommodation'] = isset($course_details->accommodation_id) ? CourseAccommodation::where('unique_id', '' . $course_details->accommodation_id)->first() : '';
             $mail_pdf_data['airport'] = isset($course_details->airport_provider) ? CourseAirport::where('course_unique_id', $course_details->program_id)->where('service_provider', $course_details->airport_provider)->first() : null;
             $mail_pdf_data['medical'] = (isset($course_details->company_name) && isset($course_details->deductible_up_to)) ? CourseMedical::where('course_unique_id', $course_details->program_id)->where('company_name', $course_details->company_name)->where('deductible', $course_details->deductible_up_to)->first() : null;
+            $mail_pdf_data['custodian'] = CourseCustodian::where('course_unique_id', $course_details->program_id)->where('age_range', $course_details->company_name)->first();
             $mail_pdf_data['company_name'] = $course_details->company_name;
             $mail_pdf_data['duration'] = $course_details->duration;
             $mail_pdf_data['min_age'] = $course_register_details->min_age;
             $mail_pdf_data['max_age'] = $course_register_details->max_age;
             $mail_pdf_data['accommodation_min_age'] = $course_register_details->accommodation_min_age;
             $mail_pdf_data['accommodation_max_age'] = $course_register_details->accommodation_max_age;
+            $mail_pdf_data['custodian_min_age'] = $course_register_details->custodian_min_age;
+            $mail_pdf_data['custodian_max_age'] = $course_register_details->custodian_max_age;
             
             $default_currency = getDefaultCurrency();
     
@@ -750,12 +807,12 @@ class FrontendController extends Controller
                     $to_be_saved['accommodation_summer_fee'],
                     $to_be_saved['accommodation_christmas_fee'],
                     $to_be_saved['accommodation_under_age_fee'],
-                    $to_be_saved['accommodation_custodian_fee'],
                     $to_be_saved['accommodation_peak_fee'],
                     $to_be_saved['accommodation_discount_fee'],
                     //$to_be_saved['accommodation_total'],
                     $to_be_saved['airport_pickup_fee'],
                     $to_be_saved['medical_insurance_fee'],
+                    $to_be_saved['custodian_fee'],
                     $to_be_saved['total_discount'],
                     $to_be_saved['sub_total'],
                     $to_be_saved['total_cost'],
@@ -827,17 +884,13 @@ class FrontendController extends Controller
                 'value' => (float)$to_be_saved['accommodation_under_age_fee'],
                 'converted_value' => $calculator_values['values'][14]
             ];
-            $mail_pdf_data['accommodation_custodian_fee'] = [
-                'value' => (float)$to_be_saved['accommodation_custodian_fee'],
-                'converted_value' => $calculator_values['values'][15]
-            ];
             $mail_pdf_data['accommodation_peak_fee'] = [
                 'value' => (float)$to_be_saved['accommodation_peak_fee'],
-                'converted_value' => $calculator_values['values'][16]
+                'converted_value' => $calculator_values['values'][15]
             ];
             $mail_pdf_data['accommodation_discount_fee'] = [
                 'value' => (float)$to_be_saved['accommodation_discount_fee'],
-                'converted_value' => $calculator_values['values'][17]
+                'converted_value' => $calculator_values['values'][16]
             ];
             // $mail_pdf_data['accommodation_total'] = [
             //     'value' => (float)$to_be_saved['accommodation_total'],
@@ -845,10 +898,14 @@ class FrontendController extends Controller
             // ];
             $mail_pdf_data['airport_pickup_fee'] = [
                 'value' => (float)$to_be_saved['airport_pickup_fee'],
-                'converted_value' => $calculator_values['values'][18]
+                'converted_value' => $calculator_values['values'][17]
             ];
             $mail_pdf_data['medical_insurance_fee'] = [
                 'value' => (float)$to_be_saved['medical_insurance_fee'],
+                'converted_value' => $calculator_values['values'][18]
+            ];
+            $mail_pdf_data['custodian_fee'] = [
+                'value' => (float)$to_be_saved['custodian_fee'],
                 'converted_value' => $calculator_values['values'][19]
             ];
             $mail_pdf_data['total_discount'] = [
@@ -879,7 +936,7 @@ class FrontendController extends Controller
             $mail_pdf_data['locale'] = app()->getLocale();
 
             if (isset($course_reservation_details->deposit_price)) {
-                $user_created = UserCourseBookedDetails::updateOrCreate($to_be_saved + ['user_id' => auth()->id(), 'status' => 'received']);
+                $user_created = UserCourseBookedDetails::updateOrCreate($to_be_saved, $to_be_saved + ['user_id' => auth()->id(), 'status' => 'received']);
                 $calc = Calculator::where('calc_id', request()->ip())->latest()->first();
                 $savefees = $calc->replicate()->setTable('user_course_booked_fees');
                 $savefees->user_course_booked_details_id = $user_created->id;
@@ -892,6 +949,7 @@ class FrontendController extends Controller
                 $user_created_data->registration_date = \Carbon\Carbon::now()->format('Y-m-d');
                 \Mail::to(auth()->user()->email)->send(new CourseBooked($user_created_data));
             } else {
+                $user_created = UserCourseBookedDetails::updateOrCreate($to_be_saved, $to_be_saved + ['user_id' => auth()->id(), 'paid' => 1, 'status' => 'received']);
                 $calc = Calculator::where('calc_id', request()->ip())->latest()->first();
                 $savefees = $calc->replicate()->setTable('user_course_booked_fees');
                 $savefees->user_course_booked_details_id = $user_created->id;
@@ -935,7 +993,6 @@ class FrontendController extends Controller
             $url = $telrManager->pay(time() . rand(00, 99), $to_be_saved['total_balance'], 'Program Registration Fee', $billingParams)->redirect();
             $data['url'] = $url->getTargetUrl();
         } catch(\Exception $e) {
-            debugErrorsByJsonFile(['message' => $e->getMessage(), 'line' => $e->getLine(), 'file' => $e->getFile()], 'apply.json');
             $data['errors'] = 'Something Went Wrong Check Log File';
             $data['success'] = false;
             return response()->json($data);
@@ -944,12 +1001,6 @@ class FrontendController extends Controller
         return response()->json($data);
     }
 
-    /*
-     * request helper is passed
-     *
-     * @return redirect land page
-     *
-     * */
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      * @throws \Exception
@@ -993,11 +1044,6 @@ class FrontendController extends Controller
         return redirect(route('land_page'));
     }
 
-    /*
-     * Capture Telr response here
-     *
-     * */
-
     /**
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -1008,5 +1054,412 @@ class FrontendController extends Controller
         toastr()->error(__('Frontend.payment.failed'));
 
         return redirect()->route('land_page');
+    }
+
+    public function getAgeList(Request $request) {
+        $result = '<option value="">' . __('Frontend.please_choose') . '</option>';
+        if ($request->language) {
+            $age_range_ids = [];
+            $courses = Course::with('coursePrograms')->where('display', true)->where('deleted', false)->get();
+            foreach ($courses as $course) {
+                $course_programs = $course->coursePrograms;
+                if (in_array($request->language, $course->language)) {
+                    foreach ($course_programs as $course_program) {
+                        $age_range_ids = array_merge($age_range_ids, $course_program->program_age_range);
+                    }
+                }
+            }
+            $age_range_ids = array_unique($age_range_ids);
+            
+            $program_age_ranges = Choose_Program_Age_Range::whereIn('unique_id', $age_range_ids)->orderBy('age', 'asc')->get();
+            foreach ($program_age_ranges as $program_age_range) {
+                $result .= "<option value='$program_age_range->unique_id'>$program_age_range->age</option>";
+            }
+        }
+
+        return $result;
+    }
+
+    public function getCountryList(Request $request) {
+        $result = '<option value="">' . __('Frontend.please_choose') . '</option>';
+        if ($request->language && $request->age) {
+            $country_ids = [];
+            $courses = Course::with('coursePrograms')->where('display', true)->where('deleted', false)->get();
+            foreach ($courses as $course) {
+                $course_has_age_range = false;
+                $course_programs = $course->coursePrograms;
+                if (in_array($request->language, $course->language)) {
+                    foreach ($course_programs as $course_program) {
+                        if (in_array($request->age, $course_program->program_age_range)) {
+                            $course_has_age_range = true;
+                        }
+                    }
+                }
+                if ($course_has_age_range) {
+                    $country_ids[] = $course->country_id;
+                }
+            }
+            $country_ids = array_unique($country_ids);
+            
+            $countires = Country::whereIn('id', $country_ids)->orderBy('id', 'asc')->get();
+            foreach ($countires as $county) {
+                $result .= "<option value='$county->id'>" . (app()->getLocale() == 'en' ? $county->name : $county->name_ar) . "</option>";
+            }
+        }
+
+        return $result;
+    }
+
+    public function getProgramTypeList(Request $request) {
+        $result = '<option value="">' . __('Frontend.please_choose') . '</option>';
+        if ($request->language && $request->age && $request->country) {
+            $program_type_ids = [];
+            $courses = Course::with('coursePrograms')->where('display', true)->where('deleted', false)->get();
+            foreach ($courses as $course) {
+                $course_has_age_range = false;
+                $course_programs = $course->coursePrograms;
+                if (in_array($request->language, $course->language) && $request->country == $course->country_id) {
+                    foreach ($course_programs as $course_program) {
+                        if (in_array($request->age, $course_program->program_age_range)) {
+                            $course_has_age_range = true;
+                        }
+                    }
+                }
+                if ($course_has_age_range) {
+                    $program_type_ids = array_merge($program_type_ids, $course->program_type);
+                }
+            }
+            $program_type_ids = array_unique($program_type_ids);
+            
+            $program_types = Choose_Program_Type::whereIn('unique_id', $program_type_ids)->get();
+            foreach ($program_types as $program_type) {
+                $result .= "<option value='$program_type->unique_id'>$program_type->name</option>";
+            }
+        }
+
+        return $result;
+    }
+
+    public function getStudyModeList(Request $request) {
+        $result = '<option value="">' . __('Frontend.please_choose') . '</option>';
+        if ($request->language && $request->age && $request->country && $request->program_type) {
+            $study_mode_ids = [];
+            $courses = Course::with('coursePrograms')->where('display', true)->where('deleted', false)->get();
+            foreach ($courses as $course) {
+                $course_has_age_range = false;
+                $course_programs = $course->coursePrograms;
+                if (in_array($request->language, $course->language) && $request->country == $course->country_id && in_array($request->program_type, $course->program_type)) {
+                    foreach ($course_programs as $course_program) {
+                        if (in_array($request->age, $course_program->program_age_range)) {
+                            $course_has_age_range = true;
+                        }
+                    }
+                }
+                if ($course_has_age_range) {
+                    $study_mode_ids = array_merge($study_mode_ids, $course->study_mode);
+                }
+            }
+            $study_mode_ids = array_unique($study_mode_ids);
+            
+            $study_modes = Choose_Study_Mode::whereIn('unique_id', $study_mode_ids)->get();
+            foreach ($study_modes as $study_mode) {
+                $result .= "<option value='$study_mode->unique_id'>$study_mode->name</option>";
+            }
+        }
+
+        return $result;
+    }
+
+    public function getCityList(Request $request) {
+        $result = '<option value="">' . __('Frontend.please_choose') . '</option>';
+        if ($request->language && $request->age && $request->country && $request->program_type && $request->study_mode) {
+            $city_ids = [];
+            $courses = Course::with('coursePrograms')->where('display', true)->where('deleted', false)->get();
+            foreach ($courses as $course) {
+                $course_has_age_range = false;
+                $course_programs = $course->coursePrograms;
+                if (in_array($request->language, $course->language) && $request->country == $course->country_id && in_array($request->program_type, $course->program_type)
+                    && in_array($request->study_mode, $course->study_mode)) {
+                    foreach ($course_programs as $course_program) {
+                        if (in_array($request->age, $course_program->program_age_range)) {
+                            $course_has_age_range = true;
+                        }
+                    }
+                }
+                if ($course_has_age_range) {
+                    $city_ids[] = $course->city_id;
+                }
+            }
+            $city_ids = array_unique($city_ids);
+            
+            $cities = City::whereIn('id', $city_ids)->get();
+            foreach ($cities as $city) {
+                $result .= "<option value='$city->id'>" . (app()->getLocale() == 'en' ? $city->name : $city->name_ar) . "</option>";
+            }
+        }
+
+        return $result;
+    }
+
+    public function getProgramNameList(Request $request) {
+        $result = '<option value="">' . __('Frontend.please_choose') . '</option>';
+        if ($request->language && $request->age && $request->country && $request->program_type && $request->study_mode && $request->city) {
+            $program_names = [];
+            $courses = Course::with('coursePrograms')->where('display', true)->where('deleted', false)->get();
+            foreach ($courses as $course) {
+                $course_has_age_range = false;
+                $course_programs = $course->coursePrograms;
+                if (in_array($request->language, $course->language) && $request->country == $course->country_id && in_array($request->program_type, $course->program_type)
+                    && in_array($request->study_mode, $course->study_mode) && $request->city == $course->city_id) {
+                    foreach ($course_programs as $course_program) {
+                        if (in_array($request->age, $course_program->program_age_range)) {
+                            $course_has_age_range = true;
+                        }
+                    }
+                }
+                if ($course_has_age_range) {
+                    $program_names[] = app()->getLocale() == 'en' ? $course->program_name : $course->program_name_ar;
+                }
+            }
+            $program_names = array_unique($program_names);
+            
+            foreach ($program_names as $program_name) {
+                $result .= "<option value='$program_name'>$program_name</option>";
+            }
+        }
+
+        return $result;
+    }
+
+    public function getProgramDurationList(Request $request) {
+        $result = '<option value="">' . __('Frontend.please_choose') . '</option>';
+        if ($request->language && $request->age && $request->country && $request->program_type && $request->study_mode && $request->city && $request->program_name) {
+            $program_duration_start = 0; $program_duration_end = 0;
+            $courses = Course::with('coursePrograms')->where('display', true)->where('deleted', false)->get();
+            foreach ($courses as $course) {
+                $course_programs = $course->coursePrograms;
+                if (in_array($request->language, $course->language) && $request->country == $course->country_id && in_array($request->program_type, $course->program_type)
+                    && in_array($request->study_mode, $course->study_mode) && $request->city == $course->city_id
+                    && ((app()->getLocale() == 'en' && $request->program_name == $course->program_name) || (app()->getLocale() != 'en' && $request->program_name == $course->program_name_ar))) {
+                    foreach ($course_programs as $course_program) {
+                        if (in_array($request->age, $course_program->program_age_range)) {
+                            if (!$program_duration_start) $program_duration_start = (int)$course_program->program_duration_start;
+                            if ($program_duration_start > $course_program->program_duration_start) $program_duration_start = (int)$course_program->program_duration_start;
+                            if (!$program_duration_end) $program_duration_end = (int)$course_program->program_duration_end;
+                            if ($program_duration_end < $course_program->program_duration_end) $program_duration_end = (int)$course_program->program_duration_end;
+                        }
+                    }
+                }
+            }
+            
+            for ($program_duration = $program_duration_start; $program_duration <= $program_duration_end; $program_duration++) {
+                $result .= "<option value='$program_duration'>$program_duration</option>";
+            }
+        }
+
+        return $result;
+    }
+
+    private function searchCourseList($condition) {
+        $result_courses = [];
+
+        $courses = Course::with('coursePrograms')->where('display', true)->where('deleted', false)->get();
+        foreach ($courses as $course) {
+            $course_satisfied = true;
+            $course_programs = $course->coursePrograms;
+            if (isset($condition->language) && $condition->language) {
+                if (!in_array($condition->language, $course->language)) {
+                    $course_satisfied = false;
+                }
+            }
+            if (isset($condition->age) && $condition->age) {
+                $course_program_satisified = false;
+                foreach ($course_programs as $course_program) {
+                    if (in_array($condition->age, $course_program->program_age_range)) {
+                        $course_program_satisified = true;
+                    }
+                }
+                if (!$course_program_satisified) {
+                    $course_satisfied = false;
+                }
+            }
+            if (isset($condition->country) && $condition->country) {
+                if ($condition->country != $course->country_id) {
+                    $course_satisfied = false;
+                }
+            }
+            if (isset($condition->program_type) && $condition->program_type) {
+                if (!in_array($condition->program_type, $course->program_type)) {
+                    $course_satisfied = false;
+                }
+            }
+            if (isset($condition->study_mode) && $condition->study_mode) {
+                if (!in_array($condition->study_mode, $course->study_mode)) {
+                    $course_satisfied = false;
+                }
+            }
+            if (isset($condition->start_date) && $condition->start_date) {
+                $course_program_satisified = false;
+                foreach ($course_programs as $course_program) {
+                    if ($course_program->program_start_date <= $condition->start_date && $course_program->program_end_date >= $condition->start_date) {
+                        $course_program_satisified = true;
+                    }
+                }
+                if (!$course_program_satisified) {
+                    $course_satisfied = false;
+                }
+            }
+            if (isset($condition->advanced) && $condition->advanced == 'expanded') {
+                if (isset($condition->city) && $condition->city) {
+                    if ($condition->city != $course->city_id) {
+                        $course_satisfied = false;
+                    }
+                }
+                if (isset($condition->program_name) && $condition->program_name) {
+                    if (app()->getLocale() == 'en') {
+                        if ($condition->program_name == $course->program_name) {
+                            $course_satisfied = false;
+                        }
+                    } else {
+                        if ($condition->program_name == $course->program_name_ar) {
+                            $course_satisfied = false;
+                        }
+                    }
+                }
+                if (isset($condition->program_duration) && $condition->program_duration) {
+                    $course_program_satisified = false;
+                    foreach ($course_programs as $course_program) {
+                        if ($course_program->program_duration_start <= $condition->program_duration && $course_program->program_duration_end >= $condition->program_duration) {
+                            $course_program_satisified = true;
+                        }
+                    }
+                    if (!$course_program_satisified) {
+                        $course_satisfied = false;
+                    }
+                }
+            }
+
+            if ($course_satisfied) {
+                $result_course = $course;
+                foreach ($course_programs as $course_program) {
+                    $course_program_satisified = true;
+                    if (isset($condition->age) && $condition->age) {
+                        if (!in_array($condition->age, $course_program->program_age_range)) {
+                            $course_program_satisified = false;
+                        }
+                    }
+                    if (isset($condition->start_date) && $condition->start_date) {
+                        if ($course_program->program_start_date <= $condition->start_date && $course_program->program_end_date >= $condition->start_date) {
+                            $course_program_satisified = false;
+                        }
+                    }
+                    if (isset($condition->program_duration) && $condition->program_duration) {
+                        if ($course_program->program_duration_start <= $condition->program_duration && $course_program->program_duration_end >= $condition->program_duration) {
+                            $course_program_satisified = false;
+                        }
+                    }
+                    if ($course_program_satisified) {
+                        $result_course->course_program = $course_program;
+                        $result_course->age_range = getCourseProgramAgeRange($course_program->program_age_range);
+                        break;
+                    }
+                }
+
+                $result_courses[] = $course;
+            }
+        }
+
+        return $result_courses;
+    }
+
+    public function searchCourse(Request $request) {
+        $rules = [
+            'language' => 'sometimes',
+            'age' => 'sometimes',
+            'country' => 'sometimes',
+            'program_type' => 'sometimes',
+            'study_mode' => 'sometimes',
+            'start_date' => 'sometimes',
+            'advanced' => 'sometimes',
+            'city' => 'sometimes',
+            'program_name' => 'sometimes',
+            'program_duration' => 'sometimes',
+        ];
+        $validate = Validator::make($request->all(), $rules);
+
+        $data['success'] = false;
+        if ($validate->fails()) {
+            $data['errors'] = $validate->errors();
+            return response($data);
+        }
+        
+        \Session::put('course_search', (object)$request->except('_token'));
+
+        $now = Carbon::now()->format('Y-m-d');
+
+        $data['success'] = true;
+        $data['courses'] = $courses = $this->searchCourseList($request->all());
+        $data['courses_html'] = view('frontend.layouts.course-list', compact('courses', 'now'))->render();
+        return response()->json($data);
+    }
+
+    public function viewCourse() {
+        $now = Carbon::now()->format('Y-m-d');
+
+        $course_language_ids = [];
+        $courses = Course::with('coursePrograms', 'userCourseBookedDetails.review')->where('display', true)->where('deleted', false)->get();
+        foreach ($courses as $course) {
+            $course_language_ids = array_merge($course_language_ids, $course->language ?? []);
+        }
+        $languages = Choose_Language::whereIn('unique_id', $course_language_ids)->orderBy('name', 'asc')->get();
+
+        $course_search = (object)\Session::get('course_search');
+        $courses = $this->searchCourseList($course_search);
+
+        $school_cities = [];
+        $school_names = [];
+        foreach ($courses as $course) {
+            if (app()->getLocale() == 'en') {
+                if (!$course->school->city) {
+                    if (!in_array('-', $school_cities)) {
+                        array_push($school_cities, '-');
+                    }
+                } else {
+                    if (!in_array($course->school->city->name, $school_cities)) {
+                        array_push($school_cities, $course->school->city->name);
+                    }
+                }
+                if (!$course->school->name) {
+                    if (!in_array('-', $school_names)) {
+                        array_push($school_names, '-');
+                    }
+                } else {
+                    if (!in_array($course->school->name->name, $school_names)) {
+                        array_push($school_names, $course->school->name->name);
+                    }
+                }
+            } else {
+                if (!$course->school->city) {
+                    if (!in_array('-', $school_cities)) {
+                        array_push($school_cities, '-');
+                    }
+                } else {
+                    if (!in_array($course->school->city->name_ar, $school_cities)) {
+                        array_push($school_cities, $course->school->city->name_ar);
+                    }
+                }
+                if (!$course->school->name) {
+                    if (!in_array('-', $school_names)) {
+                        array_push($school_names, '-');
+                    }
+                } else {
+                    if (!in_array($course->school->name->name_ar, $school_names)) {
+                        array_push($school_names, $course->school->name->name_ar);
+                    }
+                }
+            }
+        }
+
+        return view('frontend.course.list', compact('course_search', 'courses', 'languages', 'school_cities', 'school_names', 'now'));
     }
 }

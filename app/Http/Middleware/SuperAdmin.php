@@ -2,8 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\User;
 use Closure;
+
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class SuperAdmin
@@ -17,18 +18,21 @@ class SuperAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if(config('app.env') == 'local') {
+        if (config('app.env') == 'local') {
             $user = User::whereUserType('super_admin')->first();
-            if(auth('schooladmin')->check()){
+            if (auth('schooladmin')->check()) {
                 auth('schooladmin')->logout();
-
             }
             auth('superadmin')->login($user);
             return $next($request);
         }
 
-        if(auth('superadmin')->check() && auth('superadmin')->user()->isSuperAdmin()){
-            return $next($request);
+        if (auth('superadmin')->check()) {
+            if (auth('superadmin')->user()->user_type == 'super_admin') {
+                return $next($request);
+            } else {
+                auth('superadmin')->logout();
+            }
         }
 
         return redirect()->route('superlogin');

@@ -5,26 +5,7 @@
 @endsection
 
 @section('content')
-    @section('js')
-        <script src="{{asset('assets/js/tag/js/tag-it.js')}}" type="text/javascript" charset="utf-8"></script>
-        <script src="{{asset('assets/js/ckeditor/ckeditor.js')}}" type="text/javascript"></script>
-        <script>
-            $(document).ready(function () {                
-                $('#menu ul li a').click(function (ev) {
-                    $('#menu ul li').removeClass('selected');
-                    $(ev.currentTarget).parent('li').addClass('selected');
-                });
-                $("#videoUrl").tagit({
-                    fieldName: "video_url[]"
-                });
-            });
-            var addschoolurl = "{{route('superadmin.school.store')}}";
-            var in_arabic = "{{__('SuperAdmin/backend.in_arabic')}}";
-            var in_english = "{{__('SuperAdmin/backend.in_english')}}";
-        </script>
-    @endsection
-
-    <div class="col-12 grid-margin stretch-card">
+    <div class="page-header">
         <div class="card">
             <div class="card-body">
                 <div style="text-align: center;">
@@ -39,8 +20,6 @@
                     </change>
                 </div>
 
-                @include('superadmin.include.alert')
-
                 <div id="menu">
                     <ul class="lang text-right current_page_itemm">
                         <li class="{{app()->getLocale() == 'en' ? 'current_page_item selected' : ''}}">
@@ -52,57 +31,69 @@
                     </ul>
                 </div>
 
+                @include('superadmin.include.alert')
+            </div>
+        </div>
+    </div>
+
+    <div class="page-content">
+        <div class="card">
+            <div class="card-body">
                 <form id="schoolForm" class="forms-sample" enctype="multipart/form-data" action="{{route('superadmin.school.update', $school->id)}}" method="post">
                     {{csrf_field()}}
                     @method('PUT')
 
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="name">{{__('SuperAdmin/backend.name')}}</label>
-                            <div class="english">
-                                <input name="name" type="text" value="{{$school->name}}" class="form-control" id="name" placeholder="{{__('SuperAdmin/backend.name')}}">
-                            </div>
-                            <div class="arabic">
-                                <input name="name_ar" type="text" value="{{$school->name_ar}}" class="form-control" id="name_ar" placeholder="{{__('SuperAdmin/backend.name')}}">
-                            </div>
+                            <label for="name_id">{{__('SuperAdmin/backend.name')}}</label>
+                            <select name="name_id" id="school_name" class="form-control">
+                                <option value="">{{__('SuperAdmin/backend.select')}}</option>
+                                @foreach ($school_names as $school_name)
+                                    <option value="{{ $school_name->id }}" {{$school_name->id == $school->name_id ? 'selected' : ''}}>{{app()->getLocale() == 'en' ? $school_name->name : $school_name->name_ar}}</option>
+                                @endforeach
+                            </select>
                             @if ($errors->has('name'))
                                 <div class="alert alert-danger">{{$errors->first('name')}}</div>
                             @endif
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="email">{{__('SuperAdmin/backend.email_address')}}</label>
-                            <input value="{{$school->email}}" name="email" type="text" class="form-control" id="email" placeholder="{{__('SuperAdmin/backend.email_address')}}">
-                            @if ($errors->has('email'))
-                                <div class="alert alert-danger">{{$errors->first('email')}}</div>
+                            <label for="country_id">{{__('SuperAdmin/backend.country')}}</label>
+                            <select onchange="changeSchoolCountry()" name="country_id" id="country_name" class="form-control">
+                                <option value="">{{__('SuperAdmin/backend.select')}}</option>
+                                @foreach ($countries as $country)
+                                    <option value="{{ $country->id }}" {{$country->id == $school->country_id ? 'selected' : ''}}>{{app()->getLocale() == 'en' ? $country->name : $country->name_ar}}</option>
+                                @endforeach
+                            </select>
+                            @if ($errors->has('country'))
+                                <div class="alert alert-danger">{{$errors->first('country')}}</div>
                             @endif
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="contact">{{__('SuperAdmin/backend.contact_number')}}</label>
-                            <input value="{{$school->contact}}" name="contact" class="form-control" id="contact" placeholder="{{__('SuperAdmin/backend.contact_number')}}" type="text">
-                            @if ($errors->has('contact'))
-                                <div class="alert alert-danger">{{$errors->first('contact')}}</div>
+                            <label for="city_id">{{__('SuperAdmin/backend.city')}}</label>
+                            <select name="city_id" id="city_name" class="form-control">
+                                <option value="">{{__('SuperAdmin/backend.select')}}</option>
+                                @foreach ($countries as $country)
+                                    @if ($country->id == $school->country_id)
+                                        @foreach ($country->cities as $city)
+                                            <option value="{{$city->id}}" {{$city->id == $school->city_id ? 'selected' : ''}}>{{app()->getLocale() == 'en' ? $city->name : $city->name_ar}}</option>
+                                        @endforeach
+                                    @endif
+                                @endforeach
+                            </select>
+                            @if ($errors->has('city'))
+                                <div class="alert alert-danger">{{$errors->first('city')}}</div>
                             @endif
                         </div>
-                        <div class="form-group col-md-6">
-                            <label for="emergency_number">{{__('SuperAdmin/backend.emergency_number')}}</label>
-                            <input name="emergency_number" type="text" class="form-control" id="emergency_number" value="{{$school->emergency_number}}" placeholder="{{__('SuperAdmin/backend.emergency_number')}}">
-                            @if ($errors->has('emergency_number'))
-                                <div class="alert alert-danger">{{$errors->first('emergency_number')}}</div>
-                            @endif
-                        </div>
-                    </div>
-
-                    <div class="row">
                         <div class="form-group col-md-6">
                             <label for="branch_name">{{__('SuperAdmin/backend.branch_name')}}</label>
                             <div class="english">
-                                <input value="{{$school->branch_name}}" name="branch_name" class="form-control" id="branch_name" placeholder="{{__('SuperAdmin/backend.branch_name')}}" type="text">
+                                <input value="{{ $school->branch_name }}" name="branch_name" class="form-control" id="branch_name" placeholder="{{__('SuperAdmin/backend.branch_name')}}" type="text">
                             </div>
                             <div class="arabic">
-                                <input value="{{$school->branch_name_ar}}" name="branch_name_ar" class="form-control" id="branch_name_ar" placeholder="{{__('SuperAdmin/backend.branch_name')}}" type="text">
+                                <input value="{{ $school->branch_name_ar }}" name="branch_name_ar" class="form-control" id="branch_name_ar" placeholder="{{__('SuperAdmin/backend.branch_name')}}" type="text">
                             </div>
                             @if ($errors->has('branch_name'))
                                 <div class="alert alert-danger">{{$errors->first('branch_name')}}</div>
@@ -111,9 +102,33 @@
                     </div>
 
                     <div class="row">
-                        <div class="form-group col-md-12">
+                        <div class="form-group col-md-6">
+                            <label for="email">{{__('SuperAdmin/backend.email_address')}}</label>
+                            <input value="{{ $school->email }}" name="email" type="text" class="form-control" id="email" placeholder="{{__('SuperAdmin/backend.email_address')}}">
+                            @if ($errors->has('email'))
+                                <div class="alert alert-danger">{{$errors->first('email')}}</div>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="contact">{{__('SuperAdmin/backend.contact_number')}}</label>
+                            <input value="{{ $school->contact }}" name="contact" class="form-control" id="contact" placeholder="{{__('SuperAdmin/backend.contact_number')}}" type="text">
+                            @if ($errors->has('contact'))
+                                <div class="alert alert-danger">{{$errors->first('contact')}}</div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="emergency_number">{{__('SuperAdmin/backend.emergency_number')}}</label>
+                            <input name="emergency_number" type="text" class="form-control" id="emergency_number" value="{{ $school->emergency_number }}" placeholder="{{__('SuperAdmin/backend.emergency_number')}}">
+                            @if ($errors->has('emergency_number'))
+                                <div class="alert alert-danger">{{$errors->first('emergency_number')}}</div>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-6">
                             <label for="capacity">{{__('SuperAdmin/backend.capacity')}}</label>
-                            <input name="capacity" type="text" class="form-control" id="capacity" value="{{$school->capacity}}" placeholder="{{__('SuperAdmin/backend.capacity')}}">
+                            <input name="capacity" type="text" class="form-control" id="capacity" value="{{ $school->capacity }}" placeholder="{{__('SuperAdmin/backend.capacity')}}">
                             @if ($errors->has('capacity'))
                                 <div class="alert alert-danger">{{$errors->first('capacity')}}</div>
                             @endif
@@ -139,10 +154,10 @@
                         <div class="form-group col-md-6">
                             <label for="class_size">{{__('SuperAdmin/backend.class_size')}}</label>
                             <div class="english">
-                                <input name="class_size" type="text" class="form-control" id="class_size" value="{{$school->class_size}}" placeholder="{{__('SuperAdmin/backend.class_size')}}">
+                                <input name="class_size" type="text" class="form-control" id="class_size" value="{{ $school->class_size }}" placeholder="{{__('SuperAdmin/backend.class_size')}}">
                             </div>
                             <div class="arabic">
-                                <input name="class_size_ar" type="text" class="form-control" id="class_size_ar" value="{{$school->class_size_ar}}" placeholder="{{__('SuperAdmin/backend.class_size')}}">
+                                <input name="class_size_ar" type="text" class="form-control" id="class_size_ar" value="{{ $school->class_size_ar }}" placeholder="{{__('SuperAdmin/backend.class_size')}}">
                             </div>
                             @if ($errors->has('class_size'))
                                 <div class="alert alert-danger">{{$errors->first('class_size')}}</div>
@@ -150,7 +165,7 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label for="year_opened">{{__('SuperAdmin/backend.year_opened')}}</label>
-                            <input name="opened" type="text" class="form-control" value="{{$school->opened}}" placeholder="{{__('SuperAdmin/backend.year_opened')}}">                                
+                            <input name="opened" type="text" class="form-control" value="{{ $school->opened }}" placeholder="{{__('SuperAdmin/backend.year_opened')}}">
                             @if ($errors->has('opened'))
                                 <div class="alert alert-danger">{{$errors->first('opened')}}</div>
                             @endif
@@ -160,18 +175,93 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="opening_hours">{{__('SuperAdmin/backend.opening_hours')}}</label>
-                            <input name="opening_hours" type="text" class="form-control" id="opening_hours" value="{{$school->opening_hours}}" placeholder="{{__('SuperAdmin/backend.opening_hours')}}">
+                            <div class="english">
+                                <input name="opening_hours" type="text" class="form-control" id="opening_hours" value="{{ $school->opening_hours }}" placeholder="{{__('SuperAdmin/backend.opening_hours')}}">
+                            </div>
+                            <div class="arabic">
+                                <input name="opening_hours_ar" type="text" class="form-control" id="opening_hours_ar" value="{{ $school->opening_hours_ar }}" placeholder="{{__('SuperAdmin/backend.opening_hours')}}">
+                            </div>
                             @if ($errors->has('opening_hours'))
                                 <div class="alert alert-danger">{{$errors->first('opening_hours')}}</div>
                             @endif
                         </div>
                         <div class="form-group col-md-6">
                             <label for="number_of_classrooms">{{__('SuperAdmin/backend.number_of_classrooms')}}</label>
-                            <input name="number_of_classrooms" type="text" class="form-control" id="number_of_classrooms" value="{{$school->number_of_classrooms}}" placeholder="{{__('SuperAdmin/backend.number_of_classrooms')}}">
+                            <input name="number_of_classrooms" type="text" class="form-control" id="number_of_classrooms" value="{{ $school->number_of_classrooms }}" placeholder="{{__('SuperAdmin/backend.number_of_classrooms')}}">
                             @if ($errors->has('number_of_classrooms'))
                                 <div class="alert alert-danger">{{$errors->first('number_of_classrooms')}}</div>
                             @endif
                         </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <h3>{{__('SuperAdmin/backend.nationality_mix')}}</h3>
+                        </div>
+
+                        <input hidden id="nationality_increment" name="nationality_increment" value="{{ $school->nationalities && $school->nationalities->count() ? $school->nationalities->count() - 1 : 0 }}">
+                        @forelse ($school->nationalities as $nationality)
+                            <div id="nationality_clone{{$loop->iteration - 1}}" class="nationality-clone clone form-group col-md-12">
+                                <input name="nationality_id[]" type="hidden" value="{{ $nationality->id }}">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <div class="row">
+                                            <div class="col-md-6 nationality">
+                                                <label for="choose_nationality">
+                                                    {{__('SuperAdmin/backend.choose_nationality')}}:
+                                                    <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#SchoolNationalityModal" aria-hidden="true"></i>
+                                                    <i class="fa fa-trash pl-3" onclick="deleteSchoolNationality($(this))" aria-hidden="true"></i>
+                                                </label>
+                                                <select name="nationality[]" id="school_nationality_choose{{$loop->iteration - 1}}" class="form-control" onchange="changeSchoolNationality($(this))">
+                                                    <option value="">{{__('SuperAdmin/backend.select')}}</option>
+                                                    @foreach ($choose_nationalities as $choose_nationality)
+                                                        <option value="{{ $choose_nationality->unique_id }}" {{$nationality->nationality_id == $choose_nationality->unique_id ? 'selected' : ''}}>{{$choose_nationality->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 mt-3">
+                                                <label for="choose_nationality">{{__('SuperAdmin/backend.mix')}}:</label>
+                                                <input name="nationality_mix[]" value="{{ $nationality->mix }}" onchange="changeShcoolNationalityMix($(this))" type="number" class="form-control" id="nationality_mix{{$loop->iteration - 1}}" placeholder="{{__('SuperAdmin/backend.mix')}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mt-4 pt-3">
+                                        <i class="fa fa-plus-circle" aria-hidden="true" onclick="addSchoolNationalityForm($(this))"></i>
+                                        <i class="fa fa-minus" aria-hidden="true" onclick="deleteSchoolNationalityForm($(this))"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div id="nationality_clone0" class="nationality-clone clone form-group col-md-12">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <div class="row">
+                                            <div class="col-md-6 nationality">
+                                                <label for="choose_nationality">
+                                                    {{__('SuperAdmin/backend.choose_nationality')}}:
+                                                    <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#SchoolNationalityModal" aria-hidden="true"></i>
+                                                    <i class="fa fa-trash pl-3" onclick="deleteSchoolNationality($(this))" aria-hidden="true"></i>
+                                                </label>
+                                                <select name="nationality[]" id="school_nationality_choose0" class="form-control" onchange="changeSchoolNationality($(this))">
+                                                    <option value="">{{__('SuperAdmin/backend.select')}}</option>
+                                                    @foreach ($choose_nationalities as $choose_nationality)
+                                                        <option value="{{ $choose_nationality->unique_id }}">{{$choose_nationality->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="choose_nationality">{{__('SuperAdmin/backend.mix')}}:</label>
+                                                <input name="nationality_mix[]" onchange="changeShcoolNationalityMix($(this))" type="number" class="form-control" id="nationality_mix0" placeholder="{{__('SuperAdmin/backend.mix')}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <i class="fa fa-plus-circle" aria-hidden="true" onclick="addSchoolNationalityForm($(this))"></i>
+                                        <i class="fa fa-minus" aria-hidden="true" onclick="deleteSchoolNationalityForm($(this))"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforelse
                     </div>
 
                     <div class="row">
@@ -192,35 +282,8 @@
                     <div class="row">
                         <div class="form-group col-md-12">
                             <label for="address">{{__('SuperAdmin/backend.address')}}</label>
-                            <input name="address" type="text" class="form-control" value="{{$school->address}}" placeholder="{{__('SuperAdmin/backend.address_map_location')}}">
+                            <input value="{{ $school->address }}" name="address" class="form-control" id="address" placeholder="{{__('SuperAdmin/backend.address_map_location')}}" type="text">
                             @if ($errors->has('address'))
-                                <div class="alert alert-danger">{{$errors->first('address')}}</div>
-                            @endif
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group col-md-6">
-                            <label for="city">{{__('SuperAdmin/backend.city')}}</label>
-                            <div class="english">
-                                <input name="city" type="text" class="form-control" id="city" value="{{$school->city}}" placeholder="{{__('SuperAdmin/backend.city')}}">
-                            </div>
-                            <div class="arabic">
-                                <input name="city_ar" type="text" class="form-control" id="city_ar" value="{{$school->city_ar}}" placeholder="{{__('SuperAdmin/backend.enter_city')}}">
-                            </div>
-                            @if ($errors->has('city'))
-                                <div class="alert alert-danger">{{$errors->first('city')}}</div>
-                            @endif
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="country">{{__('SuperAdmin/backend.country')}}</label>
-                            <div class="english">
-                                <input name="country" type="text" class="form-control" value="{{$school->country}}" placeholder="{{__('SuperAdmin/backend.country')}}">
-                            </div>
-                            <div class="arabic">
-                                <input name="country_ar" type="text" class="form-control" id="country_ar" value="{{$school->country_ar}}" placeholder="{{__('SuperAdmin/backend.enter_country')}}">
-                            </div>
-                            @if ($errors->has('country'))
                                 <div class="alert alert-danger">{{$errors->first('address')}}</div>
                             @endif
                         </div>
@@ -229,10 +292,10 @@
                     <div class="row">
                         <div class="form-group col-md-12">
                             <label for="logos">{{__('SuperAdmin/backend.accreditations_logos')}}</label>
-                            <input name="logos[]" multiple type="file" onchange="$('#logos_id').hide()" class="form-control" id="logos" accept="image/*">
+                            <input name="logos[]" multiple type="file" class="form-control" id="logos" accept="image/*">
                             @if (!empty($school->logos))
                                 @foreach($school->logos as $logos)
-                                    <img id="logos_id" height="200px" width="200px" src="{{$school->getStorageImages('school_images', $logos)}}" class="img-fluid img-thumbnail" alt="...">
+                                    <img id="logos_id" height="200px" width="200px" src="{{ $school->getStorageImages('school_images', $logos) }}" class="img-fluid img-thumbnail" alt="School Logos" data-src="{{ $logos }}">
                                 @endforeach
                             @endif
                             @if ($errors->has('logos'))
@@ -244,9 +307,9 @@
                     <div class="row">
                         <div class="form-group col-md-12">
                             <label for="logo">{{__('SuperAdmin/backend.logo')}}</label>
-                            <input name="logo" type="file" onchange="$('#logo_id').hide()" class="form-control" id="logo" accept="image/*">
+                            <input name="logo" type="file" class="form-control" id="logo" accept="image/*">
                             @if (!is_null($school->logo))
-                                <img height="200px" id="logo_id" width="200px" src="{{$school->logo}}" class="img-fluid img-thumbnail" alt="...">
+                                <img height="200px" id="logo_id" width="200px" src="{{ $school->logo }}" class="img-fluid img-thumbnail" alt="School Logo" data-src="{{ $school->logo }}">
                             @endif
                             @if ($errors->has('logo'))
                                 <div class="alert alert-danger">{{$errors->first('logo')}}</div>
@@ -284,4 +347,17 @@
             </div>
         </div>
     </div>
+
+    @include('superadmin.include.modals')
+
+    @section('js')
+        <script>
+            var uploadFileOption = "{{route('superadmin.school.upload', ['_token' => csrf_token() ])}}";
+            $(document).ready(function () {
+                $("#videoUrl").tagit({
+                    fieldName: "video_url[]"
+                });
+            });
+        </script>
+    @endsection
 @endsection

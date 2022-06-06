@@ -56,13 +56,13 @@
                 <div id="tab-photo" class="tab-pane fade active show">
                     <div id="carousel-photo" class="carousel slide" data-ride="carousel">
                         <ol class="carousel-indicators">
-                            @foreach((array)$schools->multiple_photos as $photos)
+                            @foreach((array)$school->multiple_photos as $photos)
                                 <li data-target="#carousel-photo" data-slide-to="{{$loop->iteration - 1}}" class="{{$loop->iteration - 1 == 0? 'active' : ''}}"></li>
                             @endforeach
                         </ol>
 
                         <div class="carousel-inner">
-                            @foreach((array)$schools->multiple_photos as $photos)
+                            @foreach((array)$school->multiple_photos as $photos)
                                 <div class="carousel-item {{ $loop->iteration == 1 ? 'active' : ''  }}">
                                     <img class="d-block w-100" src="{{asset('storage/app/public/school_images/'. $photos)}}" alt="First slide">
                                 </div>
@@ -86,13 +86,13 @@
                         <div class="col-md-12">
                             <div id="carousel-video" class="carousel slide" data-ride="carousel">
                                 <ol class="carousel-indicators">
-                                    @foreach((array)$schools->video_url as $video_url)
+                                    @foreach((array)$school->video_url as $video_url)
                                         <li data-target="#carousel-video-item{{$loop->iteration - 1}}" data-slide-to="{{$loop->iteration - 1}}" class="{{$loop->iteration - 1 == 0? 'active' : ''}}"></li>
                                     @endforeach
                                 </ol>
 
                                 <div class="carousel-inner">
-                                    @foreach((array)$schools->video_url as $video_url)
+                                    @foreach((array)$school->video_url as $video_url)
                                         <div class="carousel-item active" href="#carousel-video-item{{$loop->iteration - 1}}">
                                             <iframe class="embed-responsive-item" src="{{$video_url}}" class="video" allowfullscreen height="450"></iframe>
                                         </div>
@@ -130,19 +130,19 @@
             <div class="row">
                 <div class="col-md-8">
                     <h3>
-                        <p class="m-0 inter-school">{{ucwords($schools->name)}} - {{is_array($schools->branch_name) && !empty($schools->branch_name) ? ucwords($schools->branch_name[0]) : $schools->branch_name}}</p>
-                        <span class="city">{{$schools->city}}, {{$schools->country}}</span>
+                        <p class="m-0 inter-school">{{ucwords($school->name ? (app()->getLocale() == 'en' ? $school->name->name : $school->name->name_ar) : '-')}} - {{is_array($school->branch_name) && !empty($school->branch_name) ? ucwords($school->branch_name[0]) : $school->branch_name}}</p>
+                        <span class="city">{{$school->city ? (app()->getLocale() == 'en' ? $school->city->name : $school->city->name_ar) : '-'}}, {{$school->country ? (app()->getLocale() == 'en' ? $school->country->name : $school->country->name_ar) : '-'}}</span>
                     </h3>
                     <ul>
                         @for($i = 1; $i <= 5; $i ++)
                             <li class="dynamic_starli" aria-hidden="true" id="rating{{$i}}">★</li>
                         @endfor
                     </ul>
-                    {{ round($schools->avgRating()) }} {{__('Frontend.reviews')}}
+                    {{ round($school->avgRating()) }} {{__('Frontend.reviews')}}
                 </div>
 
                 <div class="col-md-4">
-                    <a type="button" href="{{route('school.details', $schools->id)}}" class="btn btn-primary mt-1">{{__('Frontend.read_about_the_school')}}</a>
+                    <a type="button" href="{{route('school.details', $school->id)}}" class="btn btn-primary mt-1">{{__('Frontend.read_about_the_school')}}</a>
                 </div>
             </div>
         </div>
@@ -192,7 +192,7 @@
             <div class="study">
                 <div class="row">
                     <div class="form-group col-md-6">
-                        <input type="hidden" name="school_id" value="{{ $schools->id }}">
+                        <input type="hidden" name="school_id" value="{{ $school->id }}">
                         <label for="study_mode">{{__('SuperAdmin/backend.study_mode')}}:</label>
                         <select class="form-control" id="study_mode" name="study_mode" required>
                             <option value="" selected>{{__('Frontend.select_mode')}}</option>
@@ -373,17 +373,6 @@
                             </div>
                         </div>
 
-                        <div class="row" id="custodianship" style="display: none">
-                            <div class="form-group col-md-12">
-                                <div class="form-check">
-                                    <input name="custodianship" type="checkbox" class="form-check-input" id="custodianship_check" onchange="calcuateAccommodation()">
-                                    <label class="form-check-label mb-2" for="custodianshipCheck">
-                                        {{__('Frontend.custodianship_need')}}<i class="fa fa-question-circle pl-2" data-toggle="modal" data-target="#custodianshipModal" aria-hidden="true"></i>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
                         <!-- Special Diet Modal -->
                         <div class="modal fade" id="specialDietModal" tabindex="-1" role="dialog" aria-labelledby="specialDietModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
@@ -445,12 +434,6 @@
 
                                 <tr id="accommodation_deposit_fee">
                                     <td>{{__('Frontend.deposit_fee')}}</td>
-                                    <td class="cost_value">0</td>
-                                    <td class="converted_value">0</td>
-                                </tr>
-
-                                <tr id="accommodation_custodian_fee">
-                                    <td>{{__('Frontend.custodian_fee')}}</td>
                                     <td class="cost_value">0</td>
                                     <td class="converted_value">0</td>
                                 </tr>
@@ -560,9 +543,28 @@
                     </div>
                 </div>
 
+                <div id="custodian_service" class="custodian mt-3" style="display: none">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <h5><strong>{{__('Frontend.custodian_fee')}}</strong></h5>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <div class="form-check">
+                                <input name="custodianship" type="checkbox" class="form-check-input" id="custodianship_check" onchange="calculateOtherService()">
+                                <label class="form-check-label mb-2" for="custodianshipCheck">
+                                    {{__('Frontend.custodianship_need')}}<i class="fa fa-question-circle pl-2" data-toggle="modal" data-target="#custodianshipModal" aria-hidden="true"></i>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-row">
                     <div class="form-group col-md-12">
-                        <table class="table table-bordered table-no-drawable" id="airport_medical_fees_table">
+                        <table class="table table-bordered table-no-drawable" id="other_service_fees_table">
                             <thead>
                                 <tr>
                                     <th>{{__('Frontend.details')}}</th>
@@ -587,7 +589,15 @@
                                     <td class="converted_value">0</td>
                                 </tr>
 
-                                <tr id="airport_medical_total">
+                                <tr id="custodian_fee">
+                                    <td>{{__('Frontend.custodian_fee')}}
+                                        <i class="fa fa-question-circle pl-2" data-toggle="modal" aria-hidden="true"></i>
+                                    </td>
+                                    <td class="cost_value">0</td>
+                                    <td class="converted_value">0</td>
+                                </tr>
+
+                                <tr id="other_service_total">
                                     <td>{{__('Frontend.total')}}</td>
                                     <td class="cost_value">0</td>
                                     <td class="converted_value">0</td>
@@ -598,7 +608,7 @@
                 </div>
             </div>
 
-            <!-- Special Diet Modal -->
+            <!-- Airport Pickup Modal -->
             <div class="modal fade" id="AirportPickupModal" tabindex="-1" role="dialog" aria-labelledby="AirportPickupModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -613,7 +623,7 @@
                 </div>
             </div>
 
-            <!-- Special Diet Modal -->
+            <!-- Medical Insurance Modal -->
             <div class="modal fade" id="MedicalInsuranceModal" tabindex="-1" role="dialog" aria-labelledby="MedicalInsuranceModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -627,6 +637,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="total mt-3">
                 <div class="row">
                     <div class="col-md-6"></div>
@@ -665,7 +676,7 @@
         var calculate_discount_url = "{{route('course.calculate.discount')}}";
         var reload_calculate_url = "{{route('course.calculate.reset.program')}}";
         var reset_accommodation_url = "{{route('course.calculate.reset.accommodation')}}";
-        var reset_airport_medical_url = "{{route('course.calculate.reset.airport_medical')}}";
+        var reset_other_service_url = "{{route('course.calculate.reset.other_service')}}";
         
         var airport_names_url = "{{route('course.airport.names')}}";
         var airport_services_url = "{{route('course.airport.services')}}";
@@ -673,7 +684,8 @@
         var medical_deductibles_url = "{{route('course.medical.deductibles')}}";
         var medical_durations_url = "{{route('course.medical.durations')}}";
         var medical_fee_url = "{{route('course.medical.fee')}}";
-        var airport_medical_fee_url = "{{route('course.airport_medical.fee')}}";
+
+        var other_service_fee_url = "{{route('course.other_service.fee')}}";
 
         $(document).ready(function () {
             setTimeout(function() {
@@ -722,6 +734,7 @@
                     $('#accom_type').val('');
                     $('#accom_type').val('{{$course_details->accommodation_id}}').trigger('change');
                 @endif
+                calculateOtherService();
             }
         }
 
@@ -799,7 +812,7 @@
             @endif
         }
 
-        function callbackCalculateAirportMedical(type) {
+        function callbackCalculateOtherService(type) {
             if (type == 'airport') {
                 @if (isset($course_details->company_name))
                     $('#medical_company_name').val('');
@@ -848,7 +861,7 @@
         }
 
         $(document).ready(function () {
-            var maximumvalue="{{round($schools->avgRating())}}";
+            var maximumvalue="{{round($school->avgRating())}}";
             for (var i = 0; i <= maximumvalue; i++) {
                 $("#rating" + i).addClass('selected');
             }

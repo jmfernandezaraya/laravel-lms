@@ -142,7 +142,7 @@
 
                         <div class="col-md-4 mt-3">
                             <label for="name">{{__('SuperAdmin/backend.choose_school')}}:</label>
-                            <select onchange="changeCourseSchool(url_school_country_list, $(this).val())" class="form-control" id="name" name="school_id">
+                            <select onchange="changeCourseSchool()" class="form-control" id="name" name="school_id">
                                 <option value="">{{__('SuperAdmin/backend.select_school')}}</option>
                                 @foreach($schools as $school)
                                     <option value="{{$school->unique_id}}">{{$school->name}}</option>
@@ -155,13 +155,13 @@
                     <div class="row">
                         <div class="col-md-6">
                             <label for="country_name">{{__('SuperAdmin/backend.choose_country')}}:</label>
-                            <select class="form-control" id="country_name" name="">
+                            <select onchange="changeCourseCountry()" class="form-control" id="country_name" name="">
                                 <option>{{__('SuperAdmin/backend.select')}}</option>
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label for="city_name">{{__('SuperAdmin/backend.choose_city')}}:</label>
-                            <select class="form-control" id="city_name" name="">
+                            <select onchange="changeCourseCity()" class="form-control" id="city_name" name="">
                                 <option>{{__('SuperAdmin/backend.select')}}</option>
 
                             </select>

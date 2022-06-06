@@ -65,7 +65,7 @@
         .table-bordered thead td, .table-bordered thead th {
             border-bottom-width: 2px;
         }
-        .highlight {
+        .highlight-value {
             color: #ff3333;
         }
     </style>
@@ -172,8 +172,8 @@
                     @if ($program_discount_fee['value'])
                         <tr>
                             <td>{{__('Mail.course_booked.discount')}}</td>
-                            <td class="highlight">-{{ toFixedNumber($program_discount_fee['value']) }}</td>
-                            <td class="highlight">-{{ toFixedNumber($program_discount_fee['converted_value']) }}</td>
+                            <td class="highlight-value">-{{ toFixedNumber($program_discount_fee['value']) }}</td>
+                            <td class="highlight-value">-{{ toFixedNumber($program_discount_fee['converted_value']) }}</td>
                         </tr>
                     @endif
                     <tr>
@@ -221,13 +221,6 @@
                                 <td>{{ toFixedNumber($accommodation_deposit_fee['converted_value']) }}</td>
                             </tr>
                         @endif
-                        @if ($accommodation_custodian_fee['value'])
-                            <tr>
-                                <td>{{__('Mail.course_booked.custodian_fee')}}</td>
-                                <td>{{ toFixedNumber($accommodation_custodian_fee['value']) }}</td>
-                                <td>{{ toFixedNumber($accommodation_custodian_fee['converted_value']) }}</td>
-                            </tr>
-                        @endif
                         @if ($accommodation_summer_fee['value'])
                             <tr>
                                 <td>{{__('Mail.course_booked.summer_fees')}}</td>
@@ -259,8 +252,8 @@
                         @if ($accommodation_discount_fee['value'])
                             <tr>
                                 <td>{{__('Mail.course_booked.discount')}}</td>
-                                <td class="highlight">-{{ toFixedNumber($accommodation_discount_fee['value']) }}</td>
-                                <td class="highlight">-{{ toFixedNumber($accommodation_discount_fee['converted_value']) }}</td>
+                                <td class="highlight-value">-{{ toFixedNumber($accommodation_discount_fee['value']) }}</td>
+                                <td class="highlight-value">-{{ toFixedNumber($accommodation_discount_fee['converted_value']) }}</td>
                             </tr>
                         @endif
                         <tr>
@@ -271,7 +264,7 @@
                 </table>
             @endif
             
-            @if ($airport || $medical)
+            @if ($airport || $medical || $custodian)
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -303,6 +296,16 @@
                                 <td>{{ toFixedNumber($medical_insurance_fee['converted_value']) }}</td>
                             </tr>
                         @endif
+                        @if ($custodian)
+                            <tr>
+                                <td>
+                                    {{__('Mail.course_booked.custodian_fee')}}<br />
+                                    {{__('Frontend.age_range')}}: {{ $custodian_min_age ?? ''}} - {{ $custodian_max_age ?? ''}} {{__('Frontend.years')}}<br />
+                                </td>
+                                <td>{{ toFixedNumber($custodian_fee['value']) }}</td>
+                                <td>{{ toFixedNumber($custodian_fee['converted_value']) }}</td>
+                            </tr>
+                        @endif
                     </tbody>
                 </table>
             @endif
@@ -316,8 +319,8 @@
                     </tr>
                     <tr>
                         <th>{{__('Mail.course_booked.total_discount')}}</th>
-                        <th class="highlight">-{{ toFixedNumber($total_discount['value']) }} {{ $currency['cost'] }}</th>
-                        <th class="highlight">-{{ toFixedNumber($total_discount['converted_value']) }} {{ $currency['converted'] }}</th>
+                        <th class="highlight-value">-{{ toFixedNumber($total_discount['value']) }} {{ $currency['cost'] }}</th>
+                        <th class="highlight-value">-{{ toFixedNumber($total_discount['converted_value']) }} {{ $currency['converted'] }}</th>
                     </tr>
                     <tr>
                         <th>{{__('Mail.course_booked.total_cost')}}</th>
@@ -333,8 +336,8 @@
                     @endif
                     <tr>
                         <th>{{__('Mail.course_booked.total_balance_due')}}</th>
-                        <th class="highlight">{{ toFixedNumber($total_balance['value']) }} {{ $currency['cost'] }}</th>
-                        <th class="highlight">{{ toFixedNumber($total_balance['converted_value']) }} {{ $currency['converted'] }}</th>
+                        <th class="highlight-value">{{ toFixedNumber($total_balance['value']) }} {{ $currency['cost'] }}</th>
+                        <th class="highlight-value">{{ toFixedNumber($total_balance['converted_value']) }} {{ $currency['converted'] }}</th>
                     </tr>
                 </thead>
             </table>

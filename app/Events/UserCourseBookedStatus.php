@@ -2,11 +2,12 @@
 
 namespace App\Events;
 
+use App\Models\UserCourseBookedDetails;
+
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use App\Models\UserCourseBookedDetails;
 
 class UserCourseBookedStatus
 {

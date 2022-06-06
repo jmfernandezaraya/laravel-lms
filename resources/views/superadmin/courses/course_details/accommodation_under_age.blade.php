@@ -1,14 +1,5 @@
 @extends('superadmin.layouts.app')
 
-<style>
-    .multiselect
-    {
-        color:#fff;
-        background-color: #fff;
-        display: none;
-    }
-</style>
-
 @section('content')
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">

@@ -5,46 +5,42 @@
 @endsection
 
 @section('content')
-    @section('css')
-        <style>
-            #formaction {
-                width: 100%;
-            }
-        </style>
-    @endsection
-
-    <div class="col-12 grid-margin stretch-card">
-        <form id ="blogForm" class="forms-sample" method="post" action = "{{route('superadmin.blogs.store')}}">
-            {{csrf_field()}}
-
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="form-group col-md-12">
-                            <center>
-                                <h1 class="card-title">{{__('SuperAdmin/backend.add_blog')}}</h1>
-                                <div class="english">
-                                    {{__('SuperAdmin/backend.in_english')}}
-                                </div>
-                                <div class="arabic">
-                                    {{__('SuperAdmin/backend.in_arabic')}}
-                                </div>
-                            </center>
+    <div class="page-header">
+        <div class="card">
+            <div class="card-body">
+                <div style="text-align: center;">
+                    <h1 class="card-title">{{__('SuperAdmin/backend.add_blog')}}</h1>
+                    <change>
+                        <div class="english">
+                            {{__('SuperAdmin/backend.in_english')}}
                         </div>
-                    </div>
+                        <div class="arabic">
+                            {{__('SuperAdmin/backend.in_arabic')}}
+                        </div>
+                    </change>
+                </div>
 
-                    @include('superadmin.include.alert')
+                <div id="menu">
+                    <ul class="lang text-right current_page_itemm">
+                        <li class="{{app()->getLocale() == 'en' ? 'current_page_item selected' : ''}}">
+                            <a onclick="changeLanguage('english', 'arabic')"><img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}</a>
+                        </li>
+                        <li class="{{app()->getLocale() == 'ar' ? 'current_page_item selected' : ''}}">
+                            <a onclick="changeLanguage('arabic', 'english')"><img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}</a>
+                        </li>
+                    </ul>
+                </div>
 
-                    <div id="menu">
-                        <ul class="lang text-right current_page_itemm">
-                            <li class="{{app()->getLocale() == 'en' ? 'current_page_item selected' : ''}}">
-                                <a onclick="changeLanguage('english', 'arabic')"><img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}</a>
-                            </li>
-                            <li class="{{app()->getLocale() == 'ar' ? 'current_page_item selected' : ''}}">
-                                <a onclick="changeLanguage('arabic', 'english')"><img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}</a>
-                            </li>
-                        </ul>
-                    </div>
+                @include('superadmin.include.alert')
+            </div>
+        </div>
+    </div>
+
+    <div class="page-content">
+        <div class="card">
+            <div class="card-body">
+                <form id ="blogForm" class="forms-sample" method="post" action="{{route('superadmin.blogs.store')}}">
+                    {{csrf_field()}}
 
                     <div class="row">
                         <div class="form-group col-md-12">
@@ -70,7 +66,7 @@
                     </div>
 
                     <a class="btn btn-light" href="{{url()->previous()}}">{{__('SuperAdmin/backend.cancel')}}</a>
-                    <button type="button" onclick="getCKEDITORdata(); submitForm($(this).parents().find('#blogForm'))" class="btn btn-primary">{{__('SuperAdmin/backend.submit')}}</button>
+                    <button type="button" onclick="submitForm($(this).parents().find('#blogForm'))" class="btn btn-primary">{{__('SuperAdmin/backend.submit')}}</button>
                 </div>
             </div>
         </form>
@@ -78,6 +74,7 @@
 
     @section('js')
         <script>
+            var uploadFileOption = "{{route('superadmin.blogs.upload', ['_token' => csrf_token() ])}}";
             function previewFile(input) {
                 if (input.files && input.files[0]) {
                     var reader = new FileReader();            
@@ -87,14 +84,6 @@
                     reader.readAsDataURL(input.files[0]); // convert to base64 string
                 }
             }            
-        </script>
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('#menu ul li a').click(function (ev) {
-                    $('#menu ul li').removeClass('selected');
-                    $(ev.currentTarget).parent('li').addClass('selected');
-                });
-            });
         </script>
     @endsection
 @endsection

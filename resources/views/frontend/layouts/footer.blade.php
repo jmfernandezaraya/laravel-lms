@@ -8,7 +8,6 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-3 col-md-6 footer-contact">
-                        <!-- <h3>Mentor</h3> -->
                         <img src="{{ asset('public/frontend/assets/img/logo.png') }}" class="img-fluid" alt="" style="width: 50%;">
                         <p>
                             Lorem Ipsum is simply <br>
@@ -92,6 +91,8 @@
     <script src="{{ asset('public/frontend/assets/js/countrySelect.js') }}"></script>
     <script src="{{ asset('assets/datatables/datatables.min.js') }}"></script>
 
+    <script src="{{ asset('assets/vendors/chart.js/Chart.min.js') }}"></script>
+
     <!-- Template Main JS File -->
     <script src="{{ asset('public/frontend/assets/js/main.js') }}"></script>
 
@@ -102,7 +103,7 @@
     
     <!--Start of Tawk.to Script-->
     <script type="text/javascript">
-        var Tawk_API=Tawk_API || {}, Tawk_LoadStart = new Date();
+        var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
         (function() {
             var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
             s1.async = true;
@@ -113,5 +114,22 @@
         })();
     </script>
     <!--End of Tawk.to Script-->
+
+    <script>
+        var like_school_url = "{{url('like_school')}}";
+
+        var url_search_age_list = "{{route('frontend.search.ages')}}";
+        var url_search_country_list = "{{route('frontend.search.countries')}}";
+        var url_search_program_type_list = "{{route('frontend.search.program_types')}}";
+        var url_search_study_mode_list = "{{route('frontend.search.study_modes')}}";
+        var url_search_city_list = "{{route('frontend.search.cities')}}";
+        var url_search_program_name_list = "{{route('frontend.search.program_names')}}";
+        var url_search_program_duration_list = "{{route('frontend.search.program_durations')}}";
+
+        var url_search_course = "{{route('frontend.search.course')}}";
+        var url_course = "{{route('frontend.course')}}";
+        
+        var please_choose_str = "{{__('Frontend.please_choose')}}";
+    </script>
 </body>
 </html>

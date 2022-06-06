@@ -5,13 +5,19 @@
 @endsection
 
 @section('content')
-    <div class="col-lg-12 grid-margin stretch-card">
+    <div class="page-header">
         <div class="card">
-            <div class="card-body table table-responsive">
+            <div class="card-body">
                 <div style="text-align: center;">
                     <h1 class="card-title">{{__('SuperAdmin/backend.payment_received')}}</h1>
                 </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="page-content">
+        <div class="card">
+            <div class="card-body table table-responsive">
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr>

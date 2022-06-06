@@ -6,13 +6,11 @@
 @endsection
 
 @section('content')
-    @include('superadmin.courses.scripts')
-
-    <div class="col-12 grid-margin stretch-card">
+    <div class="page-header">
         <div class="card">
             <div class="card-body">
                 <div style="text-align: center;">
-                <h1 class="card-title">{{__('SuperAdmin/backend.add_accommodation_under_age')}}</h1>
+                    <h1 class="card-title">{{__('SuperAdmin/backend.add_accommodation_under_age')}}</h1>
                     <change>
                         <div class="english">
                             {{__('SuperAdmin/backend.in_english')}}
@@ -24,10 +22,14 @@
                 </div>
 
                 @include('superadmin.include.alert')
+            </div>
+        </div>
+    </div>
 
-                <div id="show_form"></div>
-
-                <form class="forms-sample" method="POST" action="{{route("superadmin.course.store")}}" id="accommodation_under_age_form">
+    <div class="page-content">
+        <div class="card">
+            <div class="card-body">
+                <form class="forms-sample" method="POST" action="{{route("superadmin.course.store")}}" id="accommodation_under_age_form" data-mode="create">
                     {{csrf_field()}}
 
                     <div class="first-form">
@@ -74,10 +76,10 @@
                                 <button class="btn btn-primary" type="button" onclick="submitAccommodationUnderAgeForm($(this), 1)">{{__('SuperAdmin/backend.submit')}}</button>
                             </div>
                             <div class="form-group col-md-6">
-                                @if($course_id)
-                                    <a href="{{route('superadmin.course.airport_medical.edit')}}"  class="btn btn-primary pull-right" type="button">{{__('SuperAdmin/backend.next')}}</a>
+                                @if ($course_id)
+                                    <a href="{{route('superadmin.course.other_service.edit')}}"  class="btn btn-primary pull-right" type="button">{{__('SuperAdmin/backend.next')}}</a>
                                 @else
-                                    <a href="{{route('superadmin.course.airport_medical')}}"  class="btn btn-primary pull-right" type="button">{{__('SuperAdmin/backend.next')}}</a>
+                                    <a href="{{route('superadmin.course.other_service')}}"  class="btn btn-primary pull-right" type="button">{{__('SuperAdmin/backend.next')}}</a>
                                 @endif
                             </div>
                         </div>
@@ -87,5 +89,5 @@
         </div>
     </div>
     
-    @include('superadmin.courses.modals')
+    @include('superadmin.include.modals')
 @endsection

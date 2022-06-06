@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+
 use App\Models\Formbuilder;
 use App\Models\Frontend\AppliedForVisa;
 use App\Models\SuperAdmin\AddNationality;
@@ -12,6 +13,7 @@ use App\Models\SuperAdmin\ApplyFrom;
 use App\Models\SuperAdmin\VisaApplicationCenter;
 use App\Models\SuperAdmin\VisaForm;
 use App\Models\UserCourseBookedDetails;
+
 use Illuminate\Http\Request;
 
 /**

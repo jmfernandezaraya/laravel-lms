@@ -41,7 +41,7 @@ class CourseApplicationController extends Controller
      */
     public function index()
     {
-        $data['booked_details'] = UserCourseBookedDetails::with('User', 'userBookDetailsApproved')->get();
+        $data['booked_details'] = UserCourseBookedDetails::with('User', 'course', 'userBookDetailsApproved')->get();
 
         return view('superadmin.course_application.index', $data);
     }

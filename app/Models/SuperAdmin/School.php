@@ -2,7 +2,6 @@
 
 namespace App\Models\SuperAdmin;
 
-use App\Traits\CityCountryStateTrait;
 use App\Traits\StorageTrait;
 
 use Ghanem\Rating\Traits\Ratingable;
@@ -13,12 +12,12 @@ use Illuminate\Support\Facades\Storage;
 
 class School extends Model
 {
-    use CityCountryStateTrait;
     use HasFactory;
     use Ratingable, StorageTrait;
 
     protected $guarded = [];
     protected $casts = [
+        'branch' => 'array',
         'logos' => 'array',
         'multiple_photos' => 'array',
         'video' => 'array',
@@ -51,6 +50,26 @@ class School extends Model
         return $this->hasOne(UsersSchools::class);
     }
 
+    public function country()
+    {
+        return $this->hasOne(\App\Models\Country::class, 'id', 'country_id');
+    }
+
+    public function city()
+    {
+        return $this->hasOne(\App\Models\City::class, 'id', 'city_id');
+    }
+
+    public function name()
+    {
+        return $this->hasOne(\App\Models\SchoolName::class, 'id', 'name_id');
+    }
+
+    public function nationalities()
+    {
+        return $this->hasMany(SchoolNationality::class, 'school_id', 'id');
+    }
+
     public function courses()
     {
         return $this->hasMany(Course::class, 'school_id', 'id');
@@ -58,12 +77,17 @@ class School extends Model
 
     public function availableCourses()
     {
-        return $this->hasMany(Course::class, 'school_id', 'id')->where('display', true)->where('deleted', false);
+        return $this->hasMany(Course::class, 'school_id', 'id')->with('coursePrograms')->where('display', true)->where('deleted', false);
     }
 
     public function getLogoAttribute($value)
     {
         return asset('storage/app/public/school_images/' . $value);
+    }
+
+    public function userCourseBookedDetails()
+    {
+        return $this->hasMany(\App\Models\UserCourseBookedDetails::class, 'school_id', 'id');
     }
 
     public function delete()

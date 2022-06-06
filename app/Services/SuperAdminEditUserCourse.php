@@ -68,7 +68,6 @@ class SuperAdminEditUserCourse
             $inpu['accommodation_placement_fee'] = 0;
             $inpu['accommodation_special_diet_fee'] = 0;
             $inpu['accommodation_deposit'] = 0;
-            $inpu['accommodation_custodian_fee'] = 0;
             $inpu['accommodation_summer_fee'] = 0;
             $inpu['accommodation_christmas_fee'] = 0;
             $inpu['accommodation_under_age_fee'] = 0;
@@ -77,6 +76,7 @@ class SuperAdminEditUserCourse
             $inpu['accommodation_total'] = 0;
             $inpu['airport_pickup_fee'] = 0;
             $inpu['medical_insurance_fee'] = 0;
+            $inpu['custodian_fee'] = 0;
             $inpu['airport_total'] = 0;
             $inpu['total'] = 0;
 
@@ -200,7 +200,6 @@ class SuperAdminEditUserCourse
             $add_program_cost = $program_get->program_cost;
 
             // multiplying program cost here
-            //
             $multiple_program_cost = (int)$r->value * $add_program_cost;
             // $data['value'] = $r->value;
             if ($program_get->courseTextBookFee) {

@@ -5,9 +5,7 @@
 @endsection
 
 @section('content')
-    @include('superadmin.courses.scripts')
-    
-    <div class="col-12 grid-margin stretch-card">
+    <div class="page-header">
         <div class="card">
             <div class="card-body">
                 <div style="text-align: center;">
@@ -23,12 +21,15 @@
                 </div>
 
                 @include('superadmin.include.alert')
+            </div>
+        </div>
+    </div>
 
-                <div id="show_form"></div>
-
+    <div class="page-content">
+        <div class="card">
+            <div class="card-body">
                 <form class="forms-sample" method="POST" action="{{route("superadmin.course.update", $course_id)}}" id="accommodation_under_age_form">
                     {{csrf_field()}}
-
                     @method("PUT")
 
                     <div class="first-form">
@@ -108,7 +109,7 @@
                                 <button class="btn btn-primary" type="button" onclick="submitAccommodationUnderAgeForm($(this))">{{__('SuperAdmin/backend.submit')}}</button>
                             </div>
                             <div class="form-group col-md-6">
-                                <a href="{{route('superadmin.course.airport_medical.edit')}}" class="btn btn-primary pull-right" type="button">{{__('SuperAdmin/backend.next')}}</a>
+                                <a href="{{route('superadmin.course.other_service.edit')}}" class="btn btn-primary pull-right" type="button">{{__('SuperAdmin/backend.next')}}</a>
                             </div>
                         </div>
                     </div>
@@ -128,5 +129,5 @@
         </div>
     </div>
 
-    @include('superadmin.courses.modals')
+    @include('superadmin.include.modals')
 @endsection

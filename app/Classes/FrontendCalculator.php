@@ -353,7 +353,7 @@ class FrontendCalculator
         $discounted_total = 0;
         insertCalculationIntoDB('discount_fee', $discounted_total);
 
-        if ($this->checkBetweenDate($this->discount_start_date_for_week_select, $this->discount_end_date_for_week_select, Carbon::now()->format('Y-m-d'))) {
+        if (checkBetweenDate($this->discount_start_date_for_week_select, $this->discount_end_date_for_week_select, Carbon::now()->format('Y-m-d'))) {
             // Calculating by program cost * week  - free_week
             $divide = $this->divideProgramDurationByWeekSelect($this->program_duration, $this->discount_week_get);
 
@@ -364,7 +364,7 @@ class FrontendCalculator
 
             $firstdiscount = $discounted_total = $this->program_cost - $data['total'];
 
-            if (isset($firstdiscount) && $this->checkBetweenDate($this->discount_start_date, $this->discount_end_date, Carbon::now()->format('Y-m-d'))) {
+            if (isset($firstdiscount) && checkBetweenDate($this->discount_start_date, $this->discount_end_date, Carbon::now()->format('Y-m-d'))) {
                 $explode_first = explode(" ", $this->discount);
                 $number = $explode_first[0];
                 $cal_symbol = $explode_first[1];
@@ -398,7 +398,7 @@ class FrontendCalculator
                 });
                 $discounted_total = isset($firstdiscount) ? $firstdiscount + $discounted_total : $discounted_total;
             }
-        } elseif ($this->checkBetweenDate($this->program_start_date, $this->program_end_date, Carbon::now()->format('Y-m-d'))) {
+        } elseif (checkBetweenDate($this->program_start_date, $this->program_end_date, Carbon::now()->format('Y-m-d'))) {
             /*
              * Second insertion of discount fee if the date range is matched
             */
@@ -436,27 +436,6 @@ class FrontendCalculator
             });
         }
         return $discounted_total;
-    }
-
-    /*
-     *
-     * @param start_date
-     * @param end_date
-     * @param compare_with_which date
-     *
-     *
-     * @return boolean (true or false)
-     * */
-    public function checkBetweenDate($start, $end, $compare_with)
-    {
-        if ($start == null || $end == null) {
-            return  false;
-        }
-        $startDate = Carbon::createFromFormat('Y-m-d', $start)->format('d-m-Y');
-        $endDate = Carbon::createFromFormat('Y-m-d', $end)->format('d-m-Y');
-
-        $check = Carbon::create($compare_with)->between($startDate, $endDate);
-        return $check ? true : false;
     }
 
     protected function divideProgramDurationByWeekSelect($program_duration, $week_selected): int
@@ -569,10 +548,9 @@ class FrontendCalculator
     public function CurrencyConvertedValue($course_id, $total)
     {
         $course = Course::where('unique_id', $course_id)->first();
-        $value = [];
+        $value = 0;
         if ($course && $total > 0) {
-            $value['currency'] = $course->getCurrency->name;
-            $value['price'] = round($total * $course->getCurrency->exchange_rate);
+            $value = round($total * $course->getCurrency->exchange_rate);
         }
 
         return $value;
@@ -603,6 +581,17 @@ class FrontendCalculator
         if ($currency) {
             $value['currency'] = $currency->name;
             $value['rate'] = $currency->exchange_rate;
+        }
+
+        return $value;
+    }
+
+    public function GetDefaultCurrencyName()
+    {
+        $currency = CurrencyExchangeRate::where('is_default', true)->first();
+        $value = '';
+        if ($currency) {
+            $value = $currency->name;
         }
 
         return $value;

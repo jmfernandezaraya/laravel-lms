@@ -1,7 +1,11 @@
 <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
     <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-        <a class="navbar-brand brand-logo" href="index.html"><img src="{{asset('assets/images/logo.png')}}" alt="logo" /></a>
-        <a class="navbar-brand brand-logo-mini" href="index.html"><img src="{{asset('assets/images/logo-mini.svg')}}" alt="logo" /></a>
+        <a class="navbar-brand brand-logo" href="index.html">
+            <img src="{{ asset('assets/images/logo.png') }}" alt="logo" />
+        </a>
+        <a class="navbar-brand brand-logo-mini" href="index.html">
+            <img src="{{ asset('assets/images/logo-mini.svg') }}" alt="logo" />
+        </a>
     </div>
     <div class="navbar-menu-wrapper d-flex align-items-stretch">
         <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -21,17 +25,17 @@
             <li class="nav-item nav-profile dropdown">
                 <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
                     <div class="nav-profile-img">
-                        <img src="{{asset('assets/images/user.png')}}" alt="image">
+                        <img src="{{ asset('assets/images/user.png') }}" alt="image">
                         <span class="availability-status online"></span>
                     </div>
                     <div class="nav-profile-text">
-                        <p class="mb-1 text-black">David Greymaax</p>
+                        <p class="mb-1 text-black">{{ app()->getLocale() == 'en' ? auth('superadmin')->user()->first_name_en . ' ' . auth('superadmin')->user()->lsst_name_en : auth('superadmin')->user()->first_name_ar . ' ' . auth('superadmin')->user()->last_name_ar }}</p>
                     </div>
                 </a>
                 <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
                     <a class="dropdown-item" href="#"><i class="mdi mdi-cached mr-2 text-success"></i> Activity Log </a>
                     <div class="dropdown-divider"></div>
-                    <form method="post" action = "{{route('superadmin.superadmin-logout')}}">
+                    <form method="post" action="{{ route('superadmin.superadmin-logout') }}">
                         @csrf
                         <button type ="submit" class="dropdown-item">
                         <i class="mdi mdi-logout mr-2 text-primary"></i> Signout </button>
@@ -53,7 +57,7 @@
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item preview-item">
                         <div class="preview-thumbnail">
-                            <img src="{{asset('assets/images/faces/face4.jpg')}}" alt="image" class="profile-pic">
+                            <img src="{{ asset('assets/images/faces/face4.jpg') }}" alt="image" class="profile-pic">
                         </div>
                         <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
                             <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Mark send you a message</h6>
@@ -63,7 +67,7 @@
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item preview-item">
                         <div class="preview-thumbnail">
-                            <img src="{{asset('assets/images/faces/face2.jpg')}}" alt="image" class="profile-pic">
+                            <img src="{{ asset('assets/images/faces/face2.jpg') }}" alt="image" class="profile-pic">
                         </div>
                         <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
                             <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Cregh send you a message</h6>
@@ -73,7 +77,7 @@
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item preview-item">
                         <div class="preview-thumbnail">
-                            <img src="{{asset('assets/images/faces/face3.jpg')}}" alt="image" class="profile-pic">
+                            <img src="{{ asset('assets/images/faces/face3.jpg') }}" alt="image" class="profile-pic">
                         </div>
                         <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
                             <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Profile picture updated</h6>
@@ -134,18 +138,18 @@
             <li class="nav-item nav-language dropdown">
                 <a class="nav-link dropdown-toggle" id="languageDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
                     @if (app()->getLocale() == 'en')
-                        <img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}
+                        <img class="pr-2" src="{{ asset('public/frontend/assets/img/ar.png') }}" alt="logo">{{__('SuperAdmin/backend.english')}}
                     @else
-                        <img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}
+                        <img class="pr-2" src="{{ asset('public/frontend/assets/img/ar.png') }}" alt="logo">{{__('SuperAdmin/backend.arabic')}}
                     @endif
                 </a>
                 <div class="dropdown-menu navbar-dropdown" aria-labelledby="languageDropdown">
-                    <a href="{{url('set_language/en')}}" class="dropdown-item">
-                        <img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}
+                    <a href="{{ url('set_language/en') }}" class="dropdown-item">
+                        <img class="pr-2" src="{{ asset('public/frontend/assets/img/eng.png') }}" alt="logo">{{__('SuperAdmin/backend.english')}}
                     </a>
                     <div class="dropdown-divider"></div>
-                    <a href="{{url('set_language/ar')}}" class="dropdown-item">
-                        <img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}
+                    <a href="{{ url('set_language/ar') }}" class="dropdown-item">
+                        <img class="pr-2" src="{{ asset('public/frontend/assets/img/ar.png') }}" alt="logo">{{__('SuperAdmin/backend.arabic')}}
                     </a>
                 </div>
             </li>

@@ -2,19 +2,25 @@
 
 namespace App\Http\Controllers\SuperAdmin;
 
+use Image;
+use Session;
+
 use App\Http\Controllers\Controller;
 
+use App\Models\Country;
+use App\Models\City;
 use App\Models\User;
-use App\Models\SuperAdmin\CourseProgramTextBookFee;
 
 use App\Models\SuperAdmin\Course;
-use App\Models\SuperAdmin\School;
-use App\Models\SuperAdmin\CourseAirport;
 use App\Models\SuperAdmin\CourseAccommodation;
-use App\Models\SuperAdmin\CourseProgram;
-use App\Models\SuperAdmin\CourseMedical;
-use App\Models\SuperAdmin\CourseProgramUnderAgeFee;
 use App\Models\SuperAdmin\CourseAccommodationUnderAge;
+use App\Models\SuperAdmin\CourseAirport;
+use App\Models\SuperAdmin\CourseCustodian;
+use App\Models\SuperAdmin\CourseMedical;
+use App\Models\SuperAdmin\CourseProgram;
+use App\Models\SuperAdmin\CourseProgramTextBookFee;
+use App\Models\SuperAdmin\CourseProgramUnderAgeFee;
+use App\Models\SuperAdmin\School;
 
 use App\Models\SuperAdmin\Choose_Accommodation_Age_Range;
 use App\Models\SuperAdmin\Choose_Accommodation_Under_Age;
@@ -34,8 +40,6 @@ use App\Models\SuperAdmin\CurrencyExchangeRate;
 use App\Services\CourseCreateService;
 
 use Illuminate\Http\Request;
-
-use Session;
 
 class CourseController extends Controller
 {
@@ -94,45 +98,51 @@ class CourseController extends Controller
                 }
             }
 
-            if (get_language() == 'en') {
-                if ($course->school->name) {
-                    if (!in_array($course->school->name, $choose_fields['school_names'])) {
-                        array_push($choose_fields['school_names'], $course->school->name);
-                    }
-                } else {
-                    if (!in_array('-', $choose_fields['school_names'])) {
-                        array_push($choose_fields['school_names'], '-');
-                    }
+            if (is_null($course->school->name)) {
+                if (!in_array('-', $choose_fields['school_names'])) {
+                    array_push($choose_fields['school_names'], '-');
                 }
             } else {
-                if ($course->school->name_ar) {
-                    if (!in_array($course->school->name_ar, $choose_fields['school_names'])) {
-                        array_push($choose_fields['school_names'], $course->school->name_ar);
+                if (app()->getLocale() == 'en') {
+                    if (!in_array($course->school->name->name, $choose_fields['school_names'])) {
+                        array_push($choose_fields['school_names'], $course->school->name->name);
                     }
                 } else {
-                    if (!in_array('-', $choose_fields['school_names'])) {
-                        array_push($choose_fields['school_names'], '-');
+                    if (!in_array($course->school->name->name_ar, $choose_fields['school_names'])) {
+                        array_push($choose_fields['school_names'], $course->school->name->name_ar);
                     }
                 }
             }
 
-            if ($course->city) {
-                if (!in_array($course->city, $choose_fields['school_cities'])) {
-                    array_push($choose_fields['school_cities'], $course->city);
-                }
-            } else {
+            if (is_null($course->school->city)) {
                 if (!in_array('-', $choose_fields['school_cities'])) {
                     array_push($choose_fields['school_cities'], '-');
                 }
+            } else {
+                if (app()->getLocale() == 'en') {
+                    if (!in_array($course->school->city->name, $choose_fields['school_cities'])) {
+                        array_push($choose_fields['school_cities'], $course->school->city->name);
+                    }
+                } else {
+                    if (!in_array($course->school->city->name_ar, $choose_fields['school_cities'])) {
+                        array_push($choose_fields['school_cities'], $course->school->city->name_ar);
+                    }
+                }
             }
 
-            if ($course->country) {
-                if (!in_array($course->country, $choose_fields['school_countries'])) {
-                    array_push($choose_fields['school_countries'], $course->country);
-                }
-            } else {
+            if (is_null($course->school->country)) {
                 if (!in_array('-', $choose_fields['school_countries'])) {
                     array_push($choose_fields['school_countries'], '-');
+                }
+            } else {
+                if (app()->getLocale() == 'en') {
+                    if (!in_array($course->school->country->name, $choose_fields['school_countries'])) {
+                        array_push($choose_fields['school_countries'], $course->school->country->name);
+                    }
+                } else {
+                    if (!in_array($course->school->country->name_ar, $choose_fields['school_countries'])) {
+                        array_push($choose_fields['school_countries'], $course->school->country->name_ar);
+                    }
                 }
             }
 
@@ -163,8 +173,7 @@ class CourseController extends Controller
         $choose_fields['languages'] = Choose_Language::whereIn('unique_id', $choose_fields['languages'])->pluck('name')->toArray();
         $choose_fields['program_types'] = Choose_Program_Type::whereIn('unique_id', $choose_fields['program_types'])->pluck('name')->toArray();
         $choose_fields['study_modes'] = Choose_Study_Mode::whereIn('unique_id', $choose_fields['study_modes'])->pluck('name')->toArray();
-        $choose_fields['branch_names'] = Choose_Branch::whereIn('unique_id', $choose_fields['branch_names'])->pluck('name')->toArray();
-        
+
         return $choose_fields;
     }
 
@@ -191,57 +200,10 @@ class CourseController extends Controller
     }
 
     /**
-     * @param Request $r
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
-     */
-    function getSchoolCountryList(Request $r)
-    {
-        $school = School::find($r->id);
-        $country_list = "<option value=''>" . __('SuperAdmin/backend.select_option') . "</option>";
-        foreach ($school->getCountries() as $country) {
-            if ($country) $country_list .= "<option value='$country'>$country</option>";
-        }
-
-        return response($country_list);
-    }
-
-    /**
-     * @param Request $r
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
-     */
-    function getSchoolCityList(Request $r)
-    {
-        $school = School::find($r->id);
-        $city_list  = "<option value=''>" . __('SuperAdmin/backend.select_option') . "</option>";
-        foreach ($school->getCitiesByCountry($r->country) as $city) {
-            if ($city) $city_list .= "<option value='$city'>$city</option>";
-        }
-
-        return response($city_list);
-    }
-
-    /**
-     * @param Request $r
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
-     */
-    function getSchoolBranchList(Request $r)
-    {
-        $school = School::find($r->id);
-        $branch_list = "<option value=''>" . __('SuperAdmin/backend.select_option') . "</option>";
-        foreach ($school->getBranchesByCountryCity($r->country, $r->city) as $branch) {
-            if ($branch) $branch_list .= "<option value='$branch'>$branch</option>";
-        }
-
-        return response($branch_list);
-    }
-
-    /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     function create()
     {
-        $schools = School::all()->unique('name')->values()->all();
-
         $choose_languages = Choose_Language::all();
         $choose_study_times = Choose_Study_Time::all();
         $choose_study_modes = Choose_Study_Mode::all();
@@ -249,14 +211,34 @@ class CourseController extends Controller
         $choose_start_days = Choose_Start_Day::all();
         $choose_program_age_ranges = Choose_Program_Age_Range::orderBy('age', 'asc')->get();
         $choose_program_types = Choose_Program_Type::all();
-        $choose_branches = Choose_Branch::all();
         $currencies = CurrencyExchangeRate::all();
+        $schools = School::where('is_active', true)->get();
+        $choose_branches = [];
+        $choose_schools = [];
+        foreach ($schools as $school) {
+            if (app()->getLocale() == 'en') {
+                if ($school->branch_name) {
+                    $choose_branches[] = $school->branch_name;
+                }
+                if ($school->name && $school->name->name) {
+                    $choose_schools[] = $school->name->name;
+                }
+            } else {
+                if ($school->branch_name_ar) {
+                    $choose_branches[] = $school->branch_name_ar;
+                }
+                if ($school->name && $school->name->name_ar) {
+                    $choose_schools[] = $school->name->name_ar;
+                }
+            }
+        }
+        $choose_schools = array_unique($choose_schools);
 
         \Session::has('program_ids') ? \Session::forget('program_ids') : '';
         \Session::has('accom_ids') ? \Session::forget('accom_ids') : '';
         \Session::has('has_accommodation') ? \Session::forget('has_accommodation') : '';
 
-        return view('superadmin.courses.add', compact('schools', 'choose_languages', 'choose_study_times', 'choose_study_modes',
+        return view('superadmin.courses.add', compact('choose_schools', 'choose_languages', 'choose_study_times', 'choose_study_modes',
             'choose_classes_days', 'choose_start_days', 'choose_program_age_ranges', 'choose_program_types', 'choose_branches',
             'currencies'));
     }
@@ -280,7 +262,7 @@ class CourseController extends Controller
         } elseif ($r->has('accomunderageincrement')) {
             $coursecreate->createAccommodationUnderAge($r);
         } elseif ($r->has('airportincrement')) {
-            $coursecreate->createAirportMedicalFee($r);
+            $coursecreate->createOtherServiceFee($r);
         }
 
         $data['data'] = 'Data Not Saved';
@@ -319,8 +301,6 @@ class CourseController extends Controller
      */
     function edit($id)
     {
-        $schools = School::all()->unique('name')->values()->all();
-
         $choose_languages = Choose_Language::all();
         $choose_study_times = Choose_Study_Time::all();
         $choose_classes_days = Choose_Classes_Day::all();
@@ -332,12 +312,48 @@ class CourseController extends Controller
         $currencies = CurrencyExchangeRate::all();
 
         $course = Course::whereUniqueId($id)->with('coursePrograms')->first();
+        $schools = School::where('is_active', true)->get();
+        $school_branches = [];
+        $choose_schools = [];
+        foreach ($schools as $school) {
+            if (app()->getLocale() == 'en') {
+                if ($school->branch_name) {
+                    $school_branches[] = $school->branch_name;
+                }
+                if ($school->name && $school->name->name) {
+                    $choose_schools[] = $school->name->name;
+                }
+            } else {
+                if ($school->branch_name_ar) {
+                    $school_branches[] = $school->branch_name_ar;
+                }
+                if ($school->name && $school->name->name_ar) {
+                    $choose_schools[] = $school->name->name_ar;
+                }
+            }
+        }
+        $choose_schools = array_unique($choose_schools);
         $school = School::find($course->school_id);
-        $school_countries = $school->getCityCountryState()->getCountry();
-        $school_cities = $school->getCitiesByCountry($course->country);
-        $school_branches = $school->getBranchesByCountryCity($course->country, $course->city);
+        $school_name = '';
+        if ($school) {
+            if (app()->getLocale() == 'en') {
+                if ($school->name && $school->name->name) {
+                    $school_name = $school->name->name;
+                }
+            } else {
+                if ($school->name && $school->name->name_ar) {
+                    $school_name = $school->name->name_ar;
+                }
+            }
+        }
+        $country_ids = [$school->country_id];
+        $same_name_schools = School::where('name_id', $school->name_id)->get();
+        foreach ($same_name_schools as $same_name_school) {
+            $country_ids[] = $same_name_school->country_id;
+        }
+        $school_countries = Country::with('cities')->whereIn('id', $country_ids)->get();
 
-        return view('superadmin.courses.edit', compact('course', 'schools', 'school', 'school_countries', 'school_cities', 'school_branches',
+        return view('superadmin.courses.edit', compact('course', 'choose_schools', 'school', 'school_name', 'school_countries', 'school_branches',
             'choose_languages', 'choose_study_times', 'choose_study_modes', 'choose_classes_days', 'choose_start_days', 'choose_program_age_ranges',
             'choose_program_types', 'choose_branches', 'currencies'));
     }
@@ -359,7 +375,7 @@ class CourseController extends Controller
         } elseif ($r->has('accomunderageincrement')) {
             $coursecreate->updateAccommodationUnderAge($r, $id);
         } elseif ($r->has('airportincrement')) {
-            $coursecreate->updateAirportMedicalFee($r, $id);
+            $coursecreate->updateOtherServiceFee($r, $id);
         }
 
         $data['data'] = 'Data Not Saved';
@@ -503,6 +519,7 @@ class CourseController extends Controller
                 $course->accomodations()->delete();
                 $course->airports()->delete();
                 $course->medicals()->delete();
+                $course->custodians()->delete();
                 Course::where('unique_id', $id)->delete();
                 return true;
             }
@@ -513,7 +530,7 @@ class CourseController extends Controller
         return back();
     }
 
-    public function programUnderAge()
+    public function viewProgramUnderAge()
     {
         $course_id = \Session::get('course_id');
         $course_programs = [];
@@ -563,13 +580,12 @@ class CourseController extends Controller
         }
     }
 
-    public function accommodation()
+    public function viewAccommodation()
     {
         $course_id = \Session::get('course_id');
-        $custodian_under_ages = Choose_Custodian_Under_Age::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
         $accommodation_age_ranges = Choose_Accommodation_Age_Range::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
 
-        return view('superadmin.courses.add.accommodation', compact('course_id','custodian_under_ages','accommodation_age_ranges'));
+        return view('superadmin.courses.add.accommodation', compact('course_id','accommodation_age_ranges'));
     }
 
     /**
@@ -589,10 +605,9 @@ class CourseController extends Controller
                     \Session::push('accom_ids', '' . $accom->unique_id);
                 }
                 
-                $custodian_under_ages = Choose_Custodian_Under_Age::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
                 $accommodation_age_ranges = Choose_Accommodation_Age_Range::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
 
-                return view('superadmin.courses.edit.accommodation', compact('course_id','accomodations','custodian_under_ages','accommodation_age_ranges'));
+                return view('superadmin.courses.edit.accommodation', compact('course_id','accomodations','accommodation_age_ranges'));
             } else {
                 return redirect()->route('superadmin.course.accommodation');
             }
@@ -601,10 +616,13 @@ class CourseController extends Controller
         }
     }
 
-    public function accommodationUnderAge()
+    public function viewAccommodationUnderAge()
     {
         $course_id = \Session::get('course_id');
-        $accomodations = CourseAccommodation::whereIn('unique_id', \Session::get('accom_ids'))->get();
+        $accomodations = [];
+        if (\Session::get('accom_ids')) {
+            $accomodations = CourseAccommodation::whereIn('unique_id', \Session::get('accom_ids'))->get();
+        }
         $choose_accomodation_under_ages = Choose_Accommodation_Under_Age::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
         return view('superadmin.courses.add.accommodation_under_age', compact('course_id','accomodations','choose_accomodation_under_ages'));
     }
@@ -649,25 +667,28 @@ class CourseController extends Controller
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function airportMedical()
+    public function viewOtherService()
     {
-        return view('superadmin.courses.add.airport_medical');
+        $custodian_under_ages = Choose_Custodian_Under_Age::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
+        return view('superadmin.courses.add.other_service', compact('custodian_under_ages'));
     }
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function editAirportMedical()
+    public function editOtherService()
     {
         if (\Session::get('course_id')) {
             $course_id = \Session::get('course_id');
+            $custodian_under_ages = Choose_Custodian_Under_Age::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
             $airports = CourseAirport::with('fees')->where('course_unique_id', $course_id)->get();
             $medicals = CourseMedical::with('fees')->where('course_unique_id', $course_id)->get();
+            $custodians = CourseCustodian::where('course_unique_id', $course_id)->get();
 
-            if (!empty($airports) && count($airports) && !empty($medicals) && count($medicals)) {
-                return view('superadmin.courses.edit.airport_medical', compact('course_id','airports','medicals'));
+            if ((!empty($airports) && count($airports)) || (!empty($medicals) && count($medicals)) || (!empty($custodians) && count($custodians))) {
+                return view('superadmin.courses.edit.other_service', compact('course_id', 'custodian_under_ages', 'airports', 'medicals', 'custodians'));
             } else {
-                return redirect()->route('superadmin.course.airport_medical');
+                return redirect()->route('superadmin.course.other_service');
             }
         } else {
             return redirect()->route('superadmin.course.index');
@@ -698,5 +719,33 @@ class CourseController extends Controller
         $data['url'] = route('superadmin.course.accomm_under_age.edit');
 
         return response($data);
+    }
+
+    /**
+     * @param Request $request
+     * @return string
+     */
+    public function upload(Request $request)
+    {
+        if ($request->hasFile('upload')) {
+            $originName = $request->file('upload');
+            $fulloriginName = $originName->getClientOriginalName();
+            $fileName = pathinfo($fulloriginName, PATHINFO_FILENAME);
+            $extension = $request->file('upload')->getClientOriginalExtension();
+            $fileName = $fileName . '_' . time() . '.' . 'webp';
+
+            $interventionImage = Image::make($originName)->resize(150, 150, function($constrained){
+
+              $constrained->aspectRatio();
+            })->encode('webp');
+            file_put_contents(public_path('images/course_images/' .$fileName), $interventionImage);
+            $CKEditorFuncNum = $request->input('CKEditorFuncNum');
+            $url = asset('public/images/course_images/' . $fileName);
+            $msg = 'Image uploaded successfully';
+            $response = "<script>window.parent.CKEDITOR.tools.callFunction($CKEditorFuncNum, '$url', '$msg')</script>";
+
+            @header('Content-type: text/html; charset=utf-8');
+            return $response;
+        }
     }
 }

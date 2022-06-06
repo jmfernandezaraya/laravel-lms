@@ -103,7 +103,7 @@
 <script>
     tinymceInit();
 </script>
-@include('superadmin.courses.modals')
+@include('superadmin.include.modals')
 <div class="breadcrumbs" data-aos="fade-in">
     <div class="container">
         <h1 align="center">Visa Form</h1>

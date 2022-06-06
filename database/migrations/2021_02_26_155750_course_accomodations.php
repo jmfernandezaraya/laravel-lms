@@ -23,7 +23,6 @@ class CourseAccomodations extends Migration
 			$table->string('placement_fee')->nullable();
 			$table->string('duration_fee')->nullable();
 			$table->string('deposit_fee')->nullable();
-			$table->string('custodian_fee')->nullable();
 			$table->string('special_diet_fee')->nullable();
 			$table->string('special_diet_note')->nullable();
 			$table->string('fee_per_week')->nullable();

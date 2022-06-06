@@ -17,6 +17,9 @@ use App\Http\Middleware\SuperAdmin;
 use App\Services\SuperAdminEditUserCourse;
 
 use App\Models\Calculator;
+use App\Models\UserCourseBookedDetails;
+use App\Models\UserCourseBookedFee;
+
 use App\Models\SuperAdmin\Choose_Accommodation_Age_Range;
 use App\Models\SuperAdmin\Choose_Accommodation_Under_Age;
 use App\Models\SuperAdmin\Choose_Classes_Day;
@@ -33,11 +36,9 @@ use App\Models\SuperAdmin\CourseAirport;
 use App\Models\SuperAdmin\CourseAirportFee;
 use App\Models\SuperAdmin\CourseMedical;
 use App\Models\SuperAdmin\CourseMedicalFee;
+use App\Models\SuperAdmin\CourseCustodian;
 use App\Models\SuperAdmin\CourseProgram;
 use App\Models\SuperAdmin\School;
-
-use App\Models\UserCourseBookedDetails;
-use App\Models\UserCourseBookedFee;
 
 use DB;
 use Carbon\Carbon;
@@ -85,7 +86,7 @@ class CourseControllerFrontend extends Controller
         $study_mode_ids = [];
         $program_age_range_ids = [];
         
-        $schools = School::find($school_id);
+        $school = School::find($school_id);
 
         foreach ($courses as $course) {
             $start_dates[] = $course->start_date;
@@ -110,7 +111,7 @@ class CourseControllerFrontend extends Controller
 
         $course_details = (object)(\Session::get('course_details') ?? []);
 
-        return view('frontend.course.single', $data, compact('courses', 'schools', 'study_modes', 'course_details'));
+        return view('frontend.course.single', $data, compact('courses', 'school', 'study_modes', 'course_details'));
     }
 
     /**
@@ -124,11 +125,9 @@ class CourseControllerFrontend extends Controller
             return (new SuperAdminEditUserCourse())->calculatorCourse($r);
         }
 
-        $data['is_true'] = true;
         $select = __('SuperAdmin/backend.select_option');
 
         $data['is_true'] = false;
-        $data['success'] = false;
         $data['success'] = true;
 
         $url = url()->previous();
@@ -327,7 +326,11 @@ class CourseControllerFrontend extends Controller
             $program_text_book_fee = 0;
             foreach ($program_get->courseTextBookFees as $program_course_text_book) {
                 if ($program_course_text_book->text_book_start_date <= $r->value && $program_course_text_book->text_book_end_date >= $r->value) {
-                    $program_text_book_fee = $program_course_text_book->text_book_fee;
+                    if ($program_course_text_book->text_book_fee_type == 'fixed_cost') {
+                        $program_text_book_fee = $program_course_text_book->text_book_fee;
+                    } else {
+                        $program_text_book_fee = $program_course_text_book->text_book_fee * $r->value;
+                    }
                 }
             }
             insertCalculationIntoDB('text_book_fee', $program_text_book_fee);
@@ -410,6 +413,13 @@ class CourseControllerFrontend extends Controller
                 foreach ($medicals_data as $medical_data) {
                     $data['medicals'] .= "<option value='".$medical_data->company_name."'>".$medical_data->company_name."</option>";
                 }
+            }
+
+            $data['custodians_visible'] = false;
+            $custodian_under_age = Choose_Custodian_Under_Age::whereIn('age', $program_age_ranges)->value('unique_id');
+            $course_custodian = CourseCustodian::where('course_unique_id', \Session::get('course_unique_id'))->where('age_range', 'LIKE', '%' . $custodian_under_age . '%')->first();
+            if ($course_custodian) {
+                $data['custodians_visible'] = true;
             }
 
             // multiplying program cost here
@@ -610,8 +620,8 @@ class CourseControllerFrontend extends Controller
                 $week_selected_discount = $this->calculator->calculateDiscountWeekFree($r->value, $program_getting->x_week_selected);
                 $data['discount_fee'] = $week_selected_discount;
 
-                if ($this->calculator->checkBetweenDate($program_getting->x_week_start_date, $program_getting->x_week_end_date, Carbon::now()->format('Y-m-d')) || 
-                    ($this->calculator->checkBetweenDate($program_getting->discount_start_date, $program_getting->discount_end_date, Carbon::now()->format('Y-m-d')))) {
+                if (checkBetweenDate($program_getting->x_week_start_date, $program_getting->x_week_end_date, Carbon::now()->format('Y-m-d')) || 
+                    (checkBetweenDate($program_getting->discount_start_date, $program_getting->discount_end_date, Carbon::now()->format('Y-m-d')))) {
                     $this->calculator->setProgramStartDateFromFrontend($date_set);
                     $this->calculator->setDiscountStartDateForWeekSelect($program_getting->x_week_start_date);
                     $this->calculator->setDiscountEndDateForWeekSelect($program_getting->x_week_end_date);
@@ -657,8 +667,7 @@ class CourseControllerFrontend extends Controller
         if ($accommodation) {
             $data['special_diet'] = $accommodation->special_diet_fee;
             $data['special_diet_note'] = $accommodation->special_diet_note;
-            
-            $data['custodianship'] = $accommodation->custodian_condition == 'optional' ? true : false;
+
             $data['unique_id'] = $accommodation->unique_id;
     
             $date_set = substr($request->date_set, 6, 4) . "-" . substr($request->date_set, 3, 2) . "-" . substr($request->date_set, 0, 2);
@@ -687,19 +696,7 @@ class CourseControllerFrontend extends Controller
                     }
                 }
             }
-            $this->calculator->setAccommodationUnderageFee($under_age_fee_per_week * (int)$request->duration);
-            $custodian_under_age = Choose_Custodian_Under_Age::where('age', $request_age)->first();
-            $custodian_fee_flag = false;
-            if ($custodian_under_age && in_array($custodian_under_age->unique_id, is_array($accommodation->custodian_age_range) ? $accommodation->custodian_age_range : [])) {
-                if ($accommodation->custodian_condition == 'required') {
-                    $custodian_fee_flag = true;
-                } else {
-                    if ($request->custodianship == 'true') {
-                        $custodian_fee_flag = true;
-                    }
-                }
-            }
-            $custodian_fee_flag ? $this->calculator->setAccommodationCustodianFee($accommodation->custodian_fee) : $this->calculator->setAccommodationCustodianFee(0);
+            $this->calculator->setAccommodationUnderageFee($under_age_fee_per_week * (int)$request->duration);            
             $this->calculator->setFrontEndDate($this->getEndDate($date_set, (int)$request->duration));
             $this->calculator->setProgramStartDateFromFrontend(Carbon::create($date_set)->format('Y-m-d'));
             $this->calculator->setAccommodationSummerStartDate($accommodation->summer_fee_start_date);
@@ -728,7 +725,6 @@ class CourseControllerFrontend extends Controller
         $summer_fee = $this->calculator->getAccommodationSummerFee();
         $christmas_fee = $this->calculator->getAccommodationChristmasFee();
         $under_age_fee = $this->calculator->getAccommodationUnderageFee();
-        $custodian_fee = $this->calculator->getAccommodationCustodianFee();
         $peak_fee = $this->calculator->getAccommodationPeakFee();
         $discount_fee = $this->calculator->resultAccommodationDiscount();
         $total_calculation = $this->calculator->calculateOnlyAccommodationTotal() - $discount_fee;
@@ -738,7 +734,6 @@ class CourseControllerFrontend extends Controller
         insertCalculationIntoDB('accommodation_placement_fee', $placement_fee);
         insertCalculationIntoDB('accommodation_special_diet_fee', $special_diet_fee);
         insertCalculationIntoDB('accommodation_deposit', $deposit_fee);
-        insertCalculationIntoDB('accommodation_custodian_fee', $custodian_fee);
         insertCalculationIntoDB('accommodation_summer_fee', $summer_fee);
         insertCalculationIntoDB('accommodation_christmas_fee', $christmas_fee);
         insertCalculationIntoDB('accommodation_under_age_fee', $under_age_fee);
@@ -752,7 +747,6 @@ class CourseControllerFrontend extends Controller
                 $placement_fee,
                 $special_diet_fee,
                 $deposit_fee,
-                $custodian_fee,
                 $summer_fee,
                 $christmas_fee,
                 $under_age_fee,
@@ -778,37 +772,33 @@ class CourseControllerFrontend extends Controller
             'value' => $deposit_fee,
             'converted_value' => $calculator_values['values'][3]
         ];
-        $data['custodian_fee'] = [
-            'value' => $custodian_fee,
-            'converted_value' => $calculator_values['values'][4]
-        ];
         $data['summer_fee'] = [
             'value' => $summer_fee,
-            'converted_value' => $calculator_values['values'][5]
+            'converted_value' => $calculator_values['values'][4]
         ];
         $data['christmas_fee'] = [
             'value' => $christmas_fee,
-            'converted_value' => $calculator_values['values'][6]
+            'converted_value' => $calculator_values['values'][5]
         ];
         $data['under_age_fee'] = [
             'value' => $under_age_fee,
-            'converted_value' => $calculator_values['values'][7]
+            'converted_value' => $calculator_values['values'][6]
         ];
         $data['peak_fee'] = [
             'value' => $peak_fee,
-            'converted_value' => $calculator_values['values'][8]
+            'converted_value' => $calculator_values['values'][7]
         ];
         $data['discount_fee'] = [
             'value' => $discount_fee,
-            'converted_value' => $calculator_values['values'][9]
+            'converted_value' => $calculator_values['values'][8]
         ];
         $data['total'] = [
             'value' => $total_calculation,
-            'converted_value' => $calculator_values['values'][10]
+            'converted_value' => $calculator_values['values'][9]
         ];
         $data['overall_total'] = [
             'value' => $overall_total,
-            'converted_value' => $calculator_values['values'][11]
+            'converted_value' => $calculator_values['values'][10]
         ];
         $data['currency'] = [
             'cost' => $calculator_values['currency'],
@@ -834,7 +824,6 @@ class CourseControllerFrontend extends Controller
         insertCalculationIntoDB('accommodation_placement_fee', 0);
         insertCalculationIntoDB('accommodation_special_diet_fee', 0);
         insertCalculationIntoDB('accommodation_deposit', 0);
-        insertCalculationIntoDB('accommodation_custodian_fee', 0);
         insertCalculationIntoDB('accommodation_summer_fee', 0);
         insertCalculationIntoDB('accommodation_christmas_fee', 0);
         insertCalculationIntoDB('accommodation_under_age_fee', 0);
@@ -856,7 +845,7 @@ class CourseControllerFrontend extends Controller
     /**
      * @return bool
      */
-    public function resetAirportMedical()
+    public function resetOtherService()
     {
         insertCalculationIntoDB('airport_pickup_fee', 0);
         insertCalculationIntoDB('medical_insurance_fee', 0);
@@ -1130,7 +1119,7 @@ class CourseControllerFrontend extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|Response
      */
-    public function setAirportPickupFee(Request $request)
+    public function setAirportFee(Request $request)
     {
         $airport = CourseAirport::whereCourseUniqueId(\Session::get('course_unique_id'))
             ->where('service_provider', $request->service_provider)->with('fees', function ($query) use($request) {
@@ -1147,10 +1136,8 @@ class CourseControllerFrontend extends Controller
                 }
             }
         }
-
         $this->calculator->setAirportPickupFee($airport_pickup_fee);
         $airport_pickup_fee = $this->calculator->getAirportPickupFee();
-
         insertCalculationIntoDB('airport_pickup_fee', $airport_pickup_fee);
 
         $default_currency = getDefaultCurrency();
@@ -1202,10 +1189,8 @@ class CourseControllerFrontend extends Controller
                 }
             }
         }
-
         $this->calculator->setMedicalInsuranceFee($medical_insurance_fee);
         $medical_insurance_fee = $this->calculator->getMedicalInsuranceFee();
-
         insertCalculationIntoDB('medical_insurance_fee', $medical_insurance_fee);
 
         $default_currency = getDefaultCurrency();
@@ -1236,15 +1221,14 @@ class CourseControllerFrontend extends Controller
         return response($data);
     }
 
-    public function setAirportMedicalFee(Request $request)
+    public function setOtherServiceFee(Request $request)
     {
         if ($request->airport_service_provider && $request->airport_name && $request->airport_service) {
             $airport = CourseAirport::whereHas('fees', function($query) use($request) {
                     $query->where('name', $request->airport_name)->where('service_name', $request->airport_service);
                 })->whereCourseUniqueId(\Session::get('course_unique_id'))
                 ->where('service_provider', $request->airport_service_provider)->first();
-            }
-
+        }
         $airport_pickup_fee = 0;
         if (!empty($airport)) {
             $data['airport_note'] = $airport->note;
@@ -1257,7 +1241,6 @@ class CourseControllerFrontend extends Controller
                 }
             }
         }
-
         $this->calculator->setAirportPickupFee($airport_pickup_fee);
         insertCalculationIntoDB('airport_pickup_fee', $airport_pickup_fee);
 
@@ -1267,7 +1250,6 @@ class CourseControllerFrontend extends Controller
                 })->whereCourseUniqueId(\Session::get('course_unique_id'))
                 ->where('company_name', $request->medical_company_name)->where('deductible', $request->medical_deductible)->first();
         }
-
         $medical_insurance_fee = 0;
         if (!empty($medical)) {
             $data['medical_note'] = $medical->note;
@@ -1280,20 +1262,36 @@ class CourseControllerFrontend extends Controller
                 }
             }
         }
-
         $this->calculator->setMedicalInsuranceFee($medical_insurance_fee);
         insertCalculationIntoDB('medical_insurance_fee', $medical_insurance_fee);
-
+        
+        $program_age_range = Choose_Program_Age_Range::where('unique_id', $request->under_age)->first();
+        $custodian_under_age = Choose_Custodian_Under_Age::where('age', $program_age_range ? $program_age_range->age : '')->value('unique_id');
+        $custodian = CourseCustodian::where('course_unique_id', \Session::get('course_unique_id'))->where('age_range', 'LIKE', '%' . $custodian_under_age . '%')->first();
+        $custodian_fee_flag = false;
+        if ($custodian) {
+            if ($custodian->condition == 'required') {
+                $custodian_fee_flag = true;
+            } else {
+                if ($request->custodianship == 'true') {
+                    $custodian_fee_flag = true;
+                }
+            }
+        }
+        $custodian_fee_flag ? $this->calculator->setCustodianFee($custodian->fee) : $this->calculator->setCustodianFee(0);
+       
         $default_currency = getDefaultCurrency();
         
         $airport_pickup_fee = $this->calculator->getAirportPickupFee();
         $medical_insurance_fee = $this->calculator->getMedicalInsuranceFee();
+        $custodian_fee = $this->calculator->getCustodianFee();
         $overall_total = $this->calculator->TotalCalculation();
         $calculator_values = getCurrencyConvertedValues($this->getCourseId(),
             [
                 $airport_pickup_fee,
                 $medical_insurance_fee,
-                $airport_pickup_fee + $medical_insurance_fee,
+                $custodian_fee,
+                $airport_pickup_fee + $medical_insurance_fee + $custodian_fee,
                 $overall_total,
             ]
         );
@@ -1305,13 +1303,17 @@ class CourseControllerFrontend extends Controller
             'value' => $medical_insurance_fee,
             'converted_value' => $calculator_values['values'][1]
         ];
-        $data['total'] = [
-            'value' => $airport_pickup_fee + $medical_insurance_fee,
+        $data['custodian_fee'] = [
+            'value' => $custodian_fee,
             'converted_value' => $calculator_values['values'][2]
+        ];
+        $data['total'] = [
+            'value' => $airport_pickup_fee + $medical_insurance_fee + $custodian_fee,
+            'converted_value' => $calculator_values['values'][3]
         ];
         $data['overall_total'] = [
             'value' => $overall_total,
-            'converted_value' => $calculator_values['values'][3]
+            'converted_value' => $calculator_values['values'][4]
         ];
         $data['currency'] = [
             'cost' => $calculator_values['currency'],

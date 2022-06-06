@@ -38,7 +38,6 @@ class CourseDetailsController extends Controller
     * @return view
     *
     * */
-
     public function accomodationUderageDetails($accomadation_id)
     {
         $underages = CourseAccommodationUnderAge::where('accom_id', $accomadation_id)->get();
@@ -174,14 +173,12 @@ class CourseDetailsController extends Controller
         return back();
     }
 
-
     /*
     * function for accomodation update
     *
     * @param Request $request
     *
     * @return back with success message
-    *
     *
     * */
     public function accomodationUpdate(Request $request)
@@ -194,8 +191,6 @@ class CourseDetailsController extends Controller
             "placement_fee" => $request->placement_fee,
             "program_duration" => $request->program_duration,
             "deposit_fee" => $request->deposit_fee,
-            "custodian_fee" => $request->custodian_fee,
-            "custodian_age_range" => $request->custodian_age_range,
             "special_diet_fee" => $request->special_diet_fee,
             "special_diet_note" => $request->special_diet_note,
             "fee_per_week" => $request->fee_per_week,
@@ -244,16 +239,12 @@ class CourseDetailsController extends Controller
      *
      * @return back with success message
      *
-     *
      * */
     public function airportUpdate(Request $request)
     {
         $airport = CourseAirport::where('unique_id', $request->id);
-
         $input = $request->except('_token', 'id');
-
         $airport->fill($input)->save();
-
 
         toastr()->success(__('SuperAdmin/backend.data_updated'));
         return back();
@@ -307,7 +298,6 @@ class CourseDetailsController extends Controller
         CourseAccommodationUnderAge::find($request->id)->update(['under_age_fee_per_week' => $request->under_age_fee_per_week, 'under_age' => $request->under_age]);
 
         toastr()->success(__('SuperAdmin/backend.data_updated'));
-
         return back();
     }
 

@@ -1,31 +1,23 @@
 @extends('superadmin.layouts.app')
+
 @section('content')
-    @section('css')
-        <style>
-            #formaction {
-                width: 100%;
-            }
-        </style>
-    @endsection
-    <div class="col-12 grid-margin stretch-card">
-        <form id="formaction" class="forms-sample" method="post" action = "{{route('superadmin.currency.update', $currency->id)}}">
-            {{csrf_field()}}
-            @method('PUT')
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="form-group col-md-12">
-                            <center>
-                                <h1 class="card-title">{{__('SuperAdmin/backend.update_exchange_rate')}}</h1>
-                            </center>
-                        </div>
-                    </div>
-
+    <div class="page-header">
+        <div class="card">
+            <div class="card-body">
+                <div style="text-align: center;">
+                    <h1 class="card-title">{{__('SuperAdmin/backend.update_exchange_rate')}}</h1>
                     @include('superadmin.include.alert')
+                </div>
+            </div>
+        </div>
+    </div>
 
-                    <div id="show_form"></div>
-
-                    @csrf
+    <div class="page-content">
+        <div class="card">
+            <div class="card-body">
+                <form id="formaction" class="forms-sample" method="post" action = "{{route('superadmin.currency.update', $currency->id)}}">
+                    {{csrf_field()}}
+                    @method('PUT')
 
                     <div id="form1">
                         @if ($errors->any())
@@ -37,6 +29,7 @@
                                 </ul>
                             </div>
                         @endif
+                        
                         <div class="row">
                             <div class="form-group col-md-12">
                                 <label for="name">{{__('SuperAdmin/backend.currency')}}</label>
@@ -51,8 +44,8 @@
 
                     <a class="btn btn-light" href="{{route('superadmin.currency.index')}}">{{__('SuperAdmin/backend.cancel')}}</a>
                     <button type="submit" class="btn btn-primary">{{__('SuperAdmin/backend.update')}}</button>
-                </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 @endsection

@@ -100,7 +100,6 @@
         </style>
     @endsection
 
-    @include('superadmin.courses.scripts')
     <div class="col-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
@@ -125,15 +124,5 @@
         </div>
     </div>
 
-    @include('superadmin.courses.modals')
-    <script>
-        $(document).ready(function() {
-            $('select[multiple].active2.3col').multiselect({
-                includeSelectAllOption: true
-            })
-            $('select[multiple].active.3col').multiselect({
-                includeSelectAllOption: true
-            })
-        });
-    </script>
+    @include('superadmin.include.modals')
 @endsection

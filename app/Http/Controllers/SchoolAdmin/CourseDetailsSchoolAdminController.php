@@ -193,8 +193,6 @@ class CourseDetailsSchoolAdminController extends Controller
             "placement_fee" => $request->placement_fee,
             "program_duration" => $request->program_duration,
             "deposit_fee" => $request->deposit_fee,
-            "custodian_fee" => $request->custodian_fee,
-            "custodian_age_range" => $request->custodian_age_range,
             "special_diet_fee" => $request->special_diet_fee,
             "special_diet_note" => $request->special_diet_note,
             "fee_per_week" => $request->fee_per_week,

@@ -35,9 +35,7 @@
 @endsection
 
 @section('breadcrumbs')
-    <div class="container">
-        <h1>{{__('Frontend.registration_cancelation_conditions')}}</h1>
-    </div>
+    <h1>{{__('Frontend.registration_cancelation_conditions')}}</h1>
 @endsection
 
 @section('content')

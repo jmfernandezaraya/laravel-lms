@@ -9,11 +9,12 @@ use App\Http\Controllers\Controller;
 
 use App\Http\Requests\SuperAdmin\CurrencyRequest;
 
+use App\Models\UserCourseBookedDetails;
+
 use App\Models\SuperAdmin\CurrencyExchangeRate;
 use App\Models\SuperAdmin\Choose_Language;
 use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\TransactionRefund;
-use App\Models\UserCourseBookedDetails;
 
 /**
  * Class CurrencyController
@@ -107,7 +108,7 @@ class CurrencyController extends Controller
         $course_ids = Course::where('currency', $id)->pluck('unique_id')->toArray();
         for ($course_index = 0; $course_index < count($course_ids); $course_index++) {
             $course_ids[$course_index] = '' . $course_ids[$course_index];
-        }        
+        }
         $user_course_booked_details = UserCourseBookedDetails::whereIn('course_id', $course_ids)->get();
         foreach ($user_course_booked_details as $user_course_booked_detail) {
             if ($user_course_booked_detail->status == 'application_cancelled' || $user_course_booked_detail->status == 'completed' || $user_course_booked_detail->paid_amount == $user_course_booked_detail->total_balance) {
@@ -148,12 +149,21 @@ class CurrencyController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param CurrencyExchangeRate $currency
+     * @param $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CurrencyExchangeRate $currency)
+    public function destroy($id)
     {
+        $currency = CurrencyExchangeRate::find($id);
+
+        $course_ids = Course::where('currency', $id)->pluck('unique_id')->toArray();
+        if (count($course_ids)) {
+            toastr()->error(__('SuperAdmin/backend.course_has_currency'));
+            return back();
+        }
+
         $currency->delete();
+        toastr()->success(__('SuperAdmin/backend.data_deleted'));
         return back();
     }
 }
