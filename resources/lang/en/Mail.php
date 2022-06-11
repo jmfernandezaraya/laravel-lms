@@ -16,7 +16,6 @@ return [
         'your_customer_no' => 'Your Customer #',
         'thank_you' => 'Thank you,
 Link for Study Abroad',
-
         'reservation_qutation' => 'Reservation Qutation',
         'registration_date' => 'Registration Date',
         'customer_name' => 'Customer Name',
@@ -63,6 +62,7 @@ Link for Study Abroad',
         'total_cost' => 'Total Cost',
         'amount_to_pay_now' => 'Amount to pay now',
         'amount_to_pay_now_deposit' => 'Amount to pay now ( Deposit )',
+        'total_amount_paid' => 'Total Amount Paid',
         'total_balance_due' => 'Total Balance Due',
     ],
 ];

@@ -639,7 +639,9 @@ class CourseCreateService
         return \DB::transaction(function () use ($request) {
             $rules = [
                 'airport_service_provider.*' => 'required',
+                'airport_service_provider_ar.*' => 'required',
                 'airport_note.*' => 'required',
+                'airport_note_ar.*' => 'required',
                 // 'medical_company_name.*' => 'required',
                 // 'medical_deductible.*' => 'required',
                 // 'medical_note.*' => 'required',
@@ -649,8 +651,10 @@ class CourseCreateService
              * Validation Rules Starts here
              * */
             $validation = \Validator::make($request->all(), $rules, [
-                'airport_service_provider.*.required' => "Airport Service Provider required",
-                'airport_note.*.required' => "Airport Note required",
+                'airport_service_provider.*.required' => "Airport Service Provider in English required",
+                'airport_service_provider_ar.*.required' => "Airport Service Provider in Arabic required",
+                'airport_note.*.required' => "Airport Note in English required",
+                'airport_note_ar.*.required' => "Airport Note in Arabic required",
                 // 'medical_company_name.*.required' => "Medical Company Name required",
                 // 'medical_deductible.*.required' => "Medical Deductible required",
                 // 'medical_note.*.required' => "Medical Note required",
@@ -670,9 +674,9 @@ class CourseCreateService
                 $airport_save->note_ar = $request->airport_note_ar[$i] ?? null;
                 $airport_save->order = $i;
                 $airport_save->save();
-                
+            
                 for ($j = 0; $j <= $request->airportfeeincrement[$i]; $j++) {
-                    if (($request->airport_name[$i][$j] || $request->airport_name_ar[$i][$j]) && ($request->airport_service_name[$i][$j] && $request->airport_service_name_ar[$i][$j])) {
+                    if (isset($request->airport_name[$i][$j]) && ($request->airport_name[$i][$j] || $request->airport_name_ar[$i][$j]) && ($request->airport_service_name[$i][$j] && $request->airport_service_name_ar[$i][$j])) {
                         $airport_fee_save = new CourseAirportFee();
                         $airport_fee_save->course_airport_unique_id = $airport_save->unique_id;
                         $airport_fee_save->name = $request->airport_name[$i][$j] ?? null;
@@ -686,31 +690,40 @@ class CourseCreateService
             }
 
             for ($k = 0; $k <= $request->medicalincrement; $k++) {
-                $medical_save = new CourseMedical();
-                $medical_save->course_unique_id = '' . \Session::get('course_id');
-                $medical_save->company_name = $request->medical_company_name[$k] ?? null;
-                $medical_save->company_name_ar = $request->medical_company_name_ar[$k] ?? null;
-                $medical_save->deductible = $request->medical_deductible[$k] ?? null;
-                $medical_save->week_selected_fee = $request->medical_week_selected_fee[$k] ?? null;
-                $medical_save->note = $request->medical_note[$k] ?? null;
-                $medical_save->note_ar = $request->medical_note_ar[$k] ?? null;
-                $medical_save->order = $k;
-                $medical_save->save();
-                
+                $medical_fee_count = 0;
                 for ($l = 0; $l <= $request->medicalfeeincrement[$k]; $l++) {
                     if ($request->medical_fees_per_week[$k][$l]) {
-                        $medical_fee_save = new CourseMedicalFee();
-                        $medical_fee_save->course_medical_unique_id = $medical_save->unique_id;
-                        $medical_fee_save->fees_per_week = (double)$request->medical_fees_per_week[$k][$l] ?? null;
-                        $medical_fee_save->start_date =$request->medical_start_date[$k][$l] ?? null;
-                        $medical_fee_save->end_date = $request->medical_end_date[$k][$l] ?? null;
-                        $medical_fee_save->save();
+                        $medical_fee_count = $medical_fee_count + 1;
+                    }
+                }
+                
+                if ($medical_fee_count && isset($request->medical_company_name[$k]) && ($request->medical_company_name[$k] || $request->medical_company_name_ar[$k] || $request->medical_deductible[$k] || $request->medical_week_selected_fee[$k])) {
+                    $medical_save = new CourseMedical();
+                    $medical_save->course_unique_id = '' . \Session::get('course_id');
+                    $medical_save->company_name = $request->medical_company_name[$k] ?? null;
+                    $medical_save->company_name_ar = $request->medical_company_name_ar[$k] ?? null;
+                    $medical_save->deductible = $request->medical_deductible[$k] ?? null;
+                    $medical_save->week_selected_fee = $request->medical_week_selected_fee[$k] ?? null;
+                    $medical_save->note = $request->medical_note[$k] ?? null;
+                    $medical_save->note_ar = $request->medical_note_ar[$k] ?? null;
+                    $medical_save->order = $k;
+                    $medical_save->save();
+                    
+                    for ($l = 0; $l <= $request->medicalfeeincrement[$k]; $l++) {
+                        if (isset($request->medical_fees_per_week[$k][$l]) && $request->medical_fees_per_week[$k][$l]) {
+                            $medical_fee_save = new CourseMedicalFee();
+                            $medical_fee_save->course_medical_unique_id = $medical_save->unique_id;
+                            $medical_fee_save->fees_per_week = (double)$request->medical_fees_per_week[$k][$l] ?? null;
+                            $medical_fee_save->start_date =$request->medical_start_date[$k][$l] ?? null;
+                            $medical_fee_save->end_date = $request->medical_end_date[$k][$l] ?? null;
+                            $medical_fee_save->save();
+                        }
                     }
                 }
             }
 
             for ($m = 0; $m <= $request->custodianincrement; $m++) {
-                if ($request->custodian_fee[$m]) {
+                if (isset($request->custodian_fee[$m]) && $request->custodian_fee[$m]) {
                     $custodian_save = new CourseCustodian();
                     $custodian_save->course_unique_id = '' . \Session::get('course_id');
                     $custodian_save->fee = $request->custodian_fee[$m] ?? null;
@@ -1130,7 +1143,9 @@ class CourseCreateService
         return \DB::transaction(function () use ($request, $id) {
             $rules = [
                 'airport_service_provider.*' => 'required',
+                'airport_service_provider_ar.*' => 'required',
                 'airport_note.*' => 'required',
+                'airport_note_ar.*' => 'required',
                 // 'medical_company_name.*' => 'required',
                 // 'medical_deductible.*' => 'required',
                 // 'medical_note.*' => 'required',
@@ -1140,8 +1155,10 @@ class CourseCreateService
              * Validation Rules Starts here
              * */
             $validation = \Validator::make($request->all(), $rules, [
-                'airport_service_provider.*.required' => "Airport Service Provider required",
-                'airport_note.*.required' => "Airport Note required",
+                'airport_service_provider.*.required' => "Airport Service Provider in English required",
+                'airport_service_provider_ar.*.required' => "Airport Service Provider in Arabic required",
+                'airport_note.*.required' => "Airport Note in English required",
+                'airport_note_ar.*.required' => "Airport Note in Arabic required",
                 // 'medical_company_name.*.required' => "Medical Company Name required",
                 // 'medical_deductible.*.required' => "Medical Deductible required",
                 // 'medical_note.*.required' => "Medical Note required",
@@ -1153,59 +1170,55 @@ class CourseCreateService
 
             $course_airport_ids = [];
             for ($i = 0; $i <= $request->airportincrement; $i++) {
-                if (isset($request->airport_service_provider[$i])) {
-                    $course_airport = null;
-                    if (isset($request->airport_id[$i]) && $request->airport_id[$i]) {
-                        $course_airport = CourseAirport::where('unique_id', $request->airport_id[$i])->first();
-                    }
-                    if (!$course_airport) {
-                        $course_airport = new CourseAirport;
-                        $course_airport->course_unique_id = $id;
-                    }
-                    $course_airport->service_provider = $request->airport_service_provider[$i] ?? null;
-                    $course_airport->service_provider_ar = $request->airport_service_provider_ar[$i] ?? null;
-                    $course_airport->week_selected_fee = $request->airport_week_selected_fee[$i] ?? null;
-                    $course_airport->note = $request->airport_note[$i] ?? null;
-                    $course_airport->note_ar = $request->airport_note_ar[$i] ?? null;
-                    $course_airport->order = $i;
-                    $course_airport->save();
-                    if (!$course_airport->unique_id) {
-                        $course_airport_ids[] = CourseAirport::orderBy('unique_id')->last()->unique_id;
-                    } else {
-                        $course_airport_ids[] = $course_airport->unique_id;
-                    }
+                $course_airport = null;
+                if (isset($request->airport_id[$i]) && $request->airport_id[$i]) {
+                    $course_airport = CourseAirport::where('unique_id', $request->airport_id[$i])->first();
+                }
+                if (!$course_airport) {
+                    $course_airport = new CourseAirport;
+                    $course_airport->course_unique_id = $id;
+                }
+                $course_airport->service_provider = $request->airport_service_provider[$i] ?? null;
+                $course_airport->service_provider_ar = $request->airport_service_provider_ar[$i] ?? null;
+                $course_airport->week_selected_fee = $request->airport_week_selected_fee[$i] ?? null;
+                $course_airport->note = $request->airport_note[$i] ?? null;
+                $course_airport->note_ar = $request->airport_note_ar[$i] ?? null;
+                $course_airport->order = $i;
+                $course_airport->save();
+                if (!$course_airport->unique_id) {
+                    $course_airport_ids[] = CourseAirport::orderBy('unique_id')->last()->unique_id;
+                } else {
+                    $course_airport_ids[] = $course_airport->unique_id;
+                }
 
-                    $course_airport_fee_ids = [];
-                    for ($j = 0; $j <= $request->airportfeeincrement[$i]; $j++) {
-                        if (isset($request->airport_name[$i][$j])) {
-                            if (($request->airport_name[$i][$j] || $request->airport_name_ar[$i][$j]) && ($request->airport_service_name[$i][$j] || $request->airport_service_name_ar[$i][$j])) {
-                                $course_airport_fee = null;
-                                if (isset($request->airport_fee_id[$i][$j]) && $request->airport_fee_id[$i][$j]) {
-                                    $course_airport_fee = CourseAirportFee::where('unique_id', $request->airport_fee_id[$i][$j])->first();
-                                }
-                                if (!$course_airport_fee) {
-                                    $course_airport_fee = new CourseAirportFee;
-                                    $course_airport_fee->course_airport_unique_id = $course_airport->unique_id;
-                                }
-                                $course_airport_fee->name = $request->airport_name[$i][$j] ?? null;
-                                $course_airport_fee->name_ar = $request->airport_name_ar[$i][$j] ?? null;
-                                $course_airport_fee->service_name = $request->airport_service_name[$i][$j] ?? null;
-                                $course_airport_fee->service_name_ar = $request->airport_service_name_ar[$i][$j] ?? null;
-                                $course_airport_fee->service_fee = (double)$request->airport_service_fee[$i][$j] ?? null;
-                                $course_airport_fee->save();
-                                if (!$course_airport_fee->unique_id) {
-                                    $course_airport_fee_ids[] = CourseAirportFee::orderBy('unique_id')->last()->unique_id;
-                                } else {
-                                    $course_airport_fee_ids[] = $course_airport_fee->unique_id;
-                                }
-                            }
+                $course_airport_fee_ids = [];
+                for ($j = 0; $j <= $request->airportfeeincrement[$i]; $j++) {
+                    if (isset($request->airport_name[$i][$j]) && ($request->airport_name[$i][$j] || $request->airport_name_ar[$i][$j]) && ($request->airport_service_name[$i][$j] || $request->airport_service_name_ar[$i][$j])) {
+                        $course_airport_fee = null;
+                        if (isset($request->airport_fee_id[$i][$j]) && $request->airport_fee_id[$i][$j]) {
+                            $course_airport_fee = CourseAirportFee::where('unique_id', $request->airport_fee_id[$i][$j])->first();
+                        }
+                        if (!$course_airport_fee) {
+                            $course_airport_fee = new CourseAirportFee;
+                            $course_airport_fee->course_airport_unique_id = $course_airport->unique_id;
+                        }
+                        $course_airport_fee->name = $request->airport_name[$i][$j] ?? null;
+                        $course_airport_fee->name_ar = $request->airport_name_ar[$i][$j] ?? null;
+                        $course_airport_fee->service_name = $request->airport_service_name[$i][$j] ?? null;
+                        $course_airport_fee->service_name_ar = $request->airport_service_name_ar[$i][$j] ?? null;
+                        $course_airport_fee->service_fee = (double)$request->airport_service_fee[$i][$j] ?? null;
+                        $course_airport_fee->save();
+                        if (!$course_airport_fee->unique_id) {
+                            $course_airport_fee_ids[] = CourseAirportFee::orderBy('unique_id')->last()->unique_id;
+                        } else {
+                            $course_airport_fee_ids[] = $course_airport_fee->unique_id;
                         }
                     }
-                    $course_airport_fees = CourseAirportFee::where('course_airport_unique_id', $course_airport->unique_id)->get();
-                    foreach ($course_airport_fees as $course_airport_fee) {
-                        if (!in_array($course_airport_fee->unique_id, $course_airport_fee_ids)) {
-                            $course_airport_fee->delete();
-                        }
+                }
+                $course_airport_fees = CourseAirportFee::where('course_airport_unique_id', $course_airport->unique_id)->get();
+                foreach ($course_airport_fees as $course_airport_fee) {
+                    if (!in_array($course_airport_fee->unique_id, $course_airport_fee_ids)) {
+                        $course_airport_fee->delete();
                     }
                 }
             }
@@ -1218,7 +1231,14 @@ class CourseCreateService
 
             $course_medical_ids = [];
             for ($k = 0; $k <= $request->medicalincrement; $k++) {
-                if (isset($request->medical_company_name[$k])) {
+                $medical_fee_count = 0;
+                for ($l = 0; $l <= $request->medicalfeeincrement[$k]; $l++) {
+                    if (isset($request->medical_fees_per_week[$k][$l]) && $request->medical_fees_per_week[$k][$l]) {
+                        $medical_fee_count = $medical_fee_count + 1;
+                    }
+                }
+                
+                if ($medical_fee_count && isset($request->medical_company_name[$k]) && ($request->medical_company_name[$k] || $request->medical_company_name_ar[$k] || $request->medical_deductible[$k] || $request->medical_week_selected_fee[$k])) {
                     $course_medical = null;
                     if (isset($request->medical_id[$k]) && $request->medical_id[$k]) {
                         $course_medical = CourseMedical::where('unique_id', $request->medical_id[$k])->first();
@@ -1280,26 +1300,24 @@ class CourseCreateService
 
             $course_custodian_ids = [];
             for ($m = 0; $m <= $request->custodianincrement; $m++) {
-                if (isset($request->custodian_fee[$m])) {
-                    if ($request->custodian_fee[$m]) {
-                        $course_custodian = null;
-                        if (isset($request->custodian_id[$m]) && $request->custodian_id[$m]) {
-                            $course_custodian = CourseCustodian::where('unique_id', $request->custodian_id[$m])->first();
-                        }
-                        if (!$course_custodian) {
-                            $course_custodian = new CourseCustodian;
-                            $course_custodian->course_unique_id = $id;
-                        }
-                        $course_custodian->fee = $request->custodian_fee[$m] ?? null;
-                        $course_custodian->age_range = $request->custodian_age_range[$m] ?? null;
-                        $course_custodian->condition = $request->custodian_condition[$m] ?? null;
-                        $course_custodian->order = $m;
-                        $course_custodian->save();
-                        if (!$course_custodian->unique_id) {
-                            $course_custodian_ids[] = CourseCustodian::orderBy('unique_id')->last()->unique_id;
-                        } else {
-                            $course_custodian_ids[] = $course_custodian->unique_id;
-                        }
+                if (isset($request->custodian_fee[$m]) && $request->custodian_fee[$m]) {
+                    $course_custodian = null;
+                    if (isset($request->custodian_id[$m]) && $request->custodian_id[$m]) {
+                        $course_custodian = CourseCustodian::where('unique_id', $request->custodian_id[$m])->first();
+                    }
+                    if (!$course_custodian) {
+                        $course_custodian = new CourseCustodian;
+                        $course_custodian->course_unique_id = $id;
+                    }
+                    $course_custodian->fee = $request->custodian_fee[$m] ?? null;
+                    $course_custodian->age_range = $request->custodian_age_range[$m] ?? null;
+                    $course_custodian->condition = $request->custodian_condition[$m] ?? null;
+                    $course_custodian->order = $m;
+                    $course_custodian->save();
+                    if (!$course_custodian->unique_id) {
+                        $course_custodian_ids[] = CourseCustodian::orderBy('unique_id')->last()->unique_id;
+                    } else {
+                        $course_custodian_ids[] = $course_custodian->unique_id;
                     }
                 }
             }

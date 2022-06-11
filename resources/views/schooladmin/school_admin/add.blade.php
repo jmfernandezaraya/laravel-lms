@@ -1,25 +1,9 @@
 @extends('schooladmin.layouts.app')
 
 @section('content')
-
-@section('js')
-<script>
-	$(document).ready(function () {
-		$('#menu ul li a').click(function (ev) {
-			$('#menu ul li').removeClass('selected');
-			$(ev.currentTarget).parent('li').addClass('selected');
-		});
-	});
-	var addschooladminurl = "{{route('school_admin.store')}}";
-	 var in_arabic =  "{{__('SuperAdmin/backend.in_arabic')}}";
-	var in_english = "{{__('SuperAdmin/backend.in_english')}}";
-</script>
-@endsection
-
 <div class="col-12 grid-margin stretch-card">
-
 	<div class="card">
-        <form id="form_to_be_submitted" class="forms-sample" method="post">
+        <form id="SchoolAdminForm" class="forms-sample" method="post">
             {{csrf_field()}}
             <div id="form1">
 		<div class="card-body">
@@ -72,7 +56,7 @@
 
 				</div>
 
-            <img src="//desk87.com/assets/images/preview-not-available.jpg" id="previewImg"
+            <img src="{{ asset('/assets/images/no-image.jpg') }}" id="previewImg"
                  alt="Uploaded Image Preview Holder" width="550px" height="250px"
                  style="border-radius:3px;border:5px;"/>
 
@@ -126,7 +110,7 @@
 
 
 
-				<button  onclick="submitSchoolAdminForm(addschooladminurl)" type="button" class="btn btn-gradient-primary mr-2">{{__('SuperAdmin/backend.submit')}}</button>
+				<button  onclick="submitForm($(this).parents().find('#SchoolAdminForm'))" type="button" class="btn btn-gradient-primary mr-2">{{__('SuperAdmin/backend.submit')}}</button>
 				<a class="btn btn-light" href="{{url()->previous()}}">{{__('SuperAdmin/backend.cancel')}}</a>
                 </div>
 

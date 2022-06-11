@@ -185,7 +185,7 @@ class CustomerController extends Controller
         $data['success'] = true;
 
         $rules = [
-            'attachment.*' => 'mimes:doc,docx,pdf',
+            'attachment.*' => 'sometimes|mimes:doc,docx,pdf',
             'subject' => 'required',
             'message' => 'required',
             'to_email' => 'required',
@@ -198,11 +198,12 @@ class CustomerController extends Controller
             $request_save = $request->only('attachment', 'subject', 'message', 'to_email');
 
             $attachments = [];
+            $send_files = [];
             if ($request->has("attachment")) {
                 foreach ($request->file('attachment') as $request_attachment) {
                     $attach = $request_attachment->getClientOriginalName();
                     $attachments[] = $request_attachment->getClientOriginalName();
-                    $send_file = $request_attachment->move('public/attachments', $attach);
+                    $send_files[] = $request_attachment->move('public/attachments', $attach);
                 }
             }
 
@@ -221,7 +222,7 @@ class CustomerController extends Controller
             //     ]
             // );
     
-            \Mail::send(new ContactCenterAdmin($user, \Arr::except($request->all(), 'attachment'), $send_file));
+            \Mail::send(new ContactCenterAdmin($user, \Arr::except($request->all(), 'attachment'), $send_files));
 
             $data['message'] = __('Frontend.message_sent_thank_you');
         }

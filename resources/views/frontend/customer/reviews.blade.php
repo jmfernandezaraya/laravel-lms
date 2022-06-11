@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-    <section class="dashboard">
+    <div class="dashboard">
         <div class="container" data-aos="fade-up">
             <div class="row" data-aos="zoom-in" data-aos-delay="100">
                 <div class="col-md-12">
@@ -99,5 +99,5 @@
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 @endsection

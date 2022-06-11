@@ -14,7 +14,7 @@ return [
     'select_school' => 'اختر المدرسة',
     'select_country' => 'أختر الدولة',
     'select_city' => 'اختر المدينة',
-    'select_option' => 'Select Option',
+    'select_option' => 'حدد خيار',
     'select_branch' => 'Select Branch',
     'select_age' => 'اختر العمر',
     'select_mode' => 'Select Mode',
@@ -131,6 +131,7 @@ return [
     'submit' => 'Submit',
     'yes' => 'Yes',
     'no' => 'No',
+    'download' => 'Download',
 
     'contact_us' => 'تواصل معنا',
     'your_name' => 'ألاسم',
@@ -343,7 +344,7 @@ return [
     'instagram' => 'انستقرام',
     'snapchat' => 'سناب شات',
     'tiktok' => 'تيك توك',
-    'youTube' => 'يوتيوب',
+    'youtube' => 'يوتيوب',
     'friend' => 'صديق',
     'other' => 'اخرى ',
     

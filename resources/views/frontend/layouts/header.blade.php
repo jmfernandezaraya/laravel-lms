@@ -9,25 +9,57 @@
         @endif
         <h1 class="logo mr-auto">
             <a href="{{ url('/') }}">
-                <img src="{{ asset('public/frontend/assets/img/logo.png') }}" class="img-fluid" alt="">
+                <img src="{{ getHeaderLogo() ? getStorageImages('setting', getHeaderLogo()) : asset('public/frontend/assets/img/logo.png') }}" class="img-fluid" alt="">
             </a>
         </h1>
 
         <nav class="nav-menu d-none d-lg-block">
             <ul>
-                <li class="active"><a href="{{ url('/') }}">{{__('Frontend.home')}}</a></li>
-                <li class="drop-down">
-                    <a href="#">{{__('Frontend.our_services')}}</a>
-                    <ul>
-                        <li><a href="{{ route('frontend.course') }}">{{__('Frontend.apply_for_program')}}</a></li>
-                        <li><a href="{{ route('frontend.visa') }}">{{__('Frontend.apply_for_visa')}}</a></li>
-                        <li><a href="{{ url('how_to_apply') }}">{{__('Frontend.how_to_apply')}}</a></li>
-                    </ul>
-                </li>
-                <li><a href="{{ url('about_us') }}">{{__('Frontend.about_us')}}</a></li>
-                <li><a href="{{ route('contact-us-get') }}">{{__('Frontend.contact_us')}}</a></li>
-                <li><a href="{{ route('contact-us-get') }}">{{__('Frontend.why_book_with_us')}}</a></li>
-                <li><a href="{{ route('frontend.blog') }}">{{__('Frontend.blog')}}</a></li>
+                @php $header_menu = getHeaderMenu(); @endphp
+                @foreach ($header_menu as $header_menu_item)
+                    @if (count($header_menu_item['sub_menu']))
+                        <li class="drop-down">
+                            <a href="#">
+                                @if (app()->getLocale() == 'en')
+                                    {{ $header_menu_item['label'] }}
+                                @else
+                                    {{ $header_menu_item['label_ar'] }}
+                                @endif
+                            </a>
+                            <ul>
+                                @foreach ($header_menu_item['sub_menu'] as $header_menu_sub)
+                                    <li>
+                                        <a href="{{ $header_menu_sub['type'] == 'page' ? getPageUrl($header_menu_sub['page']) : '' }}">
+                                            @if ($header_menu_sub['type'] == 'page')
+                                                {{ getPageTitle($header_menu_sub['page']) }}
+                                            @else
+                                                @if (app()->getLocale() == 'en')
+                                                    {{ $header_menu_sub['label'] }}
+                                                @else
+                                                    {{ $header_menu_sub['label_ar'] }}
+                                                @endif
+                                            @endif
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </li>
+                    @else
+                        <li>
+                            <a href="{{ $header_menu_item['type'] == 'page' ? getPageUrl($header_menu_item['page']) : '' }}">
+                                @if ($header_menu_item['type'] == 'page')
+                                    {{ getPageTitle($header_menu_item['page']) }}
+                                @else
+                                    @if (app()->getLocale() == 'en')
+                                        {{ $header_menu_item['label'] }}
+                                    @else
+                                        {{ $header_menu_item['label_ar'] }}
+                                    @endif
+                                @endif
+                            </a>
+                        </li>
+                    @endif
+                @endforeach
                 <li class="drop-down">
                     <a href="#">
                         @if (app()->getLocale() == 'en')
@@ -59,7 +91,7 @@
                             </li>
                             <li>
                                 <form method="post" action="{{route('logout')}}">
-                                    @csrf                                    
+                                    @csrf
                                     <i class="bx bx-log-out"></i>&nbsp;<button type="submit">{{__('Frontend.logout')}}</button>
                                 </form>
                             </li>

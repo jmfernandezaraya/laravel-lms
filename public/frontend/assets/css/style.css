@@ -258,8 +258,12 @@ i.fa.fa-star {
   text-transform: none;
   color: #37423b;
 }
+.nav-menu .drop-down ul li form i {
+  margin: 0;
+}
 
 .nav-menu .drop-down ul li form button {
+  margin: 0;
   padding: 0px;
   font-size: 14px;
   font-weight: 500;

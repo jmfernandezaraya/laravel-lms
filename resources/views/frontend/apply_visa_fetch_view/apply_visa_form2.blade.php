@@ -70,9 +70,8 @@
 
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="inputappliccation">@lang('Frontend.visaform.choose_visa_application_center')</label><br>
-                        <!-- <input type="password" class="form-control" id="inputPassword4" placeholder="Password"> -->
-                        <select name="visa_center" class="form-control" id="visa_select_frontend" onchange="getNumberOfPeople($(this))">
+                        <label for="inputappliccation">@lang('Frontend.visaform.choose_visa_application_center')</label>
+                        <select name="visa_center" class="form-control mt-2" id="visa_select_frontend" onchange="getNumberOfPeople($(this))">
                             <option value="">@lang('SuperAdmin/backend.select_option') </option>
                             @foreach ($visa_center as $visa_centers)
                                 <option {{session()->get('visa_form')['visa_center'] == $visa_centers->id ? 'selected' : ''}} value="{{$visa_centers->id}}">{{$visa_centers->{'application_center_'.get_language() } }} </option>

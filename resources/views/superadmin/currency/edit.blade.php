@@ -15,7 +15,7 @@
     <div class="page-content">
         <div class="card">
             <div class="card-body">
-                <form id="formaction" class="forms-sample" method="post" action = "{{route('superadmin.currency.update', $currency->id)}}">
+                <form id="formaction" class="forms-sample" method="post" action = "{{route('superadmin.setting.currency.update', $currency->id)}}">
                     {{csrf_field()}}
                     @method('PUT')
 
@@ -42,7 +42,7 @@
                         </div>
                     </div>
 
-                    <a class="btn btn-light" href="{{route('superadmin.currency.index')}}">{{__('SuperAdmin/backend.cancel')}}</a>
+                    <a class="btn btn-light" href="{{route('superadmin.setting.currency.index')}}">{{__('SuperAdmin/backend.cancel')}}</a>
                     <button type="submit" class="btn btn-primary">{{__('SuperAdmin/backend.update')}}</button>
                 </form>
             </div>

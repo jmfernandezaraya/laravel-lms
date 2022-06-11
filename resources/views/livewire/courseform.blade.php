@@ -1,11 +1,13 @@
 <div>
     <form class="forms-sample" method="POST" action="{{route("course.store")}}" id="form1">
         {{csrf_field()}}
+        
         <input hidden name="about_program" id="about_program_value">
         <input hidden name="about_courier" id="about_courier_value">
         <input hidden name="text_book_note" id="text_book_note_value">
         <input hidden name="special_diet_note" id="special_diet_note_value">
         <input hidden name="medical_insurance_note" id="medical_insurance_note_value">
+
         <div class="first-form">
             <div class="row">
                 <div class="col-md-4">
@@ -46,7 +48,7 @@
 
                 <div class="col-md-4 mt-3">
                     <label for="name">{{__('SuperAdmin/backend.choose_school')}}:</label>
-                    <select onchange="changeCourseSchool(url_school_country_list, $(this).val())" class="form-control" id="name" name="school_id">
+                    <select onchange="changeSchool(url_school_country_list, $(this).val())" class="form-control" id="name" name="school_id">
                         <option value="">{{__('SuperAdmin/backend.select_school')}}</option>
                         @foreach($schools as $school)
                             <option value="{{$school->unique_id}}">{{$school->name}}</option>

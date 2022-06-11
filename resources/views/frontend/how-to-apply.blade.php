@@ -18,8 +18,7 @@
                 <li class="nav-item"><a href="" data-target="#profile1" data-toggle="tab" class="nav-link small text-uppercase active">Apply Program</a></li>
                 <li class="nav-item"><a href="" data-target="#messages1" data-toggle="tab" class="nav-link small text-uppercase">Apply Visa</a></li>
             </ul>
-            <br>
-            <div id="tabsJustifiedContent" class="tab-content">
+            <div id="tabsJustifiedContent" class="tab-content mt-2">
                 <div id="profile1" class="tab-pane fade active show">
                     <h5>Apply Program</h5>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eu justo a est vehicula vulputate sit amet et quam. Pellentesque placerat, elit eu ullamcorper fermentum, sem ante blandit mauris, in tincidunt tellus massa vel ex.</p>

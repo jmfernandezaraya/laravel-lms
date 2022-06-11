@@ -432,29 +432,53 @@ function changeSchoolCountry() {
     }
 }
 
-function changeCourseSchool() {
+function changeSchool() {
     var school = $('#school_name').val();
-    $.post(url_school_country_list, {_token: token, school: school}, function (data) {
+    $.post(url_school_country_list, {
+        _token: token,
+        school: school,
+        empty_value: $('#country_name').hasClass('3col') && $('#country_name').hasClass('active') ? false : true
+    }, function (data) {
         $('#country_name').html(data);
-        changeCourseCountry();
+        if ($('#country_name').hasClass('3col') && $('#country_name').hasClass('active')) {
+            $('#country_name').multiselect('rebuild');
+        }
+        changeCountry();
     });
 }
 
-function changeCourseCountry() {
+function changeCountry() {
     var school = $('#school_name').val();
     var country = $('#country_name').val();
-    $.post(url_school_city_list, {_token: token, school: school, country: country}, function (data) {
+    $.post(url_school_city_list, {
+        _token: token,
+        school: school,
+        country: country,
+        empty_value: $('#city_name').hasClass('3col') && $('#city_name').hasClass('active') ? false : true
+    }, function (data) {
         $('#city_name').html(data);
-        changeCourseCity();
+        if ($('#city_name').hasClass('3col') && $('#city_name').hasClass('active')) {
+            $('#city_name').multiselect('rebuild');
+        }
+        changeCity();
     });
 }
 
-function changeCourseCity() {
+function changeCity() {
     var school = $('#school_name').val();
     var country = $('#country_name').val();
     var city = $('#city_name').val();
-    $.post(url_school_branch_list, {_token: token, school: school, country: country, city: city}, function (data) {
+    $.post(url_school_branch_list, {
+        _token: token,
+        school: school,
+        country: country,
+        city: city,
+        empty_value: $('#branch_choose').hasClass('3col') && $('#branch_choose').hasClass('active') ? false : true
+    }, function (data) {
         $('#branch_choose').html(data);
+        if ($('#branch_choose').hasClass('3col') && $('#branch_choose').hasClass('active')) {
+            $('#branch_choose').multiselect('rebuild');
+        }
     });
 }
 
@@ -517,43 +541,6 @@ function submitCommonForBlogForm(urlname, typeMethod = "POST") {
 
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
-            }
-        }
-    });
-}
-
-function submitSchoolAdminForm(urlname, method = 'POST') {
-    $("#loader").show();
-    getCkEditorsData();
-
-    var formData = new FormData($("#form_to_be_submitted")[0]);
-    $.ajax({
-        type: 'POST',
-        url: urlname,
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (data) {
-            $("#loader").hide();
-
-            if (data.errors) {
-                document.documentElement.scrollTop = 0;
-
-                $('.alert-danger').show();
-                $('.alert-danger ul').html('');
-                for (var error in data.errors) {
-                    $('.alert-danger ul').append('<li>' + data.errors[error] + '</li>');
-                }
-            } else if (data.catch_error) {
-                document.documentElement.scrollTop = 0;
-
-                $('.alert-danger').show();
-                $('.alert-danger ul').html(data.catch_error);
-            } else if (data.success == 'success') {
-                $('.alert-success').show();
-                $('.alert-success').find('p').html(data.data);
-                document.documentElement.scrollTop = 0;
             }
         }
     });
@@ -752,9 +739,9 @@ function calculateCourse(type) {
             }
             if (data.accommodations != undefined) {
                 $("#accom_type").html(data.accommodations);
-                $("#room_type").val('');
-                $("#meal_type").val('');
-                $("#accom_duration").val('');
+                $("#room_type").html(data.empty_option);
+                $("#meal_type").html(data.empty_option);
+                $("#accom_duration").html(data.empty_option);
             }
             if (data.accommodations_visible != undefined) {
                 if (data.accommodations_visible) {
@@ -1172,12 +1159,30 @@ $(document).ready(function() {
 
     $('#accom_type').change(function () {
         var accom_type = $('#accom_type option:selected').val() ? jQuery.trim($('#accom_type option:selected').text()) : '';
-        $.post(rooms_meals_url, {
+        $.post(accomm_rooms_meals_url, {
             _token: $('meta[name="csrf-token"]').attr('content'),
             'accom_type': accom_type,
             'age_selected': $("#under_age").val()
         }, function (data) {
             $('#room_type').html(data.room_type);
+            $('#meal_type').html(data.meal_type);
+            $('#accom_duration').val('');
+
+            if (typeof callbackChangeAccommodationType === "function") {
+                callbackChangeAccommodationType();
+            }
+        });
+    });
+
+    $('#room_type').change(function () {
+        var accom_type = $('#accom_type option:selected').val() ? jQuery.trim($('#accom_type option:selected').text()) : '';
+        var room_type = $('#room_type option:selected').val() ? jQuery.trim($('#room_type option:selected').text()) : '';
+        $.post(accomm_meals_url, {
+            _token: $('meta[name="csrf-token"]').attr('content'),
+            'accom_type': accom_type,
+            'room_type': room_type,
+            'age_selected': $("#under_age").val()
+        }, function (data) {
             $('#meal_type').html(data.meal_type);
             $('#accom_duration').val('');
 
@@ -2841,9 +2846,24 @@ function initRating() {
 function initLanguageSection() {
     if ($('html').attr('lang') == 'en') {
         $('.arabic').hide();
-    } else {        
+    } else {
         $('.english').hide();
     }
+}
+
+function activeSidebarLinks() {
+    var location_href = window.location.href;
+    $('.sidebar .nav-item > a.nav-link').each(function() {
+        if ($(this).attr('href') && location_href.indexOf($(this).attr('href')) >= 0) {
+            $(this).addClass('active');
+            if ($(this).closest('.collapse').length) {
+                $(this).closest('.collapse').addClass('show');
+                if ($(this).closest('.collapse').closest('.nav-item').length) {
+                    $(this).closest('.collapse').closest('.nav-item').addClass('active');
+                }
+            }
+        }
+    });
 }
 
 $(document).ready(function() {
@@ -2851,4 +2871,6 @@ $(document).ready(function() {
     initCkeditor();
     initCkeditors();
     initLanguageSection();
+    
+    activeSidebarLinks();
 });

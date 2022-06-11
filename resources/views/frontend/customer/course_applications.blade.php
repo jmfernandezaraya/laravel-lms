@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-    <section class="dashboard table table-responsive">
+    <div class="dashboard table table-responsive p-2">
         <div class="container" data-aos="fade-up">
             <div class="row" data-aos="zoom-in" data-aos-delay="100">
                 <table class="table table-hover table-bordered table-filtered" width="100%">
@@ -40,9 +40,9 @@
                                 <td>{{ ucwords($booked_course->fname) }} {{ ucwords($booked_course->lname) }}</td>
                                 <td>{{ ucwords($booked_course->userBookDetailsApproved->email ?? $booked_course->email) }}</td>
                                 <td>{{ ucwords($booked_course->userBookDetailsApproved->mobile ?? $booked_course->mobile) }}</td>
-                                <td>{{ ucwords(get_language() == 'en' ? $booked_course->course->school->name : $booked_course->course->school->name_ar) }}</td>
-                                <td>{{ ucwords(get_language() == 'en' ? $booked_course->course->school->city : $booked_course->course->school->city_ar) }}</td>
-                                <td>{{ ucwords(get_language() == 'en' ? $booked_course->course->school->country : $booked_course->course->school->country_ar) }}</td>
+                                <td>{{ $booked_course->course->school->name ? (app()->getLocale() == 'en' ? ($booked_course->course->school->name->name ?? '-') : ($booked_course->course->school->name->name_ar ?? '-')) : '-' }} {{ app()->getLocale() == 'en' ? ($booked_course->course->school->branch_name ?? '') : ($booked_course->course->school->branch_name_ar ?? '') }}</td>
+                                <td>{{ $booked_course->course->school->city ? (app()->getLocale() == 'en' ? ($booked_course->course->school->city->name ?? '-') : ($booked_course->course->school->city->name_ar ?? '-')) : '-' }}</td>
+                                <td>{{ $booked_course->course->school->country ? (app()->getLocale() == 'en' ? ($booked_course->course->school->country->name ?? '-') : ($booked_course->course->school->country->name_ar ?? '-')) : '-' }}</td>
                                 <td>{{ ucwords($booked_course->course->program_name) }}</td>
                                 <td>{{ ucwords($booked_course->start_date) }}</td>
                                 <td>{{ ucwords($booked_course->program_duration) }}</td>
@@ -61,7 +61,7 @@
                 </table>
             </div>
         </div>
-    </section>
+    </div>
 
     <script>
         window.addEventListener('load', (event) => {

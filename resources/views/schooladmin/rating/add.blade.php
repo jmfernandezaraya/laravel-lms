@@ -53,7 +53,7 @@
                     </div>
 
 
-                    <img src="//desk87.com/assets/images/preview-not-available.jpg" id="previewImg"
+                    <img src="{{ asset('/assets/images/no-image.jpg') }}" id="previewImg"
                          alt="Uploaded Image Preview Holder" width="550px" height="250px"
                          style="border-radius:3px;border:5px;"/>
 

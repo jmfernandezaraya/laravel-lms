@@ -10,17 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Country;
 use App\Models\City;
 use App\Models\User;
-
-use App\Models\SuperAdmin\Course;
-use App\Models\SuperAdmin\CourseAccommodation;
-use App\Models\SuperAdmin\CourseAccommodationUnderAge;
-use App\Models\SuperAdmin\CourseAirport;
-use App\Models\SuperAdmin\CourseCustodian;
-use App\Models\SuperAdmin\CourseMedical;
-use App\Models\SuperAdmin\CourseProgram;
-use App\Models\SuperAdmin\CourseProgramTextBookFee;
-use App\Models\SuperAdmin\CourseProgramUnderAgeFee;
-use App\Models\SuperAdmin\School;
+use App\Models\UserCourseBookedDetails;
 
 use App\Models\SuperAdmin\Choose_Accommodation_Age_Range;
 use App\Models\SuperAdmin\Choose_Accommodation_Under_Age;
@@ -35,7 +25,17 @@ use App\Models\SuperAdmin\Choose_Start_Day;
 use App\Models\SuperAdmin\Choose_Study_Mode;
 use App\Models\SuperAdmin\Choose_Study_Time;
 
+use App\Models\SuperAdmin\Course;
+use App\Models\SuperAdmin\CourseAccommodation;
+use App\Models\SuperAdmin\CourseAccommodationUnderAge;
+use App\Models\SuperAdmin\CourseAirport;
+use App\Models\SuperAdmin\CourseCustodian;
+use App\Models\SuperAdmin\CourseMedical;
+use App\Models\SuperAdmin\CourseProgram;
+use App\Models\SuperAdmin\CourseProgramTextBookFee;
+use App\Models\SuperAdmin\CourseProgramUnderAgeFee;
 use App\Models\SuperAdmin\CurrencyExchangeRate;
+use App\Models\SuperAdmin\School;
 
 use App\Services\CourseCreateService;
 
@@ -599,7 +599,7 @@ class CourseController extends Controller
         if (\Session::get('course_id')) {
             $course_id = \Session::get('course_id');
             
-            $accomodations = CourseAccommodation::where('course_unique_id', '' . \Session::get('course_id'))->get();
+            $accomodations = CourseAccommodation::where('course_unique_id', '' . \Session::get('course_id'))->orderBy('order', 'asc')->get();
             if (count($accomodations)) {
                 foreach($accomodations as $accom) {
                     \Session::push('accom_ids', '' . $accom->unique_id);
@@ -747,5 +747,13 @@ class CourseController extends Controller
             @header('Content-type: text/html; charset=utf-8');
             return $response;
         }
+    }
+
+    public function listForCustomer($customer_id) {
+        $course_ids = UserCourseBookedDetails::where('user_id', $customer_id)->pluck('course_id')->toArray();
+        $courses = Course::with('school')->where('deleted', false)->whereIn('unique_id', $course_ids)->get();
+        $choose_fields = self::_getChooseFields($courses);
+
+        return view('superadmin.courses.index', compact('courses', 'choose_fields'));
     }
 }

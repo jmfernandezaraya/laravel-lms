@@ -76,7 +76,6 @@
 
 <body>
     <img src="{{$logo}}" class="logo"/>
-    <hr />
 
     <h2 class="title">{{__('Mail.course_booked.reservation_qutation')}}</h3>
 
@@ -84,15 +83,15 @@
         <tbody>
             <tr>
                 <td>{{__('Frontend.name')}}</td>
-                <td>{{ app()->getLocale() == 'en' ? ($school->name . ($school->branch_name ? $school->branch_name : '')) : ($school->name_ar . ($school->branch_name_ar ? $school->branch_name_ar : '')) }}</td>
+                <td>{{ $school->name ? (app()->getLocale() == 'en' ? ($school->name->name ?? '-') : ($school->name->name_ar ?? '-')) : '-' }} {{ app()->getLocale() == 'en' ? ($school->branch_name ?? '-') : ($school->branch_name_ar ?? '-') }}</td>
             </tr>
             <tr>
                 <td>{{__('Frontend.city')}}</td>
-                <td>{{ app()->getLocale() == 'en' ? $school->city : $school->city_ar }}</td>
+                <td>{{ $school->city ? (app()->getLocale() == 'en' ? ($school->city->name ?? '-') : ($school->city->name_ar ?? '-')) : '-' }}</td>
             </tr>
             <tr>
                 <td>{{__('Frontend.country')}}</td>
-                <td>{{ app()->getLocale() == 'en' ? $school->country : $school->country_ar }}</td>
+                <td>{{ $school->country ? (app()->getLocale() == 'en' ? ($school->country->name ?? '-') : ($school->country->name_ar ?? '-')) : '-' }}</td>
             </tr>
         </tbody>
     </table>
@@ -280,6 +279,16 @@
                         <td>{{ toFixedNumber($medical_insurance_fee['converted_value']) }}</td>
                     </tr>
                 @endif
+                @if ($custodian)
+                    <tr>
+                        <td>
+                            {{__('Frontend.custodian_fee')}}<br />
+                            {{__('Frontend.age_range')}}: {{ $custodian_min_age ?? ''}} - {{ $custodian_max_age ?? ''}} {{__('Frontend.years')}}<br />
+                        </td>
+                        <td>{{ toFixedNumber($custodian_fee['value']) }}</td>
+                        <td>{{ toFixedNumber($custodian_fee['converted_value']) }}</td>
+                    </tr>
+                @endif
             </tbody>
         </table>
     @endif
@@ -303,9 +312,9 @@
             </tr>
             @if (!isset($course_register_details->financial_guarantee))
                 <tr>
-                    <th>{{__('Frontend.amount_to_pay_now_deposit')}}</th>
-                    <th>{{ toFixedNumber($deposit_price['value']) }} {{ $currency['cost'] }}</th>
-                    <th>{{ toFixedNumber($deposit_price['converted_value']) }} {{ $currency['converted'] }}</th>
+                    <th>{{__('Frontend.total_amount_paid')}}</th>
+                    <th>{{ toFixedNumber($amount_paid['value']) }} {{ $currency['cost'] }}</th>
+                    <th>{{ toFixedNumber($amount_paid['converted_value']) }} {{ $currency['converted'] }}</th>
                 </tr>
             @endif
             <tr>

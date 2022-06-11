@@ -45,10 +45,10 @@ Route::post('/enquiry/submit', [FrontendController::class, 'submitEnquiry'])->na
 Route::get('/handle-payment/success', [FrontendController::class, 'TelrResponse']);
 Route::get('/handle-payment/cancel', [FrontendController::class, 'TelrResponseFailed']);
 Route::get('/handle-payment/declined', [FrontendController::class, 'TelrResponseFailed']);
-Route::view('about_us', 'frontend.about');
+Route::view('about-us', 'frontend.about');
 Route::view('apply', 'frontend.apply');
-Route::view('how_to_apply', 'frontend.how-to-apply');
-Route::get('apply_visa', [ApplyVisaController::class, 'applyForVisa'])->name('frontend.visa');
+Route::view('how-to-apply', 'frontend.how-to-apply');
+Route::get('apply-for-visa', [ApplyVisaController::class, 'applyForVisa'])->name('frontend.visa');
 Route::post('get_visa_details', [ApplyVisaController::class, 'getVisaDetails'])->name('frontend.visa_details');
 Route::get('getNationality/{id}', [ApplyVisaController::class, 'getNationality'])->name('frontend.getNationality');
 Route::get('getTravel/{id}/{apply_id}', [ApplyVisaController::class, 'getTravel'])->name('frontend.getTravel');
@@ -69,6 +69,8 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
     });
     
     Route::get('course', [FrontendController::class, 'viewCourse'])->name('course');
+    
+    Route::post('download', [FrontendController::class, 'downloadFile'])->name('download');
 });
 
 Route::group(['prefix' => 'school', 'as' => 'school.'], function () {
@@ -80,6 +82,7 @@ Route::group(['prefix' => 'course', 'as' => 'course.'], function () {
     Route::get('{program_id}/{school_id}', [CourseControllerFrontend::class, 'index'])->name('single');
 
     Route::post('rooms_meals', [CourseControllerFrontend::class, 'getRoomTypeAndMealType'])->name('rooms_meals');
+    Route::post('meals', [CourseControllerFrontend::class, 'getMealType'])->name('meals');
     Route::post('accomm_durations', [CourseControllerFrontend::class, 'getAccommodationDuration'])->name('accomm_durations');    
     Route::post('calculate', [CourseControllerFrontend::class, 'calculate'])->name('calculate');
     Route::group(['prefix' => 'calculate', 'as' => 'calculate.'], function () {
@@ -148,8 +151,8 @@ Route::get('/verify_email/{id}', [\App\Http\Controllers\LoginController::class, 
 Route::get('/verify_email_again/{id}', [\App\Http\Controllers\LoginController::class, 'verifyEmailAgain'])->name('verify-email-user-again');
 
 ///// Contact URL /////
-Route::view('/contact_us', 'frontend.contact')->name('contact-us-get');
-Route::post('/contact_us/post', [ContactController::class, 'ContactUS'])->name('contact-us');
+Route::view('/contact-us', 'frontend.contact')->name('contact-us-get');
+Route::post('/contact-us/post', [ContactController::class, 'ContactUS'])->name('contact-us');
 Route::get('/register', [\App\Http\Controllers\LoginController::class, 'register'])->name('register_user');
 Route::post('/save_rating', [\App\Http\Controllers\RatingController::class, 'saveRating'])->name('save_rating');
 Route::get('/forgot-password/{token}', function ($token) { return view('frontend.reset_password', ['token' => $token]); })->name('password.reset');
@@ -186,10 +189,11 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => '
         return redirect()->route('superadmin.dashboard');
     });
 
-    Route::post('updateBookedUserCourse', 'CourseApplicationController@updateBookedUserCourse')->name('updateBookedUserCourse');
-    Route::get('editUserCourse/{course_id}/{user_course_booked_id}/edit/{school_id}', 'CourseApplicationController@editCourse')->name('manage_application.editCourse');
-
-    Route::post('/manage_application/print', 'CourseApplicationController@print')->name('manage_application.print');
+    Route::group(['prefix' => 'manage_application', 'as' => 'manage_application.'], function () {
+        Route::get('customer/{customer_id}', 'CourseApplicationController@listForCustomer')->name('list.customer');
+        Route::post('print', 'CourseApplicationController@print')->name('print');
+        Route::get('course/{course_id}/{user_course_booked_id}/{school_id}', 'CourseApplicationController@editCourse')->name('course.edit');
+    });
     Route::resource('manage_application', CourseApplicationController::class);
 
     Route::post('programagerangeupdate', 'CourseController@update')->name('course.programagerangeupdate');
@@ -233,9 +237,6 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => '
     Route::resource('/visa', 'FormbuildController');
     Route::resource('enquiry', 'EnquiryController');
 
-    Route::post('currency/set_default/{id}', 'CurrencyController@setDefault')->name('currency.set_default');
-    Route::resource('currency', 'CurrencyController');
-
     Route::view('rating', 'superadmin.rating.index')->name('rating.index');
     Route::get('rating/approve/{id}', [\App\Http\Controllers\RatingController::class, 'approve'])->name('rating.approve');
 
@@ -250,8 +251,6 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => '
     Route::post('blogs/pause/{id}', 'BlogController@pause')->name('blogs.pause');
     Route::post('blogs/play/{id}', 'BlogController@play')->name('blogs.play');
     Route::resource('blogs', 'BlogController');
-
-    Route::resource('customers', 'CustomerController');
 
     Route::group(['prefix' => 'school', 'as' => 'school.'], function () {
         Route::post('image_upload', 'SchoolController@upload')->name('upload');
@@ -335,28 +334,45 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => '
         Route::post('update', 'CourseDetailsController@courseUpdate')->name('course_update');
     
         Route::post('image_upload', 'CourseController@upload')->name('upload');
+
+        Route::get('customer/{customer_id}', 'CourseController@listForCustomer')->name('list.customer');
     });
     Route::resource('course', CourseController::class);
-
+    
     Route::resource('manage_app', CourseApplicationController::class);
     Route::resource('payment_received', PaymentController::class);
 
-    Route::post('school_admin/update/{id}', 'SchoolAdminController@update')->name('school_admins.update');
-    Route::resource('school_admin', 'SchoolAdminController');
+    Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
+        Route::resource('customer', 'CustomerController');
+        Route::resource('school_admin', 'SchoolAdminController');
+        Route::resource('super_admin', 'SuperAdminController');
+    });
 
     Route::get('visa_application', 'VisaApplicationController@index');
-    Route::get('visa_application/other_fields/{id}', 'VisaApplicationController@getOtherFields')->name('visa.otherfields');
-    
-    Route::group(['prefix' => 'front_page', 'as' => 'front_page.'], function () {
-        Route::get('home', 'FrontPageController@viewHomePage')->name('home');
-        Route::post('home', 'FrontPageController@updateHomePage')->name('home.update');
-        Route::post('image_upload', 'FrontPageController@upload')->name('upload');
-        Route::post('clone/{id}', 'FrontPageController@clone')->name('clone');
-        Route::post('pause/{id}', 'FrontPageController@pause')->name('pause');
-        Route::post('play/{id}', 'FrontPageController@play')->name('play');
-        Route::post('bulk', 'FrontPageController@bulk')->name('bulk');
+    Route::get('visa_application/other_fields/{id}', 'VisaApplicationController@getOtherFields')->name('visa.otherfields');    
+
+    Route::group(['prefix' => 'setting', 'as' => 'setting.'], function () {
+        Route::post('currency/set_default/{id}', 'CurrencyController@setDefault')->name('currency.set_default');
+        Route::resource('currency', 'CurrencyController');
+
+        Route::get('header_footer', 'SettingController@viewHeaderFooter')->name('header_footer');
+        Route::post('header_footer', 'SettingController@updateHeaderFooter')->name('header_footer.update');
+
+        Route::get('home_page', 'SettingController@viewHomePage')->name('home_page');
+        Route::post('home_page', 'SettingController@updateHomePage')->name('home_page.update');
+
+        Route::post('image_upload', 'SettingController@upload')->name('upload');
+        
+        Route::group(['prefix' => 'front_page', 'as' => 'front_page.'], function () {
+            Route::post('image_upload', 'FrontPageController@upload')->name('upload');
+            
+            Route::post('clone/{id}', 'FrontPageController@clone')->name('clone');
+            Route::post('pause/{id}', 'FrontPageController@pause')->name('pause');
+            Route::post('play/{id}', 'FrontPageController@play')->name('play');
+            Route::post('bulk', 'FrontPageController@bulk')->name('bulk');
+        });
+        Route::resource('front_page', FrontPageController::class);
     });
-    Route::resource('front_page', FrontPageController::class);
 });
 
 ///// School Admin Routes /////
@@ -366,8 +382,6 @@ Route::group(['namespace' => 'SchoolAdmin', 'prefix' => 'schooladmin', 'middlewa
     });
 
     Route::resource('branch_admin', 'BranchAdminController');
-
-    Route::get('manage_application/approve/{id}/{value}', 'CourseApplicationController@approve')->name('manage_application.approve');
 
     Route::get('dashboard', [\App\Http\Controllers\SchoolAdmin\DashboardController::class, 'index'])->name('dashboard');
     Route::post('course_update', 'CourseControllerSchoolAdmin@courseUpdate')->name('course_update');
@@ -413,11 +427,13 @@ Route::group(['namespace' => 'SchoolAdmin', 'prefix' => 'schooladmin', 'middlewa
     Route::resource('school', 'SchoolController');
 
     Route::post('school/save/program/session', 'CourseControllerSchoolAdmin@programSessionSave')->name('course.session_store_for_program');
-
+    
+    Route::get('manage_application/approve/{id}/{value}', 'CourseApplicationController@approve')->name('manage_application.approve');
     Route::get('manage_application', 'CourseApplicationController@index')->name('manage_application.index');
     Route::get('manage_application/view_message/{id}', 'CourseApplicationController@viewMessage')->name('manage_application.view_message');
-    Route::resource('payment_received', PaymentController::class);
     Route::post('manage_application/send_message_to_super_admin', 'CourseApplicationController@sendMessageToSuperAdmin')->name('manage_application.send_message_to_super_admin');
+
+    Route::resource('payment_received', PaymentController::class);
 
     Route::post('add_program_under_age_range', [CourseFormController::class, 'addProgramUnderAge'])->name('add_program_under_age_range');
     Route::post('delete_program_under_age_range', [CourseFormController::class, 'deleteProgramUnderAge'])->name('delete_program_under_age_range');

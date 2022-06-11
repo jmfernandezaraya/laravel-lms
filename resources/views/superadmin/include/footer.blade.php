@@ -1070,7 +1070,7 @@
         home_hero_clone++;
         var clone_home_hero_form = object.closest(".clone");
         var home_hero_clone_index = parseInt($(clone_home_hero_form).attr('id').replace("home_hero_clone", ""));
-        $('#heroincretment').val(home_hero_clone);
+        $('#home_hero_increment').val(home_hero_clone);
         var new_clone_form = $(clone_home_hero_form).clone(true);
         new_clone_form.attr('id', 'home_hero_clone' + (home_hero_clone_index  + 1));
         $(new_clone_form).find('[name="home_hero[]"]').val('');
@@ -1128,6 +1128,362 @@
             object.parent().find('input[name="country_id[]"]').val(object.data('id'));
         } else {
             object.parent().find('input[name="country_id[]"]').val('');
+        }
+    }
+
+    var header_menu_clone = 0;
+    function addHeaderMenuForm(object) {
+        header_menu_clone++;
+        var clone_header_menu_form = object.closest(".clone");
+        var header_menu_clone_index = parseInt($(clone_header_menu_form).attr('id').replace("header_menu_clone", ""));
+        $('#header_menu_increment').val(header_menu_clone);
+        var new_clone_form = $(clone_header_menu_form).clone(true);
+        new_clone_form.attr('id', 'header_menu_clone' + (header_menu_clone_index  + 1));
+        var clone_header_menu_forms = $(".header-menu-clone");
+        for (var header_menu_index = 0; header_menu_index < clone_header_menu_forms.length; header_menu_index++) {
+            var loop_header_menu_clone_index = parseInt($(clone_header_menu_forms[header_menu_index]).attr('id').replace("header_menu_clone", ""));
+            if (loop_header_menu_clone_index > header_menu_clone_index) {
+                var header_menu_sub_forms = $(clone_header_menu_forms[header_menu_index]).find(".header-menu-sub-clone");
+                for (var header_menu_sub_index = 0; header_menu_sub_index < header_menu_sub_forms.length; header_menu_sub_index++) {
+                    $(header_menu_sub_forms[header_menu_sub_index]).attr('id', 'header_menu' + (loop_header_menu_clone_index + 1) + '_sub_clone' + header_menu_sub_index);
+                    $(header_menu_sub_forms[header_menu_sub_index]).find('[name="header_menu_sub_type[' + loop_header_menu_clone_index + '][]"]').attr('name', 'header_menu_sub_type[' + (loop_header_menu_clone_index + 1) + '][]');
+                    $(header_menu_sub_forms[header_menu_sub_index]).find('[name="header_menu_sub_page[' + loop_header_menu_clone_index + '][]"]').attr('name', 'header_menu_sub_page[' + (loop_header_menu_clone_index + 1) + '][]');
+                    $(header_menu_sub_forms[header_menu_sub_index]).find('[name="header_menu_sub_label[' + loop_header_menu_clone_index + '][]"]').attr('name', 'header_menu_sub_label[' + (loop_header_menu_clone_index + 1) + '][]');
+                    $(header_menu_sub_forms[header_menu_sub_index]).find('[name="header_menu_sub_label_ar[' + loop_header_menu_clone_index + '][]"]').attr('name', 'header_menu_sub_label_ar[' + (loop_header_menu_clone_index + 1) + '][]');
+                }
+                $(clone_header_menu_forms[header_menu_index]).attr('id', 'header_menu_clone' + (loop_header_menu_clone_index + 1));
+                $(clone_header_menu_forms[header_menu_index]).find('[name="headermenusubincrement[]"]').attr('id', 'header_menu_sub_increment' + (loop_header_menu_clone_index + 1));
+            }
+        }
+        var header_menu_sub_forms = $(new_clone_form).find('.header-menu-sub-clone');
+        for (var header_menu_sub_index = 0; header_menu_sub_index < header_menu_sub_forms.length; header_menu_sub_index++) {
+            if (header_menu_sub_index == 0) {
+                $(header_menu_sub_forms[header_menu_sub_index]).attr('id', 'header_menu' + (header_menu_sub_index + 1) + '_sub_clone0');
+                $(header_menu_sub_forms[header_menu_sub_index]).find('[name="header_menu_sub_type[' + header_menu_clone_index + '][]"]').attr('name', 'header_menu_sub_type[' + (header_menu_clone_index + 1) + '][]').val('page');
+                $(header_menu_sub_forms[header_menu_sub_index]).find('.menu-page-label .menu-page').show();
+                $(header_menu_sub_forms[header_menu_sub_index]).find('.menu-page-label .menu-label').hide();
+                $(header_menu_sub_forms[header_menu_sub_index]).find('[name="header_menu_sub_page[' + header_menu_clone_index + '][]"]').attr('name', 'header_menu_sub_page[' + (header_menu_clone_index + 1) + '][]').val('');
+                $(header_menu_sub_forms[header_menu_sub_index]).find('[name="header_menu_sub_label[' + header_menu_clone_index + '][]"]').attr('name', 'header_menu_sub_label[' + (header_menu_clone_index + 1) + '][]').val('');
+                $(header_menu_sub_forms[header_menu_sub_index]).find('[name="header_menu_sub_label_ar[' + header_menu_clone_index + '][]"]').attr('name', 'header_menu_sub_label_ar[' + (header_menu_clone_index + 1) + '][]').val('');
+            } else {
+                $(header_menu_sub_forms[header_menu_sub_index]).remove();
+            }
+        }
+        
+        $(new_clone_form).find('[name="header_menu_type[]"]').val('page');
+        $(new_clone_form).find('.menu-page-label .menu-page').show();
+        $(new_clone_form).find('.menu-page-label .menu-label').hide();
+        $(new_clone_form).find('[name="header_menu_page[]"]').val('');
+        $(new_clone_form).find('[name="header_menu_label[]"]').val('');
+        $(new_clone_form).find('[name="header_menu_label_ar[]"]').val('');
+
+        new_clone_form.insertAfter($(clone_header_menu_form));
+    }
+
+    function removeHeaderMenuForm(object) {
+        if (header_menu_clone > 0) {
+            var clone_header_menu_form = object.closest(".clone");
+            var header_menu_clone_index = parseInt($(clone_header_menu_form).attr('id').replace("header_menu_clone", ""));
+            $(clone_header_menu_form).remove();
+            var clone_header_menu_forms = $(".header-menu-clone");
+            for (var header_menu_index = 0; header_menu_index < clone_header_menu_forms.length; header_menu_index++) {
+                var clone_header_menu_index = parseInt($(clone_header_menu_forms[header_menu_index]).attr('id').replace("header_menu_clone", ""));
+                if (clone_header_menu_index > header_menu_clone_index) {
+                    var header_menu_sub_forms = $(clone_header_menu_forms[header_menu_index]).find(".header-menu-sub-clone");
+                    for (var header_menu_sub_index = 0; header_menu_sub_index < header_menu_sub_forms.length; header_menu_sub_index++) {
+                        $(header_menu_sub_forms[header_menu_sub_index]).attr('id', 'header_menu' + (clone_header_menu_index - 1) + '_sub_clone' + header_menu_sub_index);
+                        $(header_menu_sub_forms[header_menu_sub_index]).find('[name="header_menu_sub_type[' + clone_header_menu_index + '][]"]').attr('name', 'header_menu_sub_type[' + (clone_header_menu_index - 1) + '][]');
+                        $(header_menu_sub_forms[header_menu_sub_index]).find('[name="header_menu_sub_page[' + clone_header_menu_index + '][]"]').attr('name', 'header_menu_sub_page[' + (clone_header_menu_index - 1) + '][]');
+                        $(header_menu_sub_forms[header_menu_sub_index]).find('[name="header_menu_sub_label[' + clone_header_menu_index + '][]"]').attr('name', 'header_menu_sub_label[' + (clone_header_menu_index - 1) + '][]');
+                        $(header_menu_sub_forms[header_menu_sub_index]).find('[name="header_menu_sub_label_ar[' + clone_header_menu_index + '][]"]').attr('name', 'header_menu_sub_label_ar[' + (clone_header_menu_index - 1) + '][]');
+                    }
+                    $(clone_header_menu_forms[header_menu_index]).attr('id', 'header_menu_clone' + (clone_header_menu_index - 1));
+                    $(clone_header_menu_forms[header_menu_index]).find('[name="headermenusubincrement[]"]').attr('id', 'header_menu_sub_increment' + (loop_header_menu_clone_index - 1));
+                }
+            }
+            header_menu_clone--;
+            $('#header_menu_increment').val(header_menu_clone);
+        }
+    }
+
+    function addHeaderMenuSubForm(object) {
+        var clone_header_menu_sub_form = object.closest(".clone");
+        var clone_header_menu_form = $(clone_header_menu_sub_form).parent().closest(".clone");
+        var header_menu_index = $(clone_header_menu_form).attr('id').replace("header_menu_clone", "");
+        var header_menu_sub_clone = parseInt($(clone_header_menu_form).find('[name="headermenusubincrement[]"]').val());
+        header_menu_sub_clone++;
+        var new_clone_form = $(clone_header_menu_sub_form).clone(true);
+        new_clone_form.attr('id', 'header_menu' + header_menu_index + '_sub_clone' + header_menu_sub_clone);
+        $(clone_header_menu_form).find('[name="headermenusubincrement[]"]').val(header_menu_sub_clone);
+
+        $(new_clone_form).find('[name="header_menu_sub_type[' + header_menu_index + '][]"]').val('page');
+        $(new_clone_form).find('.menu-sub-page-label .menu-page').show();
+        $(new_clone_form).find('.menu-sub-page-label .menu-label').hide();
+        $(new_clone_form).find('[name="header_menu_sub_page[' + header_menu_index + '][]"]').val('');
+        $(new_clone_form).find('[name="header_menu_sub_label[' + header_menu_index + '][]"]').val('');
+        $(new_clone_form).find('[name="header_menu_sub_label_ar[' + header_menu_index + '][]"]').val('');
+
+        new_clone_form.insertAfter($(clone_header_menu_sub_form));
+    }
+    
+    function deleteHeaderMenuSubForm(object) {
+        var clone_header_menu_sub_form = object.closest(".clone");
+        var clone_header_menu_form = $(clone_header_menu_sub_form).parent().closest(".clone");
+        var clone_header_menu_index = parseInt($(clone_header_menu_form).attr('id').replace("header_menu_clone", ""));
+        var clone_header_menu_sub_index = parseInt($(clone_header_menu_sub_form).attr('id').replace("header_menu" + clone_header_menu_index + "_sub_clone", ""));
+        var header_menu_sub_clone = parseInt($(clone_header_menu_form).find('[name="headermenusubincrement[]"]').val());
+
+        if (header_menu_sub_clone > 0) {
+            $(clone_header_menu_sub_form).remove();
+
+            var header_menu_sub_forms = $(clone_header_menu_form).find(".header-menu-sub-clone");
+            for (var header_menu_sub_index = 0; header_menu_sub_index < header_menu_sub_forms.length; header_menu_sub_index++) {
+                var header_menu_sub_clone_index = parseInt($(header_menu_sub_forms[header_menu_sub_index]).attr('id').replace("header_menu" + clone_header_menu_index + "_sub_clone", ""));
+                if (header_menu_sub_clone_index >= clone_header_menu_sub_index) {
+                    $(header_menu_sub_forms[header_menu_sub_index]).attr('id', 'header_menu' + clone_header_menu_index + '_sub_clone' + (header_menu_sub_clone_index - 1));
+                }
+            }
+            header_menu_sub_clone--;
+            $(clone_header_menu_form).find('[name="headermenusubincrement[]"]').val(header_menu_sub_clone);
+        }
+    }
+
+    var footer_menu_section_clone = 0;
+    function addFooterMenuSectionForm(object) {
+        footer_menu_section_clone++;
+        var clone_footer_menu_section_form = object.closest(".clone");
+        var footer_menu_section_clone_index = parseInt($(clone_footer_menu_section_form).attr('id').replace("footer_menu_section_clone", ""));
+        $('#footer_menu_section_increment').val(footer_menu_section_clone);
+        var new_clone_form = $(clone_footer_menu_section_form).clone(true);
+        new_clone_form.attr('id', 'footer_menu_section_clone' + (footer_menu_section_clone_index  + 1));
+        new_clone_form.find('[name="footermenuincrement[]"]').attr('id', 'footer_menu_increment' + (footer_menu_section_clone_index + 1));
+        var clone_footer_menu_section_forms = $(".footer-menu-section-clone");
+        for (var footer_menu_section_index = 0; footer_menu_section_index < clone_footer_menu_section_forms.length; footer_menu_section_index++) {
+            var loop_footer_menu_section_clone_index = parseInt($(clone_footer_menu_section_forms[footer_menu_section_index]).attr('id').replace("footer_menu_section_clone", ""));
+            if (loop_footer_menu_section_clone_index > footer_menu_section_clone_index) {
+                var footer_menu_forms = $(clone_footer_menu_section_forms[footer_menu_section_index]).find(".footer-menu-clone");
+                for (var footer_menu_index = 0; footer_menu_index < footer_menu_forms.length; footer_menu_index++) {
+                    $(footer_menu_forms[footer_menu_index]).attr('id', 'footer_menu' + (loop_footer_menu_section_clone_index + 1) + '_clone' + footer_menu_index);
+                    $(footer_menu_forms[footer_menu_index]).find('[name="footer_menu_type[' + loop_footer_menu_section_clone_index + '][]"]').attr('name', 'footer_menu_type[' + (loop_footer_menu_section_clone_index + 1) + '][]');
+                    $(footer_menu_forms[footer_menu_index]).find('[name="footer_menu_page[' + loop_footer_menu_section_clone_index + '][]"]').attr('name', 'footer_menu_page[' + (loop_footer_menu_section_clone_index + 1) + '][]');
+                    $(footer_menu_forms[footer_menu_index]).find('[name="footer_menu_label[' + loop_footer_menu_section_clone_index + '][]"]').attr('name', 'footer_menu_label[' + (loop_footer_menu_section_clone_index + 1) + '][]');
+                    $(footer_menu_forms[footer_menu_index]).find('[name="footer_menu_label_ar[' + loop_footer_menu_section_clone_index + '][]"]').attr('name', 'footer_menu_label_ar[' + (loop_footer_menu_section_clone_index + 1) + '][]');
+                    $(footer_menu_forms[footer_menu_index]).find('[name="footermenusubincrement[' + loop_footer_menu_section_clone_index + '][]"]').attr('name', 'footermenusubincrement[' + (loop_footer_menu_section_clone_index + 1) + '][]').attr('id', 'footer_menu' + (loop_footer_menu_section_clone_index + 1) + '_sub_increment' + footer_menu_index);
+                    
+                    var footer_menu_sub_forms = $(footer_menu_forms[footer_menu_index]).find(".footer-menu-sub-clone");
+                    for (var footer_menu_sub_index = 0; footer_menu_sub_index < footer_menu_sub_forms.length; footer_menu_sub_index++) {
+                        $(footer_menu_sub_forms[footer_menu_sub_index]).attr('id', 'footer_menu' + (loop_footer_menu_section_clone_index + 1) + '_sub' + footer_menu_index + '_clone' + footer_menu_sub_index);
+                        $(footer_menu_sub_forms[footer_menu_sub_index]).find('[name="footer_menu_sub_type[' + loop_footer_menu_section_clone_index + '][' + footer_menu_index + '][]"]').attr('name', 'footer_menu_sub_type[' + (loop_footer_menu_section_clone_index + 1) + '][' + footer_menu_index + '][]');
+                        $(footer_menu_sub_forms[footer_menu_sub_index]).find('[name="footer_menu_sub_page[' + loop_footer_menu_section_clone_index + '][' + footer_menu_index + '][]"]').attr('name', 'footer_menu_sub_page[' + (loop_footer_menu_section_clone_index + 1) + '][' + footer_menu_index + '][]');
+                        $(footer_menu_sub_forms[footer_menu_sub_index]).find('[name="footer_menu_sub_label[' + loop_footer_menu_section_clone_index + '][' + footer_menu_index + '][]"]').attr('name', 'footer_menu_sub_label[' + (loop_footer_menu_section_clone_index + 1) + '][' + footer_menu_index + '][]');
+                        $(footer_menu_sub_forms[footer_menu_sub_index]).find('[name="footer_menu_sub_label_ar[' + loop_footer_menu_section_clone_index + '][' + footer_menu_index + '][]"]').attr('name', 'footer_menu_sub_label_ar[' + (loop_footer_menu_section_clone_index + 1) + '][' + footer_menu_index + '][]');
+                    }
+                }
+                $(clone_footer_menu_section_forms[footer_menu_section_index]).attr('id', 'footer_menu_section_clone' + (loop_footer_menu_section_clone_index + 1));
+                $(clone_footer_menu_section_forms[footer_menu_section_index]).find('[name="footermenuincrement[]"]').attr('id', 'footer_menu_increment' + (loop_footer_menu_section_clone_index + 1));
+            }
+        }
+        var footer_menu_forms = $(new_clone_form).find('.footer-menu-clone');
+        for (var footer_menu_index = 0; footer_menu_index < footer_menu_forms.length; footer_menu_index++) {
+            if (footer_menu_index == 0) {
+                $(footer_menu_forms[footer_menu_index]).attr('id', 'footer_menu' + (footer_menu_section_clone_index  + 1) + '_clone0');
+                $(footer_menu_forms[footer_menu_index]).find('[name="footer_menu_type[' + footer_menu_section_clone_index + '][]"]').attr('name', 'footer_menu_type[' + (footer_menu_section_clone_index + 1) + '][]').val('page');
+                $(footer_menu_forms[footer_menu_index]).find('.menu-page-label .menu-page').show();
+                $(footer_menu_forms[footer_menu_index]).find('.menu-page-label .menu-label').hide();
+                $(footer_menu_forms[footer_menu_index]).find('[name="footer_menu_page[' + footer_menu_section_clone_index + '][]"]').attr('name', 'footer_menu_page[' + (footer_menu_section_clone_index + 1) + '][]').val('');
+                $(footer_menu_forms[footer_menu_index]).find('[name="footer_menu_label[' + footer_menu_section_clone_index + '][]"]').attr('name', 'footer_menu_label[' + (footer_menu_section_clone_index + 1) + '][]').val('');
+                $(footer_menu_forms[footer_menu_index]).find('[name="footer_menu_label_ar[' + footer_menu_section_clone_index + '][]"]').attr('name', 'footer_menu_label_ar[' + (footer_menu_section_clone_index + 1) + '][]').val('');
+                $(footer_menu_forms[footer_menu_index]).find('[name="footermenusubincrement[' + footer_menu_section_clone_index + '][]"]').attr('name', 'footermenusubincrement[' + (footer_menu_section_clone_index + 1) + '][]').attr('id', 'footer_menu' + (footer_menu_section_clone_index + 1) + '_sub_increment' + footer_menu_index);
+                
+                var footer_menu_sub_forms = $(footer_menu_forms[footer_menu_index]).find(".footer-menu-sub-clone");
+                for (var footer_menu_sub_index = 0; footer_menu_sub_index < footer_menu_sub_forms.length; footer_menu_sub_index++) {
+                    if (footer_menu_sub_index == 0) {
+                        $(footer_menu_sub_forms[footer_menu_sub_index]).attr('id', 'footer_menu' + (footer_menu_section_clone_index + 1) + '_sub0_clone0');
+                        $(footer_menu_sub_forms[footer_menu_sub_index]).find('[name="footer_menu_sub_type[' + footer_menu_section_clone_index + '][' + footer_menu_index + '][]"]').attr('name', 'footer_menu_sub_type[' + (footer_menu_section_clone_index + 1) + '][' + footer_menu_index + '][]').val('page');
+                        $(footer_menu_sub_forms[footer_menu_sub_index]).find('.menu-sub-page-label .menu-page').show();
+                        $(footer_menu_sub_forms[footer_menu_sub_index]).find('.menu-sub-page-label .menu-label').hide();
+                        $(footer_menu_sub_forms[footer_menu_sub_index]).find('[name="footer_menu_sub_page[' + footer_menu_section_clone_index + '][' + footer_menu_index + '][]"]').attr('name', 'footer_menu_sub_page[' + (footer_menu_section_clone_index + 1) + '][' + footer_menu_index + '][]').val('');
+                        $(footer_menu_sub_forms[footer_menu_sub_index]).find('[name="footer_menu_sub_label[' + footer_menu_section_clone_index + '][' + footer_menu_index + '][]"]').attr('name', 'footer_menu_sub_label[' + (footer_menu_section_clone_index + 1) + '][' + footer_menu_index + '][]').val('');
+                        $(footer_menu_sub_forms[footer_menu_sub_index]).find('[name="footer_menu_sub_label_ar[' + footer_menu_section_clone_index + '][' + footer_menu_index + '][]"]').attr('name', 'footer_menu_sub_label_ar[' + (footer_menu_section_clone_index + 1) + '][' + footer_menu_index + '][]').val('');
+                    } else {
+                        $(footer_menu_sub_forms[footer_menu_sub_index]).remove();
+                    }
+                }
+            } else {
+                $(footer_menu_forms[footer_menu_index]).remove();
+            }
+        }
+
+        new_clone_form.insertAfter($(clone_footer_menu_section_form));
+    }
+
+    function removeFooterMenuSectionForm(object) {
+        if (footer_menu_section_clone > 0) {
+            var clone_footer_menu_section_form = object.closest(".clone");
+            var footer_menu_section_clone_index = parseInt($(clone_footer_menu_section_form).attr('id').replace("footer_menu_section_clone", ""));
+            $(clone_footer_menu_section_form).remove();
+            var clone_footer_menu_section_forms = $(".footer-menu-section-clone");
+            for (var footer_menu_section_index = 0; footer_menu_section_index < clone_footer_menu_section_forms.length; footer_menu_section_index++) {
+                var clone_footer_menu_section_index = parseInt($(clone_footer_menu_section_forms[footer_menu_section_index]).attr('id').replace("footer_menu_section_clone", ""));
+                if (clone_footer_menu_section_index > footer_menu_section_clone_index) {
+                    var footer_menu_forms = $(clone_footer_menu_section_forms[footer_menu_section_index]).find(".footer-menu-clone");
+                    for (var footer_menu_index = 0; footer_menu_index < footer_menu_forms.length; footer_menu_index++) {
+                        $(footer_menu_forms[footer_menu_index]).attr('id', 'footer_menu' + (clone_footer_menu_section_index - 1) + '_clone' + footer_menu_index);
+                        $(footer_menu_forms[footer_menu_index]).find('[name="footer_menu_type[' + clone_footer_menu_section_index + '][]"]').attr('name', 'footer_menu_type[' + (clone_footer_menu_section_index - 1) + '][]');
+                        $(footer_menu_forms[footer_menu_index]).find('[name="footer_menu_page[' + clone_footer_menu_section_index + '][]"]').attr('name', 'footer_menu_page[' + (clone_footer_menu_section_index - 1) + '][]');
+                        $(footer_menu_forms[footer_menu_index]).find('[name="footer_menu_label[' + clone_footer_menu_section_index + '][]"]').attr('name', 'footer_menu_label[' + (clone_footer_menu_section_index - 1) + '][]');
+                        $(footer_menu_forms[footer_menu_index]).find('[name="footer_menu_label_ar[' + clone_footer_menu_section_index + '][]"]').attr('name', 'footer_menu_label_ar[' + (clone_footer_menu_section_index - 1) + '][]');
+                        $(footer_menu_forms[footer_menu_index]).find('[name="footermenusubincrement[' + clone_footer_menu_section_index + '][]"]').attr('name', 'footermenusubincrement[' + (clone_footer_menu_section_index - 1) + '][]').attr('id', 'footer_menu' + (clone_footer_menu_section_index - 1) + '_sub_increment' + footer_menu_index);
+                        
+                        var footer_menu_sub_forms = $(footer_menu_forms[footer_menu_index]).find(".footer-menu-sub-clone");
+                        for (var footer_menu_sub_index = 0; footer_menu_sub_index < footer_menu_sub_forms.length; footer_menu_sub_index++) {
+                            $(footer_menu_sub_forms[footer_menu_sub_index]).attr('id', 'footer_menu' + (clone_footer_menu_section_index - 1) + '_sub' + footer_menu_index + '_clone' + footer_menu_sub_index);
+                            $(footer_menu_sub_forms[footer_menu_sub_index]).find('[name="footer_menu_sub_type[' + clone_footer_menu_section_index + '][' + footer_menu_index + '][]"]').attr('name', 'footer_menu_sub_type[' + (clone_footer_menu_section_index - 1) + '][' + footer_menu_index + '][]');
+                            $(footer_menu_sub_forms[footer_menu_sub_index]).find('[name="footer_menu_sub_page[' + clone_footer_menu_section_index + '][' + footer_menu_index + '][]"]').attr('name', 'footer_menu_sub_page[' + (clone_footer_menu_section_index - 1) + '][' + footer_menu_index + '][]');
+                            $(footer_menu_sub_forms[footer_menu_sub_index]).find('[name="footer_menu_sub_label[' + clone_footer_menu_section_index + '][' + footer_menu_index + '][]"]').attr('name', 'footer_menu_sub_label[' + (clone_footer_menu_section_index - 1) + '][' + footer_menu_index + '][]');
+                            $(footer_menu_sub_forms[footer_menu_sub_index]).find('[name="footer_menu_sub_label_ar[' + clone_footer_menu_section_index + '][' + footer_menu_index + '][]"]').attr('name', 'footer_menu_sub_label_ar[' + (clone_footer_menu_section_index - 1) + '][' + footer_menu_index + '][]');
+                        }
+                    }
+                    $(clone_footer_menu_section_forms[footer_menu_section_index]).attr('id', 'footer_menu_section_clone' + (clone_footer_menu_section_index - 1));
+                    $(clone_footer_menu_section_forms[footer_menu_section_index]).find('[name="footermenuincrement[]"]').attr('id', 'footer_menu_increment' + (clone_footer_menu_section_index - 1));
+                }
+            }
+            footer_menu_section_clone--;
+            $('#footer_menu_section_increment').val(footer_menu_section_clone);
+        }
+    }
+
+    function addFooterMenuForm(object) {
+        var clone_footer_menu_form = object.closest(".clone");
+        var clone_footer_menu_section_form = $(clone_footer_menu_form).parent().closest(".clone");
+        var footer_menu_section_index = $(clone_footer_menu_section_form).attr('id').replace("footer_menu_section_clone", "");
+        var footer_menu_clone = parseInt($(clone_footer_menu_section_form).find('[name="footermenuincrement[]"]').val());
+        $(clone_footer_menu_section_form).find('[name="footermenuincrement[]"]').val(footer_menu_clone + 1);
+        var footer_menu_clone_index = parseInt($(clone_footer_menu_form).attr('id').replace("footer_menu" + footer_menu_section_index + "_clone", ""));
+        var new_clone_form = $(clone_footer_menu_form).clone(true);
+        var clone_footer_menu_forms = $(".footer-menu-clone");
+        for (var footer_menu_index = 0; footer_menu_index < clone_footer_menu_forms.length; footer_menu_index++) {
+            var loop_footer_menu_clone_index = parseInt($(clone_footer_menu_forms[footer_menu_index]).attr('id').replace("footer_menu" + footer_menu_section_index + "_clone", ""));
+            if (loop_footer_menu_clone_index > footer_menu_clone_index) {
+                var footer_menu_sub_forms = $(clone_footer_menu_forms[footer_menu_index]).find(".footer-menu-sub-clone");
+                for (var footer_menu_sub_index = 0; footer_menu_sub_index < footer_menu_sub_forms.length; footer_menu_sub_index++) {
+                    $(footer_menu_sub_forms[footer_menu_sub_index]).attr('id', 'footer_menu' + footer_menu_section_index + '_sub' + (loop_footer_menu_clone_index + 1) + '_clone' + footer_menu_sub_index);
+                    $(footer_menu_sub_forms[footer_menu_sub_index]).find('[name="footer_menu_sub_type[' + footer_menu_section_index + '][' + loop_footer_menu_clone_index + '][]"]').attr('name', 'footer_menu_sub_type[' + footer_menu_section_index + '][' + (loop_footer_menu_clone_index + 1) + '][]').val('');
+                    $(footer_menu_sub_forms[footer_menu_sub_index]).find('[name="footer_menu_sub_page[' + footer_menu_section_index + '][' + loop_footer_menu_clone_index + '][]"]').attr('name', 'footer_menu_sub_page[' + footer_menu_section_index + '][' + (loop_footer_menu_clone_index + 1) + '][]').val('');
+                    $(footer_menu_sub_forms[footer_menu_sub_index]).find('[name="footer_menu_sub_label[' + footer_menu_section_index + '][' + loop_footer_menu_clone_index + '][]"]').attr('name', 'footer_menu_sub_label[' + footer_menu_section_index + '][' + (loop_footer_menu_clone_index + 1) + '][]').val('');
+                    $(footer_menu_sub_forms[footer_menu_sub_index]).find('[name="footer_menu_sub_label_ar[' + footer_menu_section_index + '][' + loop_footer_menu_clone_index + '][]"]').attr('name', 'footer_menu_sub_label_ar[' + footer_menu_section_index + '][' + (loop_footer_menu_clone_index + 1) + '][]').val('');
+                }
+                $(clone_footer_menu_forms[footer_menu_index]).attr('id', 'footer_menu' + footer_menu_section_index + '_clone' + (loop_footer_menu_clone_index + 1));
+                $(clone_footer_menu_forms[footer_menu_index]).find('[name="footermenusubincrement[' + footer_menu_section_index + '][]"]').attr('id', 'footer_menu' + footer_menu_section_index + '_sub_increment' + (loop_footer_menu_clone_index + 1));
+            }
+        }
+        var footer_menu_sub_forms = $(new_clone_form).find('.footer-menu-sub-clone');
+        for (var footer_menu_sub_index = 0; footer_menu_sub_index < footer_menu_sub_forms.length; footer_menu_sub_index++) {
+            if (footer_menu_sub_index == 0) {
+                $(footer_menu_sub_forms[footer_menu_sub_index]).attr('id', 'footer_menu' + footer_menu_section_index + '_sub' + (footer_menu_sub_index + 1) + '_clone0');
+                $(footer_menu_sub_forms[footer_menu_sub_index]).find('[name="footer_menu_sub_type[' + footer_menu_section_index + '][' + (footer_menu_clone_index + 1) + '][]"]').val('page');
+                $(footer_menu_sub_forms[footer_menu_sub_index]).find('.menu-sub-page-label .menu-page').show();
+                $(footer_menu_sub_forms[footer_menu_sub_index]).find('.menu-sub-page-label .menu-label').hide();
+                $(footer_menu_sub_forms[footer_menu_sub_index]).find('[name="footer_menu_sub_page[' + footer_menu_section_index + '][' + (footer_menu_clone_index + 1) + '][]"]').val('');
+                $(footer_menu_sub_forms[footer_menu_sub_index]).find('[name="footer_menu_sub_label[' + footer_menu_section_index + '][' + (footer_menu_clone_index + 1) + '][]"]').val('');
+                $(footer_menu_sub_forms[footer_menu_sub_index]).find('[name="footer_menu_sub_label_ar[' + footer_menu_section_index + '][' + (footer_menu_clone_index + 1) + '][]"]').val('');
+            } else {
+                $(footer_menu_sub_forms[footer_menu_sub_index]).remove();
+            }
+        }
+        
+        $(new_clone_form).attr('id', 'footer_menu' + footer_menu_section_index + '_clone' + (footer_menu_clone_index + 1));
+        $(new_clone_form).find('[name="footer_menu_type[' + footer_menu_section_index + '][]"]').val('page');
+        $(new_clone_form).find('.menu-page-label .menu-page').show();
+        $(new_clone_form).find('.menu-page-label .menu-label').hide();
+        $(new_clone_form).find('[name="footer_menu_page[' + footer_menu_section_index + '][]"]').val('');
+        $(new_clone_form).find('[name="footer_menu_label[' + footer_menu_section_index + '][]"]').val('');
+        $(new_clone_form).find('[name="footer_menu_label_ar[' + footer_menu_section_index + '][]"]').val('');
+        $(new_clone_form).find('[name="footermenusubincrement[' + footer_menu_section_index + '][]"]').attr('id', 'footer_menu' + footer_menu_section_index + '_sub_increment' + (footer_menu_clone_index + 1)).val(0);
+
+        new_clone_form.insertAfter($(clone_footer_menu_form));
+    }
+
+    function removeFooterMenuForm(object) {
+        var clone_footer_menu_form = object.closest(".clone");
+        var clone_footer_menu_section_form = $(clone_footer_menu_form).parent().closest(".clone");
+        var footer_menu_section_index = $(clone_footer_menu_section_form).attr('id').replace("footer_menu_section_clone", "");
+        var footer_menu_clone_index = parseInt($(clone_footer_menu_form).attr('id').replace("footer_menu" + footer_menu_section_index + "_clone", ""));
+        var footer_menu_clone = parseInt($(clone_footer_menu_section_form).find('[name="footermenuincrement[]"]').val());
+        if (footer_menu_section_clone > 0) {
+            $(clone_footer_menu_form).remove();
+            var clone_footer_menu_forms = $(".footer-menu-clone");
+            for (var footer_menu_index = 0; footer_menu_index < clone_footer_menu_forms.length; footer_menu_index++) {
+                var footer_menu_clone_index = parseInt($(clone_footer_menu_forms[footer_menu_index]).attr('id').replace("footer_menu" + footer_menu_section_index + "_clone", ""));
+                var footer_menu_sub_forms = $(clone_footer_menu_forms[footer_menu_index]).find(".footer-menu-sub-clone");
+                for (var footer_menu_sub_index = 0; footer_menu_sub_index < footer_menu_sub_forms.length; footer_menu_sub_index++) {
+                    $(footer_menu_sub_forms[footer_menu_sub_index]).attr('id', 'footer_menu' + footer_menu_section_index + '_sub' + (footer_menu_clone_index - 1) + '_clone' + footer_menu_sub_index);
+                    $(footer_menu_sub_forms[footer_menu_sub_index]).find('[name="footer_menu_sub_type[' + footer_menu_section_index + '][' + footer_menu_clone_index + '][]"]').attr('name', 'footer_menu_sub_type[' + footer_menu_section_index + '][' + (footer_menu_clone_index - 1) + '][]').val('');
+                    $(footer_menu_sub_forms[footer_menu_sub_index]).find('[name="footer_menu_sub_page[' + footer_menu_section_index + '][' + footer_menu_clone_index + '][]"]').attr('name', 'footer_menu_sub_page[' + footer_menu_section_index + '][' + (footer_menu_clone_index - 1) + '][]').val('');
+                    $(footer_menu_sub_forms[footer_menu_sub_index]).find('[name="footer_menu_sub_label[' + footer_menu_section_index + '][' + footer_menu_clone_index + '][]"]').attr('name', 'footer_menu_sub_label[' + footer_menu_section_index + '][' + (footer_menu_clone_index - 1) + '][]').val('');
+                    $(footer_menu_sub_forms[footer_menu_sub_index]).find('[name="footer_menu_sub_label_ar[' + footer_menu_section_index + '][' + footer_menu_clone_index + '][]"]').attr('name', 'footer_menu_sub_label_ar[' + footer_menu_section_index + '][' + (footer_menu_clone_index - 1) + '][]').val('');
+                }
+                $(clone_footer_menu_forms[footer_menu_index]).attr('id', 'footer_menu' + footer_menu_section_index + '_clone' + (footer_menu_clone_index - 1));
+                $(clone_footer_menu_forms[footer_menu_index]).find('[name="footermenusubincrement[' + footer_menu_section_index + '][]"]').attr('id', 'footer_menu' + footer_menu_section_index + '_sub_increment' + (footer_menu_clone_index - 1));
+            }
+            footer_menu_clone--;
+            $(clone_footer_menu_section_form).find('[name="footermenuincrement[]"]').val(footer_menu_clone);
+        }
+    }
+
+    function addFooterMenuSubForm(object) {
+        var clone_footer_menu_sub_form = object.closest(".clone");
+        var clone_footer_menu_form = $(clone_footer_menu_sub_form).parent().closest(".clone");
+        var clone_footer_menu_section_form = $(clone_footer_menu_form).parent().closest(".clone");
+        var footer_menu_section_index = $(clone_footer_menu_section_form).attr('id').replace("footer_menu_section_clone", "");
+        var footer_menu_index = $(clone_footer_menu_form).attr('id').replace("footer_menu" + footer_menu_section_index + "_clone", "");
+        var footer_menu_sub_clone = parseInt($(clone_footer_menu_form).find('[name="footermenusubincrement[' + footer_menu_section_index + '][]"]').val());
+        footer_menu_sub_clone++;
+        var new_clone_form = $(clone_footer_menu_sub_form).clone(true);
+        new_clone_form.attr('id', 'footer_menu' + footer_menu_section_index + '_sub' + footer_menu_index + '_clone' + footer_menu_sub_clone);
+        $(clone_footer_menu_form).find('[name="footermenusubincrement[' + footer_menu_section_index + '][]"]').val(footer_menu_sub_clone);
+
+        $(new_clone_form).find('[name="footer_menu_sub_type[' + footer_menu_section_index + '][' + footer_menu_index + '][]"]').val('page');
+        $(new_clone_form).find('.menu-sub-page-label .menu-page').show();
+        $(new_clone_form).find('.menu-sub-page-label .menu-label').hide();
+        $(new_clone_form).find('[name="footer_menu_sub_page[' + footer_menu_section_index + '][' + footer_menu_index + '][]"]').val('');
+        $(new_clone_form).find('[name="footer_menu_sub_label[' + footer_menu_section_index + '][' + footer_menu_index + '][]"]').val('');
+        $(new_clone_form).find('[name="footer_menu_sub_label_ar[' + footer_menu_section_index + '][' + footer_menu_index + '][]"]').val('');
+
+        new_clone_form.insertAfter($(clone_footer_menu_sub_form));
+    }
+    
+    function deleteFooterMenuSubForm(object) {
+        var clone_footer_menu_sub_form = object.closest(".clone");
+        var clone_footer_menu_form = $(clone_footer_menu_sub_form).parent().closest(".clone");
+        var clone_footer_menu_section_form = $(clone_footer_menu_form).parent().closest(".clone");
+        var footer_menu_section_index = $(clone_footer_menu_section_form).attr('id').replace("footer_menu_section_clone", "");
+        var clone_footer_menu_index = parseInt($(clone_footer_menu_form).attr('id').replace("footer_menu" + footer_menu_section_index + "_clone", ""));
+        var clone_footer_menu_sub_index = parseInt($(clone_footer_menu_sub_form).attr('id').replace("footer_menu" + footer_menu_section_index + "_sub" + clone_footer_menu_index + "_clone", ""));
+        var footer_menu_sub_clone = parseInt($(clone_footer_menu_form).find('[name="footermenusubincrement[' + footer_menu_section_index + '][]"]').val());
+
+        if (footer_menu_sub_clone > 0) {
+            $(clone_footer_menu_sub_form).remove();
+
+            var footer_menu_sub_forms = $(clone_footer_menu_form).find(".footer-menu-sub-clone");
+            for (var footer_menu_sub_index = 0; footer_menu_sub_index < footer_menu_sub_forms.length; footer_menu_sub_index++) {
+                var footer_menu_sub_clone_index = parseInt($(footer_menu_sub_forms[footer_menu_sub_index]).attr('id').replace("footer_menu" + footer_menu_section_index + "_sub" + clone_footer_menu_index + "_clone", ""));
+                if (footer_menu_sub_clone_index >= clone_footer_menu_sub_index) {
+                    $(footer_menu_sub_forms[footer_menu_sub_index]).attr('id', 'footer_menu' + footer_menu_section_index + '_sub' + clone_footer_menu_index + '_clone' + (footer_menu_sub_clone_index - 1));
+                }
+            }
+            footer_menu_sub_clone--;
+            $(clone_footer_menu_form).find('[name="footermenusubincrement[' + footer_menu_section_index + '][]"]').val(footer_menu_sub_clone);
+        }
+    }
+    
+    function changeHeaderFooterMenuType(object) {
+        if (object.val() == 'page') {
+            object.closest('.row').find('.menu-page').show();
+            object.closest('.row').find('.menu-label').hide();
+        } else {
+            object.closest('.row').find('.menu-page').hide();
+            object.closest('.row').find('.menu-label').show();
         }
     }
 
@@ -1269,6 +1625,13 @@
         @else
             $('.english').hide();
         @endif
+
+        if ($('.page-body-wrapper .content-wrapper').length) {
+            $('.page-body-wrapper .content-wrapper .page-content').css('margin-top', ($('.page-body-wrapper .content-wrapper .page-header').outerHeight() + 15) + 'px');
+            $('.page-body-wrapper .content-wrapper .page-header').onresize = function() {
+                $('.page-body-wrapper .content-wrapper .page-content').css('margin-top', ($('.page-body-wrapper .content-wrapper .page-header').outerHeight() + 15) + 'px');                
+            };
+        }
     });
 
     function DoBulkAction() {

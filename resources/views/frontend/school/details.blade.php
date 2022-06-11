@@ -94,9 +94,9 @@
                                         <tbody>
                                             <tr>
                                                 <th class="border-none" scope="row">
-                                                    {{ucfirst($school->name ? (app()->getLocale() == 'en' ? $school->name->name : $school->name->name_ar) : '-')}}{{app()->getLocale() == 'en' ? ($school->branch_name ? ' - ' . $school->branch_name : '') : ($school->branch_name_ar ? ' - ' . $school->branch_name_ar : '')}}<br>
+                                                    <p>{{ucfirst($school->name ? (app()->getLocale() == 'en' ? $school->name->name : $school->name->name_ar) : '-')}}{{app()->getLocale() == 'en' ? ($school->branch_name ? ' - ' . $school->branch_name : '') : ($school->branch_name_ar ? ' - ' . $school->branch_name_ar : '')}}</p>
                                                     <span class="city">{{$school->city ? (app()->getLocale() == 'en' ? $school->city->name : $school->city->name_ar) : '-'}},</span>
-                                                    <span class="country">{{$school->country ? (app()->getLocale() == 'en' ? $school->country->name : $school->country->name_ar) : '-'}}</span><br>
+                                                    <p><span class="country">{{$school->country ? (app()->getLocale() == 'en' ? $school->country->name : $school->country->name_ar) : '-'}}</span></p>
                                                     <ul class="custom">
                                                         @for($i = 1; $i <=5; $i ++)
                                                             <li data-toggle="modal" data-target="#myModal" class="dynamic_starli" onclick="save_rating({{$i}})" onmouseover="highlightStar(this);" onClick="addRating(this);" id="rating{{$i}}">★</li>
@@ -554,7 +554,7 @@
                                     <div class="school-content">
                                         <div class="school-information">
                                             <a href="{{route('school.details', $school->id)}}">
-                                                <div class="school-name-branch">{{ $school_branch->name ? (app()->getLocale() == 'en' ? $school_branch->name->name : $school_branch->name->name_ar) : '' }} / {{ app()->getLocale() == 'en' ? $school_branch->branch_name : $school_branch->branch_name_ar }}</div>
+                                                <div class="school-name-branch">{{ $school_branch->name ? (app()->getLocale() == 'en' ? $school_branch->name->name : $school_branch->name->name_ar) : '' }} / {{ app()->getLocale() == 'en' ? ($school_branch->branch_name ?? '') : ($school_branch->branch_name_ar ?? '') }}</div>
                                                 <div class="school-city">{{ $school_branch->city ? (app()->getLocale() == 'en' ? $school_branch->city->name : $school_branch->city->name_ar) : '' }}</div>
                                                 <div class="school-country">{{ $school_branch->country ? (app()->getLocale() == 'en' ? $school_branch->country->name : $school_branch->country->name_ar) : '' }}</div>
                                             </a>

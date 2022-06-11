@@ -125,7 +125,7 @@ class CourseControllerFrontend extends Controller
             return (new SuperAdminEditUserCourse())->calculatorCourse($r);
         }
 
-        $select = __('SuperAdmin/backend.select_option');
+        $select = __('Frontend.select_option');
 
         $data['is_true'] = false;
         $data['success'] = true;
@@ -135,7 +135,7 @@ class CourseControllerFrontend extends Controller
         $data['previous_url'] = $school_id = end($explode);
 
         if ($r->type == 'requested_for_under_age') {
-            $programs = Course::where('school_id', $school_id)->where('deleted', false)
+            $programs = Course::where('school_id', $school_id)->where('display', true)->where('deleted', false)
                 ->where('study_mode', 'LIKE', '%' . $r->study_mode . '%')->get();
             $course_unique_ids  = [];
             foreach ($programs as $program) {
@@ -147,7 +147,7 @@ class CourseControllerFrontend extends Controller
             $programs = collect($programs)->unique('course_unique_id')->values()->all();
             $option = "<option value='' selected>$select</option>";
             foreach ($programs as $program) {
-                $program_name = $program->course->program_name;
+                $program_name = app()->getLocale() == 'en' ? $program->course->program_name : $program->course->program_name_ar;
                 $option .= "<option value=$program->course_unique_id data-id=$program->unique_id>$program_name</option>";
             }
 
@@ -388,19 +388,24 @@ class CourseControllerFrontend extends Controller
             $select = __('SuperAdmin/backend.select');
             $accommodation_options = "<option value='' selected>$select</option>";
             foreach ($accommodations as $accommodation) {
-                $accommodation_options .= "<option value=".$accommodation->unique_id.">".$accommodation->type."</option>";
+                $accommodation_type = app()->getLocale() == 'en' ? $accommodation->type : $accommodation->type_ar;
+                $accommodation_options .= "<option value=".$accommodation->unique_id.">".$accommodation_type."</option>";
             }
             $data['accommodations'] = $accommodation_options;
             $data['accommodations_visible'] = count($accommodations) ? true : false;
+            
+            $data['empty_option'] = "<option value='' selected>$select</option>";
 
             $data['airports'] = "<option value='' selected>$select</option>";
             $data['airports_visible'] = false;
             $course_airports = CourseAirport::where('course_unique_id', \Session::get('course_unique_id'))->with("fees")->get();
             if ($course_airports) {
-                $airports_data = collect($course_airports)->unique('service_provider')->values()->all();
+                if (app()->getLocale() == 'en') $airports_data = collect($course_airports)->unique('service_provider')->values()->all();
+                else $airports_data = collect($course_airports)->unique('service_provider_ar')->values()->all();
                 if (count($airports_data)) $data['airports_visible'] = true;
                 foreach ($airports_data as $airport_data) {
-                    $data['airports'] .= "<option value='" . $airport_data->service_provider . "'>" . $airport_data->service_provider . "</option>";
+                    $airport_service_provider = app()->getLocale() == 'en' ? $airport_data->service_provider : $airport_data->service_provider_ar;
+                    $data['airports'] .= "<option value='" . $airport_service_provider . "'>" . $airport_service_provider . "</option>";
                 }
             }
 
@@ -408,10 +413,12 @@ class CourseControllerFrontend extends Controller
             $data['medicals_visible'] = false;
             $course_medicals = CourseMedical::where('course_unique_id', \Session::get('course_unique_id'))->with("fees")->get();
             if ($course_medicals) {
-                $medicals_data = collect($course_medicals)->unique('company_name')->values()->all();
+                if (app()->getLocale() == 'en') $medicals_data = collect($course_medicals)->unique('company_name')->values()->all();
+                else $medicals_data = collect($course_medicals)->unique('company_name_ar')->values()->all();
                 if (count($medicals_data)) $data['medicals_visible'] = true;
                 foreach ($medicals_data as $medical_data) {
-                    $data['medicals'] .= "<option value='".$medical_data->company_name."'>".$medical_data->company_name."</option>";
+                    $medical_company_name = app()->getLocale() == 'en' ? $medical_data->company_name : $medical_data->company_name_ar;
+                    $data['medicals'] .= "<option value='".$medical_company_name."'>".$medical_company_name."</option>";
                 }
             }
 
@@ -656,18 +663,29 @@ class CourseControllerFrontend extends Controller
      */
     public function calculateAccommodation(Request $request)
     {
-        $accommodation = CourseAccommodation::where('course_unique_id', \Session::get('course_unique_id'))
-            ->whereType($request->accom_type)
-            ->whereRoomType($request->room_type)
-            ->whereMeal($request->meal_type)
-            ->where('start_week', '<=', (int)$request->duration)
+        $accommodation_query = CourseAccommodation::where('course_unique_id', \Session::get('course_unique_id'));
+        if (app()->getLocale() == 'en') {
+            $accommodation_query->whereType($request->accom_type);
+        } else {
+            $accommodation_query->whereTypeAr($request->accom_type);
+        }
+        if (app()->getLocale() == 'en') {
+            $accommodation_query->whereRoomType($request->room_type);
+        } else {
+            $accommodation_query->whereRoomTypeAr($request->room_type);
+        }
+        if (app()->getLocale() == 'en') {
+            $accommodation_query->whereMeal($request->meal_type);
+        } else {
+            $accommodation_query->whereMealAr($request->meal_type);
+        }
+        $accommodation = $accommodation_query->where('start_week', '<=', (int)$request->duration)
             ->where('end_week', '>=', (int)$request->duration)
             ->first();
 
         if ($accommodation) {
             $data['special_diet'] = $accommodation->special_diet_fee;
             $data['special_diet_note'] = $accommodation->special_diet_note;
-
             $data['unique_id'] = $accommodation->unique_id;
     
             $date_set = substr($request->date_set, 6, 4) . "-" . substr($request->date_set, 3, 2) . "-" . substr($request->date_set, 0, 2);
@@ -873,9 +891,8 @@ class CourseControllerFrontend extends Controller
         $program_duration_start = $program_get->program_duration_start;
         $accommodation_under_age = Choose_Accommodation_Age_Range::where('age', $program_age_range)->value('unique_id');
         
-        $rooms = $meals = CourseAccommodation::where('course_unique_id', \Session::get('course_unique_id'))
-            ->whereType($request->accom_type)
-            ->get()->collect()->values()->filter(function($value) use ($accommodation_under_age, $r_date_set, $program_duration_start, $r_duration) {
+        $course_accommodations = CourseAccommodation::where('course_unique_id', \Session::get('course_unique_id'))
+            ->get()->collect()->values()->filter(function($value) use ($request, $accommodation_under_age, $r_date_set, $program_duration_start, $r_duration) {
                 $under_age_flag = in_array($accommodation_under_age, $value['age_range'] ?? []);
                 $date_flag = false;
                 if ($r_date_set) {
@@ -898,22 +915,119 @@ class CourseControllerFrontend extends Controller
                 } else {
                     $date_flag = true;
                 }
-                return $under_age_flag && $date_flag;
+                $type_flag = false;
+                if (app()->getLocale() == 'en') {
+                    if ($value['type'] == $request->accom_type) {
+                        $type_flag = true;
+                    }
+                } else {
+                    if ($value['type_ar'] == $request->accom_type) {
+                        $type_flag = true;
+                    }
+                }
+                return $under_age_flag && $date_flag && $type_flag;
             })->all();
 
-        $rooms = collect($rooms)->unique('room_type')->values()->all();
-        $meals = collect($meals)->unique('meal')->values()->all();
+        $room_types = $meal_types = [];
+        foreach ($course_accommodations as $course_accommodation) {
+            $room_types[] = app()->getLocale() == 'en' ? $course_accommodation->room_type : $course_accommodation->room_type_ar;
+            $meal_types[] = app()->getLocale() == 'en' ? $course_accommodation->meal : $course_accommodation->meal_ar;
+        }
+        $room_types = array_unique($room_types);
+        $meal_types = array_unique($meal_types);
 
-        $select = __('SuperAdmin/backend.select_option');
+        $select = __('Frontend.select_option');
         $data['room_type'] = "<option value='' selected>$select</option>";
         $data['meal_type'] = "<option value='' selected>$select</option>";
 
-        foreach ($rooms as $room) {
-            $data['room_type'] .= "<option value='".$room->room_type."'>".$room->room_type."</option>";
+        foreach ($room_types as $room_type) {
+            $data['room_type'] .= "<option value='".$room_type."'>".$room_type."</option>";
         }
+        foreach ($meal_types as $meal_type) {
+            $data['meal_type'] .= "<option value='".$meal_type."'>".$meal_type."</option>";
+        }
+        $data['session'] = \Session::all();
 
-        foreach ($meals as $meal) {
-            $data['meal_type'] .= "<option value='".$meal->meal."'>".$meal->meal."</option>";
+        return response($data);
+    }
+
+    /* Return meal type
+     *
+     * @param Request $request
+     *
+     * @return meal type
+     * */
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|Response
+     */
+    public function getMealType(Request $request)
+    {
+        $program_get = CourseProgram::where('unique_id', \Session::get('program_unique_id'))->first();
+        $program_age_range = Choose_Program_Age_Range::where('unique_id', $request->age_selected)->value('age');
+        $r_date_set = \Session::get('program_date_selected');
+        $r_duration = \Session::get('program_duration');
+        $program_duration_start = $program_get->program_duration_start;
+        $accommodation_under_age = Choose_Accommodation_Age_Range::where('age', $program_age_range)->value('unique_id');
+        
+        $course_accommodations = CourseAccommodation::where('course_unique_id', \Session::get('course_unique_id'))
+            ->get()->collect()->values()->filter(function($value) use ($request, $accommodation_under_age, $r_date_set, $program_duration_start, $r_duration) {
+                $under_age_flag = in_array($accommodation_under_age, $value['age_range'] ?? []);
+                $date_flag = false;
+                if ($r_date_set) {
+                    if ($value['available_date'] == 'all_year_round') {
+                        $program_start_date = Carbon::create($r_date_set)->format('Y-m-d');
+                        $program_end_date = Carbon::create($r_date_set)->addWeeks($r_duration)->format('Y-m-d');
+                        if ($value['start_date'] <= $program_start_date && $value['end_date'] >= $program_end_date) {
+                            $date_flag = true;
+                        }
+                    } else if ($value['available_date'] == 'selected_dates') {
+                        if ($value['available_days']) {
+                            for ($accmmodation_duration = $program_duration_start; $accmmodation_duration <= $r_duration; $accmmodation_duration++) {
+                                $accmmodation_duration_date = Carbon::create($r_date_set)->addWeeks($accmmodation_duration)->format('m/d/Y');
+                                if (strpos($value['available_days'], $accmmodation_duration_date) != false) {
+                                    $date_flag = true;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    $date_flag = true;
+                }
+                $type_flag = false;
+                if (app()->getLocale() == 'en') {
+                    if ($value['type'] == $request->accom_type) {
+                        $type_flag = true;
+                    }
+                } else {
+                    if ($value['type_ar'] == $request->accom_type) {
+                        $room_flag = true;
+                    }
+                }
+                $room_flag = false;
+                if (app()->getLocale() == 'en') {
+                    if ($value['room_type'] == $request->room_type) {
+                        $room_flag = true;
+                    }
+                } else {
+                    if ($value['room_type_ar'] == $request->room_type) {
+                        $room_flag = true;
+                    }
+                }
+                return $under_age_flag && $date_flag && $type_flag && $room_flag;
+            })->all();
+
+        $meal_types = [];
+        foreach ($course_accommodations as $course_accommodation) {
+            $meal_types[] = app()->getLocale() == 'en' ? $course_accommodation->meal : $course_accommodation->meal_ar;
+        }
+        $meal_types = array_unique($meal_types);
+
+        $select = __('Frontend.select_option');
+        $data['meal_type'] = "<option value='' selected>$select</option>";
+        foreach ($meal_types as $meal_type) {
+            $data['meal_type'] .= "<option value='".$meal_type."'>".$meal_type."</option>";
         }
         $data['session'] = \Session::all();
 
@@ -1032,7 +1146,7 @@ class CourseControllerFrontend extends Controller
         $airport_unique_ids = CourseAirport::whereCourseUniqueId(\Session::get('course_unique_id'))
             ->where('service_provider', $request->service_provider)->pluck('unique_id');
 
-        $select = __('SuperAdmin/backend.select_option');
+        $select = __('Frontend.select_option');
         $data = "<option value='' selected>$select</option>";
 
         $airport_fee_names = CourseAirportFee::whereIn('course_airport_unique_id', $airport_unique_ids)->get()->unique('name')->values()->all();
@@ -1052,7 +1166,7 @@ class CourseControllerFrontend extends Controller
         $airport_unique_ids = CourseAirport::whereCourseUniqueId(\Session::get('course_unique_id'))
             ->where('service_provider', $request->service_provider)->pluck('unique_id');
 
-        $select = __('SuperAdmin/backend.select_option');
+        $select = __('Frontend.select_option');
         $data = "<option value='' selected>$select</option>";
 
         $airport_fee_service_names = CourseAirportFee::whereIn('course_airport_unique_id', $airport_unique_ids)
@@ -1073,7 +1187,7 @@ class CourseControllerFrontend extends Controller
         $medical_deductibles = CourseMedical::whereCourseUniqueId(\Session::get('course_unique_id'))
             ->where('company_name', $request->company_name)->pluck('deductible');
 
-        $select = __('SuperAdmin/backend.select_option');
+        $select = __('Frontend.select_option');
         $data = "<option value='' selected>$select</option>";
 
         foreach ($medical_deductibles as $medical_deductible) {
@@ -1105,7 +1219,7 @@ class CourseControllerFrontend extends Controller
         if ($max_week > $request->program_duration) $max_week = $request->program_duration;
         if (!$min_week) $min_week = 1;
         
-        $select = __('SuperAdmin/backend.select_option');
+        $select = __('Frontend.select_option');
         $data = "<option value='' selected>$select</option>";
 
         for ($duration = $min_week; $duration <= $max_week; $duration++) {

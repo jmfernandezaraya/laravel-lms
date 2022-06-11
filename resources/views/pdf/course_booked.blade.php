@@ -101,15 +101,15 @@
             <table class="table table-bordered">
                 <tr>
                     <td>{{__('Mail.course_booked.name')}}</td>
-                    <td>{{ $locale == 'en' ? ($school->name . ($school->branch_name ? ' - ' . $school->branch_name : '')) : ($school->branch_name_ar . ($school->branch_name_ar ? ' - ' . $school->branch_name_ar : '')) }}</td>
+                    <td>{{ $school->name ? (app()->getLocale() == 'en' ? ($school->name->name ?? '-') : ($school->name->name_ar ?? '-')) : '-' }} {{ app()->getLocale() == 'en' ? ($school->branch_name ?? '') : ($school->branch_name_ar ?? '') }}</td>
                 </tr>
                 <tr>
                     <td>{{__('Mail.course_booked.city')}}</td>
-                    <td>{{ $locale == 'en' ? $school->city : $school->city_ar }}</td>
+                    <td>{{ $school->city ? (app()->getLocale() == 'en' ? ($school->city->name ?? '-') : ($school->city->name_ar ?? '-')) : '-' }}</td>
                 </tr>
                 <tr>
                     <td>{{__('Mail.course_booked.country')}}</td>
-                    <td>{{ $locale == 'en' ? $school->country : $school->country_ar }}</td>
+                    <td>{{ $school->country ? (app()->getLocale() == 'en' ? ($school->country->name ?? '-') : ($school->country->name_ar ?? '-')) : '-' }}</td>
                 </tr>
             </table>
             <table class="table table-bordered">
@@ -327,11 +327,11 @@
                         <th>{{ toFixedNumber($total_cost['value']) }} {{ $currency['cost'] }}</th>
                         <th>{{ toFixedNumber($total_cost['converted_value']) }} {{ $currency['converted'] }}</th>
                     </tr>
-                    @if (!isset($course_register_details->financial_guarantee))
+                    @if (!$financial_guarantee))
                         <tr>
-                            <th>{{__('Mail.course_booked.amount_to_pay_now')}}</th>
-                            <th>{{ toFixedNumber($deposit_price['value']) }} {{ $currency['cost'] }}</th>
-                            <th>{{ toFixedNumber($deposit_price['converted_value']) }} {{ $currency['converted'] }}</th>
+                            <th>{{__('Mail.course_booked.total_amount_paid')}}</th>
+                            <th>{{ toFixedNumber($amount_paid['value']) }} {{ $currency['cost'] }}</th>
+                            <th>{{ toFixedNumber($amount_paid['converted_value']) }} {{ $currency['converted'] }}</th>
                         </tr>
                     @endif
                     <tr>

@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
+use App\Classes\BindsDynamically;
+
 use App\Models\Frontend\LikedSchool;
 use App\Models\SuperAdmin\SchoolAdminCourseEditPermissions;
 use App\Models\SuperAdmin\UsersSchools;
+use App\Models\SuperAdmin\UserPermission;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 use Storage;
-
-use App\Classes\BindsDynamically;
 
 class User extends Authenticatable
 {
@@ -45,10 +46,12 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
-        'branch' => 'array',
-        'city' => 'array',
+        'school' => 'array',
         'country' => 'array',
+        'city' => 'array',
+        'branch' => 'array',
+        'branch_ar' => 'array',
+        'email_verified_at' => 'datetime',
     ];
 
     /**
@@ -136,6 +139,14 @@ class User extends Authenticatable
     public function editCoursePermission()
     {
         return $this->hasOne(SchoolAdminCourseEditPermissions::class, 'user_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function permission()
+    {
+        return $this->hasOne(UserPermission::class, 'user_id');
     }
 
     /**

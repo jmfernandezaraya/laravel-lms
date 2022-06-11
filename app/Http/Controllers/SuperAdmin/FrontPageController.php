@@ -7,11 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Classes\ImageSaverToStorage;
 
 use App\Models\FrontPage;
-use App\Models\Country;
-
-use App\Models\SuperAdmin\Course;
-use App\Models\SuperAdmin\CourseProgram;
-use App\Models\SuperAdmin\School;
 
 use Carbon\Carbon;
 
@@ -47,90 +42,6 @@ class FrontPageController extends Controller
         return $slug;
     }
 
-    public function viewHomePage(Request $request)
-    {
-        $content = null;
-        $front_page = FrontPage::where('slug', '/')->first();
-        if ($front_page) {
-            $content = unserialize($front_page->content);
-        }
-
-        $now = Carbon::now()->format('Y-m-d');
-        $course_ids = array_unique(CourseProgram::where('discount_per_week', '<>', ' -')->where('discount_per_week', '<>', ' %')
-            ->where(function($query) use ($now) {
-                $query->where(function($sub_query) use ($now) {
-                    $sub_query->where('discount_start_date', '<=', $now)->where('discount_end_date', '>=', $now);
-                })->orWhere(function($sub_query) use ($now) {
-                    $sub_query->whereNotNull('x_week_selected')->where('x_week_start_date', '<=', $now)->where('x_week_end_date', '>=', $now);
-                });
-            })->pluck('course_unique_id')->toArray());
-        $school_ids = array_unique(Course::whereIn('unique_id', $course_ids)->where('display', true)->where('deleted', false)->pluck('school_id')->toArray());
-        $schools = School::whereIn('id', $school_ids)->where('is_active', true)->get();
-        
-        $countries = Country::with('cities')->get();
-        
-        return view('superadmin.front_page.home', compact('front_page', 'content', 'schools', 'countries'));
-    }
-
-    public function updateHomePage(Request $request)
-    {
-        $front_page = FrontPage::where('slug', '/')->first();
-        if (!$front_page) {
-            $front_page = new FrontPage;
-            $front_page->title = __('Frontend.home_page');
-            $front_page->title_ar = __('Frontend.home_page');
-            $front_page->slug = '/';
-            $front_page_content = [];
-        } else {
-            $front_page_content = unserialize($front_page->content);
-        }
-        $content = [
-            'heros' => [],
-            'school_promotions' => [],
-            'popular_countries' => [],
-        ];
-        for ($hero_index = 0; $hero_index <= $request->heroincretment; $hero_index++) {
-            if (isset($request->hero_background[$hero_index]) && $request->hero_background[$hero_index]) {
-                $this->storeImage->setImage($request->hero_background[$hero_index]);
-                $this->storeImage->setPath('front_page');
-            }
-            $content['heros'][] = [
-                'title' => $request->hero_title[$hero_index],
-                'title_ar' => $request->hero_title_ar[$hero_index],
-                'text' => $request->hero_text[$hero_index],
-                'text_ar' => $request->hero_text_ar[$hero_index],
-                'background' => isset($request->hero_background[$hero_index]) && $request->hero_background[$hero_index] ? $this->storeImage->saveImage() : 
-                    (isset($front_page_content['heros']) && isset($front_page_content['heros'][$hero_index]) ? $front_page_content['heros'][$hero_index]['background'] : ''),
-            ];
-        }
-        for ($school_index = 0; $school_index < count($request->school_id); $school_index++) {
-            if ($request->school_id[$school_index]) {
-                $content['school_promotions'][] = $request->school_id[$school_index];
-            }
-        }
-        $popular_country_index = 0;
-        for ($country_index = 0; $country_index < count($request->country_id); $country_index++) {
-            if ($request->country_id[$country_index]) {
-                if (isset($request->country_logo[$country_index]) && $request->country_logo[$country_index]) {
-                    $this->storeImage->setImage($request->country_logo[$country_index]);
-                    $this->storeImage->setPath('front_page');
-                }
-
-                $content['popular_countries'][] = [
-                    'id' => $request->country_id[$country_index],
-                    'logo' => isset($request->country_logo[$country_index]) && $request->country_logo[$country_index] ? $this->storeImage->saveImage() : 
-                        (isset($front_page_content['popular_countries']) && isset($front_page_content['popular_countries'][$popular_country_index]) ? $front_page_content['popular_countries'][$popular_country_index]['logo'] : ''),
-                ];
-                $popular_country_index = $popular_country_index + 1;
-            }
-        }
-        $front_page->content = serialize($content);
-        $front_page->save();
-
-        toastr()->success(__('SuperAdmin/backend.data_saved'));
-        return back();
-    }
-    
     /**
      * Display a listing of the resource.
      *
@@ -138,7 +49,7 @@ class FrontPageController extends Controller
      */
     public function index()
     {
-        $front_pages = FrontPage::where('slug', '<>', '/')->get();
+        $front_pages = FrontPage::where('slug', '<>', '/')->where('slug', '<>', '/header_footer')->get();
 
         return view('superadmin.front_page.index', compact('front_pages'));
     }
@@ -165,15 +76,11 @@ class FrontPageController extends Controller
             'title' => 'required',
             'title_ar' => 'required',
             'slug' => 'required',
-            'content' => 'required',
-            'content_ar' => 'required',
         ];
         $validate = \Validator::make($request->all(), $rules, [
             'title.required' => __('SuperAdmin/backend.errors.title_in_english'),
             'title_ar.required' => __('SuperAdmin/backend.errors.title_in_arabic'),
             'slug.required' => __('SuperAdmin/backend.errors.slug'),
-            'content.required' => __('SuperAdmin/backend.errors.content_in_english'),
-            'content_ar.required' => __('SuperAdmin/backend.errors.content_in_arabic'),
         ]);
         if ($validate->fails()) {
             return response()->json(['errors' => $validate->errors()]);
@@ -186,10 +93,13 @@ class FrontPageController extends Controller
             $front_page->slug = $this->getSlug($request->slug);
             $front_page->content = $request->content;
             $front_page->content_ar = $request->content_ar;
-            $front_page->display = true;
+            $front_page->display = isset($request->display) ? true : false;
+            $front_page->route = isset($request->route) ? true : false;
             $front_page->save();
             
-            return redirect(route('superadmin.front_page.index'));
+            toastr()->success(__('SuperAdmin/backend.front_page_added_successfully'));
+
+            return back()->with(['message' => __('SuperAdmin/backend.front_page_added_successfully')]);
         } catch (NotReadableException $e) {
             $exception = __('SuperAdmin/backend.errors.image_required');
             return response()->json(['catch_error' => $exception]);
@@ -223,15 +133,11 @@ class FrontPageController extends Controller
             'title' => 'required',
             'title_ar' => 'required',
             'slug' => 'required',
-            'content' => 'required',
-            'content_ar' => 'required',
         ];
         $validate = \Validator::make($request->all(), $rules, [
             'title.required' => __('SuperAdmin/backend.errors.title_in_english'),
             'title_ar.required' => __('SuperAdmin/backend.errors.title_in_arabic'),
             'slug.required' => __('SuperAdmin/backend.errors.slug'),
-            'content.required' => __('SuperAdmin/backend.errors.content_in_english'),
-            'content_ar.required' => __('SuperAdmin/backend.errors.content_in_arabic'),
         ]);
         if ($validate->fails()) {
             return response()->json(['errors' => $validate->errors()]);
@@ -242,9 +148,13 @@ class FrontPageController extends Controller
         $front_page->slug = $this->getSlug($request->slug);
         $front_page->content = $request->content;
         $front_page->content_ar = $request->content_ar;
+        $front_page->display = isset($request->display) ? true : false;
+        $front_page->route = isset($request->route) ? true : false;
         $front_page->save();
-        $saved = __('SuperAdmin/backend.data_saved');
-        return response()->json(['data' => $saved]);
+
+        toastr()->success(__('SuperAdmin/backend.front_page_updated_successfully'));
+
+        return back()->with(['message' => __('SuperAdmin/backend.front_page_updated_successfully')]);
     }
 
     /**
@@ -262,7 +172,9 @@ class FrontPageController extends Controller
             unlink($delete->image);
         }
         $delete->delete();
+
         toastr()->success(__('SuperAdmin/backend.front_page_deleted_successfully'));
+
         return back()->with(['message' => $deleted]);
     }
 

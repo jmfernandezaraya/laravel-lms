@@ -60,8 +60,8 @@
 
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="inputappliccation">@lang('Frontend.visaform.choose_visa_application_center')</label><br>
-                        <select onchange="getNumberOfPeople($(this))" name="visa_center" class="form-control" id="visa_select_frontend">
+                        <label for="inputappliccation">@lang('Frontend.visaform.choose_visa_application_center')</label>
+                        <select onchange="getNumberOfPeople($(this))" name="visa_center" class="form-control mt-2" id="visa_select_frontend">
                             <option selected value="">@lang('SuperAdmin/backend.select_option') </option>
                         </select>
                     </div>

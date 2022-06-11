@@ -9,7 +9,6 @@
     </div><!-- End Breadcrumbs -->
 
     <!-- ======= login Section ======= -->
-    <br><br>
     <form id="login-form" method="post" action ="{{route('enquiry.submit')}}">
         {{csrf_field()}}
 

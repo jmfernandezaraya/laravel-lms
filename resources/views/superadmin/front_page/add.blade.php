@@ -39,7 +39,7 @@
     <div class="page-content">
         <div class="card">
             <div class="card-body">
-                <form id ="frontPageForm" class="forms-sample" method="post" action="{{route('superadmin.front_page.store')}}">
+                <form id ="frontPageForm" class="forms-sample" method="post" action="{{route('superadmin.setting.front_page.store')}}">
                     {{csrf_field()}}
 
                     <div class="row">
@@ -70,6 +70,18 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label for="route">{{__('SuperAdmin/backend.route')}}</label>
+                            <input name="route" type="checkbox" onchange="changeFrontpageRoute()" />
+                        </div>
+                    </div>
+                    <div class="row display">
+                        <div class="form-group col-md-12">
+                            <label for="display">{{__('SuperAdmin/backend.display')}}</label>
+                            <input name="display" type="checkbox" checked />
+                        </div>
+                    </div>
 
                     <a class="btn btn-light" href="{{url()->previous()}}">{{__('SuperAdmin/backend.cancel')}}</a>
                     <button type="button" onclick="submitForm($(this).parents().find('#frontPageForm'))" class="btn btn-primary">{{__('SuperAdmin/backend.submit')}}</button>
@@ -80,7 +92,7 @@
 
     @section('js')
         <script>
-            var uploadFileOption = "{{route('superadmin.front_page.upload', ['_token' => csrf_token() ])}}";
+            var uploadFileOption = "{{route('superadmin.setting.front_page.upload', ['_token' => csrf_token() ])}}";
             function previewFile(input) {
                 if (input.files && input.files[0]) {
                     var reader = new FileReader();
@@ -94,6 +106,14 @@
             function changeFrontPageTitle() {
                 var title = $('[name="title"]').val();
                 $('[name="slug"]').val(generateSlug(title));
+            }
+
+            function changeFrontpageRoute() {
+                if ($('[name="route"]').is(':checked')) {
+                    $('.display').hide();
+                } else {
+                    $('.display').show();
+                }
             }
         </script>
     @endsection

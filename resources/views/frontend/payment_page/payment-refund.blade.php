@@ -30,8 +30,6 @@
     <!-- Template Main CSS File -->
 
     <link href="assets/css/style.css" rel="stylesheet">
-    <style>
-    </style>
 </head>
 
 <body>
@@ -97,17 +95,11 @@
                 <div class="row">
                     <div class="col-lg-4 col-md-4 footer-contact">
                         <img src="assets/img/logo.png" class="img-fluid" alt="" style="width: 50%;">
-                        <p>
-                            Lorem Ipsum is simply
-                            <br> dummy text of the printing
-                            <br> and typesetting industry.
-                            <br>
-                            <br>
-                            <strong>Phone:</strong> +1 1234 1234 55
-                            <br>
-                            <strong>Email:</strong> Linkforsa@gmail.com
-                            <br>
-                        </p>
+                        <p>Lorem Ipsum is simply</p>
+                        <p>dummy text of the printing</p>
+                        <p>and typesetting industry.</p>
+                        <p><strong>Phone:</strong> +1 1234 1234 55</p>
+                        <p>Email:</strong> Linkforsa@gmail.com</p>                        
                     </div>
 
                     <div class="col-lg-4 col-md-4 footer-links">

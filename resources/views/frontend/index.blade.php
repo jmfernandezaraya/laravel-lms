@@ -8,15 +8,15 @@
     <!-- Slider -->
     <div id="slider" class="carousel slide" data-ride="carousel">
         <ul class="carousel-indicators">
-            @if (isset($content['heros']) && $content['heros'])
-                @foreach ($content['heros'] as $hero_key => $hero)
+            @if (isset($setting_value['heros']) && $setting_value['heros'])
+                @foreach ($setting_value['heros'] as $hero_key => $hero)
                     <li data-target="#slider" data-slide-to="{{ $hero_key }}" class="{{ !$hero_key ? 'active' : '' }}"></li>
                 @endforeach
             @endif
         </ul>
         <div class="carousel-inner">
-            @if (isset($content['heros']) && $content['heros'])
-                @foreach ($content['heros'] as $hero_key => $hero)
+            @if (isset($setting_value['heros']) && $setting_value['heros'])
+                @foreach ($setting_value['heros'] as $hero_key => $hero)
                     <div class="carousel-item {{!$hero_key ? 'active' : ''}}">
                         <img src="{{ $hero['background'] ? asset('storage/app/public/front_page/') . '/'. $hero['background'] : '' }}" alt="Los Angeles" width="1100" height="500">
                         <div class="carousel-caption">
@@ -56,7 +56,7 @@
                 <div class="row" data-aos="zoom-in" data-aos-delay="100">
                     @php $now = Carbon\Carbon::now()->format('Y-m-d') @endphp
                     @foreach ($schools as $school)
-                        @if ($content && $content['school_promotions'] && in_array($school->id, $content['school_promotions']))
+                        @if ($setting_value && $setting_value['school_promotions'] && in_array($school->id, $setting_value['school_promotions']))
                             @php
                                 $course = null;
                                 $course_program = null;
@@ -195,8 +195,8 @@
             </div>
 
             <div class="row" data-aos="zoom-in" data-aos-delay="100">
-                @if ($content && $content['popular_countries'])
-                    @foreach ($content['popular_countries'] as $country)
+                @if ($setting_value && $setting_value['popular_countries'])
+                    @foreach ($setting_value['popular_countries'] as $country)
                         <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
                             <!-- Country Item-->
                             <div class="country-item">
@@ -232,7 +232,7 @@
                                     <div class="school-content">
                                         <div class="school-information">
                                             <a href="{{route('school.details', $school->id)}}">
-                                                <div class="school-name-branch">{{ $school->name ? (app()->getLocale() == 'en' ? $school->name->name : $school->name->name_ar) : '' }} / {{ app()->getLocale() == 'en' ? $school->branch_name : $school->branch_name_ar }}</div>
+                                                <div class="school-name-branch">{{ $school->name ? (app()->getLocale() == 'en' ? $school->name->name : $school->name->name_ar) : '' }} / {{ app()->getLocale() == 'en' ? ($school->branch_name ?? '') : ($school->branch_name_ar ?? '') }}</div>
                                                 <div class="school-city">{{ $school->city ? (app()->getLocale() == 'en' ? $school->city->name : $school->city->name_ar) : '' }}</div>
                                                 <div class="school-country">{{ $school->country ? (app()->getLocale() == 'en' ? $school->country->name : $school->country->name_ar) : '' }}</div>
                                             </a>

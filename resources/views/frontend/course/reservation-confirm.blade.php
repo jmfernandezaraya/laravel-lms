@@ -9,29 +9,6 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <style>
-        #sig-canvas {
-            border: 2px solid #CCCCCC;
-            border-radius: 5px;
-            cursor: crosshair;
-            height: 150px;
-        }
-
-        .border-top-bottom {
-            border-top: 3px solid #97d0db;
-            border-bottom: 3px solid #97d0db;
-            padding: 15px 0;
-        }
-
-        .btn-submit {
-            width: 100%;
-            padding: 15px 25px;
-        }
-        
-        form > * {
-            margin: 10px;
-        }
-    </style>
 @endsection
 
 @section('breadcrumbs')

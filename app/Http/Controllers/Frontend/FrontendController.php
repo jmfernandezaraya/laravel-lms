@@ -18,6 +18,7 @@ use App\Models\Calculator;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\FrontPage;
+use App\Models\Setting;
 use App\Models\User;
 use App\Models\UserCourseBookedDetails;
 
@@ -104,13 +105,13 @@ class FrontendController extends Controller
         $languages = Choose_Language::whereIn('unique_id', $course_language_ids)->orderBy('name', 'asc')->get();
         $schools = School::with('courses.coursePrograms')->whereIn('id', $course_school_ids)->where('is_active', true)->get();
 
-        $content = [];
-        $front_page = FrontPage::where('slug', '/')->first();
-        if ($front_page) {
-            $content = unserialize($front_page->content);
+        $setting_value = [];
+        $home_page = Setting::where('setting_key', 'home_page')->first();
+        if ($home_page) {
+            $setting_value = unserialize($home_page->setting_value);
         }
 
-        return view('frontend.index', compact('content', 'schools', 'languages'));
+        return view('frontend.index', compact('setting_value', 'schools', 'languages'));
     }
 
     /**
@@ -238,7 +239,7 @@ class FrontendController extends Controller
         $course_accommodation_age_range = getCourseAccommodationAgeRange($age_ranges);
         $accommodation_min_age = $course_accommodation_age_range['min_age']; $accommodation_max_age = $course_accommodation_age_range['max_age'];
         
-        $custodian_under_age = Choose_Custodian_Under_Age::whereIn('age', $course_details->age_selected)->value('unique_id');
+        $custodian_under_age = Choose_Custodian_Under_Age::whereIn('age', [$course_details->age_selected])->value('unique_id');
         $course_custodian = CourseCustodian::where('course_unique_id', '' . $course_details->program_unique_id)->where('age_range', 'LIKE', '%' . $custodian_under_age . '%')->first();
         $age_ranges = $course_custodian ? $course_custodian->age_range : [];
         $course_custodian_age_range = getCourseAccommodationAgeRange($age_ranges);
@@ -322,18 +323,18 @@ class FrontendController extends Controller
             unset($to_be_saved['bank_statement']);
             if ($request->has('passport_copy')) {
                 $passport_image_name = time() . rand(00, 99) . "." . $request->file('passport_copy')->getClientOriginalExtension();
-                $to_be_saved['passport_copy'] = '/public/images/user_booked_details/' . $passport_image_name;
-                $request->passport_copy->move(public_path('images/user_booked_details'), $passport_image_name);
+                $to_be_saved['passport_copy'] = '/user_booked_details/' . $passport_image_name;
+                $request->passport_copy->move(storage_path('app/public/user_booked_details'), $passport_image_name);
             }
             if ($request->has('financial_guarantee')) {
                 $finance_image = time() . rand(00, 99) . "." . $request->file('financial_guarantee')->getClientOriginalExtension();
-                $to_be_saved['financial_guarantee'] = '/public/images/user_booked_details/' . $finance_image;
-                $request->financial_guarantee->move(public_path('images/user_booked_details'), $finance_image);
+                $to_be_saved['financial_guarantee'] = '/user_booked_details/' . $finance_image;
+                $request->financial_guarantee->move(storage_path('app/public/user_booked_details'), $finance_image);
             }
             if ($request->has('bank_statement')) {
                 $bank_statement_image = time() . rand(00, 99) . "." . $request->file('bank_statement')->getClientOriginalExtension();
-                $to_be_saved['bank_statement'] = '/public/images/user_booked_details/' . $bank_statement_image;
-                $request->bank_statement->move(public_path('images/user_booked_details'), $bank_statement_image);
+                $to_be_saved['bank_statement'] = '/user_booked_details/' . $bank_statement_image;
+                $request->bank_statement->move(storage_path('app/public/user_booked_details'), $bank_statement_image);
             }
             
             $data['success'] = true;
@@ -399,19 +400,17 @@ class FrontendController extends Controller
         $data['medical'] = (isset($course_details->company_name) && isset($course_details->deductible_up_to)) ? CourseMedical::where('course_unique_id', $course_details->program_id)->where('company_name', $course_details->company_name)->where('deductible', $course_details->deductible_up_to)->first() : null;
         $data['custodian'] = CourseCustodian::where('course_unique_id', $course_details->program_id)->where('age_range', 'LIKE', '%' . $custodian_under_age . '%')->first();
 
-        $deposit_price = $program_registration_fee = $data['program']->program_registration_fee ?? 0;
+        $deposit_price = $program_registration_fee = 0;
         if (isset($course_register_details->financial_guarantee)) {
             $deposit_price = 0;
         } else {
-            if ($data['program']->program_registration_fee) {
-                if ($data['program']->deposit) {
-                    $program_deposits = explode(" ", $data['program']->deposit);
-                    if (count($program_deposits) >= 2) {
-                        if ($program_deposits[1] == '%') {
-                            $deposit_price = $data['program']->program_cost * (int)$program_deposits[0] / 100;
-                        } else {
-                            $deposit_price = (int)$program_deposits[0];
-                        }
+            if ($data['program']->deposit) {
+                $program_deposits = explode(" ", $data['program']->deposit);
+                if (count($program_deposits) >= 2) {
+                    if ($program_deposits[1] == '%') {
+                        $deposit_price = $data['program']->program_cost * (int)$program_deposits[0] / 100;
+                    } else {
+                        $deposit_price = (int)$program_deposits[0];
                     }
                 }
             }
@@ -644,7 +643,7 @@ class FrontendController extends Controller
             return response($data);
         }
 
-        try {
+        //try {
             $to_be_saved = $validate->validated();
             unset($to_be_saved['student_guardian_full_name']);
             unset($to_be_saved['registraion_terms_conditions_privacy_policy']);
@@ -786,6 +785,7 @@ class FrontendController extends Controller
             $mail_pdf_data['accommodation_max_age'] = $course_register_details->accommodation_max_age;
             $mail_pdf_data['custodian_min_age'] = $course_register_details->custodian_min_age;
             $mail_pdf_data['custodian_max_age'] = $course_register_details->custodian_max_age;
+            $mail_pdf_data['financial_guarantee'] = isset($course_register_details->financial_guarantee) ? true : false;
             
             $default_currency = getDefaultCurrency();
     
@@ -990,15 +990,20 @@ class FrontendController extends Controller
                 $data['success'] = true;
             }
 
-            $url = $telrManager->pay(time() . rand(00, 99), $to_be_saved['total_balance'], 'Program Registration Fee', $billingParams)->redirect();
+            $url = $telrManager->pay(time() . rand(00, 99), $mail_pdf_data['total_balance']['converted_value'], 'Program Registration Fee', $billingParams)->redirect();
             $data['url'] = $url->getTargetUrl();
-        } catch(\Exception $e) {
-            $data['errors'] = 'Something Went Wrong Check Log File';
-            $data['success'] = false;
-            return response()->json($data);
-        }
+        //} catch(\Exception $e) {
+        //    $data['errors'] = 'Something Went Wrong Check Log File';
+        //    $data['success'] = false;
+        //    return response()->json($data);
+        //}
 
         return response()->json($data);
+    }
+
+    public function downloadFile(Request $request)
+    {
+        return response()->download(storage_path('app/public/' . $request->file));
     }
 
     /**

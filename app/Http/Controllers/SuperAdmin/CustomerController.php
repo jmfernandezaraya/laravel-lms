@@ -10,9 +10,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator;
+use Intervention\Image\Exception\NotReadableException;
 
 use Image;
-use Intervention\Image\Exception\NotReadableException;
 
 /**
  * Class CustomerController
@@ -29,7 +29,7 @@ class CustomerController extends Controller
     {
         $customers = User::where('user_type', 'user')->get();
 
-        return view('superadmin.customers.index', compact('customers'));
+        return view('superadmin.customer.index', compact('customers'));
     }
 
     /**
@@ -39,7 +39,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        return view('superadmin.customers.add');
+        return view('superadmin.customer.add');
     }
 
     /**
@@ -53,7 +53,7 @@ class CustomerController extends Controller
         try {
             (new User($request->validated()))->save();
             $saved = __('SuperAdmin/backend.data_saved');
-            return redirect(route('superadmin.customers.index'));
+            return redirect(route('superadmin.customer.index'));
         } catch (ValidationException $e) {
             return response()->json(['errors' => $e->errors()]);
         } catch (NotReadableException $e) {
@@ -72,7 +72,7 @@ class CustomerController extends Controller
      */
     public function edit(User $customer)
     {
-        return view('superadmin.customers.edit', compact('customer'));
+        return view('superadmin.customer.edit', compact('customer'));
     }
 
     /**

@@ -9,20 +9,7 @@
 @endsection
 
 @section('content')
-    <style>
-        table thead {
-            background-color: #97d0db;
-            color: white;
-        }
-        .registration-form {
-            padding: 0 15px;
-        }
-        #collapseRegistrationForm .col-form-label {
-            font-weight: bold;
-        }
-    </style>
-
-    <section class="dashboard">
+    <div class="dashboard">
         <div class="container" data-aos="fade-up">
             <div class="reservation-section">
                 <div id="accordion" class="accordion">
@@ -36,15 +23,15 @@
                                     <tbody>
                                         <tr>
                                             <td>{{__('Frontend.name')}}</td>
-                                            <td>{{ app()->getLocale() == 'en' ? ($school->name . ($school->branch_name ? $school->branch_name : '')) : ($school->name_ar . ($school->branch_name_ar ? $school->branch_name_ar : '')) }}</td>
+                                            <td>{{ $school->name ? (app()->getLocale() == 'en' ? ($school->name->name ?? '-') : ($school->name->name_ar ?? '-')) : '-' }} {{ app()->getLocale() == 'en' ? ($school->branch_name ?? '') : ($school->branch_name_ar ?? '') }}</td>
                                         </tr>
                                         <tr>
                                             <td>{{__('Frontend.city')}}</td>
-                                            <td>{{ app()->getLocale() == 'en' ? $school->city : $school->city_ar }}</td>
+                                            <td>{{ $school->city ? (app()->getLocale() == 'en' ? ($school->city->name ?? '-') : ($school->city->name_ar ?? '-')) : '-' }}</td>
                                         </tr>
                                         <tr>
                                             <td>{{__('Frontend.country')}}</td>
-                                            <td>{{ app()->getLocale() == 'en' ? $school->country : $school->country_ar }}</td>
+                                            <td>{{ $school->country ? (app()->getLocale() == 'en' ? ($school->country->name ?? '-') : ($school->country->name_ar ?? '-')) : '-' }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -60,8 +47,8 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                {{ $course->program_name }}, {{ $course->lessons_per_week }} {{__('Frontend.lessons')}} / {{ $course->hours_per_week }} {{__('Frontend.hours_per_week')}}<br />
-                                                {{ $program_start_date }} {{__('Frontend.to')}} {{ $program_end_date }} ( {{ $course_booked_detail->program_duration }} {{__('Frontend.weeks')}} )
+                                                <p>{{ $course->program_name }}, {{ $course->lessons_per_week }} {{__('Frontend.lessons')}} / {{ $course->hours_per_week }} {{__('Frontend.hours_per_week')}}</p>
+                                                <p>{{ $program_start_date }} {{__('Frontend.to')}} {{ $program_end_date }} ( {{ $course_booked_detail->program_duration }} {{__('Frontend.weeks')}} )</p>
                                             </td>
                                             <td>{{ toFixedNumber($program_cost['value']) }}</td>
                                             <td>{{ toFixedNumber($program_cost['converted_value']) }}</td>
@@ -132,8 +119,8 @@
                                         <tbody>
                                             <tr>
                                                 <td>
-                                                    {{$accommodation->type}} - {{$accommodation->room_type}} - {{$accommodation->meal}}<br />
-                                                    {{$accommodation_start_date}} to {{$accommodation_end_date}} ( {{$course_booked_detail->accommodation_duration}} {{__('Frontend.weeks')}} )
+                                                    <p>{{$accommodation->type}} - {{$accommodation->room_type}} - {{$accommodation->meal}}</p>
+                                                    <p>{{$accommodation_start_date}} to {{$accommodation_end_date}} ( {{$course_booked_detail->accommodation_duration}} {{__('Frontend.weeks')}} )</p>
                                                 </td>
                                                 <td>{{ toFixedNumber($accommodation_fee['value']) }}</td>
                                                 <td>{{ toFixedNumber($accommodation_fee['converted_value']) }}</td>
@@ -213,9 +200,9 @@
                                             @if ($airport)
                                                 <tr>
                                                     <td>
-                                                        {{__('Frontend.transport')}}<br />
-                                                        {{__('Frontend.service_provider')}}: {{ $course_booked_detail->airport_provider }}<br />
-                                                        {{ $course_booked_detail->airport_name }} - {{ $course_booked_detail->airport_service }}<br />
+                                                        <p>{{__('Frontend.transport')}}</p>
+                                                        <p>{{__('Frontend.service_provider')}}: {{ $course_booked_detail->airport_provider }}</p>
+                                                        <p>{{ $course_booked_detail->airport_name }} - {{ $course_booked_detail->airport_service }}</p>
                                                     </td>
                                                     <td>{{ toFixedNumber($airport_pickup_fee['value']) }}</td>
                                                     <td>{{ toFixedNumber($airport_pickup_fee['converted_value']) }}</td>
@@ -224,12 +211,23 @@
                                             @if ($medical)
                                                 <tr>
                                                     <td>
-                                                        {{__('Frontend.medical_insurance')}}<br />
-                                                        {{__('Frontend.company_name')}}: {{ $course_booked_detail->company_name }}<br />
-                                                        {{ $medical_start_date }} - {{ $medical_end_date }} ( {{ $course_booked_detail->duration }} {{__('Frontend.weeks')}} )<br />
+                                                        <p>{{__('Frontend.medical_insurance')}}</p>
+                                                        <p>{{__('Frontend.company_name')}}: {{ $course_booked_detail->company_name }}</p>
+                                                        <p>{{ $medical_start_date }} - {{ $medical_end_date }} ( {{ $course_booked_detail->duration }} {{__('Frontend.weeks')}} )</p>
                                                     </td>
                                                     <td>{{ toFixedNumber($medical_insurance_fee['value']) }}</td>
                                                     <td>{{ toFixedNumber($medical_insurance_fee['converted_value']) }}</td>
+                                                </tr>
+                                            @endif
+                                            @if ($custodian)
+                                                <tr>
+                                                    <td>
+                                                        <p>{{__('Frontend.custodian')}}</p>
+                                                        <p>{{__('Frontend.age_range')}}: {{ $course_booked_detail->custodian_min_age ?? ''}} - {{ $course_booked_detail->custodian_max_age ?? ''}} {{__('Frontend.years')}}</p>
+                                                    </td>
+                                                    <td>{{ toFixedNumber($custodian_fee['value']) }}</td>
+                                                    <td>{{ toFixedNumber($custodian_fee['converted_value']) }}</td>
+                                                    <input type="hidden" value="{{$custodian_fee['value']}}" name="custodian_fee" />
                                                 </tr>
                                             @endif
                                         </tbody>
@@ -253,7 +251,7 @@
                                             <th>{{ toFixedNumber($total_cost['value']) }} {{ $currency['cost'] }}</th>
                                             <th>{{ toFixedNumber($total_cost['converted_value']) }} {{ $currency['converted'] }}</th>
                                         </tr>
-                                        @if (!isset($course_register_details->financial_guarantee))
+                                        @if (!isset($course_booked_detail->financial_guarantee))
                                             <tr>
                                                 <th>{{__('Frontend.amount_to_pay_now_deposit')}}</th>
                                                 <th>{{ toFixedNumber($deposit_price['value']) }} {{ $currency['cost'] }}</th>
@@ -356,7 +354,12 @@
                                             <div class="form-group">
                                                 <label for="fname" class="col-form-label">{{__('Frontend.upload_passport_copy')}}</label>
                                                 @if ($course_booked_detail->passport_copy)
-                                                    <img src="{{ $course_booked_detail->passport_copy }}" class="img-fluid" />
+                                                    <img src="{{ '/storage/app/public/' . $course_booked_detail->passport_copy }}" class="img-fluid" />
+                                                    <form method="post" action="{{route('frontend.download')}}">
+                                                        @csrf
+                                                        <input name="file" type="hidden" value="{{ $course_booked_detail->passport_copy }}" />
+                                                        <button class="btn btn-primary btn-sm">{{__('Frontend.download')}}</button>
+                                                    </form>
                                                 @endif
                                             </div>
                                         </div>
@@ -398,7 +401,12 @@
                                             <div class="form-group">
                                                 <label for="nat" class="col-form-label">{{__('Frontend.upload_financial_gurantee')}}</label>
                                                 @if ($course_booked_detail->financial_guarantee)
-                                                    <img src="{{ $course_booked_detail->financial_guarantee }}" class="img-fluid" />
+                                                    <img src="{{ '/storage/app/public/' . $course_booked_detail->financial_guarantee }}" class="img-fluid" />
+                                                    <form method="post" action="{{route('frontend.download')}}">
+                                                        @csrf
+                                                        <input name="file" type="hidden" value="{{ $course_booked_detail->financial_guarantee }}" />
+                                                        <button class="btn btn-primary btn-sm">{{__('Frontend.download')}}</button>
+                                                    </form>
                                                 @endif
                                             </div>
                                         </div>
@@ -406,7 +414,12 @@
                                             <div class="form-group">
                                                 <label for="nat" class="col-form-label">{{__('Frontend.upload_bank_statement')}}</label>
                                                 @if ($course_booked_detail->bank_statement)
-                                                    <img src="{{ $course_booked_detail->bank_statement }}"  class="img-fluid" />
+                                                    <img src="{{ '/storage/app/public/' . $course_booked_detail->bank_statement }}"  class="img-fluid" />
+                                                    <form method="post" action="{{route('frontend.download')}}">
+                                                        @csrf
+                                                        <input name="file" type="hidden" value="{{ $course_booked_detail->bank_statement }}" />
+                                                        <button class="btn btn-primary btn-sm">{{__('Frontend.download')}}</button>
+                                                    </form>
                                                 @endif
                                             </div>
                                         </div>
@@ -728,6 +741,8 @@
                             <div class="contact-center row mt-3 p-3">
                                 <div class="col-lg-12">
                                     <form id="contact_center_admin" method="post" action="{{ route('dashboard.course_application.send_message') }}">
+                                        @csrf
+
                                         <h5 class="text-center">{{__('Frontend.contact_center_admin')}}</h5>
 
                                         <div class="row">
@@ -790,7 +805,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
     <script>
         function printCourseApplication(section) {

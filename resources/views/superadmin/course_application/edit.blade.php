@@ -37,7 +37,7 @@
                                     <td>
                                         {{ $course_booked_detail->course->school && $course_booked_detail->course->school->name ? (app()->getLocale() == 'en' ? $course_booked_detail->course->school->name->name : $course_booked_detail->course->school->name->name_ar) : ''}}
                                         &nbsp;
-                                        {{ app()->getLocale() == 'en' ? $course_booked_detail->course->school->branch_name : $course_booked_detail->course->school->branch_name_ar }}
+                                        {{ app()->getLocale() == 'en' ? ($course_booked_detail->course->school->branch_name ?? '') : ($course_booked_detail->course->school->branch_name_ar ?? '') }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -202,7 +202,7 @@
                             </table>
                         @endif
                         
-                        @if ($airport || $medical)
+                        @if ($airport || $medical || $custodian)
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -279,7 +279,7 @@
                             </thead>
                         </table>
                         
-                        <a href="{{route('superadmin.manage_application.editCourse', ['course_id' => $course_booked_detail->course_id, 'user_course_booked_id' => $course_booked_detail->id, 'school_id' => $course_booked_detail->course->school->id])}}" class="btn btn-primary px-5">Edit</a>
+                        <a href="{{route('superadmin.manage_application.course.edit', ['course_id' => $course_booked_detail->course_id, 'user_course_booked_id' => $course_booked_detail->id, 'school_id' => $course_booked_detail->course->school->id])}}" class="btn btn-primary px-5">Edit</a>
                         <button type="button" class="btn btn-primary float-right px-5" onclick="printCourseApplication('reservation')">{{__('SuperAdmin/backend.print')}}</button>
                     </div>
                 </div>
@@ -368,7 +368,12 @@
                                     <div class="form-group">
                                         <label for="fname" class="col-form-label">{{__('SuperAdmin/backend.upload_passport_copy')}}</label>
                                         @if ($course_booked_detail->passport_copy)
-                                            <img src="{{ $course_booked_detail->passport_copy }}" class="img-fluid" />
+                                            <img src="{{ '/storage/app/public/' . $course_booked_detail->passport_copy }}" class="img-fluid" />
+                                            <form method="post" action="{{route('frontend.download')}}">
+                                                @csrf
+                                                <input name="file" type="hidden" value="{{ $course_booked_detail->passport_copy }}" />
+                                                <button class="btn btn-primary btn-sm">{{__('SuperAdmin/backend.download')}}</button>
+                                            </form>
                                         @endif
                                     </div>
                                 </div>
@@ -410,7 +415,12 @@
                                     <div class="form-group">
                                         <label for="nat" class="col-form-label">{{__('SuperAdmin/backend.upload_financial_gurantee')}}</label>
                                         @if ($course_booked_detail->financial_guarantee)
-                                            <img src="{{ $course_booked_detail->financial_guarantee }}" class="img-fluid" />
+                                            <img src="{{ '/storage/app/public/' . $course_booked_detail->financial_guarantee }}" class="img-fluid" />
+                                            <form method="post" action="{{route('frontend.download')}}">
+                                                @csrf
+                                                <input name="file" type="hidden" value="{{ $course_booked_detail->financial_guarantee }}" />
+                                                <button class="btn btn-primary btn-sm">{{__('SuperAdmin/backend.download')}}</button>
+                                            </form>
                                         @endif
                                     </div>
                                 </div>
@@ -418,7 +428,12 @@
                                     <div class="form-group">
                                         <label for="nat" class="col-form-label">{{__('SuperAdmin/backend.upload_bank_statement')}}</label>
                                         @if ($course_booked_detail->bank_statement)
-                                            <img src="{{ $course_booked_detail->bank_statement }}" class="img-fluid" />
+                                            <img src="{{ '/storage/app/public/' . $course_booked_detail->bank_statement }}" class="img-fluid" />
+                                            <form method="post" action="{{route('frontend.download')}}">
+                                                @csrf
+                                                <input name="file" type="hidden" value="{{ $course_booked_detail->bank_statement }}" />
+                                                <button class="btn btn-primary btn-sm">{{__('SuperAdmin/backend.download')}}</button>
+                                            </form>
                                         @endif
                                     </div>
                                 </div>
@@ -588,37 +603,39 @@
                 </div>
                 <div id="collapseReservationStatus" class="card-body collapse p-0" data-parent="#accordion">
                     <div class="reservation-status mt-3">
-                        <div class="col-sm-12">
-                            <form method="POST" id="update_reservation" action="{{route('superadmin.manage_application.store')}}">
-                                <div class="form-group row">
-                                    {{csrf_field()}}
+                        @if (auth('superadmin')->user()->permission['course_application_manager'] || auth('superadmin')->user()->permission['course_application_edit'] || auth('superadmin')->user()->permission['course_application_chanage_status'])
+                            <div class="col-sm-12">
+                                <form method="POST" id="update_reservation" action="{{route('superadmin.manage_application.store')}}">
+                                    <div class="form-group row">
+                                        {{csrf_field()}}
 
-                                    <label for="reservation_status" class="col-sm-2 col-form-label">{{__('SuperAdmin/backend.reservation_status')}}</label>
-                                    <input hidden name="id" value="{{ $course_booked_detail->id }}">
-                                    <input hidden name="type_of_submit" value="update_reservation">
-                                    <input hidden name="order_id" value="{{ $course_booked_detail->order_id }}">
-                                    <div class="col-sm-8">
-                                        <select class="form-control" name="status" id="reservation_status">
-                                            <option value='received' {{$course_booked_detail->status == 'received' ? 'selected' : ''}}>{{__('SuperAdmin/backend.request_received')}}</option>
-                                            <option value='process' {{$course_booked_detail->status == 'process' ? 'selected' : ''}}>{{__('SuperAdmin/backend.under_process')}}</option>
-                                            <option value='files_sent_to_customer' {{$course_booked_detail->status == 'files_sent_to_customer' ? 'selected' : ''}}>{{__('SuperAdmin/backend.application_files_sent_to_customer')}}</option>
-                                            <option value='customer_response' {{$course_booked_detail->status == 'customer_response' ? 'selected' : ''}}>{{__('SuperAdmin/backend.waiting_for_customer_response')}}</option>
-                                            <option value='cancelled' {{$course_booked_detail->status == 'cancelled' ? 'selected' : ''}}>{{__('SuperAdmin/backend.request_cancelled')}}</option>
-                                            <option value='completed' {{$course_booked_detail->status == 'completed' ? 'selected' : ''}}>{{__('SuperAdmin/backend.application_procedure_completed')}}</option>
-                                            <option value='studying' {{$course_booked_detail->status == 'studying' ? 'selected' : ''}}>{{__('SuperAdmin/backend.studying')}}</option>
-                                            <option value='course_extension' {{$course_booked_detail->status == 'course_extension' ? 'selected' : ''}}>{{__('SuperAdmin/backend.customer_request_course_extension')}}</option>
-                                            <option value='request_cancellation' {{$course_booked_detail->status == 'request_cancellation' ? 'selected' : ''}}>{{__('SuperAdmin/backend.customer_request_cancellation')}}</option>
-                                            <option value='refunded' {{$course_booked_detail->status == 'refunded' ? 'selected' : ''}}>{{__('SuperAdmin/backend.amount_refunded')}}</option>
-                                            <option value='application_cancelled' {{$course_booked_detail->status == 'cancelled' ? 'selected' : ''}}>{{__('SuperAdmin/backend.application_cancelled')}}</option>
-                                            <option value='end' {{$course_booked_detail->status == 'end' ? 'selected' : ''}}>{{__('SuperAdmin/backend.course_end')}}</option>
-                                        </select>
+                                        <label for="reservation_status" class="col-sm-2 col-form-label">{{__('SuperAdmin/backend.reservation_status')}}</label>
+                                        <input hidden name="id" value="{{ $course_booked_detail->id }}">
+                                        <input hidden name="type_of_submit" value="update_reservation">
+                                        <input hidden name="order_id" value="{{ $course_booked_detail->order_id }}">
+                                        <div class="col-sm-8">
+                                            <select class="form-control" name="status" id="reservation_status">
+                                                <option value='received' {{$course_booked_detail->status == 'received' ? 'selected' : ''}}>{{__('SuperAdmin/backend.request_received')}}</option>
+                                                <option value='process' {{$course_booked_detail->status == 'process' ? 'selected' : ''}}>{{__('SuperAdmin/backend.under_process')}}</option>
+                                                <option value='files_sent_to_customer' {{$course_booked_detail->status == 'files_sent_to_customer' ? 'selected' : ''}}>{{__('SuperAdmin/backend.application_files_sent_to_customer')}}</option>
+                                                <option value='customer_response' {{$course_booked_detail->status == 'customer_response' ? 'selected' : ''}}>{{__('SuperAdmin/backend.waiting_for_customer_response')}}</option>
+                                                <option value='cancelled' {{$course_booked_detail->status == 'cancelled' ? 'selected' : ''}}>{{__('SuperAdmin/backend.request_cancelled')}}</option>
+                                                <option value='completed' {{$course_booked_detail->status == 'completed' ? 'selected' : ''}}>{{__('SuperAdmin/backend.application_procedure_completed')}}</option>
+                                                <option value='studying' {{$course_booked_detail->status == 'studying' ? 'selected' : ''}}>{{__('SuperAdmin/backend.studying')}}</option>
+                                                <option value='course_extension' {{$course_booked_detail->status == 'course_extension' ? 'selected' : ''}}>{{__('SuperAdmin/backend.customer_request_course_extension')}}</option>
+                                                <option value='request_cancellation' {{$course_booked_detail->status == 'request_cancellation' ? 'selected' : ''}}>{{__('SuperAdmin/backend.customer_request_cancellation')}}</option>
+                                                <option value='refunded' {{$course_booked_detail->status == 'refunded' ? 'selected' : ''}}>{{__('SuperAdmin/backend.amount_refunded')}}</option>
+                                                <option value='application_cancelled' {{$course_booked_detail->status == 'cancelled' ? 'selected' : ''}}>{{__('SuperAdmin/backend.application_cancelled')}}</option>
+                                                <option value='end' {{$course_booked_detail->status == 'end' ? 'selected' : ''}}>{{__('SuperAdmin/backend.course_end')}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <button onclick="submitFormAction('update_reservation')" type="button" class="btn btn-primary mt-1 choose">{{__('SuperAdmin/backend.update')}}</button>
+                                        </div>
                                     </div>
-                                    <div class="col-sm-2">
-                                        <button onclick="submitFormAction('update_reservation')" type="button" class="btn btn-primary mt-1 choose">{{__('SuperAdmin/backend.update')}}</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
+                                </form>
+                            </div>
+                        @endif
 
                         <div class="col-sm-12">
                             <table class="table table-bordered">
@@ -683,11 +700,11 @@
                                     </tr>
                                     <tr>
                                         <td>1</td>
-                                        <td>{{$course_booked_detail->created_at->format("d M Y")}}</td>
+                                        <td>{{ $course_booked_detail->created_at->format("d M Y") }}</td>
                                         <td> -</td>
-                                        <td>{{$course_booked_detail->paid_amount}}</td>
-                                        <td>{{__('SuperAdmin/backend.deposit_for_course')}} {{$course_booked_detail->course->program_name}}</td>
-                                        <td>{{optional($course_booked_detail->transaction)->trx_reference}}</td>
+                                        <td>{{ toFixedNumber($amount_paid['converted_value']) }}</td>
+                                        <td>{{ __('SuperAdmin/backend.deposit_for_course') }} {{ $course_booked_detail->course->program_name }}</td>
+                                        <td>{{ optional($course_booked_detail->transaction)->trx_reference }}</td>
                                     </tr>
                                     @forelse ($transaction_refund as $refunds)
                                         <tr>
@@ -706,54 +723,56 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="col-sm-12 my-3">
-                            <form id="update_payment" method="POST" action="{{ route('superadmin.manage_application.store') }}">
-                                {{csrf_field()}}
+                        @if (auth('superadmin')->user()->permission['course_application_manager'] || auth('superadmin')->user()->permission['course_application_edit'] || auth('superadmin')->user()->permission['course_application_payment_refund'])
+                            <div class="col-sm-12 my-3">
+                                <form id="update_payment" method="POST" action="{{ route('superadmin.manage_application.store') }}">
+                                    {{csrf_field()}}
 
-                                <div class="form-row">
-                                    <input hidden name="id" value="{{ $course_booked_detail->id }}">
-                                    <div class="form-group col-md-6">
-                                        <div class="form-group row">
-                                            <label for="inputamount" class="col-sm-4 col-form-label">{{__('SuperAdmin/backend.amount')}}</label>
-                                            <div class="col-sm-8">
-                                                <input type="decimal" name="amount" value="" class="form-control" id="inputamount" placeholder="amount">
+                                    <div class="form-row">
+                                        <input hidden name="id" value="{{ $course_booked_detail->id }}">
+                                        <div class="form-group col-md-6">
+                                            <div class="form-group row">
+                                                <label for="inputamount" class="col-sm-4 col-form-label">{{__('SuperAdmin/backend.amount')}}</label>
+                                                <div class="col-sm-8">
+                                                    <input type="decimal" name="amount" value="" class="form-control" id="inputamount" placeholder="amount">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <div class="form-group row">
+                                                <label for="inputdetails" class="col-sm-4 col-form-label"></label>
+                                                <div class="col-sm-8">
+                                                    <select name="symbol" class="form-control form-control-lg">
+                                                        <option value='+'>+</option>
+                                                        <option value='-'>-</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group col-md-6">
-                                        <div class="form-group row">
-                                            <label for="inputdetails" class="col-sm-4 col-form-label"></label>
-                                            <div class="col-sm-8">
-                                                <select name="symbol" class="form-control form-control-lg">
-                                                    <option value='+'>+</option>
-                                                    <option value='-'>-</option>
-                                                </select>
+                                    <div class="form-row">
+                                        <input hidden name="order_id" value="{{ $course_booked_detail->order_id }}">
+                                        <div class="form-group col-md-6 mb-0">
+                                            <div class="form-group row mb-0">
+                                                <label for="course_details" class="col-sm-4 col-form-label">{{__('SuperAdmin/backend.details')}}</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" name="course_details" value="" class="form-control" id="course_details" placeholder="">
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <input hidden name="order_id" value="{{ $course_booked_detail->order_id }}">
-                                    <div class="form-group col-md-6 mb-0">
-                                        <div class="form-group row mb-0">
-                                            <label for="course_details" class="col-sm-4 col-form-label">{{__('SuperAdmin/backend.details')}}</label>
-                                            <div class="col-sm-8">
-                                                <input type="text" name="course_details" value="" class="form-control" id="course_details" placeholder="">
+                                        <div class="form-group col-md-6 mb-0">
+                                            <div class="form-group row mb-0">
+                                                <label for="reference" class="col-sm-4 col-form-label">{{__('SuperAdmin/backend.transaction_reference')}}</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" name="reference" value="" class="form-control" id="reference" placeholder="">
+                                                </div>
                                             </div>
                                         </div>
+                                        <button type="button" onclick="submitFormAction('update_payment')" class="btn btn-primary float-right mt-1 choose">{{__('SuperAdmin/backend.update')}}</button>
                                     </div>
-                                    <div class="form-group col-md-6 mb-0">
-                                        <div class="form-group row mb-0">
-                                            <label for="reference" class="col-sm-4 col-form-label">{{__('SuperAdmin/backend.transaction_reference')}}</label>
-                                            <div class="col-sm-8">
-                                                <input type="text" name="reference" value="" class="form-control" id="reference" placeholder="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button type="button" onclick="submitFormAction('update_payment')" class="btn btn-primary float-right mt-1 choose">{{__('SuperAdmin/backend.update')}}</button>
-                                </div>
-                            </form>
-                        </div>
+                                </form>
+                            </div>
+                        @endif
                         <div class="col-sm-12">
                             <table class="table table-bordered">
                                 <tbody>
@@ -788,7 +807,7 @@
                         
                         <button type="button" class="btn btn-primary float-right mt-3 px-5" onclick="printCourseApplication('payments_refunds')">{{__('SuperAdmin/backend.print')}}</button>
                     </div>
-                </div>                
+                </div>
                 
                 <div class="card-header collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseContactCenter">
                     <a class="card-title">{{__('SuperAdmin/backend.contact_center')}}</a>
@@ -796,76 +815,22 @@
                 <div id="collapseContactCenter" class="card-body collapse p-0" data-parent="#accordion">
                     <div class="contact-center row mt-3 p-3">
                         <div class="col-lg-6">
-                            <form id="contact_center_customer" method="post" action="{{ route('superadmin.manage_application.store') }}">
-                                <h5 class="text-center">{{__('SuperAdmin/backend.contact_center_customer')}}</h5>
-                                <div class="row">
-                                    @foreach ($student_messages as $student_message)
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="From" class="col-form-label">{{__('SuperAdmin/backend.From')}}</label>
-                                                @if (app()->getLocale() == 'en')
-                                                    {{ $course_booked_detail->User->first_name }} {{ $course_booked_detail->User->last_name }}
-                                                @else
-                                                    {{ $course_booked_detail->User->first_name_ar }} {{ $course_booked_detail->User->last_name_ar }}
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="subject" class="col-form-label">{{__('SuperAdmin/backend.subject')}}</label>
-                                                {{ $student_message->subject }}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="message" class="col-form-label">{{__('SuperAdmin/backend.message')}}</label>
-                                                {{ $student_message->created_at->format('d M Y') }}
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                                
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="subject" class="col-form-label">{{__('SuperAdmin/backend.subject')}}</label>
-                                            <input class="form-control" name="subject">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="add_attachments" class="col-form-label">{{__('SuperAdmin/backend.add_attachments')}}</label>
-                                            <input class="form-control" type="file" multiple class="form-control" name="attachment[]">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="message" class="col-form-label">{{__('SuperAdmin/backend.message')}}</label>
-                                            <textarea class="form-control" rows="3" id="customerMessageText"></textarea>
-                                            <input hidden name="message" id="customerMessageInput">
-                                        </div>
-                                    </div>
-                                </div>
+                            @if (auth('superadmin')->user()->permission['course_application_manager'] || auth('superadmin')->user()->permission['course_application_edit'] || auth('superadmin')->user()->permission['course_application_contact_student'])
+                                <form id="contact_center_customer" method="post" action="{{ route('superadmin.manage_application.store') }}">                                
+                                    @csrf
+                                    
+                                    <input hidden name="type_of_submit" value="send_message_to_student">
 
-                                <input hidden name="to_email" value="{{ $course_booked_detail->User->email }}" />
-                                <input hidden name="user_id" value="{{ $course_booked_detail->user_id }}" />
-
-                                <button type="button" onclick="getCkEditorData('customerMessageText', 'customerMessageInput'); sendMessage('contact_center_customer');" class="btn btn-primary px-3">{{__('SuperAdmin/backend.send')}}</button>
-                            </form>
-                        </div>
-                        <div class="col-lg-6">
-                            @if (!empty($user_school))
-                                <form id="contact_center_school" method="post" action="{{ route('superadmin.manage_application.store') }}">
-                                    <h5 class="text-center">{{__('SuperAdmin/backend.contact_center_school')}}</h5>
+                                    <h5 class="text-center">{{__('SuperAdmin/backend.contact_center_customer')}}</h5>
                                     <div class="row">
-                                        @foreach ($chat_messages as $chat_message)
+                                        @foreach ($student_messages as $student_message)
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="From" class="col-form-label">{{__('SuperAdmin/backend.From')}}</label>
                                                     @if (app()->getLocale() == 'en')
-                                                        {{ $chat_message->user->first_name }} {{ $course_booked_detail->user->last_name }}
+                                                        {{ $course_booked_detail->User->first_name }} {{ $course_booked_detail->User->last_name }}
                                                     @else
-                                                        {{ $chat_message->user->first_name_ar }} {{ $course_booked_detail->user->last_name_ar }}
+                                                        {{ $course_booked_detail->User->first_name_ar }} {{ $course_booked_detail->User->last_name_ar }}
                                                     @endif
                                                 </div>
                                             </div>
@@ -900,8 +865,8 @@
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="message" class="col-form-label">{{__('SuperAdmin/backend.message')}}</label>
-                                                <textarea class="form-control" rows="3" id="schoolMessageText"></textarea>
-                                                <input hidden name="message" id="schoolMessageInput">
+                                                <textarea class="form-control" rows="3" id="customerMessageText"></textarea>
+                                                <input hidden name="message" id="customerMessageInput">
                                             </div>
                                         </div>
                                     </div>
@@ -909,8 +874,74 @@
                                     <input hidden name="to_email" value="{{ $course_booked_detail->User->email }}" />
                                     <input hidden name="user_id" value="{{ $course_booked_detail->user_id }}" />
 
-                                    <button type="button" onclick="getCkEditorData('schoolMessageText', 'schoolMessageInput'); sendMessage('contact_center_school');" class="btn btn-primary px-3">{{__('SuperAdmin/backend.send')}}</button>
+                                    <button type="button" onclick="submitFormAction('contact_center_customer');" class="btn btn-primary px-3">{{__('SuperAdmin/backend.send')}}</button>
                                 </form>
+                            @endif
+                        </div>
+                        <div class="col-lg-6">
+                            @if (!empty($user_school))
+                                @if (auth('superadmin')->user()->permission['course_application_manager'] || auth('superadmin')->user()->permission['course_application_edit'] || auth('superadmin')->user()->permission['course_application_contact_school'])
+                                    <form id="contact_center_school" method="post" action="{{ route('superadmin.manage_application.store') }}">
+                                        @csrf
+
+                                        <input hidden name="type_of_submit" value="send_message_to_school">
+
+                                        <h5 class="text-center">{{__('SuperAdmin/backend.contact_center_school')}}</h5>
+                                        <div class="row">
+                                            @foreach ($chat_messages as $chat_message)
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="From" class="col-form-label">{{__('SuperAdmin/backend.From')}}</label>
+                                                        @if (app()->getLocale() == 'en')
+                                                            {{ $chat_message->user->first_name }} {{ $course_booked_detail->user->last_name }}
+                                                        @else
+                                                            {{ $chat_message->user->first_name_ar }} {{ $course_booked_detail->user->last_name_ar }}
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="subject" class="col-form-label">{{__('SuperAdmin/backend.subject')}}</label>
+                                                        {{ $student_message->subject }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="message" class="col-form-label">{{__('SuperAdmin/backend.message')}}</label>
+                                                        {{ $student_message->created_at->format('d M Y') }}
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="subject" class="col-form-label">{{__('SuperAdmin/backend.subject')}}</label>
+                                                    <input class="form-control" name="subject">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="add_attachments" class="col-form-label">{{__('SuperAdmin/backend.add_attachments')}}</label>
+                                                    <input class="form-control" type="file" multiple class="form-control" name="attachment[]">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="message" class="col-form-label">{{__('SuperAdmin/backend.message')}}</label>
+                                                    <textarea class="form-control" rows="3" id="schoolMessageText"></textarea>
+                                                    <input hidden name="message" id="schoolMessageInput">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <input hidden name="to_email" value="{{ $course_booked_detail->User->email }}" />
+                                        <input hidden name="user_id" value="{{ $course_booked_detail->user_id }}" />
+
+                                        <button type="button" onclick="submitFormAction('contact_center_school');" class="btn btn-primary px-3">{{__('SuperAdmin/backend.send')}}</button>
+                                    </form>
+                                @endif
                             @else
                                 {{__('SuperAdmin/backend.no_school_admin_found')}}
                             @endif

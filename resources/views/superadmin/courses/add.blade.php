@@ -107,7 +107,7 @@
                         <div class="row">
                             <div class="form-group col-md-4">
                                 <label for="name">{{__('SuperAdmin/backend.choose_school')}}:</label>
-                                <select onchange="changeCourseSchool()" class="form-control" id="school_name" name="school_name">
+                                <select onchange="changeSchool()" class="form-control" id="school_name" name="school_name">
                                     <option value="">{{__('SuperAdmin/backend.select_school')}}</option>
                                     @foreach ($choose_schools as $choose_school)
                                         <option value="{{$choose_school}}">{{ $choose_school }}</option>
@@ -116,14 +116,14 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="country_name">{{__('SuperAdmin/backend.choose_country')}}:</label>
-                                <select onchange="changeCourseCountry()" class="form-control" id="country_name" name="country_id">
+                                <select onchange="changeCountry()" class="form-control" id="country_name" name="country_id">
                                     <option value="">{{__('SuperAdmin/backend.select')}}</option>
                                 </select>
                             </div>
 
                             <div class="form-group col-md-4">
                                 <label for="city_name">{{__('SuperAdmin/backend.choose_city')}}:</label>
-                                <select onchange="changeCourseCity()" class="form-control" id="city_name" name="city_id">
+                                <select onchange="changeCity()" class="form-control" id="city_name" name="city_id">
                                     <option value="">{{__('SuperAdmin/backend.select')}}</option>
                                 </select>
                             </div>
@@ -362,7 +362,7 @@
                                 </div>
                                 <div class="form-group col-md-4 available_days" style="display: none">
                                     <label>{{__('SuperAdmin/backend.available_days')}}:</label>
-                                    <input class="form-control yeardatepicker" data-index="0" name="available_days[]" style="display: none">
+                                    <input class="form-control yeardatepicker" data-index="0" name="available_days[]">
                                 </div>
                                 <div class="form-group col-md-4"></div>
                             </div>

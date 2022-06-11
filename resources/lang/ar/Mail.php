@@ -15,7 +15,6 @@ return [
         'find_attached_quotation' => 'مرفق لك عرض السعر ',
         'your_customer_no' => 'رقم العميل #',
         'thank_you' => 'شكرا لك ، لينك للدراسة بالخارج',
-
         'reservation_qutation' => 'عرض السعر',
         'registration_date' => 'تاريخ التسجيل',
         'customer_name' => 'اسم العميل',
@@ -62,6 +61,7 @@ return [
         'total_cost' => 'المبلغ الاجمالي',
         'amount_to_pay_now' => 'المبلغ المطلوب سداده',
         'amount_to_pay_now_deposit' => 'المبلغ المطلوب سداده الان ( العربون )',
+        'total_amount_paid' => 'Total Amount Paid',
         'total_balance_due' => 'المبلغ الاجمالي المستحق',
     ],
 ];

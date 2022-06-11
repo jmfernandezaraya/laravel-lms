@@ -4,50 +4,9 @@
     {{__('Frontend.reservation_details')}}
 @endsection
 
-@section('css')
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <style>
-        #sig-canvas {
-            border: 2px dotted #CCCCCC;
-            border-radius: 15px;
-            cursor: crosshair;
-        }
-        
-        #financial_guarantee {
-            display: none;
-        }
-        
-        #bank_statement {
-            display: none;
-        }
-        
-        .diff-tution {
-            color: #b94443;
-        }
-        
-        #signature {
-            border: 2px solid black;
-        }
-        
-        form > * {
-            margin: 10px;
-        }
-
-        table thead {
-            background-color: #97d0db;
-            color: white;
-        }
-        
-        @media (max-width: 400px) {
-            #sig-canvas {
-                width: 100%;
-            }
-        }
-    </style>
-@endsection
+<script src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 @section('breadcrumbs')
     <h1>{{__('Frontend.reservation_details')}}</h1>
@@ -67,15 +26,15 @@
                     <tbody>
                         <tr>
                             <td>{{__('Frontend.name')}}</td>
-                            <td>{{ app()->getLocale() == 'en' ? ($school->name . ($school->branch_name ? $school->branch_name : '')) : ($school->name_ar . ($school->branch_name_ar ? $school->branch_name_ar : '')) }}</td>
+                            <td>{{ $school->name ? (app()->getLocale() == 'en' ? ($school->name->name ?? '-') : ($school->name->name_ar ?? '-')) : '-' }} {{ app()->getLocale() == 'en' ? ($school->branch_name ?? '') : ($school->branch_name_ar ?? '') }}</td>
                         </tr>
                         <tr>
                             <td>{{__('Frontend.city')}}</td>
-                            <td>{{ app()->getLocale() == 'en' ? $school->city : $school->city_ar }}</td>
+                            <td>{{ $school->city ? (app()->getLocale() == 'en' ? ($school->city->name ?? '-') : ($school->city->name_ar ?? '-')) : '-' }}</td>
                         </tr>
                         <tr>
                             <td>{{__('Frontend.country')}}</td>
-                            <td>{{ app()->getLocale() == 'en' ? $school->country : $school->country_ar }}</td>
+                            <td>{{ $school->country ? (app()->getLocale() == 'en' ? ($school->country->name ?? '-') : ($school->country->name_ar ?? '-')) : '-' }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -92,8 +51,8 @@
                     <tbody>
                         <tr>
                             <td>
-                                {{ $course->program_name }}, {{ $course->lessons_per_week }} {{__('Frontend.lessons')}} / {{ $course->hours_per_week }} {{__('Frontend.hours_per_week')}}<br />
-                                {{ $program_start_date }} {{__('Frontend.to')}} {{ $program_end_date }} ( {{ $course_details->program_duration }} {{__('Frontend.weeks')}} )
+                                <p>{{ $course->program_name }}, {{ $course->lessons_per_week }} {{__('Frontend.lessons')}} / {{ $course->hours_per_week }} {{__('Frontend.hours_per_week')}}</p>
+                                <p>{{ $program_start_date }} {{__('Frontend.to')}} {{ $program_end_date }} ( {{ $course_details->program_duration }} {{__('Frontend.weeks')}} )</p>
                             </td>
                             <td>{{ toFixedNumber($program_cost['value']) }}</td>
                             <td>{{ toFixedNumber($program_cost['converted_value']) }}</td>
@@ -172,8 +131,8 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    {{$accommodation->type}} - {{$accommodation->room_type}} - {{$accommodation->meal}}<br />
-                                    {{$accommodation_start_date}} to {{$accommodation_end_date}} ( {{$course_details->accommodation_duration}} {{__('Frontend.weeks')}} )
+                                    <p>{{$accommodation->type}} - {{$accommodation->room_type}} - {{$accommodation->meal}}</p>
+                                    <p>{{$accommodation_start_date}} to {{$accommodation_end_date}} ( {{$course_details->accommodation_duration}} {{__('Frontend.weeks')}} )</p>
                                 </td>
                                 <input type="hidden" value="{{$accommodation_start_date}}" name="accommodation_start_date" />
                                 <input type="hidden" value="{{$accommodation_end_date}}" name="accommodation_end_date" />
@@ -264,9 +223,9 @@
                             @if ($airport)
                                 <tr>
                                     <td>
-                                        {{__('Frontend.transport')}}<br />
-                                        {{__('Frontend.service_provider')}}: {{ $course_details->airport_provider }}<br />
-                                        {{ $course_details->airport_name }} - {{ $course_details->airport_service }}<br />
+                                        <p>{{__('Frontend.transport')}}</p>
+                                        <p>{{__('Frontend.service_provider')}}: {{ $course_details->airport_provider }}</p>
+                                        <p>{{ $course_details->airport_name }} - {{ $course_details->airport_service }}</p>
                                     </td>
                                     <td>{{ toFixedNumber($airport_pickup_fee['value']) }}</td>
                                     <td>{{ toFixedNumber($airport_pickup_fee['converted_value']) }}</td>
@@ -276,9 +235,9 @@
                             @if ($medical)
                                 <tr>
                                     <td>
-                                        {{__('Frontend.medical_insurance')}}<br />
-                                        {{__('Frontend.company_name')}}: {{ $course_details->company_name }}<br />
-                                        {{ $medical_start_date }} - {{ $medical_end_date }} ( {{ $course_details->duration }} {{__('Frontend.weeks')}} )<br />
+                                        <p>{{__('Frontend.medical_insurance')}}</p>
+                                        <p>{{__('Frontend.company_name')}}: {{ $course_details->company_name }}</p>
+                                        <p>{{ $medical_start_date }} - {{ $medical_end_date }} ( {{ $course_details->duration }} {{__('Frontend.weeks')}} )</p>
                                     </td>
                                     <input type="hidden" value="{{$medical_start_date}}" name="medical_start_date" />
                                     <input type="hidden" value="{{$medical_end_date}}" name="medical_end_date" />
@@ -287,11 +246,11 @@
                                     <input type="hidden" value="{{$medical_insurance_fee['value']}}" name="medical_insurance_fee" />
                                 </tr>
                             @endif
-                            @if ($custodian)                            
+                            @if ($custodian)
                                 <tr>
                                     <td>
-                                        {{__('Frontend.custodian')}}<br />
-                                        {{__('Frontend.age_range')}}: {{ $course_register_details->custodian_min_age ?? ''}} - {{ $course_register_details->custodian_max_age ?? ''}} {{__('Frontend.years')}}<br />
+                                        <p>{{__('Frontend.custodian')}}</p>
+                                        <p>{{__('Frontend.age_range')}}: {{ $course_register_details->custodian_min_age ?? ''}} - {{ $course_register_details->custodian_max_age ?? ''}} {{__('Frontend.years')}}</p>
                                     </td>
                                     <td>{{ toFixedNumber($custodian_fee['value']) }}</td>
                                     <td>{{ toFixedNumber($custodian_fee['converted_value']) }}</td>

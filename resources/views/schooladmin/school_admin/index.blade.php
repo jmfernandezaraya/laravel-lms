@@ -37,7 +37,7 @@
 	@if($school->image != null || $school->image != '')
 	<img width = "200px" height = "200px" src = "{{asset($school->image)}}">
 	@else
-        <img width = "200px" height = "200px" src = "//desk87.com/assets/images/preview-not-available.jpg">
+        <img width = "200px" height = "200px" src = "{{ asset('/assets/images/no-image.jpg') }}">
 
     @endif
 

@@ -42,7 +42,7 @@
                             <textarea value="{{old('description_en')}}" name="description_en" class="form-control" id="textarea_en" placeholder="{{__('SuperAdmin/backend.blog_description')}}"></textarea>
                         </div>
 
-                        <img src="//desk87.com/assets/images/preview-not-available.jpg" id="previewImg" alt="Uploaded Image Preview Holder" width="550px" height="250px" style="border-radius:3px;border:5px;"/>
+                        <img src="{{ asset('/assets/images/no-image.jpg') }}" id="previewImg" alt="Uploaded Image Preview Holder" width="550px" height="250px" style="border-radius:3px;border:5px;"/>
 
                         <div class="form-group">
                             <label>{{__('SuperAdmin/backend.blog_image')}}</label>

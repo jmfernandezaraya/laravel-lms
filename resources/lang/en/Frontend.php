@@ -131,6 +131,7 @@ return [
     'submit' => 'Submit',
     'yes' => 'Yes',
     'no' => 'No',
+    'download' => 'Download',
     
     'contact_us' => 'Contact Us',
     'your_name' => 'Your Name',
@@ -343,7 +344,7 @@ return [
     'instagram' => 'Instagram',
     'snapchat' => 'Snapchat',
     'tiktok' => 'Tiktok',
-    'youTube' => 'YouTube',
+    'youtube' => 'YouTube',
     'friend' => 'Friend',
     'other' => 'Other',
     

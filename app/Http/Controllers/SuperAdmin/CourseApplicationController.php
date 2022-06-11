@@ -86,9 +86,7 @@ class CourseApplicationController extends Controller
                 event(new UserCourseBookedStatus($event));
 
                 $success = __('SuperAdmin/backend.data_updated');
-            }
-
-            elseif ($request->type_of_submit == 'send_message_to_student') {
+            } elseif ($request->type_of_submit == 'send_message_to_student') {
                 $rules = [
                     'attachment.*' => 'mimes:doc,docx,pdf',
                     'subject' => 'required',
@@ -122,13 +120,15 @@ class CourseApplicationController extends Controller
                     $course->save();
                     event(new UserCourseBookedStatus($course));
                 }
-                $txn = Transaction::where('cart_id', $request->order_id)->first();
-                $txnrefund = new TransactionRefund;
-                $request->symbol == '+' ? $txnrefund->amount_added = $request->amount : $txnrefund->amount_refunded = $request->amount;
-                $txnrefund->transaction_id = $txn->order_id;
-                $txnrefund->txn_reference = $request->reference;
-                $txnrefund->details = $request->course_details;
-                $txnrefund->save();
+                if ($request->order_id) {
+                    $txn = Transaction::where('cart_id', $request->order_id)->first();
+                    $txnrefund = new TransactionRefund;
+                    $request->symbol == '+' ? $txnrefund->amount_added = $request->amount : $txnrefund->amount_refunded = $request->amount;
+                    $txnrefund->transaction_id = $txn->order_id;
+                    $txnrefund->txn_reference = $request->reference;
+                    $txnrefund->details = $request->course_details;
+                    $txnrefund->save();
+                }
 
                 $success = __('SuperAdmin/backend.data_updated');
             }
@@ -333,5 +333,11 @@ class CourseApplicationController extends Controller
         }
 
         return response()->download($pdf_file);
+    }
+
+    public function listForCustomer($customer_id) {
+        $data['booked_details'] = UserCourseBookedDetails::with('User', 'course', 'userBookDetailsApproved')->where('user_id', $customer_id)->get();
+
+        return view('superadmin.course_application.index', $data);
     }
 }

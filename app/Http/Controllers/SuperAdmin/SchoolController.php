@@ -161,9 +161,6 @@ class SchoolController extends Controller
 
                 $input['logo'] = $this->storeImage->saveImage();
             }
-            if ($request->has('website_link')) {
-                $input['website_link'] = $request->website_link;
-            }
             if ($request->has("video_url")) {
                 $input['video'] = $request->video_url;
             }
@@ -244,9 +241,6 @@ class SchoolController extends Controller
                 $this->storeImage->setPath('school_images');
 
                 $logos[] = $this->storeImage->saveImage();
-            }
-            if ($request->has('website_link')) {
-                $input['webiste_link '] = $request->webiste_link;
             }
             $input['logos'] = $logos;
         }
@@ -456,7 +450,7 @@ class SchoolController extends Controller
     function getCountryList(Request $request)
     {
         $language = app()->getLocale();
-        $schools = School::whereHas('name', function($query) use ($request, $language)
+        $schools = School::where('is_active', true)->whereHas('name', function($query) use ($request, $language)
             { $language ? $query->where('name', $request->school) : $query->where('name_ar', $request->school); })->get();
         $country_ids = [];
         foreach ($schools as $school) {
@@ -465,7 +459,8 @@ class SchoolController extends Controller
             }
         }
         $countries = Country::whereIn('id', $country_ids)->orderBy('id', 'asc')->get();
-        $country_list = "<option value=''>" . __('SuperAdmin/backend.select_option') . "</option>";
+        $country_list = "";
+        if ($request->empty_value == 'true') $country_list .= "<option value=''>" . __('SuperAdmin/backend.select_option') . "</option>";
         foreach ($countries as $country) {
             if ($country) $country_list .= "<option value='$country->id'>".(app()->getLocale() == 'en' ? $country->name : $country->name_ar)."</option>";
         }
@@ -480,16 +475,23 @@ class SchoolController extends Controller
     function getCityList(Request $request)
     {
         $language = app()->getLocale();
-        $schools = School::whereHas('name', function($query) use ($request, $language)
+        $schools = School::where('is_active', true)->whereHas('name', function($query) use ($request, $language)
             { $language ? $query->where('name', $request->school) : $query->where('name_ar', $request->school); })->get();
         $city_ids = [];
         foreach ($schools as $school) {
-            if ($school->country_id == $request->country) {
-                $city_ids[] = $school->city_id;
+            if (is_array($request->country)) {
+                if (in_array($school->country_id, $request->country)) {
+                    $city_ids[] = $school->city_id;
+                }
+            } else {
+                if ($school->country_id == $request->country) {
+                    $city_ids[] = $school->city_id;
+                }
             }
         }
         $cities = City::whereIn('id', $city_ids)->get();
-        $city_list = "<option value=''>" . __('SuperAdmin/backend.select_option') . "</option>";
+        $city_list = "";
+        if ($request->empty_value == 'true') $city_list .= "<option value=''>" . __('SuperAdmin/backend.select_option') . "</option>";
         foreach ($cities as $city) {
             if ($city) $city_list .= "<option value='$city->id'>".(app()->getLocale() == 'en' ? $city->name : $city->name_ar)."</option>";
         }
@@ -504,7 +506,8 @@ class SchoolController extends Controller
     function getCityByCountryList(Request $request)
     {
         $country = Country::with('cities')->where('id', $request->id)->first();
-        $city_list = "<option value=''>" . __('SuperAdmin/backend.select_option') . "</option>";
+        $city_list = "";
+        if ($request->empty_value == 'true') $city_list .= "<option value=''>" . __('SuperAdmin/backend.select_option') . "</option>";
         foreach ($country->cities as $city) {
             if ($city) $city_list .= "<option value='$city->id'>".(app()->getLocale() == 'en' ? $city->name : $city->name_ar)."</option>";
         }
@@ -519,15 +522,39 @@ class SchoolController extends Controller
     function getBranchList(Request $request)
     {
         $language = app()->getLocale();
-        $schools = School::whereHas('name', function($query) use ($request, $language)
+        $schools = School::where('is_active', true)->whereHas('name', function($query) use ($request, $language)
             { $language ? $query->where('name', $request->school) : $query->where('name_ar', $request->school); })->get();
         $branch_names = [];
         foreach ($schools as $school) {
-            if ($school->country_id == $request->country && $school->city_id == $request->city) {
-                $branch_names[] = app()->getLocale() == 'en' ? $school->branch_name : $school->branch_name_ar;
+            $country_city_flag = true;
+            if (is_array($request->country)) {
+                if (!in_array($school->country_id, $request->country)) {
+                    $country_city_flag = false;
+                }
+            } else {
+                if ($school->country_id != $request->country) {
+                    $country_city_flag = false;
+                }
+            }
+            if (is_array($request->city)) {
+                if (!in_array($school->city_id, $request->city)) {
+                    $country_city_flag = false;
+                }
+            } else {
+                if ($school->city_id != $request->city) {
+                    $country_city_flag = false;
+                }
+            }
+            if ($country_city_flag) {
+                if (app()->getLocale() == 'en' && $school->branch_name) {
+                    $branch_names[] = $school->branch_name;
+                } else if (app()->getLocale() != 'en' && $school->branch_name_ar) {
+                    $branch_names[] = $school->branch_name_ar;
+                }
             }
         }
-        $branch_list = "<option value=''>" . __('SuperAdmin/backend.select_option') . "</option>";
+        $branch_list = "";
+        if ($request->empty_value == 'true') $branch_list .= "<option value=''>" . __('SuperAdmin/backend.select_option') . "</option>";
         foreach ($branch_names as $branch_name) {
             $branch_list .= "<option value='$branch_name'>$branch_name</option>";
         }

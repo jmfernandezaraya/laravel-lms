@@ -39,7 +39,7 @@
     <div class="page-content">
         <div class="card">
             <div class="card-body">
-                <form id="frontPageForm" class="forms-sample" method="post" action="{{route('superadmin.front_page.update', $front_page->id)}}">
+                <form id="frontPageForm" class="forms-sample" method="post" action="{{route('superadmin.setting.front_page.update', $front_page->id)}}">
                     {{csrf_field()}}
                     @method('PUT')
 
@@ -56,7 +56,7 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-md-12">
-                            <label for="title">{{__('SuperAdmin/backend.slug')}}</label>
+                            <label for="slug">{{__('SuperAdmin/backend.slug')}}</label>
                             <input value="{{$front_page->slug}}" name="slug" type="text" class="form-control" placeholder="{{__('SuperAdmin/backend.slug')}}">
                         </div>
                     </div>
@@ -71,6 +71,18 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label for="route">{{__('SuperAdmin/backend.route')}}</label>
+                            <input name="route" type="checkbox" onchange="changeFrontpageRoute()" {{$front_page->route ? 'checked' : ''}} />
+                        </div>
+                    </div>
+                    <div class="row display" style="display: {{$front_page->route ? 'none' : 'block'}}">
+                        <div class="form-group col-md-12">
+                            <label for="display">{{__('SuperAdmin/backend.display')}}</label>
+                            <input name="display" type="checkbox" {{$front_page->display ? 'checked' : ''}} />
+                        </div>
+                    </div>
 
                     <a class="btn btn-light" href="{{url()->previous()}}">{{__('SuperAdmin/backend.cancel')}}</a>
                     <button type="button" onclick="submitForm($(this).parents().find('#frontPageForm'))" class="btn btn-primary">{{__('SuperAdmin/backend.submit')}}</button>
@@ -81,7 +93,7 @@
 
     @section('js')
         <script>
-            var uploadFileOption = "{{route('superadmin.front_page.upload', ['_token' => csrf_token() ])}}";
+            var uploadFileOption = "{{route('superadmin.setting.front_page.upload', ['_token' => csrf_token() ])}}";
             function previewFile(input) {
                 if (input.files && input.files[0]) {
                     var reader = new FileReader();
@@ -97,6 +109,14 @@
             function changeFrontPageTitle() {
                 var title = $('[name="title"]').val();
                 $('[name="slug"]').val(generateSlug(title));
+            }
+
+            function changeFrontpageRoute() {
+                if ($('[name="route"]').is(':checked')) {
+                    $('.display').hide();
+                } else {
+                    $('.display').show();
+                }
             }
         </script>
     @endsection

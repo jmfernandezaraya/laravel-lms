@@ -280,6 +280,16 @@
 
                     <div class="row">
                         <div class="form-group col-md-12">
+                            <label for="website_link">{{__('SuperAdmin/backend.website_link')}}</label>
+                            <input name="website_link" type="text" class="form-control" id="website_link" placeholder="{{__('SuperAdmin/backend.website_link')}}">
+                            @if ($errors->has('website_link'))
+                                <div class="alert alert-danger">{{$errors->first('website_link')}}</div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-12">
                             <label for="photos">{{__('SuperAdmin/backend.photos')}}</label>
                             <input name="multiple_photos[]" multiple type="file" class="form-control" id="photos" accept="image/*">
                             @if ($errors->has('multiple_photos'))

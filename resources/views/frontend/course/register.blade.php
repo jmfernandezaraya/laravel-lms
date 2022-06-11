@@ -4,45 +4,9 @@
     {{__('Frontend.registration_form')}}
 @endsection
 
-@section('css')
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <style>
-        #sig-canvas {
-            border: 2px dotted #CCCCCC;
-            border-radius: 15px;
-            cursor: crosshair;
-        }
-        
-        #financial_guarantee {
-            display: none;
-        }
-        
-        #bank_statement {
-            display: none;
-        }
-        
-        .diff-tution {
-            color: #b94443;
-        }
-        
-        #signature {
-            border: 2px solid black;
-        }
-        
-        form > * {
-            margin: 10px;
-        }
-        
-        @media (max-width: 400px) {
-            #sig-canvas {
-                width: 100%;
-            }
-        }
-    </style>
-@endsection
+<script src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 @section('breadcrumbs')
     <h1>{{__('Frontend.registration_form')}}</h1>
@@ -532,7 +496,7 @@
                 </div>
                 <div class="form-check form-check-inline">
                     <input name="heard_where[]" class="form-check-input" type="checkbox" id="heard_where_youtube" value="YouTube">
-                    <label class="form-check-label" for="heard_where_youtube">{{__('Frontend.youTube')}}</label>
+                    <label class="form-check-label" for="heard_where_youtube">{{__('Frontend.youtube')}}</label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input name="heard_where[]" class="form-check-input" type="checkbox" id="heard_where_friend" value="Friend">

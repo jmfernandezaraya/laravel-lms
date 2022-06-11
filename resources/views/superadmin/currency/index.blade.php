@@ -7,9 +7,12 @@
                 <div style="text-align: center;">
                     <h1 class="card-title">{{__('SuperAdmin/backend.currencies')}}</h1>
                 </div>
-                <a href="{{route('superadmin.currency.create')}}" type="button" class="btn btn-primary btn-sm pull-right">
-                    <i class="fa fa-plus"></i>&nbsp;{{__('SuperAdmin/backend.add')}}
-                </a>
+
+                @if (auth('superadmin')->user()->permission['course_manager'])
+                    <a href="{{route('superadmin.setting.currency.create')}}" type="button" class="btn btn-primary btn-sm pull-right">
+                        <i class="fa fa-plus"></i>&nbsp;{{__('SuperAdmin/backend.add')}}
+                    </a>
+                @endif
             </div>
         </div>
     </div>
@@ -25,7 +28,9 @@
                             <th>{{__('SuperAdmin/backend.exchange_rate')}}</th>
                             <th>{{__('SuperAdmin/backend.default')}}</th>
                             <th>{{__('SuperAdmin/backend.created_on')}}</th>
-                            <th>{{__('SuperAdmin/backend.action')}}</th>
+                            @if (auth('superadmin')->user()->permission['course_manager'] || auth('superadmin')->user()->permission['currency_deit'])
+                                <th>{{__('SuperAdmin/backend.action')}}</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -36,22 +41,30 @@
                                 <td>{{ $currency->exchange_rate }}</td>
                                 <td>{{ $currency->is_default ? __('SuperAdmin/backend.default') : '' }}</td>
                                 <td>{{ $currency->created_at->diffForHumans() }}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <a href="{{route('superadmin.currency.edit', $currency->id)}}" class="btn btn-info btn-sm fa fa-pencil"></a>
-                                        @if(!$currency->is_default)
-                                            <form action="{{route('superadmin.currency.set_default', $currency->id)}}" method="POST">
-                                                @csrf
-                                                <button type="submit" onclick="return confirm('{{__('SuperAdmin/backend.confirm_set_default')}}')" class="btn btn-primary btn-sm fa fa-check"></button>
-                                            </form>
-                                        @endif
-                                        <form action="{{route('superadmin.currency.destroy', $currency->id)}}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" onclick="return confirmDelete()" class="btn btn-danger btn-sm fa fa-trash"></button>
-                                        </form>
-                                    </div>
-                                </td>
+                                @if (auth('superadmin')->user()->permission['course_manager'] || auth('superadmin')->user()->permission['currency_deit'])
+                                    <td>
+                                        <div class="btn-group">
+                                            @if (auth('superadmin')->user()->permission['course_manager'] || auth('superadmin')->user()->permission['currency_deit'])
+                                                <a href="{{route('superadmin.setting.currency.edit', $currency->id)}}" class="btn btn-info btn-sm fa fa-pencil"></a>
+                                            @endif
+                                            
+                                            @if (auth('superadmin')->user()->permission['course_manager'])
+                                                @if(!$currency->is_default)
+                                                    <form action="{{route('superadmin.setting.currency.set_default', $currency->id)}}" method="POST">
+                                                        @csrf
+                                                        <button type="submit" onclick="return confirm('{{__('SuperAdmin/backend.confirm_set_default')}}')" class="btn btn-primary btn-sm fa fa-check"></button>
+                                                    </form>
+                                                @endif
+
+                                                <form action="{{route('superadmin.setting.currency.destroy', $currency->id)}}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" onclick="return confirmDelete()" class="btn btn-danger btn-sm fa fa-trash"></button>
+                                                </form>
+                                            @endif
+                                        </div>
+                                    </td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>

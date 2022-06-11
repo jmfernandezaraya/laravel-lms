@@ -18,15 +18,12 @@
     <div class="page-content">
         <div class="card">
             <div class="card-body table table-responsive">
-                <div style="text-align: center;">
-                    <h1 class="card-title">{{__('SuperAdmin/backend.course_application_details')}}</h1>
-                </div>
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr>
                             <th>#</th>
                             <td>{{__('SuperAdmin/backend.created_at')}}</td>
-                            <th>{{__('SuperAdmin/backend.name')}}</th>
+                            <th>{{__('SuperAdmin/backend.user_name')}}</th>
                             <th>{{__('SuperAdmin/backend.email')}}</th>
                             <th>{{__('SuperAdmin/backend.mobile')}}</th>
                             <th>{{__('SuperAdmin/backend.school_name')}}</th>
@@ -58,18 +55,20 @@
                                 <td>{{ ucwords($details->other_currency) }}</td>
                                 <td>{{ ucwords($details->paid_amount) }}</td>
                                 <td>{{ isset($details->userBookDetailsApproved->approve) ? ucwords($details->userBookDetailsApproved->approve  == 1 ? 'Application Recevived' : 'Send To School Admin' ) : 'Application Recevived' }}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <a href="{{route('superadmin.manage_application.edit', $details->id)}}" class="btn btn-info btn-sm fa fa-eye"></a>
-                                        @if (isset($details->userBookDetailsApproved->approved))
-                                            @if ($details->userBookDetailsApproved->approved == 1)
-                                                <a href="{{route('superadmin.manage_application.approve', ['id' => $details->id, 'value' => 0])}}" class="btn btn-success btn-sm fa fa-check"></a>
-                                            @else
-                                                <a href="{{route('superadmin.manage_application.approve', ['id' => $details->id, 'value' => 1])}}" class="btn btn-danger btn-sm fa fa-window-close"></a>
+                                @if (auth('superadmin')->user()->permission['course_application_manager'] || auth('superadmin')->user()->permission['course_application_edit'])
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="{{route('superadmin.manage_application.edit', $details->id)}}" class="btn btn-info btn-sm fa fa-eye"></a>
+                                            @if (isset($details->userBookDetailsApproved->approved))
+                                                @if ($details->userBookDetailsApproved->approved == 1)
+                                                    <a href="{{route('superadmin.manage_application.approve', ['id' => $details->id, 'value' => 0])}}" class="btn btn-success btn-sm fa fa-check"></a>
+                                                @else
+                                                    <a href="{{route('superadmin.manage_application.approve', ['id' => $details->id, 'value' => 1])}}" class="btn btn-danger btn-sm fa fa-window-close"></a>
+                                                @endif
                                             @endif
-                                        @endif
-                                    </div>
-                                </td>
+                                        </div>
+                                    </td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>

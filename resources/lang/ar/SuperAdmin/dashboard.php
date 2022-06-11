@@ -3,6 +3,8 @@
 return [
 	'dashboard' => 'لوحة التحكم',
 	'user' => 'User',
+	'users' => 'Users',
+	'customers' => 'Customers',
 	'branch_admin' => 'Branch Admin',
 	'school_admin' => 'School Admin',
 	'super_admin' => 'Super Admin',
@@ -12,7 +14,9 @@ return [
 	'courses' => 'الدورات',
 	'front_pages' => 'Front Pages',
 	'home_page' => 'Home Page',
+    'header_footer' => 'Header & Footer',
 	'settings' => 'Settings',
+	'currency' => 'Currency',
 	'total_schools' => 'جميع المدارس',
 	'total_school_admin' => 'جميع حسابات المدارس',
 	'signout' => 'تسجيل الخروج',

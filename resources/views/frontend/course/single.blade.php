@@ -4,51 +4,6 @@
     {{__('Frontend.single_course')}}
 @endsection
 
-@section('css')
-    <style>
-        .section-title {
-            font-size: 24px;
-            margin: 30px 0 15px 0;
-            font-weight: 700;
-            position: relative;
-            padding-bottom: 10px;
-        }
-        .section-title:before {
-            content: '';
-            position: absolute;
-            display: block;
-            width: 100%;
-            height: 1px;
-            background: #eef0ef;
-            bottom: 0;
-            left: 0;
-        }
-        .section-title:after {
-            content: '';
-            position: absolute;
-            display: block;
-            width: 60px;
-            height: 1px;
-            background: #97d0db;
-            bottom: 0;
-            left: 0;
-        }
-
-        #tab-video .carousel-item {
-            position: relative;
-            width: 100%;
-            height: 100%;
-        }
-        #tab-video .carousel-item .video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-    </style>
-@endsection
-
 @section('content')
     <div class="row">
         <div class="col-md-12">
@@ -668,7 +623,8 @@
     <script>
         var token = "{{csrf_token()}}";
 
-        var rooms_meals_url = "{{route('course.rooms_meals')}}";
+        var accomm_rooms_meals_url = "{{route('course.rooms_meals')}}";
+        var accomm_meals_url = "{{route('course.meals')}}";
         var accomm_durations_url = "{{route('course.accomm_durations')}}";
         
         var calculate_url = "{{route('course.calculate')}}";

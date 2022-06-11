@@ -1,56 +1,6 @@
 @extends('frontend.layouts.app')
 
 @section('content')
-    @section('css')
-        <style>
-            .register-content .form-control {
-                border: 1px solid #eee;
-            }
-            .register-content .heading {
-                color: #fff;
-                text-align: center;
-                text-transform: uppercase;
-                padding: 15px 0;
-                background: #97d0db;
-                font-weight: 600;
-                font-size: 25px;
-                margin-bottom: 30px;
-            }
-            .register-content {
-                padding: 25px;
-                text-align: center;
-                box-shadow: 0 15px 30px 0 rgb(0 0 0 / 10%);
-                max-width: 550px;
-                background-color: #fff;
-                margin: 0 auto;
-            }
-            .form-control {
-                height: 50px;
-                padding: 15px;
-                font-size: 16px;
-                border-radius: 5px;
-                font-weight: 400;
-            }
-            .register-content h4 {
-                color: #777;
-                margin-top: 20px;
-                font-size: 18px;
-                font-weight: 400;
-            }
-            .register-content h4 {
-                color: #777;
-                margin-top: 20px;
-                font-size: 14px;
-                font-weight: 600;
-            }
-            .register-content .btn {
-                display: block;
-                width: 100%;
-                text-transform: uppercase;
-            }
-        </style>
-    @endsection
-
     <main id="main">
         <!-- ======= Breadcrumbs ======= -->
         <div class="breadcrumbs" data-aos="fade-in">

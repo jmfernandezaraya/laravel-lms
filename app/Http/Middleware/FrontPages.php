@@ -28,7 +28,7 @@ class FrontPages
         }
 
         if ($request_uri != '' && $request_uri != '/') {
-            $front_pages = FrontPage::where('slug', '<>', '/')->get();
+            $front_pages = FrontPage::where('slug', '<>', '/')->where('route', false)->where('display', true)->get();
             foreach ($front_pages as $front_page) {
                 if ($front_page->slug == $request_uri) {
                     $title = app()->getLocale() == 'en' ? $front_page->title : $front_page->title_ar;

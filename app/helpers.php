@@ -339,6 +339,110 @@ function getCurrencyConvertedValues($course_id, $values)
     return $currency_values;
 }
 
+function getStorageImages($path, $filename)
+{
+    return asset("storage/app/public/" . $path . '/' . $filename);
+}
+
+function getHeaderLogo()
+{
+    $header_logo = [];
+    $header_footer = \App\Models\Setting::where('setting_key', 'header_footer')->first();
+    if ($header_footer) {
+        $content = unserialize($header_footer->setting_value);
+        if (isset($content['header']['logo'])) {
+            $header_logo = $content['header']['logo'];
+        }
+    }
+
+    return $header_logo;
+}
+
+function getHeaderMenu()
+{
+    $header_menu = [];
+    $header_footer = \App\Models\Setting::where('setting_key', 'header_footer')->first();
+    if ($header_footer) {
+        $content = unserialize($header_footer->setting_value);
+        if (isset($content['header']['menu'])) {
+            $header_menu = $content['header']['menu'];
+        }
+    }
+
+    return $header_menu;
+}
+
+function getFooterLogo()
+{
+    $footer_logo = [];
+    $header_footer = \App\Models\Setting::where('setting_key', 'header_footer')->first();
+    if ($header_footer) {
+        $content = unserialize($header_footer->setting_value);
+        if (isset($content['footer']['logo'])) {
+            $footer_logo = $content['footer']['logo'];
+        }
+    }
+
+    return $footer_logo;
+}
+
+function getFooterMenu()
+{
+    $footer_menu = [];
+    $header_footer = \App\Models\Setting::where('setting_key', 'header_footer')->first();
+    if ($header_footer) {
+        $content = unserialize($header_footer->setting_value);
+        if (isset($content['footer']['menu'])) {
+            $footer_menu = $content['footer']['menu'];
+        }
+    }
+
+    return $footer_menu;
+}
+
+function getSocials()
+{
+    $socials = [];
+    $header_footer = \App\Models\Setting::where('setting_key', 'header_footer')->first();
+    if ($header_footer) {
+        $content = unserialize($header_footer->setting_value);
+        if (isset($content['social'])) {
+            $socials = $content['social'];
+        }
+    }
+
+    return $socials;
+}
+
+function getPageUrl($id)
+{
+    $front_page_url = '';
+    $front_page = \App\Models\FrontPage::where('id', $id)->first();
+    if ($front_page) {
+        $front_page_url = $front_page->slug;
+        if ($front_page_url && $front_page_url[0] != '/') {
+            $front_page_url = '/' . $front_page_url;
+        }
+    }
+
+    return $front_page_url;
+}
+
+function getPageTitle($id)
+{
+    $front_page_title = '';
+    $front_page = \App\Models\FrontPage::where('id', $id)->first();
+    if ($front_page) {
+        if (app()->getLocale() == 'en') {
+            $front_page_title = $front_page->title;
+        } else {
+            $front_page_title = $front_page->title_ar;
+        }
+    }
+
+    return $front_page_title;
+}
+
 /**
  * @param $start_date
  * @param $weeks

@@ -39,7 +39,7 @@
     <div class="page-content">
         <div class="card">
             <div class="card-body">
-                <form id="frontPageForm" class="forms-sample" enctype="multipart/form-data" method="POST" action="{{route('superadmin.front_page.home.update')}}">
+                <form id="frontPageForm" class="forms-sample" enctype="multipart/form-data" method="POST" action="{{route('superadmin.setting.home_page.update')}}">
                     {{csrf_field()}}
 
                     <div class="row">
@@ -48,19 +48,19 @@
 
                             <script>
                                 window.addEventListener('load', function() {
-                                    home_hero_clone = {{$content && $content['heros'] ? count($content['heros']) - 1 : 0}};
+                                    home_hero_clone = {{$setting_value && $setting_value['heros'] ? count($setting_value['heros']) - 1 : 0}};
                                 }, false );
                             </script>
-                            <input hidden id="heroincretment" name="heroincretment" value="{{$content && $content['heros'] ? count($content['heros']) - 1 : 0}}">
-                            @if ($content && $content['heros'] && count($content['heros']))
-                                @foreach ($content['heros'] as $hero)
+                            <input hidden id="home_hero_increment" name="heroincretment" value="{{$setting_value && $setting_value['heros'] ? count($setting_value['heros']) - 1 : 0}}">
+                            @if ($setting_value && $setting_value['heros'] && count($setting_value['heros']))
+                                @foreach ($setting_value['heros'] as $hero)
                                     <div id="home_hero_clone{{$loop->iteration - 1}}" class="home-hero-clone clone">
                                         <div class="row">
                                             <div class="form-group col-md-4">
                                                 <label for="background">{{__('SuperAdmin/backend.background')}}:</label>
                                                 <input name="hero_background[]" type="file" class="form-control" accept="image/*">
                                                 @if (!is_null($hero['background']))
-                                                    <img src="{{ $front_page->getStorageImages('front_page', $hero['background']) }}" class="img-fluid img-thumbnail" alt="Background Image">
+                                                    <img src="{{ getStorageImages('setting', $hero['background']) }}" class="img-fluid img-thumbnail" alt="Background Image">
                                                 @endif
                                                 @if ($errors->has('logo'))
                                                     <div class="alert alert-danger">{{$errors->first('logo')}}</div>
@@ -146,39 +146,27 @@
                     </div>
                     
                     <div class="row">
-                        <div class="form-group col-md-12">
+                        <div class="form-group col-md-6">
                             <label><h3>{{__('SuperAdmin/backend.school_promotion')}}</h3></label>
 
-                            @foreach ($schools as $school)
-                                <div class="row">
-                                    <div class="form-group col-md-1">
-                                        <input type="checkbox" onclick="toggleSchoolPromotion($(this))" data-id="{{ $school->id }}" {{ $content && $content['school_promotions'] && count($content['school_promotions']) && in_array($school->id, $content['school_promotions']) ? 'checked' : '' }}/>
-                                        <input type="hidden" name="school_id[]" value="{{ $content && $content['school_promotions'] && count($content['school_promotions']) && in_array($school->id, $content['school_promotions']) ? $school->id : '' }}" />
-                                    </div>
-                                    <div class="form-group col-md-11">
-                                        <div class="english">
-                                            <h5>{{ $school->name ? $school->name->name : '' }}</h5>
-                                            {{ $school->city ? $school->city->name : '' }}, {{ $school->country ? $school->country->name : '' }}
-                                        </div>
-                                        <div class="arabic">
-                                            <h5>{{ $school->name ? $school->name->name_ar : '' }}</h5>
-                                            {{ $school->city ? $school->city->name_ar : ''}}, {{ $school->country ? $school->country->name_ar : '' }}
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
+                            <select name="school_id[]" id="school_id_choose" multiple="multiple" class="3col active">
+                                @foreach ($schools as $school)
+                                    <option value="{{ $school->id }}" {{in_array($school->id, isset($setting_value['school_promotions']) ? $setting_value['school_promotions'] : []) ? 'selected' : ''}}>
+                                        {{ app()->getLocale() == 'en' ? ($school->name ? $school->name->name : '-') . ' / ' . ($school->city ? $school->city->name : '-') . ' / ' . ($school->country ? $school->country->name : '-') : ($school->name ? $school->name->name_ar : '-') . ' / ' . ($school->city ? $school->city->name_ar : '-') . ' / ' . ($school->country ? $school->country->name_ar : '-') }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                     
                     <div class="row">
                         <div class="form-group col-md-12">
                             <label><h3>{{__('SuperAdmin/backend.popular_country')}}</h3></label>
-
                             @php
                                 $popular_country_ids = [];
                                 $popular_country_logos = [];
-                                if ($content && $content['popular_countries']) {
-                                    foreach ($content['popular_countries'] as $popular_country) {
+                                if ($setting_value && $setting_value['popular_countries']) {
+                                    foreach ($setting_value['popular_countries'] as $popular_country) {
                                         if ($popular_country['id']) {
                                             $popular_country_ids[] = $popular_country['id'];
                                             $popular_country_logos[] = $popular_country['logo'];
@@ -204,7 +192,7 @@
                                     <div class="form-group col-md-4">
                                         <input name="country_logo[]" type="file" class="form-control" accept="image/*">
                                         @if ($popular_country_logos && in_array($country->id, $popular_country_ids))
-                                            <img src="{{ $front_page->getStorageImages('front_page', $popular_country_logos[array_search($country->id, $popular_country_ids)]) }}" class="img-fluid img-thumbnail" />
+                                            <img src="{{ getStorageImages('setting', $popular_country_logos[array_search($country->id, $popular_country_ids)]) }}" class="img-fluid img-thumbnail" />
                                         @endif
                                     </div>
                                 </div>

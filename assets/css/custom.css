@@ -1,15 +1,16 @@
 html[lang="ar"] body {
     direction: rtl;
+    text-align: right;
 }
 
 .page-body-wrapper .sidebar {
     margin-top: 80px;
 }
-
 .page-body-wrapper .content-wrapper {
+    background: #f2edf3;
+    border: none;
     padding-top: 5rem;
 }
-
 .page-body-wrapper .content-wrapper .page-header {
     position: fixed;
     top: 5.2rem;
@@ -21,14 +22,21 @@ html[lang="ar"] body {
     z-index: 10;
     background: #f2edf3;
 }
+html[lang="ar"] body .page-body-wrapper .content-wrapper .page-header {
+    margin-left: 0px;
+    margin-right: 260px;
+}
 .page-body-wrapper .content-wrapper .page-header > * {
     width: calc(100%);
 }
-
-.page-body-wrapper .content-wrapper .page-content {
-    margin-top: 13rem;
+.page-body-wrapper .content-wrapper .page-header .card .card-body {
+    border: 1px solid #ccc;
+    border-radius: 0.3125rem;
 }
-
+.page-body-wrapper .content-wrapper .page-content {
+    border: 1px solid #ccc;
+    border-radius: 0.3125rem;
+}
 @media (max-width: 991px) {
     .page-body-wrapper .content-wrapper .page-header {
         top: 9.5rem;
@@ -56,6 +64,11 @@ html[lang="ar"] body {
     opacity: .7;
 }
 
+.dashboard {
+    margin-top: 1rem;
+    padding: 0.5rem;
+}
+
 #form2 {
     display: none;
 }
@@ -71,14 +84,12 @@ html[lang="ar"] body {
     padding: 10px 10px;
     font-weight: 600;
 }
-
 #menu a:hover {
     text-decoration: underline;
     background: #daf2f7;
     color: #FFFFFF;
     padding: 10px 10px;
 }
-
 #menu a:active {
     background: #daf2f7;
     color: black;
@@ -88,7 +99,6 @@ html[lang="ar"] body {
 ul.lang li a {
     font-weight: 600;
 }
-
 .lang li {
     display: inline;
     padding: 0px 10px;
@@ -115,11 +125,9 @@ ul.lang.text-right li a:hover {
 ul.multiselect-container.dropdown-menu.show {
     width: 100%;
 }
-
 .multiselect-native-select .btn-group {
     width: 100%;
 }
-
 button.multiselect.dropdown-toggle.btn.btn-default {
     outline: 1px solid #ebedf2;
     color: #c9c8c8;
@@ -129,7 +137,6 @@ button.multiselect.dropdown-toggle.btn.btn-default {
     justify-content: space-between;
     padding: 15px;
 }
-
 span.multiselect-selected-text {
     font-size: 12px;
     font-family: sans-serif;
@@ -184,7 +191,6 @@ i.fa.fa-plus-circle {
     border-radius: 10px;
     font-size: 15px;
 }
-
 i.fa.fa-minus {
     background: linear-gradient(to right, #da8cff, #9a55ff) !important;
     padding: 15px 15px;
@@ -192,7 +198,6 @@ i.fa.fa-minus {
     border-radius: 10px;
     font-size: 15px;
 }
-
 i.fa.fa-plus {
     background: linear-gradient(to right, #da8cff, #9a55ff) !important;
     padding: 10px 15px 10px 0px;
@@ -201,7 +206,6 @@ i.fa.fa-plus {
     font-size: 15px;
     margin-left: 5px;
 }
-
 i.fa.fa-trash {
     background: linear-gradient(to right, #da8cff, #9a55ff) !important;
     padding: 10px 15px 10px 0px;
@@ -210,7 +214,6 @@ i.fa.fa-trash {
     font-size: 15px;
     margin-left: 5px;
 }
-
 .btn i.fa {
     padding: 0;
 }
@@ -311,6 +314,7 @@ i.fa.fa-trash {
 .w-100 {
     width: 100% !important;
 }
+
 .ui-datepicker-group .ui-datepicker-header .ui-datepicker-title {
     cursor: pointer;
 }
@@ -396,6 +400,7 @@ i.fa.fa-trash {
     content: "\f067";
     cursor: pointer;
 }
+
 .table {
     border: 1px solid #ccc;
     box-shadow: 0px -1px 4px 1px #ece7e7;
@@ -404,7 +409,7 @@ i.fa.fa-trash {
 .table-bordered {
     border: 1px solid #dee2e6;
 }
-table thead {
+#main .container table thead {
     background-color: #97d0db;
     color: white;
 }
@@ -413,6 +418,13 @@ table thead {
     vertical-align: top;
     border-top: 1px solid #dee2e6;
 }
+.table td p, .table th p {
+    margin-bottom: 0;
+}
+.table td .btn-group .btn {
+    margin: 0;
+}
+
 .content-wrapper {
     background: #ffffff;
     border: 1px solid #ccc;
@@ -420,16 +432,21 @@ table thead {
 .diff-tution {
     color: #b94443;
 }
+
 .form-check {
     position: relative;
     display: block;
     padding-left: 1.25rem;
+}
+.form-check-inline {
+    display: inline-block;
 }
 .form-check-input {
     position: absolute;
     margin-top: .3rem;
     margin-left: -1.25rem;
 }
+
 .best {
     font-size: 16px;
     font-weight: 600;
@@ -451,14 +468,12 @@ table thead {
     padding: 10px 10px;
     font-weight: 600;
 }
-
 #menu a:hover {
     text-decoration: underline;
     background: #daf2f7;
     color: #FFFFFF;
     padding: 10px 10px;
 }
-
 #menu a:active {
     background: #daf2f7;
     color: black;
@@ -467,4 +482,155 @@ table thead {
 
 ul.lang li a {
     font-weight: 600;
+}
+
+#visa-form .form-control {
+    border: 1px solid #eee;
+}
+#visa-form .btn {
+    text-transform: uppercase;
+    display: block;
+    width: 100%;
+    margin-top: 23px;
+}
+
+.submit1 {
+    width: 30%;
+    margin: 0 auto;
+}
+
+form#visa-form {
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 15px 30px 0 rgb(0 0 0 / 10%);
+    max-width: 1000px;
+    margin: 0 auto;
+}
+#visa-form .heading {
+    color: #fff;
+    text-align: center;
+    text-transform: uppercase;
+    padding: 15px 0;
+    background: #96cfda;
+    font-weight: 600;
+    font-size: 25px;
+}
+#visa-form .left {
+    padding: 30px;
+}
+
+#medical_insurance_fee {
+    display:none;
+}
+
+#other_service_fee {
+    display:none;
+}
+
+.register-content .form-control {
+    border: 1px solid #eee;
+}
+.register-content .heading {
+    color: #fff;
+    text-align: center;
+    text-transform: uppercase;
+    padding: 15px 0;
+    background: #97d0db;
+    font-weight: 600;
+    font-size: 25px;
+    margin-bottom: 30px;
+}
+.register-content {
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 15px 30px 0 rgb(0 0 0 / 10%);
+    max-width: 550px;
+    background-color: #fff;
+    margin: 0 auto;
+}
+.register-content h4 {
+    color: #777;
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: 400;
+}
+.register-content h4 {
+    color: #777;
+    margin-top: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+.register-content .btn {
+    display: block;
+    width: 100%;
+    text-transform: uppercase;
+}
+
+#sig-canvas {
+    border: 2px dotted #CCCCCC;
+    border-radius: 15px;
+    cursor: crosshair;
+    height: 150px;
+}
+#financial_guarantee {
+    display: none;
+}
+#bank_statement {
+    display: none;
+}
+#signature {
+    border: 2px solid black;
+}
+form > * {
+    margin: 10px;
+}
+@media (max-width: 400px) {
+    #sig-canvas {
+        width: 100%;
+    }
+}
+
+.section-title {
+    font-size: 24px;
+    margin: 30px 0 15px 0;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 10px;
+}
+.section-title:before {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: #eef0ef;
+    bottom: 0;
+    left: 0;
+}
+.section-title:after {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 60px;
+    height: 1px;
+    background: #97d0db;
+    bottom: 0;
+    left: 0;
+}
+
+#tab-video .carousel-item {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+#tab-video .carousel-item .video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#collapseRegistrationForm .col-form-label {
+    font-weight: bold;
 }
