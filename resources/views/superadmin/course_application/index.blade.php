@@ -24,6 +24,8 @@
                             <th>#</th>
                             <td>{{__('SuperAdmin/backend.created_at')}}</td>
                             <th>{{__('SuperAdmin/backend.user_name')}}</th>
+                            <th>{{__('SuperAdmin/backend.user_email')}}</th>
+                            <th>{{__('SuperAdmin/backend.name')}}</th>
                             <th>{{__('SuperAdmin/backend.email')}}</th>
                             <th>{{__('SuperAdmin/backend.mobile')}}</th>
                             <th>{{__('SuperAdmin/backend.school_name')}}</th>
@@ -43,27 +45,29 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $details->created_at }}</td>
-                                <td>{{ get_language() == 'en' ? ucwords($details->User->first_name_en) : ucwords($details->User->first_name_ar) }} {{ get_language() == 'en' ? ucwords($details->User->last_name_en) : ucwords($details->User->last_name_ar) }}</td>
-                                <td>{{ ucwords($details->User->email ?? $details->email) }}</td>
-                                <td>{{ ucwords($details->User->contact ?? $details->mobile) }}</td>
-                                <td>{{ ucwords($details->course->school && $details->course->school->name ? (get_language() == 'en' ? $details->course->school->name->name : $details->course->school->name->name_ar) : '') }}</td>
-                                <td>{{ ucwords($details->course->school && $details->course->school->city ? (get_language() == 'en' ? $details->course->school->city->name : $details->course->school->city->name_ar) : '') }}</td>
-                                <td>{{ ucwords($details->course->school && $details->course->school->country ? (get_language() == 'en' ? $details->course->school->country->name : $details->course->school->country->name_ar) : '') }}</td>
-                                <td>{{ ucwords($details->course->program_name) }}</td>
-                                <td>{{ ucwords($details->start_date) }}</td>
-                                <td>{{ ucwords($details->program_duration) }}</td>
-                                <td>{{ ucwords($details->other_currency) }}</td>
-                                <td>{{ ucwords($details->paid_amount) }}</td>
-                                <td>{{ isset($details->userBookDetailsApproved->approve) ? ucwords($details->userBookDetailsApproved->approve  == 1 ? 'Application Recevived' : 'Send To School Admin' ) : 'Application Recevived' }}</td>
+                                <td>{{ get_language() == 'en' ? $details->User->first_name_en : $details->User->first_name_ar }} {{ get_language() == 'en' ? $details->User->last_name_en : $details->User->last_name_ar }}</td>
+                                <td>{{ $details->User->email ?? '-' }}</td>
+                                <td>{{ $details->fname ?? '' }} {{ $details->mname ?? '' }} {{ $details->lname ?? '' }}</td>
+                                <td>{{ $details->email }}</td>
+                                <td>{{ $details->User->contact ?? $details->mobile }}</td>
+                                <td>{{ $details->course->school && $details->course->school->name ? (get_language() == 'en' ? $details->course->school->name->name : $details->course->school->name->name_ar) : '' }}</td>
+                                <td>{{ $details->course->school && $details->course->school->city ? (get_language() == 'en' ? $details->course->school->city->name : $details->course->school->city->name_ar) : '' }}</td>
+                                <td>{{ $details->course->school && $details->course->school->country ? (get_language() == 'en' ? $details->course->school->country->name : $details->course->school->country->name_ar) : '' }}</td>
+                                <td>{{ $details->course->program_name }}</td>
+                                <td>{{ $details->start_date }}</td>
+                                <td>{{ $details->program_duration }}</td>
+                                <td>{{ $details->other_currency }}</td>
+                                <td>{{ $details->deposit_price }}</td>
+                                <td>{{ isset($details->courseApplicationApprove->approve) ? ucwords($details->courseApplicationApprove->approve  == 1 ? 'Application Recevived' : 'Send To School Admin' ) : 'Application Recevived' }}</td>
                                 @if (auth('superadmin')->user()->permission['course_application_manager'] || auth('superadmin')->user()->permission['course_application_edit'])
                                     <td>
                                         <div class="btn-group">
-                                            <a href="{{route('superadmin.manage_application.edit', $details->id)}}" class="btn btn-info btn-sm fa fa-eye"></a>
-                                            @if (isset($details->userBookDetailsApproved->approved))
-                                                @if ($details->userBookDetailsApproved->approved == 1)
-                                                    <a href="{{route('superadmin.manage_application.approve', ['id' => $details->id, 'value' => 0])}}" class="btn btn-success btn-sm fa fa-check"></a>
+                                            <a href="{{route('superadmin.course_application.edit', $details->id)}}" class="btn btn-info btn-sm fa fa-eye"></a>
+                                            @if (isset($details->courseApplicationApprove->approved))
+                                                @if ($details->courseApplicationApprove->approved == 1)
+                                                    <a href="{{route('superadmin.course_application.approve', ['id' => $details->id, 'value' => 0])}}" class="btn btn-success btn-sm fa fa-check"></a>
                                                 @else
-                                                    <a href="{{route('superadmin.manage_application.approve', ['id' => $details->id, 'value' => 1])}}" class="btn btn-danger btn-sm fa fa-window-close"></a>
+                                                    <a href="{{route('superadmin.course_application.approve', ['id' => $details->id, 'value' => 1])}}" class="btn btn-danger btn-sm fa fa-window-close"></a>
                                                 @endif
                                             @endif
                                         </div>

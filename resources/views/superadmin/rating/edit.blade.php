@@ -35,7 +35,7 @@
     <div class="page-content">
         <div class="card">
             <div class="card-body">
-                <form id ="formaction" class="forms-sample" method="post" action="{{route('superadmin.blogs.update', $blog->id)}}">
+                <form id ="formaction" class="forms-sample" method="post" action="{{route('superadmin.blog.update', $blog->id)}}">
                     {{csrf_field()}}
 
                     <div id="form1">

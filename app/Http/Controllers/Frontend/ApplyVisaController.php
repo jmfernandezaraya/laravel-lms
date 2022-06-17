@@ -12,7 +12,7 @@ use App\Models\SuperAdmin\AddWhereToTravel;
 use App\Models\SuperAdmin\ApplyFrom;
 use App\Models\SuperAdmin\VisaApplicationCenter;
 use App\Models\SuperAdmin\VisaForm;
-use App\Models\UserCourseBookedDetails;
+use App\Models\CourseApplication;
 
 use Illuminate\Http\Request;
 

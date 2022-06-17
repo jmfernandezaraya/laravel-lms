@@ -19,7 +19,7 @@
         <div class="course-details mt-5">
             @include('schooladmin.include.alert')
             
-            <form id="course_reversation" enctype="multipart/form-data" action="{{route('course.reservation')}}" method="POST">
+            <form id="course_reversation" enctype="multipart/form-data" action="{{route('frontend.course.reservation')}}" method="POST">
                 {{csrf_field()}}
 
                 <table class="table table-bordered">
@@ -321,7 +321,7 @@
 
     <script>
         function backRegister(object) {
-            window.location.href='{{ route("course.register.detail") }}';
+            window.location.href='{{ route("frontend.course.register.detail") }}';
         }
         function doReservation(object) {
             var formData = new FormData($(object).parents().find('#course_reversation')[0]);
@@ -341,7 +341,7 @@
                     if (data.success == true) {
                         document.documentElement.scrollTop = 0;
 
-                        window.location.href='{{ route("course.reservation_confirm.detail") }}';
+                        window.location.href='{{ route("frontend.course.reservation_confirm.detail") }}';
                     }
                 }
             });

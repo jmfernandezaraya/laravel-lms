@@ -15,7 +15,7 @@ use App\Classes\TransactionCalculator;
 use Ghanem\Rating\Models\Rating;
 
 use App\Models\User;
-use App\Models\UserCourseBookedDetails;
+use App\Models\CourseApplication;
 use App\Models\Review;
 
 use App\Models\SuperAdmin\Choose_Accommodation_Age_Range;
@@ -30,10 +30,10 @@ use App\Models\SuperAdmin\CourseProgram;
 use App\Models\SuperAdmin\CourseProgramTextBookFee;
 use App\Models\SuperAdmin\CourseProgramUnderAgeFee;
 use App\Models\SuperAdmin\School;
-use App\Models\SuperAdmin\SendMessageToStudentCourse;
+use App\Models\SuperAdmin\ToCourseStudentMessage;
 use App\Models\SuperAdmin\TransactionRefund;
 
-use App\Models\SchoolAdmin\ReplyToSendSchoolMessage;
+use App\Models\SchoolAdmin\ReplyToSchoolAdminMessage;
 
 use PDF;
 use Storage;
@@ -129,7 +129,7 @@ class CustomerController extends Controller
     
     public function courseApplication()
     {
-        $booked_courses = UserCourseBookedDetails::where('user_id', auth()->user()->id)->with('userBookDetailsApproved')->get();
+        $booked_courses = CourseApplication::where('user_id', auth()->user()->id)->with('courseApplicationApprove')->get();
 
         return view('frontend.customer.course_applications', compact('booked_courses'));
     }
@@ -208,13 +208,13 @@ class CustomerController extends Controller
             }
 
             $user = User::find(auth()->user()->id);
-            // ReplyToSendSchoolMessage::updateOrCreate(
+            // ReplyToSchoolAdminMessage::updateOrCreate(
             //     [
-            //         'send_school_message_id' => $request->send_school_message_id,
+            //         'to_school_admin_message_id' => $request->to_school_admin_message_id,
             //         'user_id' => auth()->user()->id
             //     ],
             //     [
-            //         'send_school_message_id' => $request->send_school_message_id,
+            //         'to_school_admin_message_id' => $request->to_school_admin_message_id,
             //         'user_id' => auth()->user()->id,
             //         'subject' => $request->subject,
             //         'attachment' => $attachment,
@@ -232,21 +232,21 @@ class CustomerController extends Controller
 
     public function reviews()
     {
-        $course_booked_details = UserCourseBookedDetails::with('school', 'review')->where('user_id', auth()->user()->id)->get();
+        $course_applications = CourseApplication::with('school', 'review')->where('user_id', auth()->user()->id)->get();
 
-        return view('frontend.customer.reviews', compact('course_booked_details'));
+        return view('frontend.customer.reviews', compact('course_applications'));
     }
 
     public function review($id)
     {
-        $review = Review::where('user_course_booked_details_id', $id)->first();
+        $review = Review::where('course_application_id', $id)->first();
 
         return view('frontend.customer.review', compact('id', 'review'));
     }
 
     public function reviewBooking(Request $request, $id)
     {
-        $course_book_review = Review::where('user_course_booked_details_id', $id)->first();
+        $course_book_review = Review::where('course_application_id', $id)->first();
 
         if ($course_book_review) {
             $course_book_review->review = $request->review;
@@ -266,7 +266,7 @@ class CustomerController extends Controller
         } else {
             $new_course_book_review = new Review;
             $new_course_book_review->author_id = auth()->user()->id;
-            $new_course_book_review->user_course_booked_details_id = $id;
+            $new_course_book_review->course_application_id = $id;
             $new_course_book_review->review = $request->review;
             $new_course_book_review->quality_teaching = $request->quality_teaching;
             $new_course_book_review->school_facilities = $request->school_facilities;

@@ -3,7 +3,7 @@
 namespace App\Mail;
 
 use App\Models\User;
-use App\Models\UserCourseBookedDetails;
+use App\Models\CourseApplication;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -22,12 +22,12 @@ class SendMailToSuperAdminUserCourseApproveStatus extends Mailable  implements S
      *
      * @return void
      */
-    private $user, $approve, $userCourseBookedDetails;
-    public function __construct(User $user, UserCourseBookedDetails $userCourseBookedDetails,  bool $approve)
+    private $user, $approve, $courseApplicationDetails;
+    public function __construct(User $user, CourseApplication $courseApplicationDetails,  bool $approve)
     {
         $this->user = $user;
         $this->approve = $approve;
-        $this->userCourseBookedDetails = $userCourseBookedDetails;
+        $this->courseApplicationDetails = $courseApplicationDetails;
     }
 
     /**
@@ -40,6 +40,6 @@ class SendMailToSuperAdminUserCourseApproveStatus extends Mailable  implements S
         $approved = $this->approve == 1 ? 'Approved' : "Rejected by School Admin";
         return $this->markdown('mail/sendnotificationtosuperadmincourseapprovestatus')
             ->to($this->user->email)
-            ->subject("Course ". $this->userCourseBookedDetails->course->program_name . " has been ". $approved);
+            ->subject("Course ". $this->courseApplicationDetails->course->program_name . " has been ". $approved);
     }
 }

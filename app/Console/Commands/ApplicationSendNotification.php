@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\UserCourseBookedDetails;
+use App\Models\CourseApplication;
 
 use App\Notifications\ApplicationNotificationToStudent;
 use App\Notifications\ApplicationNotificationToAdmin;
@@ -49,22 +49,22 @@ class ApplicationSendNotification extends Command
     public function handle()
     {
         $now = Carbon::now()->format('Y-m-d');
-        $course_booked_details = UserCourseBookedDetails::with('getCourseProgram', 'User')
+        $course_applications = CourseApplication::with('getCourseProgram', 'User')
             ->where('end_date', $now)
             ->get();
-        if (!$course_booked_details->isEmpty()){
-            foreach ($course_booked_details as $course_booked_detail) {
-                $course_booked_detail->notify(new ApplicationNotificationToStudent($course_booked_detail));
+        if (!$course_applications->isEmpty()){
+            foreach ($course_applications as $course_application) {
+                $course_application->notify(new ApplicationNotificationToStudent($course_application));
             }
         }
 
         $before_two_days = Carbon::now()->subDays(2)->format('Y-m-d');
-        $course_booked_details = UserCourseBookedDetails::with('getCourseProgram', 'User')->doesntHave('review')
+        $course_applications = CourseApplication::with('getCourseProgram', 'User')->doesntHave('review')
             ->whereDate('created_at', $before_two_days)
             ->get();
-        if (!$course_booked_details->isEmpty()){
-            foreach ($course_booked_details as $course_booked_detail) {
-                $course_booked_detail->notify(new ApplicationNotificationToAdmin($course_booked_detail));
+        if (!$course_applications->isEmpty()){
+            foreach ($course_applications as $course_application) {
+                $course_application->notify(new ApplicationNotificationToAdmin($course_application));
             }
         }
 

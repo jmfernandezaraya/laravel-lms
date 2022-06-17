@@ -4,7 +4,7 @@ namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Formbuilder;
-use App\Models\UserCourseBookedDetails;
+use App\Models\CourseApplication;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Validator;
 
@@ -20,7 +20,7 @@ class FormbuildController extends Controller
     public function index()
     {
         $forms =  Formbuilder::all();
-        $data['booked_details'] = UserCourseBookedDetails::all();
+        $data['booked_details'] = CourseApplication::all();
         return view('superadmin.visa.index', $data, compact('forms'));
     }
 

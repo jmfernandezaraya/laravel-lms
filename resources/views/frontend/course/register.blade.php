@@ -14,7 +14,7 @@
 
 @section('content')
     <div class="course-details border-bottom">
-        <form id="course_form_register" enctype="multipart/form-data" action="{{route('course.register')}}" data-action="{{route('course.details.back')}}" method="POST">
+        <form id="course_form_register" enctype="multipart/form-data" action="{{route('frontend.course.register')}}" data-action="{{route('frontend.course.details.back')}}" method="POST">
             {{csrf_field()}}
 
             <input hidden id="get_country" value="{{ $course_country }}" />

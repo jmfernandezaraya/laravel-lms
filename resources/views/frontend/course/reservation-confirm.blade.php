@@ -23,7 +23,7 @@
 
                 @include('schooladmin.include.alert')
 
-                <form id="course_reversation_confirm" enctype="multipart/form-data" action="{{route('course.reservation_confirm')}}" method="POST">
+                <form id="course_reversation_confirm" enctype="multipart/form-data" action="{{route('frontend.course.reservation_confirm')}}" method="POST">
                     {{csrf_field()}}
 
                     <div class="study m-2">

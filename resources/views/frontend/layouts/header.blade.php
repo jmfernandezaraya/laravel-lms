@@ -87,7 +87,7 @@
                     <ul>
                         @auth
                             <li>
-                                <a href="{{route('dashboard')}}"><i class="bx bx-home"></i>&nbsp;{{__('Frontend.dashboard')}}</a>
+                                <a href="{{route('frontend.dashboard')}}"><i class="bx bx-home"></i>&nbsp;{{__('Frontend.dashboard')}}</a>
                             </li>
                             <li>
                                 <form method="post" action="{{route('logout')}}">

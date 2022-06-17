@@ -9,8 +9,8 @@ use App\Models\SuperAdmin\CourseAccommodation;
 use App\Models\SuperAdmin\CourseAirport;
 use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\CourseProgram;
-use App\Models\UserCourseBookedDetails;
-use App\Models\UserCourseBookedFee;
+use App\Models\CourseApplication;
+use App\Models\CourseApplicationFee;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -34,7 +34,7 @@ class SuperAdminEditUserCourse
 
         $this->calculator = new AccommodationCalculator;
 
-        $this->userbookfeemodel = UserCourseBookedDetails::find($this->usercourseid);
+        $this->userbookfeemodel = CourseApplication::find($this->usercourseid);
     }
 
     /**
@@ -43,9 +43,9 @@ class SuperAdminEditUserCourse
     public function create_calculator_db()
     {
         if (str_contains(url()->previous(), 'editUserCourse') && !Calculator::whereCalcId(request()->ip())->first()) {
-            $booked = UserCourseBookedFee::where('user_course_booked_details_id', $this->usercourseid)->first();
+            $booked = CourseApplicationFee::where('course_application_id', $this->usercourseid)->first();
 
-            $replicate = $booked->replicate(['ip', 'user_course_booked_details_id', 'deleted_at'])->setTable('calculators');
+            $replicate = $booked->replicate(['ip', 'course_application_id', 'deleted_at'])->setTable('calculators');
             $replicate->calc_id = request()->ip();
             return $replicate->save();
         }
@@ -217,7 +217,7 @@ class SuperAdminEditUserCourse
                 $this->calculator->setPeakStartDate($program_get->peak_time_start_date);
                 $this->calculator->setPeakEndDate($program_get->peak_time_end_date);
                 $this->calculator->setSummerFee($program_get->summer_fee_per_week);
-                $this->calculator->setFrontEndDate($this->getEndDate($r->date_set, (int)$r->value));
+                $this->calculator->setFrontEndDate(getEndDate($r->date_set, (int)$r->value));
                 $this->calculator->setProgramStartDateFromFrontend(Carbon::create($r->date_set)->format('Y-m-d'));
                 $this->calculator->setSummerEndDateProgram($program_get->summer_fee_end_date);
 
@@ -269,15 +269,5 @@ class SuperAdminEditUserCourse
         $course_id = session()->has('course_unique_id') ? session()->get('course_unique_id') : prev($ee);
 
         return $course_id;
-    }
-
-    /**
-     * @param $date
-     * @param $weeks
-     * @return string
-     */
-    private function getEndDate($date, $weeks)
-    {
-        return Carbon::create($date)->addWeeks($weeks)->format('Y-m-d');
     }
 }

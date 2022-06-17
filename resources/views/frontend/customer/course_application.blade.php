@@ -48,7 +48,7 @@
                                         <tr>
                                             <td>
                                                 <p>{{ $course->program_name }}, {{ $course->lessons_per_week }} {{__('Frontend.lessons')}} / {{ $course->hours_per_week }} {{__('Frontend.hours_per_week')}}</p>
-                                                <p>{{ $program_start_date }} {{__('Frontend.to')}} {{ $program_end_date }} ( {{ $course_booked_detail->program_duration }} {{__('Frontend.weeks')}} )</p>
+                                                <p>{{ $program_start_date }} {{__('Frontend.to')}} {{ $program_end_date }} ( {{ $course_application->program_duration }} {{__('Frontend.weeks')}} )</p>
                                             </td>
                                             <td>{{ toFixedNumber($program_cost['value']) }}</td>
                                             <td>{{ toFixedNumber($program_cost['converted_value']) }}</td>
@@ -120,7 +120,7 @@
                                             <tr>
                                                 <td>
                                                     <p>{{$accommodation->type}} - {{$accommodation->room_type}} - {{$accommodation->meal}}</p>
-                                                    <p>{{$accommodation_start_date}} to {{$accommodation_end_date}} ( {{$course_booked_detail->accommodation_duration}} {{__('Frontend.weeks')}} )</p>
+                                                    <p>{{$accommodation_start_date}} to {{$accommodation_end_date}} ( {{$course_application->accommodation_duration}} {{__('Frontend.weeks')}} )</p>
                                                 </td>
                                                 <td>{{ toFixedNumber($accommodation_fee['value']) }}</td>
                                                 <td>{{ toFixedNumber($accommodation_fee['converted_value']) }}</td>
@@ -201,8 +201,8 @@
                                                 <tr>
                                                     <td>
                                                         <p>{{__('Frontend.transport')}}</p>
-                                                        <p>{{__('Frontend.service_provider')}}: {{ $course_booked_detail->airport_provider }}</p>
-                                                        <p>{{ $course_booked_detail->airport_name }} - {{ $course_booked_detail->airport_service }}</p>
+                                                        <p>{{__('Frontend.service_provider')}}: {{ $course_application->airport_provider }}</p>
+                                                        <p>{{ $course_application->airport_name }} - {{ $course_application->airport_service }}</p>
                                                     </td>
                                                     <td>{{ toFixedNumber($airport_pickup_fee['value']) }}</td>
                                                     <td>{{ toFixedNumber($airport_pickup_fee['converted_value']) }}</td>
@@ -212,8 +212,8 @@
                                                 <tr>
                                                     <td>
                                                         <p>{{__('Frontend.medical_insurance')}}</p>
-                                                        <p>{{__('Frontend.company_name')}}: {{ $course_booked_detail->company_name }}</p>
-                                                        <p>{{ $medical_start_date }} - {{ $medical_end_date }} ( {{ $course_booked_detail->duration }} {{__('Frontend.weeks')}} )</p>
+                                                        <p>{{__('Frontend.company_name')}}: {{ $course_application->company_name }}</p>
+                                                        <p>{{ $medical_start_date }} - {{ $medical_end_date }} ( {{ $course_application->duration }} {{__('Frontend.weeks')}} )</p>
                                                     </td>
                                                     <td>{{ toFixedNumber($medical_insurance_fee['value']) }}</td>
                                                     <td>{{ toFixedNumber($medical_insurance_fee['converted_value']) }}</td>
@@ -223,7 +223,7 @@
                                                 <tr>
                                                     <td>
                                                         <p>{{__('Frontend.custodian')}}</p>
-                                                        <p>{{__('Frontend.age_range')}}: {{ $course_booked_detail->custodian_min_age ?? ''}} - {{ $course_booked_detail->custodian_max_age ?? ''}} {{__('Frontend.years')}}</p>
+                                                        <p>{{__('Frontend.age_range')}}: {{ $course_application->custodian_min_age ?? ''}} - {{ $course_application->custodian_max_age ?? ''}} {{__('Frontend.years')}}</p>
                                                     </td>
                                                     <td>{{ toFixedNumber($custodian_fee['value']) }}</td>
                                                     <td>{{ toFixedNumber($custodian_fee['converted_value']) }}</td>
@@ -251,7 +251,7 @@
                                             <th>{{ toFixedNumber($total_cost['value']) }} {{ $currency['cost'] }}</th>
                                             <th>{{ toFixedNumber($total_cost['converted_value']) }} {{ $currency['converted'] }}</th>
                                         </tr>
-                                        @if (!isset($course_booked_detail->financial_guarantee))
+                                        @if (!isset($course_application->financial_guarantee))
                                             <tr>
                                                 <th>{{__('Frontend.amount_to_pay_now_deposit')}}</th>
                                                 <th>{{ toFixedNumber($deposit_price['value']) }} {{ $currency['cost'] }}</th>
@@ -281,19 +281,19 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="fname" class="col-form-label">{{__('Frontend.first_name')}}</label>
-                                                <p>{{ $course_booked_detail->fname }}</p>
+                                                <p>{{ $course_application->fname }}</p>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="mname" class="col-form-label">{{__('Frontend.middle_name')}}</label>
-                                                <p>{{ $course_booked_detail->mname }}</p>
+                                                <p>{{ $course_application->mname }}</p>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="lname" class="col-form-label">{{__('Frontend.last_name')}}</label>
-                                                <p>{{ $course_booked_detail->lname }}</p>
+                                                <p>{{ $course_application->lname }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -301,19 +301,19 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="city" class="col-form-label">{{__('Frontend.place_of_birth')}}</label>
-                                                <p>{{ $course_booked_detail->place_of_birth }}</p>
+                                                <p>{{ $course_application->place_of_birth }}</p>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="gender" class="col-form-label">{{__('Frontend.gender')}}</label>
-                                                <p>{{ $course_booked_detail->gender }}</p>
+                                                <p>{{ $course_application->gender }}</p>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="dob" class="col-form-label">{{__('Frontend.date_of_birth')}}</label>
-                                                <p>{{ $course_booked_detail->dob }}</p>
+                                                <p>{{ $course_application->dob }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -321,19 +321,19 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="nat" class="col-form-label">{{__('Frontend.nationality')}}</label>
-                                                <p>{{ $course_booked_detail->nationality }}</p>
+                                                <p>{{ $course_application->nationality }}</p>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="nat" class="col-form-label">{{__('Frontend.id_iqama_number')}}</label>
-                                                <p>{{ $course_booked_detail->id_number }}</p>
+                                                <p>{{ $course_application->id_number }}</p>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="Passport" class="col-form-label">{{__('Frontend.passport_no')}}</label>
-                                                <p>{{ $course_booked_detail->passport_number }}</p>
+                                                <p>{{ $course_application->passport_number }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -341,23 +341,23 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="portdate" class="col-form-label">{{__('Frontend.passport_date_of_issue')}}</label>
-                                                <p>{{ $course_booked_detail->passport_date_of_issue }}</p>
+                                                <p>{{ $course_application->passport_date_of_issue }}</p>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="edate" class="col-form-label">{{__('Frontend.passport_date_of_expiry')}}</label>
-                                                <p>{{ $course_booked_detail->passport_date_of_expiry }}</p>
+                                                <p>{{ $course_application->passport_date_of_expiry }}</p>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="fname" class="col-form-label">{{__('Frontend.upload_passport_copy')}}</label>
-                                                @if ($course_booked_detail->passport_copy)
-                                                    <img src="{{ '/storage/app/public/' . $course_booked_detail->passport_copy }}" class="img-fluid" />
+                                                @if ($course_application->passport_copy)
+                                                    <img src="{{ '/storage/app/public/' . $course_application->passport_copy }}" class="img-fluid" />
                                                     <form method="post" action="{{route('frontend.download')}}">
                                                         @csrf
-                                                        <input name="file" type="hidden" value="{{ $course_booked_detail->passport_copy }}" />
+                                                        <input name="file" type="hidden" value="{{ $course_application->passport_copy }}" />
                                                         <button class="btn btn-primary btn-sm">{{__('Frontend.download')}}</button>
                                                     </form>
                                                 @endif
@@ -369,17 +369,17 @@
                                             <div class="form-group">
                                                 <label for="nat" class="col-form-label">{{__('Frontend.your_level_of_language')}}</label>
                                                 <p>
-                                                    @if ($course_booked_detail->level_of_language == 'beginner_a1')
+                                                    @if ($course_application->level_of_language == 'beginner_a1')
                                                         {{__('Frontend.beginner_a1')}}
-                                                    @elseif ($course_booked_detail->level_of_language == 'elementary_a2')
+                                                    @elseif ($course_application->level_of_language == 'elementary_a2')
                                                         {{__('Frontend.elementary_a2')}}
-                                                    @elseif ($course_booked_detail->level_of_language == 'intermediate_b1')
+                                                    @elseif ($course_application->level_of_language == 'intermediate_b1')
                                                         {{__('Frontend.intermediate_b1')}}
-                                                    @elseif ($course_booked_detail->level_of_language == 'upper_intermediate_b2')
+                                                    @elseif ($course_application->level_of_language == 'upper_intermediate_b2')
                                                         {{__('Frontend.upper_intermediate_b2')}}
-                                                    @elseif ($course_booked_detail->level_of_language == 'advanced_c1')
+                                                    @elseif ($course_application->level_of_language == 'advanced_c1')
                                                         {{__('Frontend.advanced_c1')}}
-                                                    @elseif ($course_booked_detail->level_of_language == 'proficient_c2')
+                                                    @elseif ($course_application->level_of_language == 'proficient_c2')
                                                         {{__('Frontend.proficient_c2')}}
                                                     @endif
                                                 </p>
@@ -389,9 +389,9 @@
                                             <div class="form-group">
                                                 <label for="city" class="col-form-label">{{__('Frontend.study_finance')}}</label>
                                                 <p>
-                                                    @if ($course_booked_detail->study_finance == 'personal')
+                                                    @if ($course_application->study_finance == 'personal')
                                                         {{__('Frontend.personal')}}
-                                                    @elseif ($course_booked_detail->study_finance == 'scholarship')
+                                                    @elseif ($course_application->study_finance == 'scholarship')
                                                         {{__('Frontend.scholarship')}}
                                                     @endif
                                                 </p>
@@ -400,11 +400,11 @@
                                         <div class="col-md-4" id="financial_guarantee">
                                             <div class="form-group">
                                                 <label for="nat" class="col-form-label">{{__('Frontend.upload_financial_gurantee')}}</label>
-                                                @if ($course_booked_detail->financial_guarantee)
-                                                    <img src="{{ '/storage/app/public/' . $course_booked_detail->financial_guarantee }}" class="img-fluid" />
+                                                @if ($course_application->financial_guarantee)
+                                                    <img src="{{ '/storage/app/public/' . $course_application->financial_guarantee }}" class="img-fluid" />
                                                     <form method="post" action="{{route('frontend.download')}}">
                                                         @csrf
-                                                        <input name="file" type="hidden" value="{{ $course_booked_detail->financial_guarantee }}" />
+                                                        <input name="file" type="hidden" value="{{ $course_application->financial_guarantee }}" />
                                                         <button class="btn btn-primary btn-sm">{{__('Frontend.download')}}</button>
                                                     </form>
                                                 @endif
@@ -413,11 +413,11 @@
                                         <div class="col-md-4" id="bank_statement">
                                             <div class="form-group">
                                                 <label for="nat" class="col-form-label">{{__('Frontend.upload_bank_statement')}}</label>
-                                                @if ($course_booked_detail->bank_statement)
-                                                    <img src="{{ '/storage/app/public/' . $course_booked_detail->bank_statement }}"  class="img-fluid" />
+                                                @if ($course_application->bank_statement)
+                                                    <img src="{{ '/storage/app/public/' . $course_application->bank_statement }}"  class="img-fluid" />
                                                     <form method="post" action="{{route('frontend.download')}}">
                                                         @csrf
-                                                        <input name="file" type="hidden" value="{{ $course_booked_detail->bank_statement }}" />
+                                                        <input name="file" type="hidden" value="{{ $course_application->bank_statement }}" />
                                                         <button class="btn btn-primary btn-sm">{{__('Frontend.download')}}</button>
                                                     </form>
                                                 @endif
@@ -432,19 +432,19 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="mobile" class="col-form-label">{{__('Frontend.mobile')}}</label>
-                                                <p>{{ $course_booked_detail->mobile }}</p>
+                                                <p>{{ $course_application->mobile }}</p>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="Tel" class="col-form-label">{{__('Frontend.tel')}}</label>
-                                                <p>{{ $course_booked_detail->telephone }}</p>
+                                                <p>{{ $course_application->telephone }}</p>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="Email" class="col-form-label">{{__('Frontend.email')}}</label>
-                                                <p>{{ $course_booked_detail->email }}</p>
+                                                <p>{{ $course_application->email }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -452,13 +452,13 @@
                                         <div class="col-md-8">
                                             <div class="form-group">
                                                 <label for="Address" class="col-form-label">{{__('Frontend.address')}}</label>
-                                                <p>{{ $course_booked_detail->address }}</p>
+                                                <p>{{ $course_application->address }}</p>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="Post" class="col-form-label">{{__('Frontend.post_code')}}</label>
-                                                <p>{{ $course_booked_detail->post_code }}</p>
+                                                <p>{{ $course_application->post_code }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -466,19 +466,19 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="city_contact" class="col-form-label">{{__('Frontend.city')}}</label>
-                                                <p>{{ $course_booked_detail->city_contact }}</p>
+                                                <p>{{ $course_application->city_contact }}</p>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="province_region" class="col-form-label">{{__('Frontend.province_region')}}</label>
-                                                <p>{{ $course_booked_detail->province_region }}</p>
+                                                <p>{{ $course_application->province_region }}</p>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="country_contact" class="col-form-label">{{__('Frontend.country')}}</label>
-                                                <p>{{ $course_booked_detail->country_contact }}</p>
+                                                <p>{{ $course_application->country_contact }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -490,13 +490,13 @@
                                         <div class="col-md-8">
                                             <div class="form-group">
                                                 <label for="full_name_emergency" class="col-form-label">{{__('Frontend.full_name')}}</label>
-                                                <p>{{ $course_booked_detail->full_name_emergency }}</p>
+                                                <p>{{ $course_application->full_name_emergency }}</p>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="relative_emergency" class="col-form-label">{{__('Frontend.relative')}}</label>
-                                                <p>{{ $course_booked_detail->relative_emergency }}</p>
+                                                <p>{{ $course_application->relative_emergency }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -504,19 +504,19 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="mobile_emergency" class="col-form-label">{{__('Frontend.mobile')}}</label>
-                                                <p>{{ $course_booked_detail->mobile_emergency }}</p>
+                                                <p>{{ $course_application->mobile_emergency }}</p>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="telephone_emergency" class="col-form-label">{{__('Frontend.tel')}}</label>
-                                                <p>{{ $course_booked_detail->telephone_emergency }}</p>
+                                                <p>{{ $course_application->telephone_emergency }}</p>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="email_emergency" class="col-form-label">{{__('Frontend.email')}}</label>
-                                                <p>{{ $course_booked_detail->email_emergency }}</p>
+                                                <p>{{ $course_application->email_emergency }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -525,14 +525,14 @@
                                 <h3 class="best">{{__('Frontend.how_you_heard_about_link_for_study_abroad')}}</h3>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <p>{{ implode($course_booked_detail->heard_where, ", ") }}</p>
-                                        <p>{{ $course_booked_detail->other }}</p>
+                                        <p>{{ implode($course_application->heard_where, ", ") }}</p>
+                                        <p>{{ $course_application->other }}</p>
                                     </div>
                                 </div>
 
                                 <h3 class="best">{{__('Frontend.comment')}}</h3>
                                 <div class="study m-2">
-                                    <p>{{ $course_booked_detail->comments }}</p>
+                                    <p>{{ $course_application->comments }}</p>
                                 </div>
                                 
                                 <button type="button" class="btn btn-primary float-right mt-3 px-5" onclick="printCourseApplication('registration')">{{__('Frontend.print')}}</button>
@@ -561,7 +561,7 @@
                                     <div class="row form-group">
                                         <div class="col-md-12">
                                             <label for="student_guardian_full_name" class="col-form-label"><strong>{{__('Frontend.student_guardian_full_name')}}</strong>:</label>
-                                            <p>{{ $course_booked_detail->guardian_full_name }}</p>
+                                            <p>{{ $course_application->guardian_full_name }}</p>
                                         </div>
                                     </div>
                                     <div class="row form-group">
@@ -577,7 +577,7 @@
                                             <label class="col-form-label"><strong>{{__('Frontend.signature')}}:</strong></label>
                                         </div>
                                         <div class="col-md-10">
-                                            <img src="{{ $course_booked_detail->signature }}" />
+                                            <img src="{{ $course_application->signature }}" />
                                         </div>
                                     </div>
                                 </div>
@@ -593,31 +593,31 @@
                             <div class="reservation-status mt-3">
                                 <div class="col-sm-12">
                                     <p>
-                                        @if ($course_booked_detail->status == 'received')
+                                        @if ($course_application->status == 'received')
                                             {{__('Frontend.request_received')}}
-                                        @elseif ($course_booked_detail->status == 'process')
+                                        @elseif ($course_application->status == 'process')
                                             {{__('Frontend.under_process')}}
-                                        @elseif ($course_booked_detail->status == 'files_sent_to_customer')
+                                        @elseif ($course_application->status == 'files_sent_to_customer')
                                             {{__('Frontend.application_files_sent_to_customer')}}
-                                        @elseif ($course_booked_detail->status == 'customer_response')
+                                        @elseif ($course_application->status == 'customer_response')
                                             {{__('Frontend.waiting_for_customer_response')}}
-                                        @elseif ($course_booked_detail->status == 'cancelled')
+                                        @elseif ($course_application->status == 'cancelled')
                                             {{__('Frontend.request_cancelled')}}
-                                        @elseif ($course_booked_detail->status == 'refunded')
+                                        @elseif ($course_application->status == 'refunded')
                                             {{__('Frontend.amount_refunded')}}
-                                        @elseif ($course_booked_detail->status == 'completed')
+                                        @elseif ($course_application->status == 'completed')
                                             {{__('Frontend.application_procedure_completed')}}
-                                        @elseif ($course_booked_detail->status == 'studying')
+                                        @elseif ($course_application->status == 'studying')
                                             {{__('Frontend.studying')}}
-                                        @elseif ($course_booked_detail->status == 'course_extension')
+                                        @elseif ($course_application->status == 'course_extension')
                                             {{__('Frontend.customer_request_course_extension')}}
-                                        @elseif ($course_booked_detail->status == 'request_cancellation')
+                                        @elseif ($course_application->status == 'request_cancellation')
                                             {{__('Frontend.customer_request_cancellation')}}
-                                        @elseif ($course_booked_detail->status == 'amount_refunded')
+                                        @elseif ($course_application->status == 'amount_refunded')
                                             {{__('Frontend.amount_refunded')}}
-                                        @elseif ($course_booked_detail->status == 'application_cancelled')
+                                        @elseif ($course_application->status == 'application_cancelled')
                                             {{__('Frontend.application_cancelled')}}
-                                        @elseif ($course_booked_detail->status == 'end')
+                                        @elseif ($course_application->status == 'end')
                                             {{__('Frontend.course_end')}}
                                         @endif
                                     </p>
@@ -629,7 +629,7 @@
                                                 <th>{{__('Frontend.status')}}</th>
                                                 <th>{{__('Frontend.date')}}</th>
                                             </tr>
-                                            @foreach($course_booked_detail->userCourseBookedStatusus as $status)
+                                            @foreach($course_application->courseApplicationStatusus as $status)
                                                 <tr>
                                                     <td>
                                                         @if ($status->status == 'received')
@@ -675,20 +675,20 @@
                                             </tr>
                                             <tr>
                                                 <td>1</td>
-                                                <td>{{$course_booked_detail->created_at->format("d M Y")}}</td>
+                                                <td>{{ $course_application->created_at->format("d M Y") }}</td>
                                                 <td> -</td>
-                                                <td>{{$course_booked_detail->paid_amount}}</td>
-                                                <td>{{__('Frontend.deposit_for_course')}} {{$course_booked_detail->course->program_name}}</td>
-                                                <td>{{optional($course_booked_detail->transaction)->trx_reference}}</td>
+                                                <td>{{ $course_application->paid_amount}}</td>
+                                                <td>{{ __('Frontend.deposit_for_course') }} {{ $course_application->course->program_name }}</td>
+                                                <td>{{ optional($course_application->transaction)->trx_reference }}</td>
                                             </tr>
-                                            @forelse ($transaction_refund as $refunds)
+                                            @forelse ($transaction_refunds as $transaction_refund)
                                                 <tr>
-                                                    <td>{{$loop->iteration + 1}}</td>
-                                                    <td>{{$refunds->created_at->format("d M Y")}}</td>
-                                                    <td>{{$refunds->amount_refunded == null ? '-' : $refunds->amount_refunded}}</td>
-                                                    <td>{{$refunds->amount_added == null ? '-' : $refunds->amount_added}}</td>
-                                                    <td>{{$refunds->details}}</td>
-                                                    <td>{{$refunds->txn_reference}}</td>
+                                                    <td>{{ $loop->iteration + 1 }}</td>
+                                                    <td>{{ $transaction_refund->created_at->format("d M Y") }}</td>
+                                                    <td>{{ $transaction_refund->amount_refunded == null ? '-' : $transaction_refund->amount_refunded }}</td>
+                                                    <td>{{ $transaction_refund->amount_added == null ? '-' : $transaction_refund->amount_added }}</td>
+                                                    <td>{{ $transaction_refund->details }}</td>
+                                                    <td>{{ $transaction_refund->txn_reference }}</td>
                                                 </tr>
                                             @empty
                                                 <tr>
@@ -713,8 +713,8 @@
                                             </tr>
                                             <tr>
                                                 <td>{{__('Frontend.total_amount_paid')}}</td>
-                                                <td>{{ toFixedNumber($amount_paid['value']) }}</td>
-                                                <td>{{ toFixedNumber($amount_paid['converted_value']) }}</td>
+                                                <td>{{ toFixedNumber($deposit_price['value']) }}</td>
+                                                <td>{{ toFixedNumber($deposit_price['converted_value']) }}</td>
                                             </tr>
                                             <tr>
                                                 <td>{{__('Frontend.total_amount_refunded')}}</td>
@@ -740,7 +740,7 @@
                         <div id="collapseContactCenter" class="card-body collapse p-0" data-parent="#accordion">
                             <div class="contact-center row mt-3 p-3">
                                 <div class="col-lg-12">
-                                    <form id="contact_center_admin" method="post" action="{{ route('dashboard.course_application.send_message') }}">
+                                    <form id="contact_center_admin" method="post" action="{{ route('frontend.dashboard.course_application.send_message') }}">
                                         @csrf
 
                                         <h5 class="text-center">{{__('Frontend.contact_center_admin')}}</h5>
@@ -751,9 +751,9 @@
                                                     <div class="form-group">
                                                         <label for="From" class="col-form-label">{{__('Frontend.From')}}</label>
                                                         @if (app()->getLocale() == 'en')
-                                                            {{ $course_booked_detail->User->first_name }} {{ $course_booked_detail->User->last_name }}
+                                                            {{ $course_application->User->first_name }} {{ $course_application->User->last_name }}
                                                         @else
-                                                            {{ $course_booked_detail->User->first_name_ar }} {{ $course_booked_detail->User->last_name_ar }}
+                                                            {{ $course_application->User->first_name_ar }} {{ $course_application->User->last_name_ar }}
                                                         @endif
                                                     </div>
                                                 </div>
@@ -793,8 +793,8 @@
                                             </div>
                                         </div>
 
-                                        <input hidden name="to_email" value="{{ $course_booked_detail->User->email }}" />
-                                        <input hidden name="user_id" value="{{ $course_booked_detail->user_id }}" />
+                                        <input hidden name="to_email" value="{{ $course_application->User->email }}" />
+                                        <input hidden name="user_id" value="{{ $course_application->user_id }}" />
 
                                         <button type="button" onclick="submitFormAction('contact_center_admin');" class="btn btn-primary px-3">{{__('Frontend.send')}}</button>
                                     </form>
@@ -810,9 +810,9 @@
     <script>
         function printCourseApplication(section) {
             $.ajax({
-                url: "{{route('dashboard.course_application.print')}}",
+                url: "{{route('frontend.dashboard.course_application.print')}}",
                 method: 'POST',
-                data: { _token: $("meta[name='csrf-token']").attr('content'), id: "{{ $course_booked_detail->id }}", section: section },
+                data: { _token: $("meta[name='csrf-token']").attr('content'), id: "{{ $course_application->id }}", section: section },
                 xhrFields: {
                     responseType: 'blob'
                 },
@@ -835,13 +835,13 @@
                     var link = document.createElement('a');
                     link.href = window.URL.createObjectURL(blob);
                     if (section == 'reservation') {
-                        link.download = "{{__('Frontend.reservation_details')}} {{ $course_booked_detail->id }}.pdf";
+                        link.download = "{{__('Frontend.reservation_details')}} {{ $course_application->id }}.pdf";
                     } else if (section == 'registration') {
-                        link.download = "{{__('Frontend.regsitration_form')}} {{ $course_booked_detail->id }}.pdf";
+                        link.download = "{{__('Frontend.regsitration_form')}} {{ $course_application->id }}.pdf";
                     } else if (section == 'registration_cancellation') {
-                        link.download = "{{__('Frontend.registration_cancelation_conditions')}} {{ $course_booked_detail->id }}.pdf";
+                        link.download = "{{__('Frontend.registration_cancelation_conditions')}} {{ $course_application->id }}.pdf";
                     } else if (section == 'payments_refunds') {
-                        link.download = "{{__('Frontend.payments_refunds_statement')}} {{ $course_booked_detail->id }}.pdf";
+                        link.download = "{{__('Frontend.payments_refunds_statement')}} {{ $course_application->id }}.pdf";
                     }
                     link.click();
                 },

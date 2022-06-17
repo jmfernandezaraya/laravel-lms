@@ -9,12 +9,14 @@ use App\Http\Controllers\Controller;
 
 use App\Http\Requests\SuperAdmin\CurrencyRequest;
 
-use App\Models\UserCourseBookedDetails;
+use App\Models\CourseApplication;
 
 use App\Models\SuperAdmin\CurrencyExchangeRate;
 use App\Models\SuperAdmin\Choose_Language;
 use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\TransactionRefund;
+
+use TelrGateway\Transaction;
 
 /**
  * Class CurrencyController
@@ -56,7 +58,7 @@ class CurrencyController extends Controller
 
         toastr()->success(__('SuperAdmin/backend.data_saved'));
 
-        return redirect()->route('superadmin.currency.index');
+        return redirect()->route('superadmin.setting.currency.index');
     }
 
     /**
@@ -109,26 +111,26 @@ class CurrencyController extends Controller
         for ($course_index = 0; $course_index < count($course_ids); $course_index++) {
             $course_ids[$course_index] = '' . $course_ids[$course_index];
         }
-        $user_course_booked_details = UserCourseBookedDetails::whereIn('course_id', $course_ids)->get();
-        foreach ($user_course_booked_details as $user_course_booked_detail) {
-            if ($user_course_booked_detail->status == 'application_cancelled' || $user_course_booked_detail->status == 'completed' || $user_course_booked_detail->paid_amount == $user_course_booked_detail->total_balance) {
-                $user_course_booked_detail->total_cost = $user_course_booked_detail->total_cost * $currency_ratio;
-            }
-            $user_course_booked_detail->paid_amount = $user_course_booked_detail->paid_amount * $currency_ratio;
-            $user_course_booked_detail->save();
-            $user_course_booked_detail->transaction->amount = $user_course_booked_detail->transaction->amount * $currency_ratio;
-            $user_course_booked_detail->transaction->amount_added = $user_course_booked_detail->transaction->amount_added * $currency_ratio;
-            $user_course_booked_detail->transaction->save();
-            $transaction_refunds = TransactionRefund::where('transaction_id', $user_course_booked_detail->transaction->order_id)->get();
-            foreach ($transaction_refunds as $transaction_refund) {
-                if ($transaction_refund->amount_refunded) {
-                    $transaction_refund->amount_refunded = $transaction_refund->amount_refunded * $currency_ratio;
-                    $transaction_refund->save();
+        $course_applications = CourseApplication::whereIn('course_id', $course_ids)->get();
+        foreach ($course_applications as $course_application) {
+            $amount_added = 0;
+            $amount_refunded = 0;
+            if ($course_application->transaction) {
+                $transaction_refunds = TransactionRefund::where('transaction_id', $course_application->transaction->order_id)->get();
+                foreach ($transaction_refunds as $transaction_refund) {
+                    $amount_added += $transaction_refund->amount_added;
+                    $amount_refunded += $transaction_refund->amount_refunded;
                 }
             }
+            $amount_due = $course_application->total_cost - $course_application->deposit_price - $amount_added + $amount_refunded;
+            if ($course_application->status == 'application_cancelled' || $course_application->status == 'completed' || $amount_due == 0) {
+                $course_application->total_cost = $course_application->total_cost * $currency_ratio;
+            }
+            $course_application->deposit_price = $course_application->deposit_price * $currency_ratio;
+            $course_application->save();
         }
 
-        return redirect()->route('superadmin.currency.index');
+        return redirect()->route('superadmin.setting.currency.index');
     }
 
     public function setDefault(Request $request, $id)
@@ -143,7 +145,7 @@ class CurrencyController extends Controller
         $currency->is_default = true;
         $currency->save();
 
-        return redirect()->route('superadmin.currency.index');
+        return redirect()->route('superadmin.setting.currency.index');
     }
 
     /**

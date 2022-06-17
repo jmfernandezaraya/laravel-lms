@@ -38,14 +38,14 @@
                         <div class="row pb-2">
                             <div id="schoolVideoCarousel" class="carousel slide" data-ride="carousel">
                                 <ol class="carousel-indicators">
-                                    @foreach ((array)$school->video as $videos)
+                                    @foreach ((array)$school->video as $video)
                                         <li data-target="#schoolVideoCarousel" data-slide-to="{{$loop->iteration - 1}}" class="{{$loop->iteration - 1 == 0 ? 'active' : ''}}"></li>
                                     @endforeach
                                 </ol>
                                 <div class="carousel-inner">
-                                    @foreach ((array)$school->video as $videos)
+                                    @foreach ((array)$school->video as $video)
                                         <div class="carousel-item {{$loop->iteration == 1 ? 'active' : ''}}">
-                                            {!! $videos !!}
+                                            <iframe src="{{ $video }}" height="500"></iframe>                                            
                                         </div>
                                     @endforeach
                                 </div>
@@ -251,18 +251,18 @@
                     $school_top_review_two_scores = 0;
                     $school_top_review_one_scores = 0;
                 @endphp
-                @foreach ($school_top_review_course_booked_details as $school_top_review_course_booked_detail)
+                @foreach ($school_top_review_course_applications as $school_top_review_course_application)
                     @php
-                        $school_top_review_rating = ($school_top_review_course_booked_detail->review->quality_teaching + $school_top_review_course_booked_detail->review->school_facilities + $school_top_review_course_booked_detail->review->social_activities + 
-                            $school_top_review_course_booked_detail->review->school_location + $school_top_review_course_booked_detail->review->satisfied_teaching + $school_top_review_course_booked_detail->review->level_cleanliness + 
-                            $school_top_review_course_booked_detail->review->distance_accommodation_school + $school_top_review_course_booked_detail->review->satisfied_accommodation + $school_top_review_course_booked_detail->review->airport_transfer + 
-                            $school_top_review_course_booked_detail->review->city_activities) / 10;
+                        $school_top_review_rating = ($school_top_review_course_application->review->quality_teaching + $school_top_review_course_application->review->school_facilities + $school_top_review_course_application->review->social_activities + 
+                            $school_top_review_course_application->review->school_location + $school_top_review_course_application->review->satisfied_teaching + $school_top_review_course_application->review->level_cleanliness + 
+                            $school_top_review_course_application->review->distance_accommodation_school + $school_top_review_course_application->review->satisfied_accommodation + $school_top_review_course_application->review->airport_transfer + 
+                            $school_top_review_course_application->review->city_activities) / 10;
                         $school_top_review_ratings += $school_top_review_rating;
-                        $school_top_review_quality_teachings += $school_top_review_course_booked_detail->review->quality_teaching;
-                        $school_top_review_school_facilities += $school_top_review_course_booked_detail->review->school_facilities;
-                        $school_top_review_social_activities += $school_top_review_course_booked_detail->review->social_activities;
-                        $school_top_review_school_locations += $school_top_review_course_booked_detail->review->school_location;
-                        $school_top_review_satisfied_teachings += $school_top_review_course_booked_detail->review->satisfied_teaching;
+                        $school_top_review_quality_teachings += $school_top_review_course_application->review->quality_teaching;
+                        $school_top_review_school_facilities += $school_top_review_course_application->review->school_facilities;
+                        $school_top_review_social_activities += $school_top_review_course_application->review->social_activities;
+                        $school_top_review_school_locations += $school_top_review_course_application->review->school_location;
+                        $school_top_review_satisfied_teachings += $school_top_review_course_application->review->satisfied_teaching;
                         if ($school_top_review_rating == 5) $school_top_review_five_scores += 1;
                         if ($school_top_review_rating < 5 && $school_top_review_rating >= 4) $school_top_review_four_scores += 1;
                         if ($school_top_review_rating < 4 && $school_top_review_rating >= 3) $school_top_review_three_scores += 1;
@@ -270,9 +270,9 @@
                         if ($school_top_review_rating < 2 && $school_top_review_rating >= 1) $school_top_review_one_scores += 1;
                     @endphp
                 @endforeach
-                @if ($school_top_review_course_booked_details && count($school_top_review_course_booked_details))
+                @if ($school_top_review_course_applications && count($school_top_review_course_applications))
                     @php
-                        $school_top_review_rating_count = count($school_top_review_course_booked_details);
+                        $school_top_review_rating_count = count($school_top_review_course_applications);
                         $school_top_review_ratings = $school_top_review_ratings / $school_top_review_rating_count;
                         $school_top_review_quality_teachings = $school_top_review_quality_teachings / $school_top_review_rating_count;
                         $school_top_review_school_facilities = $school_top_review_school_facilities / $school_top_review_rating_count;
@@ -414,12 +414,12 @@
             </div>
 
             <div class="school-reviews mt-3 border-bottom">
-                @foreach ($school_top_review_course_booked_details as $school_top_review_course_booked_detail)
+                @foreach ($school_top_review_course_applications as $school_top_review_course_application)
                     @php
-                        $school_top_review_rating = ($school_top_review_course_booked_detail->review->quality_teaching + $school_top_review_course_booked_detail->review->school_facilities + $school_top_review_course_booked_detail->review->social_activities + 
-                            $school_top_review_course_booked_detail->review->school_location + $school_top_review_course_booked_detail->review->satisfied_teaching + $school_top_review_course_booked_detail->review->level_cleanliness + 
-                            $school_top_review_course_booked_detail->review->distance_accommodation_school + $school_top_review_course_booked_detail->review->satisfied_accommodation + $school_top_review_course_booked_detail->review->airport_transfer + 
-                            $school_top_review_course_booked_detail->review->city_activities) / 10;
+                        $school_top_review_rating = ($school_top_review_course_application->review->quality_teaching + $school_top_review_course_application->review->school_facilities + $school_top_review_course_application->review->social_activities + 
+                            $school_top_review_course_application->review->school_location + $school_top_review_course_application->review->satisfied_teaching + $school_top_review_course_application->review->level_cleanliness + 
+                            $school_top_review_course_application->review->distance_accommodation_school + $school_top_review_course_application->review->satisfied_accommodation + $school_top_review_course_application->review->airport_transfer + 
+                            $school_top_review_course_application->review->city_activities) / 10;
                     @endphp
                     <div class="score-wrap">
                         <span class="stars" style="width: {{$school_top_review_rating * 20}}%">
@@ -438,7 +438,7 @@
                         </div>
                         <div class="col-md-3">
                             <div class="score-wrap">
-                                <span class="stars" style="width: {{$school_top_review_course_booked_detail->review->quality_teaching * 20}}%">
+                                <span class="stars" style="width: {{$school_top_review_course_application->review->quality_teaching * 20}}%">
                                     <i class="fa fa-star" aria-hidden="true"></i>
                                     <i class="fa fa-star" aria-hidden="true"></i>
                                     <i class="fa fa-star" aria-hidden="true"></i>
@@ -451,7 +451,7 @@
                             <p>{{__('Frontend.duration_of_study')}}</p>
                         </div>
                         <div class="col-md-3">
-                            <p>{{ $school_top_review_course_booked_detail->program_duration }} {{__('Frontend.weeks')}}</p>
+                            <p>{{ $school_top_review_course_application->program_duration }} {{__('Frontend.weeks')}}</p>
                         </div>
                     </div>
                     <div class="row">
@@ -460,7 +460,7 @@
                         </div>
                         <div class="col-md-3">
                             <div class="score-wrap">
-                                <span class="stars" style="width: {{$school_top_review_course_booked_detail->review->school_facilities * 20}}%">
+                                <span class="stars" style="width: {{$school_top_review_course_application->review->school_facilities * 20}}%">
                                     <i class="fa fa-star" aria-hidden="true"></i>
                                     <i class="fa fa-star" aria-hidden="true"></i>
                                     <i class="fa fa-star" aria-hidden="true"></i>
@@ -473,7 +473,7 @@
                             <p>{{__('Frontend.date_of_study')}}</p>
                         </div>
                         <div class="col-md-3">
-                            <p>{{ $school_top_review_course_booked_detail->start_date->format('d M Y') }} - {{ $school_top_review_course_booked_detail->end_date->format('d M Y') }}</p>
+                            <p>{{ $school_top_review_course_application->start_date->format('d M Y') }} - {{ $school_top_review_course_application->end_date->format('d M Y') }}</p>
                         </div>
                     </div>
                     <div class="row">
@@ -482,7 +482,7 @@
                         </div>
                         <div class="col-md-3">
                             <div class="score-wrap">
-                                <span class="stars" style="width: {{$school_top_review_course_booked_detail->review->social_activities * 20}}%">
+                                <span class="stars" style="width: {{$school_top_review_course_application->review->social_activities * 20}}%">
                                     <i class="fa fa-star" aria-hidden="true"></i>
                                     <i class="fa fa-star" aria-hidden="true"></i>
                                     <i class="fa fa-star" aria-hidden="true"></i>
@@ -495,7 +495,7 @@
                             <p>{{__('Frontend.would_you_recommend_this_school')}}</p>
                         </div>
                         <div class="col-md-3">
-                            <p>{{ $school_top_review_course_booked_detail->recommend_this_school ? __('Frontend.yes') : __('Frontend.no') }}</p>
+                            <p>{{ $school_top_review_course_application->recommend_this_school ? __('Frontend.yes') : __('Frontend.no') }}</p>
                         </div>
                     </div>
                     <div class="row">
@@ -504,7 +504,7 @@
                         </div>
                         <div class="col-md-3">
                             <div class="score-wrap">
-                                <span class="stars" style="width: {{$school_top_review_course_booked_detail->review->school_location * 20}}%">
+                                <span class="stars" style="width: {{$school_top_review_course_application->review->school_location * 20}}%">
                                     <i class="fa fa-star" aria-hidden="true"></i>
                                     <i class="fa fa-star" aria-hidden="true"></i>
                                     <i class="fa fa-star" aria-hidden="true"></i>
@@ -517,7 +517,7 @@
                             <p>{{__('Frontend.use_my_full_name_for_the_rating_and_review')}}</p>
                         </div>
                         <div class="col-md-3">
-                            <p>{{ $school_top_review_course_booked_detail->use_full_name ? __('Frontend.yes') : __('Frontend.no') }}</p>
+                            <p>{{ $school_top_review_course_application->use_full_name ? __('Frontend.yes') : __('Frontend.no') }}</p>
                         </div>
                     </div>
                 @endforeach
@@ -539,67 +539,69 @@
             </div>
 
             <!-- ======= School Branches Section ======= -->
-            <section id="school-branches" class="school-branches" data-aos="fade-up">
-                <h5 class="best">{{__('Frontend.school_branches')}}</h5>
+            @if ($school_branches && count($school_branches))
+                <section id="school-branches" class="school-branches" data-aos="fade-up">
+                    <h5 class="best">{{__('Frontend.school_branches')}}</h5>
 
-                <div class="school-list schools-style-popular">
-                    @foreach($school_branches as $school_branch_index => $school_branch)
-                        @if ($school_branch_index % 3 == 0)
-                            <div class="row" data-aos="zoom-in" data-aos-delay="100" data-row-index="{{ $school_branch_index / 3 + 1 }}">
-                        @endif
-                        <div class="col-md-4 d-flex align-items-stretch mt-4 mt-md-0">
-                            <div class="school-item">
-                                <a href="{{route('school.details', $school->id)}}">
-                                    <div class="school-logo" style="background-image: url('{{ $school->logo }}')"></div>
-                                    <div class="school-content">
-                                        <div class="school-information">
-                                            <a href="{{route('school.details', $school->id)}}">
-                                                <div class="school-name-branch">{{ $school_branch->name ? (app()->getLocale() == 'en' ? $school_branch->name->name : $school_branch->name->name_ar) : '' }} / {{ app()->getLocale() == 'en' ? ($school_branch->branch_name ?? '') : ($school_branch->branch_name_ar ?? '') }}</div>
-                                                <div class="school-city">{{ $school_branch->city ? (app()->getLocale() == 'en' ? $school_branch->city->name : $school_branch->city->name_ar) : '' }}</div>
-                                                <div class="school-country">{{ $school_branch->country ? (app()->getLocale() == 'en' ? $school_branch->country->name : $school_branch->country->name_ar) : '' }}</div>
-                                            </a>
-                                        </div>
-                                        <div class="school-users-loves-likes">
-                                            <div class="school-users-loves">
-                                                <i class="bx bx-show"></i>&nbsp;{{$school_branch->viewed_count}}&nbsp;&nbsp;
-                                                @auth
-                                                    @if (!empty(auth()->user()->likedSchool))
-                                                        <i class="bx bxs-heart" data-school="{{ $school_branch->id }}" style="cursor:pointer" onclick="like_school($(this).attr('data-school'))"></i>&nbsp;{{ auth()->user()->likedSchool()->count() }}
+                    <div class="school-list schools-style-popular">
+                        @foreach($school_branches as $school_branch_index => $school_branch)
+                            @if ($school_branch_index % 3 == 0)
+                                <div class="row" data-aos="zoom-in" data-aos-delay="100" data-row-index="{{ $school_branch_index / 3 + 1 }}">
+                            @endif
+                            <div class="col-md-4 d-flex align-items-stretch mt-4 mt-md-0">
+                                <div class="school-item">
+                                    <a href="{{route('frontend.school.details', $school->id)}}">
+                                        <div class="school-logo" style="background-image: url('{{ $school->logo }}')"></div>
+                                        <div class="school-content">
+                                            <div class="school-information">
+                                                <a href="{{route('frontend.school.details', $school->id)}}">
+                                                    <div class="school-name-branch">{{ $school_branch->name ? (app()->getLocale() == 'en' ? $school_branch->name->name : $school_branch->name->name_ar) : '' }}{{ app()->getLocale() == 'en' ? ($school_branch->branch_name ? ' / ' . $school_branch->branch_name : '') : ($school_branch->branch_name_ar ?' / ' . $school_branch->branch_name_ar : '') }}</div>
+                                                    <div class="school-city">{{ $school_branch->city ? (app()->getLocale() == 'en' ? $school_branch->city->name : $school_branch->city->name_ar) : '' }}</div>
+                                                    <div class="school-country">{{ $school_branch->country ? (app()->getLocale() == 'en' ? $school_branch->country->name : $school_branch->country->name_ar) : '' }}</div>
+                                                </a>
+                                            </div>
+                                            <div class="school-users-loves-likes">
+                                                <div class="school-users-loves">
+                                                    <i class="bx bx-show"></i>&nbsp;{{$school_branch->viewed_count}}&nbsp;&nbsp;
+                                                    @auth
+                                                        @if (!empty(auth()->user()->likedSchool))
+                                                            <i class="bx bxs-heart" data-school="{{ $school_branch->id }}" style="cursor:pointer" onclick="like_school($(this).attr('data-school'))"></i>&nbsp;{{ auth()->user()->likedSchool()->count() }}
+                                                        @else
+                                                            <i class="bx bx-heart" data-school="{{ $school_branch->id }}" style="cursor:pointer" onclick="like_school($(this).attr('data-school'))">&nbsp;{{ auth()->user()->likedSchool()->count() }}</i>
+                                                        @endif
                                                     @else
-                                                        <i class="bx bx-heart" data-school="{{ $school_branch->id }}" style="cursor:pointer" onclick="like_school($(this).attr('data-school'))">&nbsp;{{ auth()->user()->likedSchool()->count() }}</i>
-                                                    @endif
-                                                @else
-                                                    <i class="bx bx-heart" data-school="{{ $school_branch->id }}" onclick="like_school($(this).attr('data-school'), true)" style="cursor:pointer">&nbsp;{{ \App\Models\Frontend\LikedSchool::count() }}</i>
-                                                @endauth
-                                            </div>
-                                            <div class="school-likes">
-                                                <i class="bx bxs-star"></i>
-                                                <i class="bx bxs-star"></i>
-                                                <i class="bx bxs-star"></i>
-                                                <i class="bx bxs-star"></i>
-                                                <i class="bx bxs-star-half"></i>
+                                                        <i class="bx bx-heart" data-school="{{ $school_branch->id }}" onclick="like_school($(this).attr('data-school'), true)" style="cursor:pointer">&nbsp;{{ \App\Models\Frontend\LikedSchool::count() }}</i>
+                                                    @endauth
+                                                </div>
+                                                <div class="school-likes">
+                                                    <i class="bx bxs-star"></i>
+                                                    <i class="bx bxs-star"></i>
+                                                    <i class="bx bxs-star"></i>
+                                                    <i class="bx bxs-star"></i>
+                                                    <i class="bx bxs-star-half"></i>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </a>
-                            </div> <!-- End School Item-->
-                        </div>
-                        @if ($school_branch_index % 3 == 2)
+                                    </a>
+                                </div> <!-- End School Item-->
+                            </div>
+                            @if ($school_branch_index % 3 == 2)
+                                </div>
+                            @endif
+                        @endforeach
+                        @if (count($school_branches) % 3 != 2)
                             </div>
                         @endif
-                    @endforeach
-                    @if (count($school_branches) % 3 != 2)
-                        </div>
-                    @endif
-                    @if (count($school_branches) > 3)
-                        <div class="row" data-aos="zoom-in" data-aos-delay="100">
-                            <div class="col-md-12">
-                                <button onclick="loadMoreSchoolBranch()" class="btn btn-primary w-100">{{__('Frontend.more_branches')}}</button>
+                        @if (count($school_branches) > 3)
+                            <div class="row" data-aos="zoom-in" data-aos-delay="100">
+                                <div class="col-md-12">
+                                    <button onclick="loadMoreSchoolBranch()" class="btn btn-primary w-100">{{__('Frontend.more_branches')}}</button>
+                                </div>
                             </div>
-                        </div>
-                    @endif
-                </div>
-            </section>
+                        @endif
+                    </div>
+                </section>
+            @endif
             <!-- End School Branches Section -->
         </div>
     </div>
@@ -608,7 +610,7 @@
     <div class="modal" id="myModal">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form method="POST" action="{{route('rateSaved')}}">
+                <form method="POST" action="{{route('frontend.rate.save')}}">
                     @csrf
                     <!-- Modal Header -->
                     <div class="modal-header">
@@ -722,7 +724,7 @@
         }
 
         function get_program() {
-            var urlname = "{{route('school.programs')}}";
+            var urlname = "{{route('frontend.school.programs')}}";
             $.post(
                 urlname, 
                 {

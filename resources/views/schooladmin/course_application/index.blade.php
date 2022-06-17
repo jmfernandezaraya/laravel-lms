@@ -48,8 +48,8 @@
                             <td>{{$details->created_at}}</td>
                             <td>{{ucwords($details->fname) }} {{ucwords($details->lname) }}</td>
 
-                            <td>{{ ucwords($details->userBookDetailsApproved->email ?? $details->email)  }}</td>
-                            <td>{{ ucwords($details->userBookDetailsApproved->mobile ?? $details->mobile)  }}</td>
+                            <td>{{ ucwords($details->courseApplicationApprove->email ?? $details->email)  }}</td>
+                            <td>{{ ucwords($details->courseApplicationApprove->mobile ?? $details->mobile)  }}</td>
                             <td>{{ ucwords(get_language() == 'en' ? $details->course->school->name : $details->course->school->name_ar )  }}</td>
                             <td>{{ ucwords( $details->course->school->city)  }}</td>
                             <td>{{ ucwords($details->course->school->country)  }}</td>
@@ -58,9 +58,9 @@
                             <td>{{ ucwords($details->program_duration )  }}</td>
                             <td>{{ ucwords($details->other_currency )  }}</td>
                             <td>{{ ucwords($details->paid_amount )  }}</td>
-                            <td>{{ isset($details->userBookDetailsApproved->status) ? ucwords($details->userBookDetailsApproved->approve  == 1 ? 'Application Received' : 'Send To School Admin' ) : 'Application Received'  }}</td>
+                            <td>{{ isset($details->courseApplicationApprove->status) ? ucwords($details->courseApplicationApprove->approve  == 1 ? 'Application Received' : 'Send To School Admin' ) : 'Application Received'  }}</td>
                             <td>
-                                @if(!isset($details->userBookDetailsApproved->status))
+                                @if(!isset($details->courseApplicationApprove->status))
                                     <div class="btn-group">
                                         <a href="{{route('schooladmin.manage_application.approve', ['id' => $details->id, 'value' => 1])}}"
                                          class="btn btn-success btn-sm fa fa-check"></a>
@@ -71,7 +71,7 @@
                                     </div>
                                 @else
                                     <?php
-                                    $status = $details->userBookDetailsApproved->status == 1 ? 'Accepted' : 'Rejected';
+                                    $status = $details->courseApplicationApprove->status == 1 ? 'Accepted' : 'Rejected';
                                     ?>
                                     @if($status == 'Rejected')
                                         <a href="javascript:void(0);"

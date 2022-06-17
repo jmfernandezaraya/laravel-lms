@@ -21,13 +21,13 @@ class CourseDetailsController extends Controller
     {
         $course_programs = CourseProgram::whereCourseUniqueId($course_unique_id)->get();
 
-        return view("superadmin.courses.course_details.program", compact('course_programs'));
+        return view("superadmin.course.course_details.program", compact('course_programs'));
     }
 
     public function accomodationDetails($course_unique_id)
     {
         $accomodations = CourseAccommodation::whereCourseUniqueId($course_unique_id)->get();
-        return view("superadmin.courses.course_details.accommodation", compact('accomodations'));
+        return view("superadmin.course.course_details.accommodation", compact('accomodations'));
     }
 
     /*
@@ -42,13 +42,13 @@ class CourseDetailsController extends Controller
     {
         $underages = CourseAccommodationUnderAge::where('accom_id', $accomadation_id)->get();
 
-        return view('superadmin.courses.course_details.accommodation_under_age', compact('underages'));
+        return view('superadmin.course.course_details.accommodation_under_age', compact('underages'));
     }
 
     public function airportDetails($course_unique_id)
     {
         $airports = CourseAirport::whereCourseUniqueId($course_unique_id)->get();
-        return view("superadmin.courses.course_details.airport", compact('airports'));
+        return view("superadmin.course.course_details.airport", compact('airports'));
     }
 
     /*
@@ -64,14 +64,14 @@ class CourseDetailsController extends Controller
     public function courseProgramUnderAgeDetails($program_id)
     {
         $programs = CourseProgramUnderAgeFee::where('course_program_id', $program_id)->get();
-        return view('superadmin.courses.course_details.program_under_age', compact('programs'));
+        return view('superadmin.course.course_details.program_under_age', compact('programs'));
     }
 
     public function medicalDetails($id)
     {
         $medicals = CourseMedicalFee::where('course_unique_id', $id)->get();
 
-        return view('superadmin.courses.course_details.medical_details', compact('medicals'));
+        return view('superadmin.course.course_details.medical_details', compact('medicals'));
     }
 
     /*

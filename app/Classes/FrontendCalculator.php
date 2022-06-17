@@ -357,7 +357,7 @@ class FrontendCalculator
             // Calculating by program cost * week  - free_week
             $divide = $this->divideProgramDurationByWeekSelect($this->program_duration, $this->discount_week_get);
 
-            $data['total'] =  $this->fixed_program_cost * $divide * $this->how_many_week_free;
+            $data['total'] = $this->fixed_program_cost * $divide * $this->how_many_week_free;
 
             //Calculating discount fee here and inserting into db
             insertCalculationIntoDB('discount_fee', $this->fixed_program_cost * $divide * $this->how_many_week_free);
@@ -467,30 +467,30 @@ class FrontendCalculator
 
         if (!($this->program_start_date_from_frontend > $this->summer_date_from_db_program) && !($this->getFrontEndDate() < $this->summer_start_date_program)) {
             if ($this->getFrontEndDate() >= $this->summer_date_from_db_program && $this->getProgramStartDateFromFrontend() <= $this->summer_start_date_program ) {
-                $multiply['summer_date_program'] = $this->compareBetweenTwoDates($this->summer_start_date_program, $this->summer_date_from_db_program);
+                $multiply['summer_date_program'] = compareBetweenTwoDates($this->summer_start_date_program, $this->summer_date_from_db_program);
             } elseif (($this->getFrontEndDate() < $this->summer_date_from_db_program && $this->summer_start_date_program > $this->getProgramStartDateFromFrontend())) {
                 $multiply['summer_date_program'] = $this->getFrontEndDate() < $this->summer_date_from_db_program ?
-                    $this->compareBetweenTwoDates($this->getFrontEndDate(), $this->summer_start_date_program) :
-                    $this->compareBetweenTwoDates($this->getFrontEndDate(), $this->summer_date_from_db_program);
+                    compareBetweenTwoDates($this->getFrontEndDate(), $this->summer_start_date_program) :
+                    compareBetweenTwoDates($this->getFrontEndDate(), $this->summer_date_from_db_program);
             } elseif ($this->getFrontEndDate() <= $this->summer_date_from_db_program && $this->getFrontEndDate() >= $this->summer_start_date_program) {
-                $multiply['summer_date_program'] = $this->compareBetweenTwoDates($this->program_start_date_from_frontend, $this->getFrontEndDate());
+                $multiply['summer_date_program'] = compareBetweenTwoDates($this->program_start_date_from_frontend, $this->getFrontEndDate());
             } elseif ($this->getFrontEndDate() >= $this->summer_date_from_db_program && $this->program_start_date_from_frontend >= $this->summer_start_date_program) {
-                $multiply['summer_date_program'] = $this->compareBetweenTwoDates($this->program_start_date_from_frontend, $this->summer_date_from_db_program);
+                $multiply['summer_date_program'] = compareBetweenTwoDates($this->program_start_date_from_frontend, $this->summer_date_from_db_program);
             }
         }
 
         $multiply['peak_date_program'] = 0;
         if (!($this->program_start_date_from_frontend > $this->peak_end_date) && !($this->getFrontEndDate() < $this->peak_start_date)) {
             if ($this->getFrontEndDate() >= $this->peak_end_date && $this->getProgramStartDateFromFrontend() <= $this->peak_start_date) {
-                $multiply['peak_date_program'] = $this->compareBetweenTwoDates($this->peak_start_date, $this->peak_end_date);
+                $multiply['peak_date_program'] = compareBetweenTwoDates($this->peak_start_date, $this->peak_end_date);
             } elseif (($this->getFrontEndDate() < $this->peak_end_date && $this->peak_start_date > $this->getProgramStartDateFromFrontend())) {
                 $multiply['peak_date_program'] = $this->getFrontEndDate() < $this->peak_end_date ?
-                    $this->compareBetweenTwoDates($this->getFrontEndDate(), $this->peak_start_date) :
-                    $this->compareBetweenTwoDates($this->getFrontEndDate(), $this->peak_end_date);
+                    compareBetweenTwoDates($this->getFrontEndDate(), $this->peak_start_date) :
+                    compareBetweenTwoDates($this->getFrontEndDate(), $this->peak_end_date);
             } elseif ($this->getFrontEndDate() <= $this->peak_end_date && $this->getFrontEndDate() >= $this->peak_start_date) {
-                $multiply['peak_date_program'] = $this->compareBetweenTwoDates($this->program_start_date_from_frontend, $this->getFrontEndDate());
+                $multiply['peak_date_program'] = compareBetweenTwoDates($this->program_start_date_from_frontend, $this->getFrontEndDate());
             } elseif ($this->getFrontEndDate() >= $this->peak_end_date && $this->program_start_date_from_frontend >= $this->peak_start_date) {
-                $multiply['peak_date_program'] = $this->compareBetweenTwoDates($this->program_start_date_from_frontend, $this->peak_end_date);
+                $multiply['peak_date_program'] = compareBetweenTwoDates($this->program_start_date_from_frontend, $this->peak_end_date);
             }
         }
 
@@ -511,14 +511,6 @@ class FrontendCalculator
     public function getProgramStartDateFromFrontend()
     {
         return $this->program_start_date_from_frontend;
-    }
-
-    public function compareBetweenTwoDates($date1, $date2)
-    {
-        $first = Carbon::createFromFormat('Y-m-d', $date1);
-        $second = Carbon::createFromFormat('Y-m-d', $date2);
-
-        return $first->diffInWeeks($second);
     }
 
     public function calculateDiscountWeekFree($value, $week_selected): bool

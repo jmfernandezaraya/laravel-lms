@@ -90,6 +90,24 @@ function checkBetweenDate($start, $end, $compare_with)
     return $check ? true : false;
 }
 
+function compareBetweenTwoDates($date1, $date2)
+{
+    $first = Carbon\Carbon::createFromFormat('Y-m-d', $date1);
+    $second = Carbon\Carbon::createFromFormat('Y-m-d', $date2);
+
+    return $first->diffInWeeks($second);
+}
+
+/**
+ * @param $date
+ * @param $weeks
+ * @return string
+ */
+function getEndDate($date, $weeks)
+{
+    return Carbon\Carbon::create($date)->addWeeks($weeks)->format('Y-m-d');
+}
+
 /**
  * @return mixed
  */
@@ -166,33 +184,33 @@ function getSchoolCountryName($country_id)
     return '';
 }
 
-function getSchoolTopReviewCourseBookedDetails($school_id, $count = 3) {
-    $top_course_booked_details = [];
-    $school_user_course_booked_details = \App\Models\UserCourseBookedDetails::with('review')->where('school_id', $school_id)->get();
-    foreach ($school_user_course_booked_details as $school_user_course_booked_detail) {
-        if ($school_user_course_booked_detail->review) {
-            $top_course_booked_details[] = $school_user_course_booked_detail;
+function getSchoolTopReviewCourseApplications($school_id, $count = 3) {
+    $top_course_applications = [];
+    $school_course_applications = \App\Models\CourseApplication::with('review')->where('school_id', $school_id)->get();
+    foreach ($school_course_applications as $school_course_application) {
+        if ($school_course_application->review) {
+            $top_course_applications[] = $school_course_application;
         }
     }
-    usort($top_course_booked_details, function($first, $second) {
+    usort($top_course_applications, function($first, $second) {
         return ($first->review->quality_teaching + $first->review->school_facilities + $first->review->social_activities + $first->review->school_location + $first->review->satisfied_teaching + $first->review->level_cleanliness + $first->review->distance_accommodation_school + $first->review->satisfied_accommodation + $first->review->airport_transfer + $first->review->city_activities)
              < ($second->review->quality_teaching + $second->review->school_facilities + $second->review->social_activities + $second->review->school_location + $second->review->satisfied_teaching + $second->review->level_cleanliness + $second->review->distance_accommodation_school + $second->review->satisfied_accommodation + $second->review->airport_transfer + $second->review->city_activities);
     });
 
-    return array_slice($top_course_booked_details, 0, $count);
+    return array_slice($top_course_applications, 0, $count);
 }
 
 function getSchoolRating($school_id) {
     $school_ratings = 0;
     $school_rating_count = 0;
-    $school_user_course_booked_details = \App\Models\UserCourseBookedDetails::with('review')->where('school_id', $school_id)->get();
-    if ($school_user_course_booked_details) {
-        foreach ($school_user_course_booked_details as $course_booked_detail) {
-            if ($course_booked_detail->review) {
-                $school_ratings = ($course_booked_detail->review->quality_teaching + $course_booked_detail->review->school_facilities + $course_booked_detail->review->social_activities + 
-                    $course_booked_detail->review->school_location + $course_booked_detail->review->satisfied_teaching + $course_booked_detail->review->level_cleanliness + 
-                    $course_booked_detail->review->distance_accommodation_school + $course_booked_detail->review->satisfied_accommodation + $course_booked_detail->review->airport_transfer + 
-                    $course_booked_detail->review->city_activities) / 10;
+    $school_course_applications = \App\Models\CourseApplication::with('review')->where('school_id', $school_id)->get();
+    if ($school_course_applications) {
+        foreach ($school_course_applications as $course_application) {
+            if ($course_application->review) {
+                $school_ratings = ($course_application->review->quality_teaching + $course_application->review->school_facilities + $course_application->review->social_activities + 
+                    $course_application->review->school_location + $course_application->review->satisfied_teaching + $course_application->review->level_cleanliness + 
+                    $course_application->review->distance_accommodation_school + $course_application->review->satisfied_accommodation + $course_application->review->airport_transfer + 
+                    $course_application->review->city_activities) / 10;
                 $school_rating_count += 1;
             }
         }
@@ -204,14 +222,14 @@ function getSchoolRating($school_id) {
 function getCourseRating($course_id) {
     $course_ratings = 0;
     $course_rating_count = 0;
-    $course_user_course_booked_details = \App\Models\UserCourseBookedDetails::with('review')->where('course_id', $course_id)->get();
-    if ($course_user_course_booked_details) {
-        foreach ($course_user_course_booked_details as $course_booked_detail) {
-            if ($course_booked_detail->review) {
-                $course_ratings = ($course_booked_detail->review->quality_teaching + $course_booked_detail->review->school_facilities + $course_booked_detail->review->social_activities + 
-                    $course_booked_detail->review->school_location + $course_booked_detail->review->satisfied_teaching + $course_booked_detail->review->level_cleanliness + 
-                    $course_booked_detail->review->distance_accommodation_school + $course_booked_detail->review->satisfied_accommodation + $course_booked_detail->review->airport_transfer + 
-                    $course_booked_detail->review->city_activities) / 10;
+    $course_course_applications = \App\Models\CourseApplication::with('review')->where('course_id', $course_id)->get();
+    if ($course_course_applications) {
+        foreach ($course_course_applications as $course_application) {
+            if ($course_application->review) {
+                $course_ratings = ($course_application->review->quality_teaching + $course_application->review->school_facilities + $course_application->review->social_activities + 
+                    $course_application->review->school_location + $course_application->review->satisfied_teaching + $course_application->review->level_cleanliness + 
+                    $course_application->review->distance_accommodation_school + $course_application->review->satisfied_accommodation + $course_application->review->airport_transfer + 
+                    $course_application->review->city_activities) / 10;
                 $course_rating_count += 1;
             }
         }
@@ -531,9 +549,9 @@ if (!function_exists('getBranchesForBranchAdmin')) {
 
 function getCourseApplicationPrintData($id)
 {
-    $course_booked_detail = \App\Models\UserCourseBookedDetails::with('course', 'User', 'userCourseBookedStatusus')->whereId($id)->firstOrFail();
+    $course_application = \App\Models\CourseApplication::with('course', 'User', 'courseApplicationStatusus')->whereId($id)->firstOrFail();
 
-    $program_age_ranges = \App\Models\SuperAdmin\Choose_Program_Age_Range::whereIn('unique_id', [$course_booked_detail->age_selected])->pluck('age')->toArray();
+    $program_age_ranges = \App\Models\SuperAdmin\Choose_Program_Age_Range::whereIn('unique_id', [$course_application->age_selected])->pluck('age')->toArray();
     $data['min_age'] = ''; $data['max_age'] = '';
     if (!empty($program_age_ranges) && count($program_age_ranges)) {
         $data['min_age'] = $program_age_ranges[0];
@@ -541,23 +559,23 @@ function getCourseApplicationPrintData($id)
     }
     $program_under_age = \App\Models\SuperAdmin\Choose_Program_Under_Age::whereIn('age', $program_age_ranges)->value('unique_id');
 
-    $data['course_booked_detail'] = $course_booked_detail;
-    $data['program_start_date'] = Carbon\Carbon::create($course_booked_detail->start_date)->format('d-m-Y');
-    $data['accommodation_start_date'] = $data['medical_start_date'] = Carbon\Carbon::create($course_booked_detail->start_date)->subDay()->format('d-m-Y');
-    $data['program_end_date'] = Carbon\Carbon::create($course_booked_detail->end_date)->format('d-m-Y');
-    $data['accommodation_end_date'] = Carbon\Carbon::create($data['accommodation_start_date'])->addWeeks($course_booked_detail->accommodation_duration)->subDay()->format('d-m-Y');
-    $data['medical_end_date'] = Carbon\Carbon::create($data['medical_start_date'])->addWeeks($course_booked_detail->medical_duration ?? 0)->subDay()->format('d-m-Y');
-    $data['school'] = \App\Models\SuperAdmin\School::find($course_booked_detail->school_id);
-    $data['course'] = isset($course_booked_detail->course_id) ? \App\Models\SuperAdmin\Course::where('unique_id', $course_booked_detail->course_id)->first() : '';
-    $data['program'] = isset($course_booked_detail->course_program_id) ? \App\Models\SuperAdmin\CourseProgram::where('unique_id', $course_booked_detail->course_program_id)->first() : null;
-    $data['program_text_book_fee'] = isset($course_booked_detail->course_program_id) ? \App\Models\SuperAdmin\CourseProgramTextBookFee::where('course_program_id', $course_booked_detail->course_program_id)->
-        where('text_book_start_date', '<=', $course_booked_detail->course_program_id)->where('text_book_end_date', '>=', $course_booked_detail->course_program_id)->first() : '';
-    $data['program_under_age_fee'] = isset($course_booked_detail->course_program_id) ? \App\Models\SuperAdmin\CourseProgramUnderAgeFee::where('course_program_id', $course_booked_detail->course_program_id)->
-        where('under_age', 'LIKE', '%' . $program_under_age . '%')->first() : '';
-    $data['accommodation'] = isset($course_booked_detail->accommodation_id) ? \App\Models\SuperAdmin\CourseAccommodation::where('unique_id', '' . $course_booked_detail->accommodation_id)->first() : '';
-    $data['airport'] = isset($course_booked_detail->airport_id) ? \App\Models\SuperAdmin\CourseAirport::where('unique_id', $course_booked_detail->airport_id)->first() : null;
-    $data['medical'] = isset($course_booked_detail->medical_id) ? \App\Models\SuperAdmin\CourseMedical::where('unique_id', $course_booked_detail->medical_id)->first() : null;
-    $data['custodian'] = isset($course_booked_detail->custodian_id) ? \App\Models\SuperAdmin\CourseCustodian::where('unique_id', $course_booked_detail->medical_id)->first() : null;
+    $data['course_application'] = $course_application;
+    $data['program_start_date'] = Carbon\Carbon::create($course_application->start_date)->format('d-m-Y');
+    $data['accommodation_start_date'] = $data['medical_start_date'] = Carbon\Carbon::create($course_application->start_date)->subDay()->format('d-m-Y');
+    $data['program_end_date'] = Carbon\Carbon::create($course_application->end_date)->format('d-m-Y');
+    $data['accommodation_end_date'] = Carbon\Carbon::create($data['accommodation_start_date'])->addWeeks($course_application->accommodation_duration)->subDay()->format('d-m-Y');
+    $data['medical_end_date'] = Carbon\Carbon::create($data['medical_start_date'])->addWeeks($course_application->medical_duration ?? 0)->subDay()->format('d-m-Y');
+    $data['school'] = \App\Models\SuperAdmin\School::find($course_application->school_id);
+    $data['course'] = isset($course_application->course_id) ? \App\Models\SuperAdmin\Course::where('unique_id', $course_application->course_id)->first() : null;
+    $data['program'] = isset($course_application->course_program_id) ? \App\Models\SuperAdmin\CourseProgram::where('unique_id', $course_application->course_program_id)->first() : null;
+    $data['program_text_book_fee'] = isset($course_application->course_program_id) ? \App\Models\SuperAdmin\CourseProgramTextBookFee::where('course_program_id', $course_application->course_program_id)->
+        where('text_book_start_date', '<=', $course_application->course_program_id)->where('text_book_end_date', '>=', $course_application->course_program_id)->first() : null;
+    $data['program_under_age_fee'] = isset($course_application->course_program_id) ? \App\Models\SuperAdmin\CourseProgramUnderAgeFee::where('course_program_id', $course_application->course_program_id)->
+        where('under_age', 'LIKE', '%' . $program_under_age . '%')->first() : null;
+    $data['accommodation'] = isset($course_application->accommodation_id) ? \App\Models\SuperAdmin\CourseAccommodation::where('unique_id', '' . $course_application->accommodation_id)->first() : null;
+    $data['airport'] = isset($course_application->airport_id) ? \App\Models\SuperAdmin\CourseAirport::where('unique_id', $course_application->airport_id)->first() : null;
+    $data['medical'] = isset($course_application->medical_id) ? \App\Models\SuperAdmin\CourseMedical::where('unique_id', $course_application->medical_id)->first() : null;
+    $data['custodian'] = isset($course_application->custodian_id) ? \App\Models\SuperAdmin\CourseCustodian::where('unique_id', $course_application->medical_id)->first() : null;
 
     $age_ranges = $data['accommodation'] ? $data['accommodation']->age_range : [];
     $data['accommodation_min_age'] = ''; $data['accommodation_max_age'] = '';
@@ -569,103 +587,163 @@ function getCourseApplicationPrintData($id)
 
     $default_currency = getDefaultCurrency();
 
-    $program_total = $course_booked_detail->total_cost - $course_booked_detail->accommodation_total - $course_booked_detail->accommodation_special_diet_fee
-            - $course_booked_detail->airport_pickup_fee - $course_booked_detail->medical_insurance_fee + $course_booked_detail->discount_fee + $course_booked_detail->accommodation_discount_fee;
-    
-    $amount_due = 0;
-    if ($transaction = $course_booked_detail->transaction) {
-        $amount_due += $transaction->amount - $course_booked_detail->total_cost;
-    }
-    $data['transaction_details'] = new \App\Classes\TransactionCalculator($course_booked_detail);
-    
+    $program_total = $course_application->total_cost - $course_application->accommodation_total - $course_application->accommodation_special_diet_fee
+            - $course_application->airport_pickup_fee - $course_application->medical_insurance_fee + $course_application->discount_fee + $course_application->accommodation_discount_fee;
+        
+    $amount_added = 0;
     $amount_refunded = 0;
-    $data['transaction_refund'] = [];
-    if ($course_booked_detail->transaction) {
-        $data['transaction_refund'] = \App\Models\SuperAdmin\TransactionRefund::where('transaction_id', $course_booked_detail->transaction->order_id)->get();
-        foreach ($data['transaction_refund'] as $all_refund) {
-            $amount_refunded += $all_refund->amount_refunded;
+    $data['transaction_refunds'] = [];
+    if ($course_application->transaction) {
+        $data['transaction_refunds'] = \App\Models\SuperAdmin\TransactionRefund::where('transaction_id', $course_application->transaction->order_id)->get();
+        foreach ($data['transaction_refunds'] as $transaction_refund) {
+            $amount_added += $transaction_refund->amount_added;
+            $amount_refunded += $transaction_refund->amount_refunded;
         }
     }
-    $amount_paid = ($course_booked_detail->transaction)->amount ?? $course_booked_detail->paid_amount + $data['transaction_details']->amountAdded() ?? 0;
-    //$data['amount_due'] = $data['transaction_details']->amountDue($course_booked_detail->total_balance);
-    $data['amount_due'] = $course_booked_detail->total_cost - $amount_paid + $amount_refunded;
+    $currency_exchange_rate = \App\Models\SuperAdmin\CurrencyExchangeRate::where('id', $data['course'] ? $data['course']->currency : 0)->first() ?? null;
+    $amount_added = (float)($amount_added / ($currency_exchange_rate ? (float)$currency_exchange_rate->exchange_rate : 1));
+    $amount_refunded = (float)($amount_refunded / ($currency_exchange_rate ? (float)$currency_exchange_rate->exchange_rate : 1));
+    $amount_due = $course_application->total_cost - $course_application->deposit_price - $amount_added + $amount_refunded;
 
-    $calculator_values = getCurrencyConvertedValues($course_booked_detail->course_id,
+    $calculator_values = getCurrencyConvertedValues($course_application->course_id,
         [
-            $course_booked_detail->program_cost,
-            $course_booked_detail->registration_fee,
-            $course_booked_detail->text_book_fee,
-            $course_booked_detail->summer_fees,
-            $course_booked_detail->under_age_fees,
-            $course_booked_detail->peak_time_fees,
-            $course_booked_detail->courier_fee,
-            $course_booked_detail->discount_fee,
+            $course_application->program_cost,
+            $course_application->registration_fee,
+            $course_application->text_book_fee,
+            $course_application->summer_fees,
+            $course_application->under_age_fees,
+            $course_application->peak_time_fees,
+            $course_application->courier_fee,
+            $course_application->discount_fee,
             $program_total,
-            $course_booked_detail->accommodation_fee,
-            $course_booked_detail->accommodation_placement_fee,
-            $course_booked_detail->accommodation_special_diet_fee,
-            $course_booked_detail->accommodation_deposit_fee,
-            $course_booked_detail->accommodation_summer_fee,
-            $course_booked_detail->accommodation_christmas_fee,
-            $course_booked_detail->accommodation_under_age_fee,
-            $course_booked_detail->accommodation_peak_fee,
-            $course_booked_detail->accommodation_discount_fee,
-            $course_booked_detail->accommodation_total,
-            $course_booked_detail->airport_pickup_fee,
-            $course_booked_detail->medical_insurance_fee,
-            $course_booked_detail->custodian_fee,
-            $course_booked_detail->total_discount,
-            $course_booked_detail->sub_total,
-            $course_booked_detail->total_cost,
-            $course_booked_detail->deposit_price,
-            $course_booked_detail->total_balance,
-            $amount_paid,
+            $course_application->accommodation_fee,
+            $course_application->accommodation_placement_fee,
+            $course_application->accommodation_special_diet_fee,
+            $course_application->accommodation_deposit_fee,
+            $course_application->accommodation_summer_fee,
+            $course_application->accommodation_christmas_fee,
+            $course_application->accommodation_under_age_fee,
+            $course_application->accommodation_peak_fee,
+            $course_application->accommodation_discount_fee,
+            $course_application->accommodation_total,
+            $course_application->airport_pickup_fee,
+            $course_application->medical_insurance_fee,
+            $course_application->custodian_fee,
+            $course_application->sub_total,
+            $course_application->total_discount,
+            $course_application->total_cost,
+            $course_application->deposit_price,
+            $course_application->total_balance,
+            $amount_added,
             $amount_refunded,
             $amount_due,
         ]
     );
-    $data['program_cost'] = [ 'value' => (float)$course_booked_detail->program_cost, 'converted_value' => $calculator_values['values'][0] ];
-    $data['program_registration_fee'] = [ 'value' => (float)$course_booked_detail->registration_fee, 'converted_value' => $calculator_values['values'][1] ];
-    $data['program_text_book_fee'] = [ 'value' => (float)$course_booked_detail->text_book_fee, 'converted_value' => $calculator_values['values'][2] ];
-    $data['program_summer_fees'] = [ 'value' => (float)$course_booked_detail->summer_fee, 'converted_value' => $calculator_values['values'][3] ];
-    $data['program_under_age_fees'] = [ 'value' => (float)$course_booked_detail->under_age_fee, 'converted_value' => $calculator_values['values'][4] ];
-    $data['program_peak_time_fees'] = [ 'value' => (float)$course_booked_detail->peak_time_fee, 'converted_value' => $calculator_values['values'][5] ];
-    $data['program_express_mail_fee'] = [ 'value' => (float)$course_booked_detail->courier_fee, 'converted_value' => $calculator_values['values'][6] ];
-    $data['program_discount_fee'] = [ 'value' => (float)$course_booked_detail->discount_fee, 'converted_value' => $calculator_values['values'][7] ];
+    $data['program_cost'] = [ 'value' => (float)$course_application->program_cost, 'converted_value' => $calculator_values['values'][0] ];
+    $data['program_registration_fee'] = [ 'value' => (float)$course_application->registration_fee, 'converted_value' => $calculator_values['values'][1] ];
+    $data['program_text_book_fee'] = [ 'value' => (float)$course_application->text_book_fee, 'converted_value' => $calculator_values['values'][2] ];
+    $data['program_summer_fees'] = [ 'value' => (float)$course_application->summer_fee, 'converted_value' => $calculator_values['values'][3] ];
+    $data['program_under_age_fees'] = [ 'value' => (float)$course_application->under_age_fee, 'converted_value' => $calculator_values['values'][4] ];
+    $data['program_peak_time_fees'] = [ 'value' => (float)$course_application->peak_time_fee, 'converted_value' => $calculator_values['values'][5] ];
+    $data['program_express_mail_fee'] = [ 'value' => (float)$course_application->courier_fee, 'converted_value' => $calculator_values['values'][6] ];
+    $data['program_discount_fee'] = [ 'value' => (float)$course_application->discount_fee, 'converted_value' => $calculator_values['values'][7] ];
     $data['program_total'] = [ 'value' => (float)($program_total), 'converted_value' => $calculator_values['values'][8] ];
-    $data['accommodation_fee'] = [ 'value' => (float)($course_booked_detail->accommodation_fee), 'converted_value' => $calculator_values['values'][9] ];
-    $data['accommodation_placement_fee'] = [ 'value' => (float)($course_booked_detail->accommodation_placement_fee), 'converted_value' => $calculator_values['values'][10] ];
-    $data['accommodation_special_diet_fee'] = [ 'value' => (float)($course_booked_detail->accommodation_special_diet_fee), 'converted_value' => $calculator_values['values'][11] ];
-    $data['accommodation_deposit_fee'] = [ 'value' => (float)($course_booked_detail->accommodation_deposit_fee), 'converted_value' => $calculator_values['values'][12] ];
-    $data['accommodation_summer_fee'] = [ 'value' => (float)($course_booked_detail->accommodation_summer_fee), 'converted_value' => $calculator_values['values'][13] ];
-    $data['accommodation_christmas_fee'] = [ 'value' => (float)($course_booked_detail->accommodation_christmas_fee), 'converted_value' => $calculator_values['values'][14] ];
-    $data['accommodation_under_age_fee'] = [ 'value' => (float)($course_booked_detail->accommodation_under_age_fee), 'converted_value' => $calculator_values['values'][15] ];
-    $data['accommodation_peak_fee'] = [ 'value' => (float)($course_booked_detail->accommodation_peak_fee), 'converted_value' => $calculator_values['values'][16] ];
-    $data['accommodation_discount_fee'] = [ 'value' => (float)($course_booked_detail->accommodation_discount_fee), 'converted_value' => $calculator_values['values'][17] ];
-    $data['accommodation_total'] = [ 'value' => (float)($course_booked_detail->accommodation_total), 'converted_value' => $calculator_values['values'][18] ];
-    $data['airport_pickup_fee'] = [ 'value' => (float)$course_booked_detail->airport_pickup_fee, 'converted_value' => $calculator_values['values'][19] ];
-    $data['medical_insurance_fee'] = [ 'value' => (float)$course_booked_detail->medical_insurance_fee, 'converted_value' => $calculator_values['values'][20] ];
-    $data['custodian_fee'] = [ 'value' => (float)($course_booked_detail->custodian_fee), 'converted_value' => $calculator_values['values'][21] ];
-    $data['total_discount'] = [ 'value' => (float)$course_booked_detail->total_discount, 'converted_value' => $calculator_values['values'][22] ];
-    $data['sub_total'] = [ 'value' => (float)$course_booked_detail->sub_total, 'converted_value' => $calculator_values['values'][23] ];
-    $data['total_cost'] = [ 'value' => (float)$course_booked_detail->total_cost, 'converted_value' => $calculator_values['values'][24] ];
-    $data['deposit_price'] = [ 'value' => (float)$course_booked_detail->deposit_price, 'converted_value' => $calculator_values['values'][25] ];
-    $data['total_balance'] = [ 'value' => (float)$course_booked_detail->total_balance, 'converted_value' => $calculator_values['values'][26] ];
-    $data['amount_paid'] = [ 'value' => (float)$amount_paid, 'converted_value' => $calculator_values['values'][27] ];
+    $data['accommodation_fee'] = [ 'value' => (float)($course_application->accommodation_fee), 'converted_value' => $calculator_values['values'][9] ];
+    $data['accommodation_placement_fee'] = [ 'value' => (float)($course_application->accommodation_placement_fee), 'converted_value' => $calculator_values['values'][10] ];
+    $data['accommodation_special_diet_fee'] = [ 'value' => (float)($course_application->accommodation_special_diet_fee), 'converted_value' => $calculator_values['values'][11] ];
+    $data['accommodation_deposit_fee'] = [ 'value' => (float)($course_application->accommodation_deposit_fee), 'converted_value' => $calculator_values['values'][12] ];
+    $data['accommodation_summer_fee'] = [ 'value' => (float)($course_application->accommodation_summer_fee), 'converted_value' => $calculator_values['values'][13] ];
+    $data['accommodation_christmas_fee'] = [ 'value' => (float)($course_application->accommodation_christmas_fee), 'converted_value' => $calculator_values['values'][14] ];
+    $data['accommodation_under_age_fee'] = [ 'value' => (float)($course_application->accommodation_under_age_fee), 'converted_value' => $calculator_values['values'][15] ];
+    $data['accommodation_peak_fee'] = [ 'value' => (float)($course_application->accommodation_peak_fee), 'converted_value' => $calculator_values['values'][16] ];
+    $data['accommodation_discount_fee'] = [ 'value' => (float)($course_application->accommodation_discount_fee), 'converted_value' => $calculator_values['values'][17] ];
+    $data['accommodation_total'] = [ 'value' => (float)($course_application->accommodation_total), 'converted_value' => $calculator_values['values'][18] ];
+    $data['airport_pickup_fee'] = [ 'value' => (float)$course_application->airport_pickup_fee, 'converted_value' => $calculator_values['values'][19] ];
+    $data['medical_insurance_fee'] = [ 'value' => (float)$course_application->medical_insurance_fee, 'converted_value' => $calculator_values['values'][20] ];
+    $data['custodian_fee'] = [ 'value' => (float)($course_application->custodian_fee), 'converted_value' => $calculator_values['values'][21] ];
+    $data['sub_total'] = [ 'value' => (float)$course_application->sub_total, 'converted_value' => $calculator_values['values'][22] ];
+    $data['total_discount'] = [ 'value' => (float)$course_application->total_discount, 'converted_value' => $calculator_values['values'][23] ];
+    $data['total_cost'] = [ 'value' => (float)$course_application->total_cost, 'converted_value' => $calculator_values['values'][24] ];
+    $data['deposit_price'] = [ 'value' => (float)$course_application->deposit_price, 'converted_value' => $calculator_values['values'][25] ];
+    $data['total_balance'] = [ 'value' => (float)$course_application->total_balance, 'converted_value' => $calculator_values['values'][26] ];
+    $data['amount_added'] = [ 'value' => (float)$amount_added, 'converted_value' => $calculator_values['values'][27] ];
     $data['amount_refunded'] = [ 'value' => (float)$amount_refunded, 'converted_value' => $calculator_values['values'][28] ];
     $data['amount_due'] = [ 'value' => (float)$amount_due, 'converted_value' => $calculator_values['values'][29] ];
     $data['currency'] = [ 'cost' => $calculator_values['currency'], 'converted' => $default_currency['currency'] ];
 
     $data['today'] = Carbon\Carbon::now()->format('d-m-Y');
 
-    $data['student_messages'] = \App\Models\SuperAdmin\SendMessageToStudentCourse::where('user_id', $course_booked_detail->user_id)->get();
+    $user_id = auth()->user()->id;
+    $data['student_messages'] = \App\Models\Message::with('fromUser', 'toUser')->where('type_id', $course_application->id)        
+        ->where(function($query) use ($user_id) {
+            $query->where(function($sub_query) use ($user_id) {
+                $sub_query->where('type', 'to_student')->where('from_user', $user_id);
+            })->orWhere(function($sub_query) use ($user_id) {
+                $sub_query->where('type', 'to_admin')->where('to_user', $user_id);
+            });
+        })->orderBy('created_at', 'asc')->get();
     $data['user_school'] = null;
-    $data['chat_messages'] = [];
-    if ($course_booked_detail->course->school->userSchool != null) {
-        $data['user_school'] = $course_booked_detail->course->school->userSchool;
-        $data['chat_messages'] = \App\Models\SchoolAdmin\ReplyToSendSchoolMessage::where('user_id', $course_booked_detail->course->school->userSchool->user->id)->get();
+    $data['school_messages'] = [];
+    if ($course_application->course->school->userSchool != null) {
+        $data['user_school'] = $course_application->course->school->userSchool;
+        $data['school_messages'] = \App\Models\Message::with('fromUser', 'toUser')->where('type_id', $course_application->id)        
+            ->where(function($query) use ($user_id) {
+                $query->where(function($sub_query) use ($user_id) {
+                    $sub_query->where('type', 'to_school_admin')->where('from_user', $user_id);
+                })->orWhere(function($sub_query) use ($user_id) {
+                    $sub_query->where('type', 'to_admin')->where('to_user', $user_id);
+                });
+            })->orderBy('created_at', 'asc')->get();
     }
 
     return $data;
+}
+
+function checkCoursePromotion($course_id)
+{
+    $now = Carbon\Carbon::now()->format('Y-m-d');
+    $course = \App\Models\SuperAdmin\Course::with('coursePrograms')->where('unique_id', $course_id)->first();
+    if ($course) {
+        foreach ($course->coursePrograms as $course_program) {
+            if ($course_program->discount_per_week != ' -' && $course_program->discount_per_week != ' %') {
+                if (($course_program->discount_start_date <= $now && $course_program->discount_end_date >= $now) ||
+                    ($course_program->x_week_selected && $course_program->x_week_start_date <= $now && $course_program->x_week_end_date >= $now)) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+function checkCourseProgramPromotion($course_program_id)
+{
+    $now = Carbon\Carbon::now()->format('Y-m-d');
+    $course_program = \App\Models\SuperAdmin\CourseProgram::where('unique_id', $course_program_id)->first();
+    if ($course_program) {
+        if ($course_program->discount_per_week != ' -' && $course_program->discount_per_week != ' %') {
+            if (($course_program->discount_start_date <= $now && $course_program->discount_end_date >= $now) ||
+                ($course_program->x_week_selected && $course_program->x_week_start_date <= $now && $course_program->x_week_end_date >= $now)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function generateRandomString($length)
+{    
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $character_length = strlen($characters);
+    $random_string = '';
+    for ($i = 0; $i < $length; $i++) {
+        $random_string .= $characters[rand(0, $character_length - 1)];
+    }
+    return $random_string;
+}
+
+function generateOrderId()
+{
+    return 'linkforsa-' . generateRandomString(4) . '-' . generateRandomString(4) . '-' . generateRandomString(4) . '-' . generateRandomString(12) . '-' . generateRandomString(10);
 }
 ?>

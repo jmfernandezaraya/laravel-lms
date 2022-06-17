@@ -6,7 +6,7 @@ use App\Classes\BindsDynamically;
 
 use App\Models\Frontend\LikedSchool;
 use App\Models\SuperAdmin\SchoolAdminCourseEditPermissions;
-use App\Models\SuperAdmin\UsersSchools;
+use App\Models\SuperAdmin\UserSchool;
 use App\Models\SuperAdmin\UserPermission;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -122,7 +122,7 @@ class User extends Authenticatable
      */
     public function userSchool()
     {
-        return $this->hasOne(UsersSchools::class, 'user_id', 'id');
+        return $this->hasOne(UserSchool::class, 'user_id', 'id');
     }
 
     /**
@@ -130,7 +130,7 @@ class User extends Authenticatable
      */
     public function userSchools()
     {
-        return $this->hasMany(UsersSchools::class, 'user_id');
+        return $this->hasMany(UserSchool::class, 'user_id');
     }
 
     /**
@@ -152,16 +152,16 @@ class User extends Authenticatable
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function userCourseBookedDetails()
+    public function courseApplicationDetails()
     {
-        return $this->hasMany(UserCourseBookedDetails::class, 'user_id');
+        return $this->hasMany(CourseApplication::class, 'user_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function updateUserCourseBookedDetails()
+    public function updateCourseApplication()
     {
-        return $this->hasMany(UserCourseBookedDetails::class, 'user_id')->latest()->where('paid',  0)->orWhere('paid', 2);
+        return $this->hasMany(CourseApplication::class, 'user_id')->latest()->where('paid',  0)->orWhere('paid', 2);
     }
 }

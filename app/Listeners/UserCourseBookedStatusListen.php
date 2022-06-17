@@ -2,24 +2,24 @@
 
 namespace App\Listeners;
 
-use App\Events\UserCourseBookedStatus;
+use App\Events\CourseApplicationStatus;
 use App\Models\Calculator;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class UserCourseBookedStatusListen
+class CourseApplicationStatusListen
 {
     /**
      * Handle the event.
      *
-     * @param  UserCourseBookedStatus  $userCourseBookedStatus
+     * @param  CourseApplicationStatus  $courseApplicationStatus
      * @return void
      */
-    public function handle(UserCourseBookedStatus $userCourseBookedStatus)
+    public function handle(CourseApplicationStatus $courseApplicationStatus)
     {
-        return \App\Models\UserCourseBookedStatus::updateOrCreate(
-            ['user_course_booked_detail_id' => $userCourseBookedStatus->userCourseBookedStatus->id, 'status' =>$userCourseBookedStatus->userCourseBookedStatus->status],
-            ['user_course_booked_detail_id' => $userCourseBookedStatus->userCourseBookedStatus->id, 'status' => $userCourseBookedStatus->userCourseBookedStatus->status]
+        return \App\Models\CourseApplicationStatus::updateOrCreate(
+            ['course_application_id' => $courseApplicationStatus->courseApplicationStatus->id, 'status' =>$courseApplicationStatus->courseApplicationStatus->status],
+            ['course_application_id' => $courseApplicationStatus->courseApplicationStatus->id, 'status' => $courseApplicationStatus->courseApplicationStatus->status]
         );
     }
 }

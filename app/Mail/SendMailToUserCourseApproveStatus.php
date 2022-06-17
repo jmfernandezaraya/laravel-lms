@@ -3,7 +3,7 @@
 namespace App\Mail;
 
 use App\Models\User;
-use App\Models\UserCourseBookedDetails;
+use App\Models\CourseApplication;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -22,12 +22,12 @@ class SendMailToUserCourseApproveStatus extends Mailable implements ShouldQueue
      *
      * @return void
      */
-    private $user, $approve, $userCourseBookedDetails;
-    public function __construct(User $user, UserCourseBookedDetails $userCourseBookedDetails,  bool $approve)
+    private $user, $approve, $courseApplicationDetails;
+    public function __construct(User $user, CourseApplication $courseApplicationDetails,  bool $approve)
     {
         $this->user = $user;
         $this->approve = $approve;
-        $this->userCourseBookedDetails = $userCourseBookedDetails;
+        $this->courseApplicationDetails = $courseApplicationDetails;
     }
 
     /**
@@ -40,6 +40,6 @@ class SendMailToUserCourseApproveStatus extends Mailable implements ShouldQueue
         $approved = $this->approve == 1 ? 'Approved' : "Rejected";
         return $this->markdown('mail/sendnotificationtousercourseapprovestatus')
             ->to($this->user->email)
-            ->subject("Your Course ". $this->userCourseBookedDetails->course->program_name . " ahas been ". $approved);
+            ->subject("Your Course ". $this->courseApplicationDetails->course->program_name . " ahas been ". $approved);
     }
 }

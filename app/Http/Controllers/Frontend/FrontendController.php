@@ -6,7 +6,7 @@ use App\Classes\FrontendCalculator;
 use App\Classes\SendCourseNotificationToStudent;
 use App\Classes\AccommodationCalculator;
 
-use App\Events\UserCourseBookedStatus;
+use App\Events\CourseApplicationStatus;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EnquiryRequest;
@@ -20,7 +20,7 @@ use App\Models\Country;
 use App\Models\FrontPage;
 use App\Models\Setting;
 use App\Models\User;
-use App\Models\UserCourseBookedDetails;
+use App\Models\CourseApplication;
 
 use App\Models\Frontend\AppliedForVisa;
 use App\Models\Frontend\Enquiry;
@@ -35,7 +35,9 @@ use App\Models\SuperAdmin\Choose_Study_Mode;
 use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\CourseAccommodation;
 use App\Models\SuperAdmin\CourseAirport;
+use App\Models\SuperAdmin\CourseAirportFee;
 use App\Models\SuperAdmin\CourseMedical;
+use App\Models\SuperAdmin\CourseMedicalFee;
 use App\Models\SuperAdmin\CourseCustodian;
 use App\Models\SuperAdmin\CourseProgram;
 use App\Models\SuperAdmin\CourseProgramTextBookFee;
@@ -51,7 +53,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
-
+use TelrGateway\Transaction;
 use function Psy\debug;
 
 /**
@@ -159,14 +161,14 @@ class FrontendController extends Controller
         $school->viewed_count += 1;
         $school->save();
 
-        $school_top_review_course_booked_details = getSchoolTopReviewCourseBookedDetails($id);
+        $school_top_review_course_applications = getSchoolTopReviewCourseApplications($id);
 
         $school_branches = [];
         if ($school) {
             $school_branches = School::where('name_id', $school->name_id)->where('id', '<>', $id)->get();
         }
 
-        return view('frontend.school.details', ['id' => $id], compact('school', 'school_top_review_course_booked_details', 'languages', 'study_modes', 'age_ranges', 'school_branches'));
+        return view('frontend.school.details', ['id' => $id], compact('school', 'school_top_review_course_applications', 'languages', 'study_modes', 'age_ranges', 'school_branches'));
     }
 
     /**
@@ -203,7 +205,7 @@ class FrontendController extends Controller
         if (isset($course_details->program_id)) {
             $course = Course::where('unique_id', $course_details->program_id)->first();
             if ($course) {
-                $data['url'] = route('course.single', ['school_id' => $course->school_id, 'program_id' => $course->unique_id]);
+                $data['url'] = route('frontend.course.single', ['school_id' => $course->school_id, 'program_id' => $course->unique_id]);
             }
         }
         return response()->json($data);
@@ -339,7 +341,7 @@ class FrontendController extends Controller
             
             $data['success'] = true;
             \Session::put('course_register_details', $to_be_saved);
-            $data['url'] = route('course.reservation.detail');
+            $data['url'] = route('frontend.course.reservation.detail');
         } catch(\Exception $e) {
             $data['errors'] = 'Something Went Wrong Check Log File';
             $data['success'] = false;
@@ -396,8 +398,8 @@ class FrontendController extends Controller
         $data['program_under_age_fee'] = isset($course_details->program_unique_id) ? CourseProgramUnderAgeFee::where('course_program_id', $course_details->program_unique_id)->
             where('under_age', 'LIKE', '%' . $program_under_age . '%')->first() : '';
         $data['accommodation'] = isset($course_details->accommodation_id) ? CourseAccommodation::where('unique_id', '' . $course_details->accommodation_id)->first() : '';
-        $data['airport'] = isset($course_details->airport_provider) ? CourseAirport::where('course_unique_id', $course_details->program_id)->where('service_provider', $course_details->airport_provider)->first() : null;
-        $data['medical'] = (isset($course_details->company_name) && isset($course_details->deductible_up_to)) ? CourseMedical::where('course_unique_id', $course_details->program_id)->where('company_name', $course_details->company_name)->where('deductible', $course_details->deductible_up_to)->first() : null;
+        $data['airport'] = isset($course_details->airport_id) ? CourseAirport::where('unique_id', $course_details->airport_id)->first() : null;
+        $data['medical'] = isset($course_details->medical_id) ? CourseMedical::where('unique_id', $course_details->medical_id)->first() : null;
         $data['custodian'] = CourseCustodian::where('course_unique_id', $course_details->program_id)->where('age_range', 'LIKE', '%' . $custodian_under_age . '%')->first();
 
         $deposit_price = $program_registration_fee = 0;
@@ -408,7 +410,7 @@ class FrontendController extends Controller
                 $program_deposits = explode(" ", $data['program']->deposit);
                 if (count($program_deposits) >= 2) {
                     if ($program_deposits[1] == '%') {
-                        $deposit_price = $data['program']->program_cost * (int)$program_deposits[0] / 100;
+                        $deposit_price = $data['program']->program_cost * $course_details->program_duration * (int)$program_deposits[0] / 100;
                     } else {
                         $deposit_price = (int)$program_deposits[0];
                     }
@@ -643,7 +645,7 @@ class FrontendController extends Controller
             return response($data);
         }
 
-        //try {
+        try {
             $to_be_saved = $validate->validated();
             unset($to_be_saved['student_guardian_full_name']);
             unset($to_be_saved['registraion_terms_conditions_privacy_policy']);
@@ -670,16 +672,18 @@ class FrontendController extends Controller
             // course_details
             $to_be_saved['accommodation_duration'] = $mail_pdf_data['accommodation_duration'] = $course_details->accommodation_duration ?? null;
 
-            $course_airport = isset($course_details->airport_provider) ? CourseAirport::where('course_unique_id', '' . $course_details->program_id)->where('service_provider', $course_details->airport_provider)->first() : null;
+            $course_airport = isset($course_details->airport_id) ? CourseAirport::where('unique_id', '' . $course_details->airport_id)->first() : null;
             $to_be_saved['airport_id'] = $mail_pdf_data['airport_id'] = $course_airport ? $course_airport->unique_id : 0;
-            $to_be_saved['airport_provider'] = $mail_pdf_data['airport_provider'] = $course_details->airport_provider ?? null;
-            $to_be_saved['airport_name'] = $mail_pdf_data['airport_name'] = $course_details->airport_name ?? null;
-            $to_be_saved['airport_service'] = $mail_pdf_data['airport_service'] = $course_details->airport_service ?? null;
+            $mail_pdf_data['airport_provider'] = app()->getLocale() == 'en' ? ($course_airport->service_provider ?? null) : ($course_airport->service_provider_ar ?? null);
+            $course_airport_fee = isset($course_details->airport_fee_id) ? CourseAirportFee::where('unique_id', '' . $course_details->airport_fee_id)->first() : null;
+            $to_be_saved['airport_fee_id'] = $mail_pdf_data['airport_fee_id'] = $course_airport_fee ? $course_airport_fee->unique_id : 0;
+            $to_be_saved['airport_name'] = $mail_pdf_data['airport_name'] = app()->getLocale() == 'en' ? ($course_airport_fee->name ?? null) : ($course_airport_fee->name_ar ?? null);
+            $to_be_saved['airport_service'] = $mail_pdf_data['airport_service'] = app()->getLocale() == 'en' ? ($course_airport_fee->service_name ?? null) : ($course_airport_fee->service_name_ar ?? null);
 
             $course_medical = (isset($course_details->company_name) && isset($course_details->deductible_up_to)) ? CourseMedical::where('course_unique_id', '' . $course_details->program_id)->where('company_name', $course_details->company_name)->where('deductible', $course_details->deductible_up_to)->first() : null;
             $to_be_saved['medical_id'] = $mail_pdf_data['medical_id'] = $course_medical ? $course_medical->unique_id : 0;
-            $to_be_saved['medical_company'] = $mail_pdf_data['medical_company'] = $course_details->company_name ?? null;
-            $to_be_saved['medical_deductible'] = $mail_pdf_data['medical_deductible'] = $course_details->deductible_up_to ?? null;
+            $to_be_saved['medical_company'] = $mail_pdf_data['medical_company'] = app()->getLocale() == 'en' ? ($course_medical->company_name ?? null) : ($course_medical->company_name_ar ?? null);
+            $to_be_saved['medical_deductible'] = $mail_pdf_data['medical_deductible'] = $course_medical->deductible ?? null;
 
             // course_reservation_details
             $to_be_saved['medical_start_date'] = $mail_pdf_data['medical_start_date'] = isset($course_reservation_details->medical_start_date) ? Carbon::create($course_reservation_details->medical_start_date)->format('Y-m-d') : null;
@@ -739,7 +743,7 @@ class FrontendController extends Controller
             $to_be_saved['study_finance'] = $mail_pdf_data['study_finance'] = $course_register_details->study_finance ?? '';
             $to_be_saved['mobile'] = $mail_pdf_data['mobile'] = $course_register_details->mobile ?? '';
             $to_be_saved['telephone'] = $mail_pdf_data['telephone'] = $course_register_details->telephone ?? '';
-            $to_be_saved['email'] = $mail_pdf_data['email'] = $course_register_details->email ?? '';
+            $to_be_saved['email'] = $mail_pdf_data['email'] = $course_register_details->email ? strtolower($course_register_details->email) : '';
             $to_be_saved['address'] = $mail_pdf_data['address'] = $course_register_details->address ?? '';
             $to_be_saved['post_code'] = $mail_pdf_data['post_code'] = $course_register_details->post_code ?? '';
             $to_be_saved['city_contact'] = $mail_pdf_data['city_contact'] = $course_register_details->city_contact ?? '';
@@ -749,7 +753,7 @@ class FrontendController extends Controller
             $to_be_saved['relative_emergency'] = $mail_pdf_data['relative_emergency'] = $course_register_details->relative_emergency ?? '';
             $to_be_saved['mobile_emergency'] = $mail_pdf_data['mobile_emergency'] = $course_register_details->mobile_emergency ?? '';
             $to_be_saved['telephone_emergency'] = $mail_pdf_data['telephone_emergency'] = $course_register_details->telephone_emergency ?? '';
-            $to_be_saved['email_emergency'] = $mail_pdf_data['email_emergency'] = $course_register_details->email_emergency ?? '';
+            $to_be_saved['email_emergency'] = $mail_pdf_data['email_emergency'] = $course_register_details->email_emergency ? strtolower($course_register_details->email_emergency) : '';
             $to_be_saved['heard_where'] = $mail_pdf_data['heard_where'] = $course_register_details->heard_where ?? [];
             $to_be_saved['other'] = $mail_pdf_data['other'] = $course_register_details->other ?? '';
             $to_be_saved['comments'] = $mail_pdf_data['comments'] = $course_register_details->comments ?? '';
@@ -774,9 +778,9 @@ class FrontendController extends Controller
             $mail_pdf_data['course'] = isset($course_details->program_id) ? Course::where('unique_id', $course_details->program_id)->first() : '';
             $mail_pdf_data['program'] = isset($course_details->program_unique_id) ? CourseProgram::where('unique_id', $course_details->program_unique_id)->first() : null;
             $mail_pdf_data['accommodation'] = isset($course_details->accommodation_id) ? CourseAccommodation::where('unique_id', '' . $course_details->accommodation_id)->first() : '';
-            $mail_pdf_data['airport'] = isset($course_details->airport_provider) ? CourseAirport::where('course_unique_id', $course_details->program_id)->where('service_provider', $course_details->airport_provider)->first() : null;
-            $mail_pdf_data['medical'] = (isset($course_details->company_name) && isset($course_details->deductible_up_to)) ? CourseMedical::where('course_unique_id', $course_details->program_id)->where('company_name', $course_details->company_name)->where('deductible', $course_details->deductible_up_to)->first() : null;
-            $mail_pdf_data['custodian'] = CourseCustodian::where('course_unique_id', $course_details->program_id)->where('age_range', $course_details->company_name)->first();
+            $mail_pdf_data['airport'] = isset($course_details->airport_id) ? CourseAirport::where('unique_id', $course_details->airport_id)->first() : null;
+            $mail_pdf_data['medical'] = isset($course_details->medical_id) ? CourseMedical::where('unique_id', $course_details->medical_id)->first() : null;
+            $mail_pdf_data['custodian'] = CourseCustodian::where('course_unique_id', $course_details->program_id)->where('age_range', $course_details->company_name)->first() ?? null;
             $mail_pdf_data['company_name'] = $course_details->company_name;
             $mail_pdf_data['duration'] = $course_details->duration;
             $mail_pdf_data['min_age'] = $course_register_details->min_age;
@@ -936,33 +940,61 @@ class FrontendController extends Controller
             $mail_pdf_data['locale'] = app()->getLocale();
 
             if (isset($course_reservation_details->deposit_price)) {
-                $user_created = UserCourseBookedDetails::updateOrCreate($to_be_saved, $to_be_saved + ['user_id' => auth()->id(), 'status' => 'received']);
+                $course_application = CourseApplication::updateOrCreate($to_be_saved, $to_be_saved + ['user_id' => auth()->id(), 'status' => 'received']);
                 $calc = Calculator::where('calc_id', request()->ip())->latest()->first();
-                $savefees = $calc->replicate()->setTable('user_course_booked_fees');
-                $savefees->user_course_booked_details_id = $user_created->id;
-                $savefees->save();
+                $course_application_fee = $calc->replicate()->setTable('course_application_fees');
+                $course_application_fee->course_application_id = $course_application->id;
+                $course_application_fee->save();
 
-                event(new UserCourseBookedStatus($user_created));
+                event(new CourseApplicationStatus($course_application));
 
-                $user_created_data = (object) $mail_pdf_data;
-                $user_created_data->id = $user_created->id;
-                $user_created_data->registration_date = \Carbon\Carbon::now()->format('Y-m-d');
-                \Mail::to(auth()->user()->email)->send(new CourseBooked($user_created_data));
+                $course_application_data = (object) $mail_pdf_data;
+                $course_application_data->id = $course_application->id;
+                $course_application_data->registration_date = \Carbon\Carbon::now()->format('Y-m-d');
+                \Mail::to(auth()->user()->email)->send(new CourseBooked($course_application_data));
             } else {
-                $user_created = UserCourseBookedDetails::updateOrCreate($to_be_saved, $to_be_saved + ['user_id' => auth()->id(), 'paid' => 1, 'status' => 'received']);
+                $course_application = CourseApplication::updateOrCreate($to_be_saved, $to_be_saved + ['user_id' => auth()->id(), 'paid' => 1, 'status' => 'received']);
                 $calc = Calculator::where('calc_id', request()->ip())->latest()->first();
-                $savefees = $calc->replicate()->setTable('user_course_booked_fees');
-                $savefees->user_course_booked_details_id = $user_created->id;
-                $savefees->save();
+                $course_application_fee = $calc->replicate()->setTable('course_application_fees');
+                $course_application_fee->course_application_id = $course_application->id;
+                $course_application_fee->save();
 
                 toastr()->success(__('Frontend.user_course_booked'));
 
-                event(new UserCourseBookedStatus($user_created));
+                event(new CourseApplicationStatus($course_application));
 
-                $user_created_data = (object) $mail_pdf_data;
-                $user_created_data->id = $user_created->id;
-                $user_created_data->registration_date = \Carbon\Carbon::now()->format('Y-m-d');
-                \Mail::to(auth()->user()->email)->send(new CourseBooked($user_created_data));
+                $course_application_data = (object) $mail_pdf_data;
+                $course_application_data->id = $course_application->id;
+                $course_application_data->registration_date = \Carbon\Carbon::now()->format('Y-m-d');
+                \Mail::to(auth()->user()->email)->send(new CourseBooked($course_application_data));
+
+                $course_application->order_id = generateOrderId();
+                $course_application->save();
+                
+                $transaction = new Transaction();
+                $transaction->cart_id = $course_application->order_id;
+                $transaction->order_id = time() . rand(00, 99);
+                $transaction->store_id = 999999;
+                $transaction->test_mode = 0;
+                $transaction->amount = $mail_pdf_data['total_balance']['converted_value'];
+                $transaction->description = __('SuperAdmin/backend.program_registration_free');
+                $transaction->success_url = '';
+                $transaction->canceled_url = '';
+                $transaction->declined_url = '';
+                $transaction->billing_fname = $course_application->fname;
+                $transaction->billing_sname = ($course_application->mname ? $course_application->mname . ' ' : '') . $course_application->lname;
+                $transaction->billing_address_1 = $course_application->address;
+                $transaction->billing_address_2 = '';
+                $transaction->billing_city = $to_be_saved['city_contact'];
+                $transaction->billing_region = auth()->user()->state;
+                $transaction->billing_zip = auth()->user()->zip;
+                $transaction->billing_country = $to_be_saved['country_contact'];
+                $transaction->billing_email = $to_be_saved['email'];
+                $transaction->lang_code = app()->getLocale();
+                $transaction->approved = 1;
+                $transaction->response = json_encode([]);
+                $transaction->status = 1;
+                $transaction->save();
 
                 $data['url'] = route('land_page');
 
@@ -975,28 +1007,28 @@ class FrontendController extends Controller
             $telrManager = new \TelrGateway\TelrManager();
 
             $billingParams = [
-                'first_name' => $user_created->fname,
-                'sur_name' => '',
-                'address_1' => $user_created->address,
+                'first_name' => $course_application->fname,
+                'sur_name' => ($course_application->mname ? $course_application->mname . ' ' : '') . $course_application->lname,
+                'address_1' => $course_application->address,
                 'address_2' => '',
-                'city' => $request->city_contact,
+                'city' => $to_be_saved['city_contact'],
                 'region' => auth()->user()->state,
                 'zip' => auth()->user()->zip,
-                'country' => $request->country,
-                'email' => $request->email,
+                'country' =>  $to_be_saved['country_contact'],
+                'email' =>  $to_be_saved['email'],
             ];
-            if ($user_created) {
+            if ($course_application) {
                 $data['data'] = 'Success';
                 $data['success'] = true;
             }
 
-            $url = $telrManager->pay(time() . rand(00, 99), $mail_pdf_data['total_balance']['converted_value'], 'Program Registration Fee', $billingParams)->redirect();
+            $url = $telrManager->pay(time() . rand(00, 99), $mail_pdf_data['total_balance']['converted_value'], __('SuperAdmin/backend.program_registration_free'), $billingParams)->redirect();
             $data['url'] = $url->getTargetUrl();
-        //} catch(\Exception $e) {
-        //    $data['errors'] = 'Something Went Wrong Check Log File';
-        //    $data['success'] = false;
-        //    return response()->json($data);
-        //}
+        } catch(\Exception $e) {
+            $data['errors'] = 'Something Went Wrong Check Log File';
+            $data['success'] = false;
+            return response()->json($data);
+        }
 
         return response()->json($data);
     }
@@ -1022,7 +1054,7 @@ class FrontendController extends Controller
 
         $telr->status == 1 ? toastr()->success(__('Frontend.user_course_booked')) : toastr()->error(__('Frontend.payment.failed'));
 
-        auth()->user()->updateUserCourseBookedDetails()->update(['paid' => 1, 'order_id' => $cart_id]);
+        auth()->user()->updateCourseApplication()->update(['paid' => 1, 'order_id' => $cart_id]);
 
         return redirect()->route('land_page');
     }
@@ -1055,7 +1087,7 @@ class FrontendController extends Controller
     public function TelrResponseFailed()
     {
         $cart_id = $_GET['cart_id'];
-        auth()->user()->updateUserCourseBookedDetails()->update(['paid' => 2, 'order_id' => $cart_id]);
+        auth()->user()->updateCourseApplication()->update(['paid' => 2, 'order_id' => $cart_id]);
         toastr()->error(__('Frontend.payment.failed'));
 
         return redirect()->route('land_page');
@@ -1412,7 +1444,7 @@ class FrontendController extends Controller
         $now = Carbon::now()->format('Y-m-d');
 
         $course_language_ids = [];
-        $courses = Course::with('coursePrograms', 'userCourseBookedDetails.review')->where('display', true)->where('deleted', false)->get();
+        $courses = Course::with('coursePrograms', 'courseApplicationDetails.review')->where('display', true)->where('deleted', false)->get();
         foreach ($courses as $course) {
             $course_language_ids = array_merge($course_language_ids, $course->language ?? []);
         }

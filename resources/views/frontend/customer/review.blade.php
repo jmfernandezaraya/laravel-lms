@@ -23,7 +23,7 @@
         <div class="container" data-aos="fade-up">
             <div class="row" data-aos="zoom-in" data-aos-delay="100">
                 <div class="col-md-12">
-                    <form class="review-form" method="POST" action="{{route('dashboard.review.booking', $id)}}" id="ReviewForm">
+                    <form class="review-form" method="POST" action="{{route('frontend.dashboard.review.booking', $id)}}" id="ReviewForm">
                         {{csrf_field()}}
 
                         <div class="row">

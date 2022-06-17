@@ -5,7 +5,7 @@ namespace App\Http\Controllers\SchoolAdmin;
 use App\Http\Controllers\Controller;
 use App\Models\SuperAdmin\BranchSchools;
 use App\Models\SuperAdmin\School;
-use App\Models\SuperAdmin\UsersSchools;
+use App\Models\SuperAdmin\UserSchool;
 use App\Models\User;
 use Illuminate\Http\Request;
 

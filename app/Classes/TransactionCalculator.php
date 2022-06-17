@@ -3,7 +3,7 @@
 namespace App\Classes;
 
 use App\Models\SuperAdmin\TransactionRefund;
-use App\Models\UserCourseBookedDetails;
+use App\Models\CourseApplication;
 
 /**
  * Class TransactionCalculator
@@ -18,7 +18,7 @@ class TransactionCalculator implements TransactionCalculatorInterface
     /**
      * @var
      */
-    private $userCourseBookedDetails;
+    private $courseApplicationDetails;
     /**
      * @var
      */
@@ -26,12 +26,12 @@ class TransactionCalculator implements TransactionCalculatorInterface
 
     /**
      * TransactionCalculator constructor.
-     * @param UserCourseBookedDetails $userCourseBookedDetails
+     * @param CourseApplication $courseApplicationDetails
      */
-    public function __construct(UserCourseBookedDetails $userCourseBookedDetails)
+    public function __construct(CourseApplication $courseApplicationDetails)
     {
-        $this->userCourseBookedDetails = $userCourseBookedDetails;
-        $this->transactionrefundId = optional($userCourseBookedDetails->transaction)->order_id;
+        $this->courseApplicationDetails = $courseApplicationDetails;
+        $this->transactionrefundId = optional($courseApplicationDetails->transaction)->order_id;
     }
 
     /**
@@ -39,7 +39,7 @@ class TransactionCalculator implements TransactionCalculatorInterface
      */
     public function amountPaidByStudent()
     {
-        return (float)$this->userCourseBookedDetails->paid_amount;
+        return (float)$this->courseApplicationDetails->paid_amount;
     }
 
     /**

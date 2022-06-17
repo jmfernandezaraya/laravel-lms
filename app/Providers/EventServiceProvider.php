@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Providers;
-use App\Events\UserCourseBookedStatus;
-use App\Listeners\UserCourseBookedStatusListen;
+use App\Events\CourseApplicationStatus;
+use App\Listeners\CourseApplicationStatusListen;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -23,8 +23,8 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
 
-        UserCourseBookedStatus::class => [
-            UserCourseBookedStatusListen::class,
+        CourseApplicationStatus::class => [
+            CourseApplicationStatusListen::class,
         ]
     ];
 

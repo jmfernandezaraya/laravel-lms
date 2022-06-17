@@ -89,5 +89,5 @@
         </div>
     </div>
 
-    @include('superadmin.courses.modals')
+    @include('superadmin.course.modals')
 @endsection

@@ -42,12 +42,12 @@ class School extends Model
 
     public function userSchools()
     {
-        return $this->hasMany(UsersSchools::class);
+        return $this->hasMany(UserSchool::class);
     }
 
     public function userSchool()
     {
-        return $this->hasOne(UsersSchools::class);
+        return $this->hasOne(UserSchool::class);
     }
 
     public function country()
@@ -85,9 +85,9 @@ class School extends Model
         return asset('storage/app/public/school_images/' . $value);
     }
 
-    public function userCourseBookedDetails()
+    public function courseApplicationDetails()
     {
-        return $this->hasMany(\App\Models\UserCourseBookedDetails::class, 'school_id', 'id');
+        return $this->hasMany(\App\Models\CourseApplication::class, 'school_id', 'id');
     }
 
     public function delete()

@@ -79,7 +79,7 @@
                             <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
                                 <!-- School Item-->
                                 <div class="school-item">
-                                    <a href="{{route('school.details', $school->id)}}">
+                                    <a href="{{route('frontend.course.single', ['school_id' => $school->id, 'program_id' => $course ? $course->unique_id : 0])}}">
                                         <div class="school-logo" style="background-image: url('{{ $school->logo }}')"></div>
                                         @if ($course_program)
                                             <div class="program-content">
@@ -100,7 +100,7 @@
                                                         </span>
                                                         <span>
                                                             @if ($course_program_discount || $course_program_x_week_discount)
-                                                                - {{ getDiscountedValue(getCurrencyConvertedValue($course_program->course_unique_id, $course_program->program_cost), $course_program->discount_per_week) }}
+                                                                - {{ getCurrencyConvertedValue($course_program->course_unique_id, getDiscountedValue($course_program->program_cost, $course_program->discount_per_week)) }}
                                                             @endif
                                                         </span>
                                                         <span>{{ getGetDefaultCurrencyName() }} {{__('Frontend.per_week')}}</span>
@@ -116,7 +116,7 @@
                                                                         $course_program_discount_per_week_symbol = count($course_program_discount_per_weeks) >= 2 ? $course_program_discount_per_weeks[1] : '';
                                                                     @endphp
                                                                     @if ($course_program_discount_per_week_symbol == '-')
-                                                                        {{ $course_program_discount_per_week_symbol }}{{ $course_program_discount_per_week_value }} {{ getGetDefaultCurrencyName() }}
+                                                                        {{ $course_program_discount_per_week_symbol }}{{ getCurrencyConvertedValue($course_program->course_unique_id, $course_program_discount_per_week_value) }} {{ getGetDefaultCurrencyName() }}
                                                                     @else
                                                                         {{ $course_program_discount_per_week_value }}{{ $course_program_discount_per_week_symbol }}
                                                                     @endif
@@ -146,10 +146,10 @@
                                             </div>
                                             <div class="school-content">
                                                 <div class="school-information">
-                                                    {{ $school->name ? (app()->getLocale() == 'en' ? ($school->name->name ?? '-') : ($school->name->name_ar ?? '-')) : '-' }}
-                                                    / {{ app()->getLocale() == 'en' ? ($school->branch_name ?? '-') : ($school->branch_name_ar ?? '-') }}
-                                                    / {{ $school->city ? (app()->getLocale() == 'en' ? ($school->city->name ?? '-') : ($school->city->name_ar ?? '-')) : '-' }}
-                                                    / {{ $school->country ? (app()->getLocale() == 'en' ? ($school->country->name ?? '-') : ($school->country->name_ar ?? '-')) : '-' }}
+                                                    {{ $school->name ? (app()->getLocale() == 'en' ? ($school->name->name ?? '') : ($school->name->name_ar ?? '-')) : '' }}
+                                                    {{ app()->getLocale() == 'en' ? ($school->branch_name ? ' / ' . $school->branch_name : '') : ($school->branch_name_ar ? ' / ' . $school->branch_name : '') }}
+                                                    {{ $school->city ? (app()->getLocale() == 'en' ? ($school->city->name ? ' / ' . $school->city->name : '') : ($school->city->name_ar ? ' / ' . $school->city->name_ar : '')) : '' }}
+                                                    {{ $school->country ? (app()->getLocale() == 'en' ? ($school->country->name ? ' / ' . $school->country->name : '') : ($school->country->name_ar ? ' / ' . $school->country->name_ar : '')) : '' }}
                                                 </div>
                                                 <div class="school-users-loves-likes">
                                                     <div class="school-users-loves">
@@ -227,12 +227,12 @@
                     @foreach($schools as $school)
                         <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
                             <div class="school-item">
-                                <a href="{{route('school.details', $school->id)}}">
+                                <a href="{{route('frontend.school.details', $school->id)}}">
                                     <div class="school-logo" style="background-image: url('{{ $school->logo }}')"></div>
                                     <div class="school-content">
                                         <div class="school-information">
-                                            <a href="{{route('school.details', $school->id)}}">
-                                                <div class="school-name-branch">{{ $school->name ? (app()->getLocale() == 'en' ? $school->name->name : $school->name->name_ar) : '' }} / {{ app()->getLocale() == 'en' ? ($school->branch_name ?? '') : ($school->branch_name_ar ?? '') }}</div>
+                                            <a href="{{route('frontend.school.details', $school->id)}}">
+                                                <div class="school-name-branch">{{ $school->name ? (app()->getLocale() == 'en' ? $school->name->name : $school->name->name_ar) : '' }}{{ app()->getLocale() == 'en' ? ($school->branch_name ? ' / ' . $school->branch_name : '') : ($school->branch_name_ar ? ' / ' . $school->branch_name_ar : '') }}</div>
                                                 <div class="school-city">{{ $school->city ? (app()->getLocale() == 'en' ? $school->city->name : $school->city->name_ar) : '' }}</div>
                                                 <div class="school-country">{{ $school->country ? (app()->getLocale() == 'en' ? $school->country->name : $school->country->name_ar) : '' }}</div>
                                             </a>

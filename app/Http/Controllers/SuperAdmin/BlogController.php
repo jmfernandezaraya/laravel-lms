@@ -30,7 +30,7 @@ class BlogController extends Controller
     {
         $blogs = Blog::all();
 
-        return view('superadmin.blogs.index', compact('blogs'));
+        return view('superadmin.blog.index', compact('blogs'));
     }
 
     /**
@@ -40,7 +40,7 @@ class BlogController extends Controller
      */
     public function create()
     {
-        return view('superadmin.blogs.add');
+        return view('superadmin.blog.add');
     }
 
     /**
@@ -76,7 +76,7 @@ class BlogController extends Controller
             $blog->display = true;
             $blog->save();
             
-            return redirect(route('superadmin.blogs.index'));
+            return redirect(route('superadmin.blog.index'));
         } catch (NotReadableException $e) {
             $exception = __('SuperAdmin/backend.errors.image_required');
             return response()->json(['catch_error' => $exception]);
@@ -93,7 +93,7 @@ class BlogController extends Controller
      */
     public function edit(Blog $blog)
     {
-        return view('superadmin.blogs.edit', compact('blog'));
+        return view('superadmin.blog.edit', compact('blog'));
     }
 
     /**

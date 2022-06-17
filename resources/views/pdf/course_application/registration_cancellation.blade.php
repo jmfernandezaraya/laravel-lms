@@ -78,7 +78,7 @@
                     <tr>
                         <td>
                             <label for="student_guardian_full_name" class="col-form-label"><strong>{{__('Frontend.student_guardian_full_name')}}</strong>:</label>
-                            <p>{{ $course_booked_detail->guardian_full_name }}</p>
+                            <p>{{ $course_application->guardian_full_name }}</p>
                         </td>
                     </tr>
                 </tbody>
@@ -95,7 +95,7 @@
                 <tbody>
                     <tr>
                         <td><strong>{{__('Frontend.signature')}}:</strong></td>
-                        <td colspan="3"><img src="{{ $course_booked_detail->signature }}" class="img-fluid"/></td>
+                        <td colspan="3"><img src="{{ $course_application->signature }}" class="img-fluid"/></td>
                     </tr>
                 </tbody>
             </table>

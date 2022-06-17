@@ -14,9 +14,9 @@ class Review extends Model
         return $this->belongsTo('App\Models\User', 'author_id', 'id');
     }
 
-    public function course_booked_details()
+    public function course_applications()
     {
-        return $this->belongsTo('App\Models\UserCourseBookedDetails', 'user_course_booked_details_id', 'id');
+        return $this->belongsTo('App\Models\CourseApplication', 'course_application_id', 'id');
     }
 
     public function rated()

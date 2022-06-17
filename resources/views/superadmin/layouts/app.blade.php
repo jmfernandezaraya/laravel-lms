@@ -59,7 +59,6 @@
             @include('superadmin.include.header')
 
             @toastr_js
-
             @toastr_render
 
             <div class="container-fluid page-body-wrapper">

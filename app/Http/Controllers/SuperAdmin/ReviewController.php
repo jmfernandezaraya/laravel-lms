@@ -19,7 +19,7 @@ class ReviewController extends Controller
      */
     public function index()
     {
-        $reviews = Review::with('user', 'course_booked_details.school')->get();
+        $reviews = Review::with('user', 'course_applications.school')->get();
 
         return view('superadmin.review.index', compact('reviews'));
     }
@@ -55,7 +55,7 @@ class ReviewController extends Controller
 
         $review = new Review;
         $review->author_id = $request->user_id;
-        $review->user_course_booked_details_id = $id;
+        $review->course_application_id = $id;
         $review->review = $request->review;
         $review->quality_teaching = $request->quality_teaching;
         $review->school_facilities = $request->school_facilities;

@@ -99,8 +99,8 @@ class Course extends Model
         return $this->belongsTo(School::class, 'school_id', 'id')->whereIn("branch_name", getBranchesForBranchAdmin());
     }
 
-    public function userCourseBookedDetails()
+    public function courseApplicationDetails()
     {
-        return $this->hasMany(\App\Models\UserCourseBookedDetails::class, 'course_id', 'id');
+        return $this->hasMany(\App\Models\CourseApplication::class, 'course_id', 'id');
     }
 }

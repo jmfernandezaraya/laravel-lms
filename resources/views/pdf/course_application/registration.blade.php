@@ -132,58 +132,58 @@
                 <tr>
                     <td>
                         <label for="fname" class="col-form-label">{{__('Frontend.first_name')}}</label>
-                        <p>{{ $course_booked_detail->fname }}</p>
+                        <p>{{ $course_application->fname }}</p>
                     </td>
                     <td>
                         <label for="mname" class="col-form-label">{{__('Frontend.middle_name')}}</label>
-                        <p>{{ $course_booked_detail->mname }}</p>
+                        <p>{{ $course_application->mname }}</p>
                     </td>
                     <td>
                         <label for="lname" class="col-form-label">{{__('Frontend.last_name')}}</label>
-                        <p>{{ $course_booked_detail->lname }}</p>
+                        <p>{{ $course_application->lname }}</p>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label for="city" class="col-form-label">{{__('Frontend.place_of_birth')}}</label>
-                        <p>{{ $course_booked_detail->place_of_birth }}</p>
+                        <p>{{ $course_application->place_of_birth }}</p>
                     </td>
                     <td>
                         <label for="gender" class="col-form-label">{{__('Frontend.gender')}}</label>
-                        <p>{{ $course_booked_detail->gender }}</p>
+                        <p>{{ $course_application->gender }}</p>
                     </td>
                     <td>
                         <label for="dob" class="col-form-label">{{__('Frontend.date_of_birth')}}</label>
-                        <p>{{ $course_booked_detail->dob }}</p>
+                        <p>{{ $course_application->dob }}</p>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label for="nat" class="col-form-label">{{__('Frontend.nationality')}}</label>
-                        <p>{{ $course_booked_detail->nationality }}</p>
+                        <p>{{ $course_application->nationality }}</p>
                     </td>
                     <td>
                         <label for="nat" class="col-form-label">{{__('Frontend.id_iqama_number')}}</label>
-                        <p>{{ $course_booked_detail->id_number }}</p>
+                        <p>{{ $course_application->id_number }}</p>
                     </td>
                     <td>
                         <label for="Passport" class="col-form-label">{{__('Frontend.passport_no')}}</label>
-                        <p>{{ $course_booked_detail->passport_number }}</p>
+                        <p>{{ $course_application->passport_number }}</p>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label for="portdate" class="col-form-label">{{__('Frontend.passport_date_of_issue')}}</label>
-                        <p>{{ $course_booked_detail->passport_date_of_issue }}</p>
+                        <p>{{ $course_application->passport_date_of_issue }}</p>
                     </td>
                     <td>
                         <label for="edate" class="col-form-label">{{__('Frontend.passport_date_of_expiry')}}</label>
-                        <p>{{ $course_booked_detail->passport_date_of_expiry }}</p>
+                        <p>{{ $course_application->passport_date_of_expiry }}</p>
                     </td>
                     <td>
                         <label for="fname" class="col-form-label">{{__('Frontend.upload_passport_copy')}}</label>
-                        @if ($course_booked_detail->passport_copy)
-                            <img src="public/images/user_booked_details/{{ $course_booked_detail->passport_copy }}" />
+                        @if ($course_application->passport_copy)
+                            <img src="public/images/user_booked_details/{{ $course_application->passport_copy }}" />
                         @endif
                     </td>
                 </tr>
@@ -191,17 +191,17 @@
                     <td>
                         <label for="nat" class="col-form-label">{{__('Frontend.your_level_of_language')}}</label>
                         <p>
-                            @if ($course_booked_detail->level_of_language == 'beginner_a1')
+                            @if ($course_application->level_of_language == 'beginner_a1')
                                 {{__('Frontend.beginner_a1')}}
-                            @elseif ($course_booked_detail->level_of_language == 'elementary_a2')
+                            @elseif ($course_application->level_of_language == 'elementary_a2')
                                 {{__('Frontend.elementary_a2')}}
-                            @elseif ($course_booked_detail->level_of_language == 'intermediate_b1')
+                            @elseif ($course_application->level_of_language == 'intermediate_b1')
                                 {{__('Frontend.intermediate_b1')}}
-                            @elseif ($course_booked_detail->level_of_language == 'upper_intermediate_b2')
+                            @elseif ($course_application->level_of_language == 'upper_intermediate_b2')
                                 {{__('Frontend.upper_intermediate_b2')}}
-                            @elseif ($course_booked_detail->level_of_language == 'advanced_c1')
+                            @elseif ($course_application->level_of_language == 'advanced_c1')
                                 {{__('Frontend.advanced_c1')}}
-                            @elseif ($course_booked_detail->level_of_language == 'proficient_c2')
+                            @elseif ($course_application->level_of_language == 'proficient_c2')
                                 {{__('Frontend.proficient_c2')}}
                             @endif
                         </p>
@@ -209,25 +209,25 @@
                     <td>
                         <label for="city" class="col-form-label">{{__('Frontend.study_finance')}}</label>
                         <p>
-                            @if ($course_booked_detail->study_finance == 'personal')
+                            @if ($course_application->study_finance == 'personal')
                                 {{__('Frontend.personal')}}
-                            @elseif ($course_booked_detail->study_finance == 'scholarship')
+                            @elseif ($course_application->study_finance == 'scholarship')
                                 {{__('Frontend.scholarship')}}
                             @endif
                         </p>
                     </td>
                     <td>
                         <label for="nat" class="col-form-label">{{__('Frontend.upload_financial_gurantee')}}</label>
-                        @if ($course_booked_detail->financial_guarantee)
-                            <img src="public/images/user_booked_details/{{ $course_booked_detail->financial_guarantee }}" />
+                        @if ($course_application->financial_guarantee)
+                            <img src="public/images/user_booked_details/{{ $course_application->financial_guarantee }}" />
                         @endif
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label for="nat" class="col-form-label">{{__('Frontend.upload_bank_statement')}}</label>
-                        @if ($course_booked_detail->bank_statement)
-                            <img src="public/images/user_booked_details/{{ $course_booked_detail->bank_statement }}" />
+                        @if ($course_application->bank_statement)
+                            <img src="public/images/user_booked_details/{{ $course_application->bank_statement }}" />
                         @endif
                     </td>
                 </tr>
@@ -248,39 +248,39 @@
                 <tr>
                     <td>
                         <label for="mobile" class="col-form-label">{{__('Frontend.mobile')}}</label>
-                        <p>{{ $course_booked_detail->mobile }}</p>
+                        <p>{{ $course_application->mobile }}</p>
                     </td>
                     <td>
                         <label for="Tel" class="col-form-label">{{__('Frontend.tel')}}</label>
-                        <p>{{ $course_booked_detail->telephone }}</p>
+                        <p>{{ $course_application->telephone }}</p>
                     </td>
                     <td>
                         <label for="Email" class="col-form-label">{{__('Frontend.email')}}</label>
-                        <p>{{ $course_booked_detail->email }}</p>
+                        <p>{{ $course_application->email }}</p>
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
                         <label for="Address" class="col-form-label">{{__('Frontend.address')}}</label>
-                        <p>{{ $course_booked_detail->address }}</p>
+                        <p>{{ $course_application->address }}</p>
                     </td>
                     <td>
                         <label for="Post" class="col-form-label">{{__('Frontend.post_code')}}</label>
-                        <p>{{ $course_booked_detail->post_code }}</p>
+                        <p>{{ $course_application->post_code }}</p>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label for="city_contact" class="col-form-label">{{__('Frontend.city')}}</label>
-                        <p>{{ $course_booked_detail->city_contact }}</p>
+                        <p>{{ $course_application->city_contact }}</p>
                     </td>
                     <td>
                         <label for="province_region" class="col-form-label">{{__('Frontend.province_region')}}</label>
-                        <p>{{ $course_booked_detail->province_region }}</p>
+                        <p>{{ $course_application->province_region }}</p>
                     </td>
                     <td>
                         <label for="country_contact" class="col-form-label">{{__('Frontend.country')}}</label>
-                        <p>{{ $course_booked_detail->country_contact }}</p>
+                        <p>{{ $course_application->country_contact }}</p>
                     </td>
                 </tr>
             </tbody>
@@ -299,25 +299,25 @@
                 <tr>
                     <td colspan="2">
                         <label for="full_name_emergency" class="col-form-label">{{__('Frontend.full_name')}}</label>
-                        <p>{{ $course_booked_detail->full_name_emergency }}</p>
+                        <p>{{ $course_application->full_name_emergency }}</p>
                     </td>
                     <td>
                         <label for="relative_emergency" class="col-form-label">{{__('Frontend.relative')}}</label>
-                        <p>{{ $course_booked_detail->relative_emergency }}</p>
+                        <p>{{ $course_application->relative_emergency }}</p>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label for="mobile_emergency" class="col-form-label">{{__('Frontend.mobile')}}</label>
-                        <p>{{ $course_booked_detail->mobile_emergency }}</p>
+                        <p>{{ $course_application->mobile_emergency }}</p>
                     </td>
                     <td>
                         <label for="telephone_emergency" class="col-form-label">{{__('Frontend.tel')}}</label>
-                        <p>{{ $course_booked_detail->telephone_emergency }}</p>
+                        <p>{{ $course_application->telephone_emergency }}</p>
                     </td>
                     <td>
                         <label for="email_emergency" class="col-form-label">{{__('Frontend.email')}}</label>
-                        <p>{{ $course_booked_detail->email_emergency }}</p>
+                        <p>{{ $course_application->email_emergency }}</p>
                     </td>
                 </tr>
             </tbody>
@@ -334,8 +334,8 @@
             <tbody>
                 <tr>
                     <td>
-                        <p>{{ implode($course_booked_detail->heard_where, ", ") }}</p>
-                        <p>{{ $course_booked_detail->other }}</p>
+                        <p>{{ implode($course_application->heard_where, ", ") }}</p>
+                        <p>{{ $course_application->other }}</p>
                     </td>
                 </tr>
             </tbody>
@@ -354,7 +354,7 @@
             <tbody>
                 <tr>
                     <td>
-                        <p>{{ $course_booked_detail->comments }}</p>
+                        <p>{{ $course_application->comments }}</p>
                     </td>
                 </tr>
             </tbody>

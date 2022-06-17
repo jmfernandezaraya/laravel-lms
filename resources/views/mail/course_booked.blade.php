@@ -1,8 +1,8 @@
 @component('mail::message')
-{{__('Mail.course_booked.dear')}} {{ $data->customer_name }},
-{{__('Mail.course_booked.thank_you_choosing')}} <a href="{{$data->website_link}}">{{__('Mail.course_booked.website_name')}}</a> {{__('Mail.course_booked.to_helping_you')}}
-{{__('Mail.course_booked.find_attached_quotation')}}
-{{__('Mail.course_booked.your_customer_no')}}: {{ $data->customer_no }}
+{{__('Mail.dear')}} {{ $data->customer_name }},<br />
+{{__('Mail.thank_you_choosing')}} <a href="{{$data->website_link}}">{{__('Mail.website_name')}}</a> {{__('mail.to_helping_you')}}<br />
+{{__('Mail.find_attached_quotation')}}<br />
+<strong>{{__('Mail.your_customer_no')}}:</strong> {{ $data->customer_no }}<br />
 
-{{__('Mail.course_booked.thank_you')}}
+{{__('mail.thank_you')}}
 @endcomponent

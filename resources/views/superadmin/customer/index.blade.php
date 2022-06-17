@@ -49,8 +49,7 @@
                                 @if (auth('superadmin')->user()->permission['user_manager'] || auth('superadmin')->user()->permission['user_edit'] || auth('superadmin')->user()->permission['user_delete'])
                                     <td>
                                         <div class="btn-group">
-                                            <a href="{{route('superadmin.course.list.customer', $customer->id)}}" class="btn btn-primary btn-sm fa fa-eye"></a>
-                                            <a href="{{route('superadmin.manage_application.list.customer', $customer->id)}}" class="btn btn-success btn-sm fa fa-eye"></a>
+                                            <a href="{{route('superadmin.course_application.list.customer', $customer->id)}}" class="btn btn-success btn-sm fa fa-eye"></a>
                                             @if (auth('superadmin')->user()->permission['user_manager'] || auth('superadmin')->user()->permission['user_edit'])
                                                 <a href="{{route('superadmin.user.customer.edit', $customer->id)}}" class="btn btn-info btn-sm fa fa-pencil"></a>
                                             @endif

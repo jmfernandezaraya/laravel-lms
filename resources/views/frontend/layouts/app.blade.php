@@ -49,6 +49,9 @@
 
         @include('frontend.layouts.header')
 
+        @toastr_js
+        @toastr_render
+
         @yield('after_header')
 
         <div class="breadcrumbs mt-9 pt-5" data-aos="fade-in">

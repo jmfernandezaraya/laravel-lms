@@ -3,6 +3,21 @@
 return [
     'site_name' => 'Link For Study Abroad لينك للدراسة بالخارج',
     
+    'login' => 'Log In',
+    'login_description' => 'Log In Description',
+    'logout' => 'Log Out',
+    'email_phone' => 'Email / Phone',
+    'password' => 'Password',
+    'confirm_password' => 'Confirm Password',
+    'recovery_email' => 'Reset Password',
+    'remember_me' => 'Remember Me',
+    'are_you_member' => 'Are you a member',
+    'do_not_have_an_account' => 'Don\'t Have an account?',
+    'forgot_password' => 'Forgot Password',
+    'forgot_password_description' => 'Forgot Password',
+    'sign_up' => 'Sign Up',
+    'login_now' => 'Login Now',
+    
     'dashboard' => 'Dashboard',
     'total_customers' => 'Total Customers',
     'visa_customers' => 'Visa Customers',
@@ -131,7 +146,15 @@ return [
     'school_names' => 'School Names',
 
     'study_mode' => 'نظام الدراسة',
+    'your_age' => 'Your Age',
+    'registration_fee' => 'Registration Fee',
+    'express_mailing' => 'EXPRESS MAILING',
+    'express_mailing_description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec elementum dolor elementum dolor consectetur tincidunt. Duis a est consectetur dui egestas placerat. Suspendisse auctor erat sed ipsum dapibus consequat.',
+    'accommodation_fees' => 'Accommodation Fees',
+    'register_now' => 'Register Now',
+    'program_fees' => 'Program Fees',
 
+    'promotion' => 'Promotion',
     'program_type' => 'Program Type',
     'choose_program_type' => 'اختر نوع البرنامج',
     'choose_lang' => 'اختر لغة البرنامج',
@@ -379,6 +402,7 @@ return [
     
     'comments' => 'ملاحظة',
     'user_name' => 'اسم المستخدم',
+    'user_email' => 'User Email',
     'rated' => 'تم التقييم',
     'rating_details' => 'التقييمات',
     'approved' => 'تمت الموافقة',
@@ -389,6 +413,8 @@ return [
     'save_form_name' => 'حفظ اسم النموذج',
     'subject' => 'العنوان',
     'message' => 'الرسالة',
+    'message_sent_thank_you' => 'تم ارسال رسالتك . شكرا لك !',
+    'attachments' => 'Attachments',
     
     'contact_number' => 'Contact Number',
     'branch_name' => 'Branch Name',

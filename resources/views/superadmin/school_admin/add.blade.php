@@ -116,17 +116,17 @@
                             <div class="form-group col-md-12">
                                 <div class="form-check">
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <input name="can_add_course" type="checkbox" class="form-check-input" id="can_add_course" value='1'>
+                                    <input name="can_add_course" type="checkbox" class="form-check-input" id="can_add_course" value='1' checked />
                                     <label for="can_add_course">{{__('SuperAdmin/backend.can_add_course')}}</label>
                                 </div>
                                 <div class="form-check">
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <input name="can_edit_course" type="checkbox" class="form-check-input" id="can_edit_course" value='1'>
+                                    <input name="can_edit_course" type="checkbox" class="form-check-input" id="can_edit_course" value='1' checked />
                                     <label for="can_edit_course">{{__('SuperAdmin/backend.can_edit_course')}}</label>
                                 </div>
                                 <div class="form-check">
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <input name="can_delete_course" type="checkbox" class="form-check-input" id="can_delete_course" value='1'>
+                                    <input name="can_delete_course" type="checkbox" class="form-check-input" id="can_delete_course" value='1' checked />
                                     <label for="can_delete_course">{{__('SuperAdmin/backend.can_delete_course')}}</label>
                                 </div>
                             </div>

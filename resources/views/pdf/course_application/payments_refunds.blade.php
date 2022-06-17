@@ -82,20 +82,20 @@
                     </tr>
                     <tr>
                         <td>1</td>
-                        <td>{{$course_booked_detail->created_at->format("d M Y")}}</td>
+                        <td>{{ $course_application->created_at->format("d M Y") }}</td>
                         <td> -</td>
-                        <td>{{$course_booked_detail->paid_amount}}</td>
-                        <td>{{__('Frontend.deposit_for_course')}} {{$course_booked_detail->course->program_name}}</td>
-                        <td>{{optional($course_booked_detail->transaction)->trx_reference}}</td>
+                        <td>{{ $course_application->paid_amount }}</td>
+                        <td>{{ __('Frontend.deposit_for_course') }} {{ $course_application->course->program_name }}</td>
+                        <td>{{ optional($course_application->transaction)->trx_reference }}</td>
                     </tr>
-                    @forelse ($transaction_refund as $refunds)
+                    @forelse ($transaction_refunds as $transaction_refund)
                         <tr>
-                            <td>{{$loop->iteration + 1}}</td>
-                            <td>{{$refunds->created_at->format("d M Y")}}</td>
-                            <td>{{$refunds->amount_refunded == null ? '-' : $refunds->amount_refunded}}</td>
-                            <td>{{$refunds->amount_added == null ? '-' : $refunds->amount_added}}</td>
-                            <td>{{$refunds->details}}</td>
-                            <td>{{$refunds->txn_reference}}</td>
+                            <td>{{ $loop->iteration + 1 }}</td>
+                            <td>{{ $transaction_refund->created_at->format("d M Y") }}</td>
+                            <td>{{ $transaction_refund->amount_refunded == null ? '-' : $transaction_refund->amount_refunded }}</td>
+                            <td>{{ $transaction_refund->amount_added == null ? '-' : $transaction_refund->amount_added }}</td>
+                            <td>{{ $transaction_refund->details }}</td>
+                            <td>{{ $transaction_refund->txn_reference }}</td>
                         </tr>
                     @empty
                         <tr>
@@ -120,8 +120,8 @@
                     </tr>
                     <tr>
                         <td>{{__('Frontend.total_amount_paid')}}</td>
-                        <td>{{ toFixedNumber($amount_paid['value']) }}</td>
-                        <td>{{ toFixedNumber($amount_paid['converted_value']) }}</td>
+                        <td>{{ toFixedNumber($deposit_price['value']) }}</td>
+                        <td>{{ toFixedNumber($deposit_price['converted_value']) }}</td>
                     </tr>
                     <tr>
                         <td>{{__('Frontend.total_amount_refunded')}}</td>

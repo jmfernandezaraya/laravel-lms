@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddForeignToUserCourseBookedFees extends Migration
+class AddForeignToCourseApplicationFees extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddForeignToUserCourseBookedFees extends Migration
      */
     public function up()
     {
-        Schema::table('user_course_booked_fees', function (Blueprint $table) {
-            $table->foreignIdFor(\App\Models\UserCourseBookedDetails::class)->after('id');
+        Schema::table('course_application_fees', function (Blueprint $table) {
+            $table->foreignIdFor(\App\Models\CourseApplication::class)->after('id');
         });
     }
 
@@ -25,7 +25,7 @@ class AddForeignToUserCourseBookedFees extends Migration
      */
     public function down()
     {
-        Schema::table('user_course_booked_fees', function (Blueprint $table) {
+        Schema::table('course_application_fees', function (Blueprint $table) {
             //
         });
     }

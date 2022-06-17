@@ -34,28 +34,30 @@ Route::view('superamin/test_livewire', 'superadmin.test');
 
 ///// Frontend Routes Start /////
 Route::post('visa_submit', [ApplyVisaController::class, 'applyForVisaPost'])->name('frontend.visa_submit')->middleware('paymentauth:visa_form');
-Route::post('getNumberofPeople','Frontend\ApplyVisaController@getNumberOfPeople')->name('frontend.get_number_of_people');
-
-Route::get('/blogs', [BlogController::class, 'index'])->name('frontend.blog');
-Route::get('/blog/search/{value}', [BlogController::class, 'search'])->name('frontend.blog.search');
-Route::get('blogs/details/{id}', [BlogController::class, 'show'])->name('frontend.blog_detail');
-
 Route::post('/enquiry/submit', [FrontendController::class, 'submitEnquiry'])->name('enquiry.submit');
 
 Route::get('/handle-payment/success', [FrontendController::class, 'TelrResponse']);
 Route::get('/handle-payment/cancel', [FrontendController::class, 'TelrResponseFailed']);
 Route::get('/handle-payment/declined', [FrontendController::class, 'TelrResponseFailed']);
-Route::view('about-us', 'frontend.about');
-Route::view('apply', 'frontend.apply');
-Route::view('how-to-apply', 'frontend.how-to-apply');
-Route::get('apply-for-visa', [ApplyVisaController::class, 'applyForVisa'])->name('frontend.visa');
-Route::post('get_visa_details', [ApplyVisaController::class, 'getVisaDetails'])->name('frontend.visa_details');
-Route::get('getNationality/{id}', [ApplyVisaController::class, 'getNationality'])->name('frontend.getNationality');
-Route::get('getTravel/{id}/{apply_id}', [ApplyVisaController::class, 'getTravel'])->name('frontend.getTravel');
-Route::get('getApplicationCenter/{id}/{apply_id}', [ApplyVisaController::class, 'getApplicationCenter'])->name('frontend.getApplicationCenter');
-Route::get('getTypeOfVisa/{id}/{apply_id}', [ApplyVisaController::class, 'getTypeOfVisa'])->name('frontend.getTypeOfVisa');
 
 Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
+    Route::view('about-us', 'about');
+    Route::view('apply', 'apply');
+    Route::view('how-to-apply', 'how-to-apply');
+
+    Route::get('/blog', [BlogController::class, 'index'])->name('blog');
+    Route::get('/blog/search/{value}', [BlogController::class, 'search'])->name('blog.search');
+    Route::get('blog/details/{id}', [BlogController::class, 'show'])->name('blog_detail');
+
+    Route::get('apply-for-visa', [ApplyVisaController::class, 'applyForVisa'])->name('visa');
+    Route::post('get_visa_details', [ApplyVisaController::class, 'getVisaDetails'])->name('visa_details');
+    Route::get('getNationality/{id}', [ApplyVisaController::class, 'getNationality'])->name('getNationality');
+    Route::get('getTravel/{id}/{apply_id}', [ApplyVisaController::class, 'getTravel'])->name('getTravel');
+    Route::get('getApplicationCenter/{id}/{apply_id}', [ApplyVisaController::class, 'getApplicationCenter'])->name('getApplicationCenter');
+    Route::get('getTypeOfVisa/{id}/{apply_id}', [ApplyVisaController::class, 'getTypeOfVisa'])->name('getTypeOfVisa');
+    Route::post('getNumberofPeople','Frontend\ApplyVisaController@getNumberOfPeople')->name('get_number_of_people');
+    Route::view('payment_terms', 'payment_page.payment-refund');
+    
     Route::group(['prefix' => 'search', 'as' => 'search.'], function () {
         Route::post('ages', [FrontendController::class, 'getAgeList'])->name('ages');
         Route::post('countries', [FrontendController::class, 'getCountryList'])->name('countries');
@@ -71,79 +73,80 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
     Route::get('course', [FrontendController::class, 'viewCourse'])->name('course');
     
     Route::post('download', [FrontendController::class, 'downloadFile'])->name('download');
-});
 
-Route::group(['prefix' => 'school', 'as' => 'school.'], function () {
-    Route::get('{id}', [FrontendController::class, 'schoolDetails'])->name('details');
-    Route::post('programs', [FrontendController::class, 'getPrograms'])->name('programs');
-});
+    Route::group(['prefix' => 'school', 'as' => 'school.'], function () {
+        Route::get('{id}', [FrontendController::class, 'schoolDetails'])->name('details');
+        Route::post('programs', [FrontendController::class, 'getPrograms'])->name('programs');
+    });
+    
+    Route::group(['prefix' => 'course', 'as' => 'course.'], function () {
+        Route::get('{program_id}/{school_id}', [CourseControllerFrontend::class, 'index'])->name('single');
 
-Route::group(['prefix' => 'course', 'as' => 'course.'], function () {
-    Route::get('{program_id}/{school_id}', [CourseControllerFrontend::class, 'index'])->name('single');
+        Route::post('rooms_meals', [CourseControllerFrontend::class, 'getRoomTypeAndMealType'])->name('rooms_meals');
+        Route::post('meals', [CourseControllerFrontend::class, 'getMealType'])->name('meals');
+        Route::post('accomm_durations', [CourseControllerFrontend::class, 'getAccommodationDuration'])->name('accomm_durations');    
+        Route::post('calculate', [CourseControllerFrontend::class, 'calculate'])->name('calculate');
+        Route::group(['prefix' => 'calculate', 'as' => 'calculate.'], function () {
+            Route::post('accommodation', [CourseControllerFrontend::class, 'calculateAccommodation'])->name('accommodation');
+            Route::post('discount', [CourseControllerFrontend::class, 'discountCalculate'])->name('discount');
+            Route::group(['prefix' => 'reset', 'as' => 'reset.'], function () {
+                Route::get('program', [CourseControllerFrontend::class, 'resetProgram'])->name('program');
+                Route::get('accommodation', [CourseControllerFrontend::class, 'resetAccommodation'])->name('accommodation');
+                Route::get('other_service', [CourseControllerFrontend::class, 'resetOtherService'])->name('other_service');
+            });
+        });
 
-    Route::post('rooms_meals', [CourseControllerFrontend::class, 'getRoomTypeAndMealType'])->name('rooms_meals');
-    Route::post('meals', [CourseControllerFrontend::class, 'getMealType'])->name('meals');
-    Route::post('accomm_durations', [CourseControllerFrontend::class, 'getAccommodationDuration'])->name('accomm_durations');    
-    Route::post('calculate', [CourseControllerFrontend::class, 'calculate'])->name('calculate');
-    Route::group(['prefix' => 'calculate', 'as' => 'calculate.'], function () {
-        Route::post('accommodation', [CourseControllerFrontend::class, 'calculateAccommodation'])->name('accommodation');
-        Route::post('discount', [CourseControllerFrontend::class, 'discountCalculate'])->name('discount');
-        Route::group(['prefix' => 'reset', 'as' => 'reset.'], function () {
-            Route::get('program', [CourseControllerFrontend::class, 'resetProgram'])->name('program');
-            Route::get('accommodation', [CourseControllerFrontend::class, 'resetAccommodation'])->name('accommodation');
-            Route::get('other_service', [CourseControllerFrontend::class, 'resetOtherService'])->name('other_service');
+        Route::post('airport/names', [CourseControllerFrontend::class, 'getAirportNames'])->name('airport.names');
+        Route::post('airport/services', [CourseControllerFrontend::class, 'getAirportServiceNames'])->name('airport.services');
+        Route::post('airport/fee', [CourseControllerFrontend::class, 'setAirportPickupFee'])->name('airport.fee');
+
+        Route::post('medical/deductibles', [CourseControllerFrontend::class, 'getMedicalDeductibles'])->name('medical.deductibles');
+        Route::post('medical/durations', [CourseControllerFrontend::class, 'getMedicalDurations'])->name('medical.durations');
+        Route::post('medical/fee', [CourseControllerFrontend::class, 'setMedicalInsuranceFee'])->name('medical.fee');
+        
+        Route::post('other_service/fee', [CourseControllerFrontend::class, 'setOtherServiceFee'])->name('other_service.fee');
+        
+        Route::group(['middleware' => 'course.register'], function () {
+            Route::post('details', [FrontendController::class, 'viewRegister'])->name('details.save');
         });
     });
 
-    Route::post('airport/names', [CourseControllerFrontend::class, 'getAirportNames'])->name('airport.names');
-    Route::post('airport/services', [CourseControllerFrontend::class, 'getAirportServiceNames'])->name('airport.services');
-    Route::post('airport/fee', [CourseControllerFrontend::class, 'setAirportPickupFee'])->name('airport.fee');
-
-    Route::post('medical/deductibles', [CourseControllerFrontend::class, 'getMedicalDeductibles'])->name('medical.deductibles');
-    Route::post('medical/durations', [CourseControllerFrontend::class, 'getMedicalDurations'])->name('medical.durations');
-    Route::post('medical/fee', [CourseControllerFrontend::class, 'setMedicalInsuranceFee'])->name('medical.fee');
+    ///// Frontend Middleware Starts //////
+    Route::group(['middleware' => 'auth'], function () {
+        Route::group(['prefix' => 'course', 'as' => 'course.'], function () {
+            // Route::post('details', [FrontendController::class, 'viewRegister'])->name('details.save');
+            Route::post('details/back', [FrontendController::class, 'backDetails'])->name('details.back');
+            Route::get('register', [FrontendController::class, 'viewRegister'])->name('register.detail');
+            Route::post('register', [FrontendController::class, 'register'])->name('register');
+            Route::get('reservation', [FrontendController::class, 'viewReservation'])->name('reservation.detail');
+            Route::post('reservation', [FrontendController::class, 'reservation'])->name('reservation');
+            Route::get('reservation_confirm', [FrontendController::class, 'viewConfirmReservation'])->name('reservation_confirm.detail');
+            Route::post('reservation_confirm', [FrontendController::class, 'confirmReservation'])->name('reservation_confirm');
+            // Route::post('/telr-gateway', [FrontendController::class, 'paymentPost'])->name('payment-gateway');
+        });
     
-    Route::post('other_service/fee', [CourseControllerFrontend::class, 'setOtherServiceFee'])->name('other_service.fee');
-
-    Route::post('details/back', [FrontendController::class, 'backDetails'])->name('details.back');
-    Route::post('details', [FrontendController::class, 'viewRegister'])->name('details.save')->middleware('course.register');
-});
-
-///// Frontend Middleware Starts //////
-Route::group(['middleware' => 'auth'], function () {
-    Route::group(['prefix' => 'course', 'as' => 'course.'], function () {
-        Route::post('details', [FrontendController::class, 'viewRegister'])->name('details.save');
-        Route::get('register', [FrontendController::class, 'viewRegister'])->name('register.detail');
-        Route::post('register', [FrontendController::class, 'register'])->name('register');
-        Route::get('reservation', [FrontendController::class, 'viewReservation'])->name('reservation.detail');
-        Route::post('reservation', [FrontendController::class, 'reservation'])->name('reservation');
-        Route::get('reservation_confirm', [FrontendController::class, 'viewConfirmReservation'])->name('reservation_confirm.detail');
-        Route::post('reservation_confirm', [FrontendController::class, 'confirmReservation'])->name('reservation_confirm');
-        // Route::post('/telr-gateway', [FrontendController::class, 'paymentPost'])->name('payment-gateway');
-    });
-
-    Route::get('/like_school/{school_id}', [FrontendController::class, 'likeSchool'])->name('likeschool');
-    Route::post('/school/rating_save', [\App\Http\Controllers\RatingController::class, 'saveComments'])->name('rateSaved');
-    
-    Route::get('/dashboard', [CustomerController::class, 'index'])->name('dashboard');
-    Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
-        Route::get('/login_password', [CustomerController::class, 'loginPassword'])->name('login_password');
-        Route::post('/login_password', [CustomerController::class, 'updateLoginPassword'])->name('login_password.update');
-        Route::post('/verify_email', [CustomerController::class, 'verifyEmail'])->name('verify_email');
-        Route::post('/verify_phone', [CustomerController::class, 'verifyPhone'])->name('verify_phone');
-        Route::get('/course_applications', [CustomerController::class, 'courseApplication'])->name('course_applications');
-        Route::get('/course_application/{id}', [CustomerController::class, 'detailCourseApplication'])->name('course_application');
-        Route::post('/course_application/print', [CustomerController::class, 'printCourseApplication'])->name('course_application.print');
-        Route::get('/course_application/approve/{id}/{value}', [CustomerController::class, 'approveCourseApplication'])->name('course_application.approve');
-        Route::post('/course_application/send_message', [CustomerController::class, 'sendCourseApplicationMessage'])->name('course_application.send_message');
-        Route::get('/reviews', [CustomerController::class, 'reviews'])->name('reviews');
-        Route::get('/review/{id}', [CustomerController::class, 'review'])->name('review');
-        Route::post('/review/{id}', [CustomerController::class, 'reviewBooking'])->name('review.booking');
-        Route::get('/payments', [CustomerController::class, 'payments'])->name('payments');
+        Route::get('/like_school/{school_id}', [FrontendController::class, 'likeSchool'])->name('likeschool');
+        Route::post('/school/rating', [\App\Http\Controllers\RatingController::class, 'saveComments'])->name('rate.save');
+        
+        Route::get('/dashboard', [CustomerController::class, 'index'])->name('dashboard');
+        Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
+            Route::get('/login_password', [CustomerController::class, 'loginPassword'])->name('login_password');
+            Route::post('/login_password', [CustomerController::class, 'updateLoginPassword'])->name('login_password.update');
+            Route::post('/verify_email', [CustomerController::class, 'verifyEmail'])->name('verify_email');
+            Route::post('/verify_phone', [CustomerController::class, 'verifyPhone'])->name('verify_phone');
+            Route::get('/course_applications', [CustomerController::class, 'courseApplication'])->name('course_applications');
+            Route::get('/course_application/{id}', [CustomerController::class, 'detailCourseApplication'])->name('course_application');
+            Route::post('/course_application/print', [CustomerController::class, 'printCourseApplication'])->name('course_application.print');
+            Route::get('/course_application/approve/{id}/{value}', [CustomerController::class, 'approveCourseApplication'])->name('course_application.approve');
+            Route::post('/course_application/send_message', [CustomerController::class, 'sendCourseApplicationMessage'])->name('course_application.send_message');
+            Route::get('/reviews', [CustomerController::class, 'reviews'])->name('reviews');
+            Route::get('/review/{id}', [CustomerController::class, 'review'])->name('review');
+            Route::post('/review/{id}', [CustomerController::class, 'reviewBooking'])->name('review.booking');
+            Route::get('/payments', [CustomerController::class, 'payments'])->name('payments');
+        });
     });
 });
 
-Route::view('payment_terms', 'frontend.payment_page.payment-refund');
 
 Route::get('db_migrate', function() { return Artisan::call('migrate'); });
 
@@ -189,12 +192,13 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => '
         return redirect()->route('superadmin.dashboard');
     });
 
-    Route::group(['prefix' => 'manage_application', 'as' => 'manage_application.'], function () {
+    Route::group(['prefix' => 'course_application', 'as' => 'course_application.'], function () {
         Route::get('customer/{customer_id}', 'CourseApplicationController@listForCustomer')->name('list.customer');
         Route::post('print', 'CourseApplicationController@print')->name('print');
-        Route::get('course/{course_id}/{user_course_booked_id}/{school_id}', 'CourseApplicationController@editCourse')->name('course.edit');
+        Route::get('course/{id}', 'CourseApplicationController@editCourse')->name('course.edit');
+        Route::post('course', 'CourseApplicationController@updateCourse')->name('course.update');
     });
-    Route::resource('manage_application', CourseApplicationController::class);
+    Route::resource('course_application', CourseApplicationController::class);
 
     Route::post('programagerangeupdate', 'CourseController@update')->name('course.programagerangeupdate');
     Route::get('update_airport_page', 'CourseController@viewAirportForUpdate')->name('update_airport_page');
@@ -246,11 +250,11 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => '
     Route::post('review/disapprove/{id}', 'ReviewController@disapprove')->name('review.disapprove');
     Route::resource('review', ReviewController::class);
 
-    Route::post('blogs/update/{id}', 'BlogController@update')->name('blogs.update');
-    Route::post('blogs/image_upload', 'BlogController@upload')->name('blogs.upload');
-    Route::post('blogs/pause/{id}', 'BlogController@pause')->name('blogs.pause');
-    Route::post('blogs/play/{id}', 'BlogController@play')->name('blogs.play');
-    Route::resource('blogs', 'BlogController');
+    Route::post('blog/update/{id}', 'BlogController@update')->name('blog.update');
+    Route::post('blog/image_upload', 'BlogController@upload')->name('blog.upload');
+    Route::post('blog/pause/{id}', 'BlogController@pause')->name('blog.pause');
+    Route::post('blog/play/{id}', 'BlogController@play')->name('blog.play');
+    Route::resource('blog', 'BlogController');
 
     Route::group(['prefix' => 'school', 'as' => 'school.'], function () {
         Route::post('image_upload', 'SchoolController@upload')->name('upload');
@@ -306,6 +310,7 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => '
         Route::post('clone/{course_id}', 'CourseController@clone')->name('clone');
         Route::post('pause/{course_id}', 'CourseController@pause')->name('pause');
         Route::post('play/{course_id}', 'CourseController@play')->name('play');
+        Route::post('promotion/{course_id}', 'CourseController@promotion')->name('promotion');
         Route::post('bulk', 'CourseController@bulk')->name('bulk');
     
         Route::post('program_under_age/fetch', 'CourseController@fetchProgramUnderAgePage')->name('program_under_age.fetch');
@@ -428,10 +433,10 @@ Route::group(['namespace' => 'SchoolAdmin', 'prefix' => 'schooladmin', 'middlewa
 
     Route::post('school/save/program/session', 'CourseControllerSchoolAdmin@programSessionSave')->name('course.session_store_for_program');
     
-    Route::get('manage_application/approve/{id}/{value}', 'CourseApplicationController@approve')->name('manage_application.approve');
-    Route::get('manage_application', 'CourseApplicationController@index')->name('manage_application.index');
-    Route::get('manage_application/view_message/{id}', 'CourseApplicationController@viewMessage')->name('manage_application.view_message');
-    Route::post('manage_application/send_message_to_super_admin', 'CourseApplicationController@sendMessageToSuperAdmin')->name('manage_application.send_message_to_super_admin');
+    Route::get('course_application/approve/{id}/{value}', 'CourseApplicationController@approve')->name('course_application.approve');
+    Route::get('course_application', 'CourseApplicationController@index')->name('course_application.index');
+    Route::get('course_application/view_message/{id}', 'CourseApplicationController@viewMessage')->name('course_application.view_message');
+    Route::post('course_application/send_message_to_super_admin', 'CourseApplicationController@sendMessageToSuperAdmin')->name('course_application.send_message_to_super_admin');
 
     Route::resource('payment_received', PaymentController::class);
 
@@ -454,7 +459,7 @@ Route::group(['namespace' => 'BranchAdmin', 'prefix' => 'branch_admin', 'middlew
         return redirect()->route('branch_admin.dashboard');
     });
 
-    Route::get('manage_application/approve/{id}/{value}', 'CourseApplicationController@approve')->name('manage_application.approve');
+    Route::get('course_application/approve/{id}/{value}', 'CourseApplicationController@approve')->name('course_application.approve');
 
     Route::get('dashboard', [\App\Http\Controllers\BranchAdmin\DashboardController::class, 'index'])->name('dashboard');
     Route::post('course_update', 'CourseControllerSchoolAdmin@courseUpdate')->name('course_update');
@@ -501,10 +506,10 @@ Route::group(['namespace' => 'BranchAdmin', 'prefix' => 'branch_admin', 'middlew
 
     Route::post('school/save/program/session', 'CourseControllerSchoolAdmin@programSessionSave')->name('course.session_store_for_program');
 
-    Route::get('manage_application', 'CourseApplicationController@index')->name('manage_application.index');
-    Route::get('manage_application/view_message/{id}', 'CourseApplicationController@viewMessage')->name('manage_application.view_message');
+    Route::get('course_application', 'CourseApplicationController@index')->name('course_application.index');
+    Route::get('course_application/view_message/{id}', 'CourseApplicationController@viewMessage')->name('course_application.view_message');
     Route::resource('payment_received', PaymentController::class);
-    Route::post('manage_application/send_message_to_super_admin', 'CourseApplicationController@sendMessageToSuperAdmin')->name('manage_application.send_message_to_super_admin');
+    Route::post('course_application/send_message_to_super_admin', 'CourseApplicationController@sendMessageToSuperAdmin')->name('course_application.send_message_to_super_admin');
 
     Route::post('add_program_under_age_range', [CourseFormController::class, 'addProgramUnderAge'])->name('add_program_under_age_range');
     Route::post('delete_program_under_age_range', [CourseFormController::class, 'deleteProgramUnderAge'])->name('delete_program_under_age_range');

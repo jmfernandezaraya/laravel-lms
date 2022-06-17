@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Country;
 use App\Models\City;
 use App\Models\User;
-use App\Models\UserCourseBookedDetails;
+use App\Models\CourseApplication;
 
 use App\Models\SuperAdmin\Choose_Accommodation_Age_Range;
 use App\Models\SuperAdmin\Choose_Accommodation_Under_Age;
@@ -185,7 +185,7 @@ class CourseController extends Controller
         $courses = Course::with('school')->where('deleted', false)->get();
         $choose_fields = self::_getChooseFields($courses);
 
-        return view('superadmin.courses.index', compact('courses', 'choose_fields'));
+        return view('superadmin.course.index', compact('courses', 'choose_fields'));
     }
 
     /**
@@ -196,7 +196,7 @@ class CourseController extends Controller
         $courses = Course::with('school')->where('deleted', true)->get();
         $choose_fields = self::_getChooseFields($courses);
 
-        return view('superadmin.courses.deleted', compact('courses', 'choose_fields'));
+        return view('superadmin.course.deleted', compact('courses', 'choose_fields'));
     }
 
     /**
@@ -238,30 +238,30 @@ class CourseController extends Controller
         \Session::has('accom_ids') ? \Session::forget('accom_ids') : '';
         \Session::has('has_accommodation') ? \Session::forget('has_accommodation') : '';
 
-        return view('superadmin.courses.add', compact('choose_schools', 'choose_languages', 'choose_study_times', 'choose_study_modes',
+        return view('superadmin.course.add', compact('choose_schools', 'choose_languages', 'choose_study_times', 'choose_study_modes',
             'choose_classes_days', 'choose_start_days', 'choose_program_age_ranges', 'choose_program_types', 'choose_branches',
             'currencies'));
     }
 
     /**
-     * @param Request $r
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    function store(Request $r)
+    function store(Request $request)
     {
         $coursecreate = new CourseCreateService();
-        if ($r->has('language')) {
+        if ($request->has('language')) {
             $coursecreate->createCourseAndProgram($r);
-            if ($r->has('accommodation')) {
-                Session::put('has_accommodation', $r->accommodation);
+            if ($request->has('accommodation')) {
+                Session::put('has_accommodation', $request->accommodation);
             }
-        } else if ($r->has('underagefeeincrement')) {
+        } else if ($request->has('underagefeeincrement')) {
             $coursecreate->createProgramUnderAgeAndTextBook($r);
-        } elseif ($r->has('type')) {
+        } elseif ($request->has('type')) {
             $coursecreate->createAccommodation($r);
-        } elseif ($r->has('accomunderageincrement')) {
+        } elseif ($request->has('accomunderageincrement')) {
             $coursecreate->createAccommodationUnderAge($r);
-        } elseif ($r->has('airportincrement')) {
+        } elseif ($request->has('airportincrement')) {
             $coursecreate->createOtherServiceFee($r);
         }
 
@@ -353,29 +353,29 @@ class CourseController extends Controller
         }
         $school_countries = Country::with('cities')->whereIn('id', $country_ids)->get();
 
-        return view('superadmin.courses.edit', compact('course', 'choose_schools', 'school', 'school_name', 'school_countries', 'school_branches',
+        return view('superadmin.course.edit', compact('course', 'choose_schools', 'school', 'school_name', 'school_countries', 'school_branches',
             'choose_languages', 'choose_study_times', 'choose_study_modes', 'choose_classes_days', 'choose_start_days', 'choose_program_age_ranges',
             'choose_program_types', 'choose_branches', 'currencies'));
     }
 
     /**
-     * @param Request $r
+     * @param Request $request
      * @param null $id
      * @return \Illuminate\Http\JsonResponse
      */
-    function update(Request $r, $id = null)
+    function update(Request $request, $id = null)
     {
         $coursecreate = new CourseCreateService();
-        if ($r->has('language')) {
-            $coursecreate->updateCourseAndProgram($r, $id);
-        } elseif ($r->has('underagefeeincrement')) {
-            $coursecreate->updateProgramUnderAgeAndTextBook($r);
-        } elseif ($r->has('type')) {
-            $coursecreate->updateAccommodation($r, $id);
-        } elseif ($r->has('accomunderageincrement')) {
-            $coursecreate->updateAccommodationUnderAge($r, $id);
-        } elseif ($r->has('airportincrement')) {
-            $coursecreate->updateOtherServiceFee($r, $id);
+        if ($request->has('language')) {
+            $coursecreate->updateCourseAndProgram($request, $id);
+        } elseif ($request->has('underagefeeincrement')) {
+            $coursecreate->updateProgramUnderAgeAndTextBook($request);
+        } elseif ($request->has('type')) {
+            $coursecreate->updateAccommodation($request, $id);
+        } elseif ($request->has('accomunderageincrement')) {
+            $coursecreate->updateAccommodationUnderAge($request, $id);
+        } elseif ($request->has('airportincrement')) {
+            $coursecreate->updateOtherServiceFee($request, $id);
         }
 
         $data['data'] = 'Data Not Saved';
@@ -405,10 +405,10 @@ class CourseController extends Controller
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function bulk(Request $r)
+    public function bulk(Request $request)
     {
-        $request_action = $r->action;
-        $request_ids = $r->ids;
+        $request_action = $request->action;
+        $request_ids = $request->ids;
         if ($request_ids) {
             $course_ids = explode(",", $request_ids);
     
@@ -490,6 +490,26 @@ class CourseController extends Controller
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
+    public function promotion(Request $request, $course_id)
+    {
+        $db = \DB::transaction(function() use ($request, $course_id) {
+            $course = Course::where('unique_id', $course_id)->first();
+            if ($course) {
+                $course->promotion = !$request->promotion;
+                $course->save();
+                return true;
+            }
+        });
+        if ($db) {
+            toastr()->success(__('SuperAdmin/backend.data_paused_successfully'));
+        }
+        return back();
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function restore($course_id)
     {
         $db = \DB::transaction(function() use ($course_id) {
@@ -538,7 +558,7 @@ class CourseController extends Controller
         $choose_program_under_ages = Choose_Program_Under_Age::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
         $has_accommodation = !\Session::has('has_accommodation') || (\Session::has('has_accommodation') && \Session::get('has_accommodation') == 'yes');
 
-        return view('superadmin.courses.add.program_under_age', compact('course_id','course_programs','choose_program_under_ages','has_accommodation'));
+        return view('superadmin.course.add.program_under_age', compact('course_id','course_programs','choose_program_under_ages','has_accommodation'));
     }
 
     /**
@@ -571,7 +591,7 @@ class CourseController extends Controller
             if (!empty($course_programs) && count($course_programs)) {
                 $choose_program_under_ages = Choose_Program_Under_Age::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
         
-                return view('superadmin.courses.edit.program_under_age', compact('course_id','course_program_id','course_programs','program_under_age_fees','program_text_book_fees','choose_program_under_ages'));
+                return view('superadmin.course.edit.program_under_age', compact('course_id','course_program_id','course_programs','program_under_age_fees','program_text_book_fees','choose_program_under_ages'));
             } else {
                 return redirect()->route('superadmin.course.program_under_age');
             }
@@ -585,7 +605,7 @@ class CourseController extends Controller
         $course_id = \Session::get('course_id');
         $accommodation_age_ranges = Choose_Accommodation_Age_Range::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
 
-        return view('superadmin.courses.add.accommodation', compact('course_id','accommodation_age_ranges'));
+        return view('superadmin.course.add.accommodation', compact('course_id','accommodation_age_ranges'));
     }
 
     /**
@@ -607,7 +627,7 @@ class CourseController extends Controller
                 
                 $accommodation_age_ranges = Choose_Accommodation_Age_Range::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
 
-                return view('superadmin.courses.edit.accommodation', compact('course_id','accomodations','accommodation_age_ranges'));
+                return view('superadmin.course.edit.accommodation', compact('course_id','accomodations','accommodation_age_ranges'));
             } else {
                 return redirect()->route('superadmin.course.accommodation');
             }
@@ -624,7 +644,7 @@ class CourseController extends Controller
             $accomodations = CourseAccommodation::whereIn('unique_id', \Session::get('accom_ids'))->get();
         }
         $choose_accomodation_under_ages = Choose_Accommodation_Under_Age::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
-        return view('superadmin.courses.add.accommodation_under_age', compact('course_id','accomodations','choose_accomodation_under_ages'));
+        return view('superadmin.course.add.accommodation_under_age', compact('course_id','accomodations','choose_accomodation_under_ages'));
     }
 
     /**
@@ -655,7 +675,7 @@ class CourseController extends Controller
             if (!empty($accomodations) && count($accomodations)) {
                 $choose_accomodation_under_ages = Choose_Accommodation_Under_Age::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
         
-                return view('superadmin.courses.edit.accommodation_under_age', compact('course_id','accom_id','accomodations','accomodation_under_ages','choose_accomodation_under_ages'));
+                return view('superadmin.course.edit.accommodation_under_age', compact('course_id','accom_id','accomodations','accomodation_under_ages','choose_accomodation_under_ages'));
             } else {
                 return redirect()->route('superadmin.course.accommodation_under_age');
             }
@@ -670,7 +690,7 @@ class CourseController extends Controller
     public function viewOtherService()
     {
         $custodian_under_ages = Choose_Custodian_Under_Age::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
-        return view('superadmin.courses.add.other_service', compact('custodian_under_ages'));
+        return view('superadmin.course.add.other_service', compact('custodian_under_ages'));
     }
 
     /**
@@ -686,7 +706,7 @@ class CourseController extends Controller
             $custodians = CourseCustodian::where('course_unique_id', $course_id)->get();
 
             if ((!empty($airports) && count($airports)) || (!empty($medicals) && count($medicals)) || (!empty($custodians) && count($custodians))) {
-                return view('superadmin.courses.edit.other_service', compact('course_id', 'custodian_under_ages', 'airports', 'medicals', 'custodians'));
+                return view('superadmin.course.edit.other_service', compact('course_id', 'custodian_under_ages', 'airports', 'medicals', 'custodians'));
             } else {
                 return redirect()->route('superadmin.course.other_service');
             }
@@ -750,10 +770,10 @@ class CourseController extends Controller
     }
 
     public function listForCustomer($customer_id) {
-        $course_ids = UserCourseBookedDetails::where('user_id', $customer_id)->pluck('course_id')->toArray();
+        $course_ids = CourseApplication::where('user_id', $customer_id)->pluck('course_id')->toArray();
         $courses = Course::with('school')->where('deleted', false)->whereIn('unique_id', $course_ids)->get();
         $choose_fields = self::_getChooseFields($courses);
 
-        return view('superadmin.courses.index', compact('courses', 'choose_fields'));
+        return view('superadmin.course.index', compact('courses', 'choose_fields'));
     }
 }

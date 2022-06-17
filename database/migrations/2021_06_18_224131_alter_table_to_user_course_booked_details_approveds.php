@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterTableToUserCourseBookedDetailsApproveds extends Migration
+class AlterTableToCourseApplicationApproves extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class AlterTableToUserCourseBookedDetailsApproveds extends Migration
      */
     public function up()
     {
-        Schema::drop('user_course_booked_details_approveds');
-        Schema::create('user_course_booked_details_approveds', function (Blueprint $table) {
+        Schema::drop('course_applications_approveds');
+        Schema::create('course_applications_approveds', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\UserCourseBookedDetails::class);
+            $table->foreignIdFor(\App\Models\CourseApplication::class);
             $table->boolean('status');
             $table->timestamps();
             $table->softDeletes();
@@ -30,7 +30,7 @@ class AlterTableToUserCourseBookedDetailsApproveds extends Migration
      */
     public function down()
     {
-        Schema::table('user_course_booked_details_approveds', function (Blueprint $table) {
+        Schema::table('course_applications_approveds', function (Blueprint $table) {
             //
         });
     }

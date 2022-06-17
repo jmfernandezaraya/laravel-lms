@@ -97,14 +97,14 @@
                 </div>
 
                 <div class="col-md-4">
-                    <a type="button" href="{{route('school.details', $school->id)}}" class="btn btn-primary mt-1">{{__('Frontend.read_about_the_school')}}</a>
+                    <a type="button" href="{{route('frontend.school.details', $school->id)}}" class="btn btn-primary mt-1">{{__('Frontend.read_about_the_school')}}</a>
                 </div>
             </div>
         </div>
 
         <div class="course-details border-bottom">
             <div class="row">
-                <div class="col-md-12">                            
+                <div class="col-md-12">
                     <h3>{{__('Frontend.program_information')}}</h3>
                     <div id="program_information">{!! get_language() == 'en' ? $course_update->program_information : $course_update->program_information_ar !!}</div>
                 </div>
@@ -142,7 +142,7 @@
             </table>
         </div>
 
-        <form method="POST" action="{{route('course.details.save')}}">
+        <form method="POST" action="{{route('frontend.course.details.save')}}">
             @csrf
             <div class="study">
                 <div class="row">
@@ -172,7 +172,7 @@
                 <h3 class="section-title">{{__('Frontend.program_fees')}}</h3>
                 <div class="row">
                     <div class="form-group col-md-4">
-                        <label for="program_name">{{__('Frontend.program_name')}}:</label>                        
+                        <label for="program_name">{{__('Frontend.program_name')}}:</label>
                         <input hidden name="program_unique_id" id="program_unique_id">
 
                         <select class="form-control" id="get_program_name" onchange="set_program_unique_id($(this).children('option:selected').data('id')); calculateCourse('select_program');" name="program_id" required>
@@ -287,25 +287,26 @@
             <div id="accommodation_fees">
                 <div class="accommodation-fees">
                     <h3 class="section-title">{{__('Frontend.accommodation_fees')}}</h3>
+                    <input id="accommodation_id" name="accommodation_id" type="hidden" />
                     <div class="mt-3">
                         <div class="row">
                             <div class="form-group col-md-3">
                                 <label for="input">{{__("Frontend.accommodation_type")}}:</label>
-                                <select name="accommodation_id" id="accom_type" class="form-control">
+                                <select id="accom_type" class="form-control">
                                     <option value="">{{__('Frontend.select_option')}}</option>
                                 </select>
                             </div>
 
                             <div class="form-group col-md-3">
                                 <label for="input">{{__('Frontend.room_type')}}:</label>
-                                <select class="form-control" id="room_type">
+                                <select class="form-control" id="room_type" name="room_type">
                                     <option value="">{{__('Frontend.select_option')}}</option>
                                 </select>
                             </div>
 
                             <div class="form-group col-md-3">
                                 <label for="input">{{__('Frontend.meal_type')}}:</label>
-                                <select class="form-control" id="meal_type">
+                                <select class="form-control" id="meal_type" name="meal_type">
                                     <option value="">{{__('Frontend.select_option')}}</option>
                                 </select>
                             </div>
@@ -440,27 +441,29 @@
                     <div class="form-row">
                         <div class="form-group col-md-4">
                             <h5><strong>{{__('Frontend.transport')}}</strong></h5>
+                            <input id="airport_id" name="airport_id" type="hidden" />
+                            <input id="airport_fee_id" name="airport_fee_id" type="hidden" />
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group col-md-4">
                             <label for="input">{{__('Frontend.service_provider')}}:</label>
-                            <select class="form-control" name="airport_provider" id="airport_service_provider">
+                            <select class="form-control" id="airport_service_provider">
                                 <option value="">{{__('Frontend.select')}}</option>
                             </select>
                         </div>
 
                         <div class="form-group col-md-4">
                             <label for="input">{{__('Frontend.airport_name')}}:</label>
-                            <select name="airport_name" class="form-control" id="airport_name">
+                            <select class="form-control" id="airport_name">
                                 <option value="">{{__('Frontend.select')}}</option>
                             </select>
                         </div>
 
                         <div class="form-group col-md-4">
                             <label for="input">{{__('Frontend.type_of_service')}}:</label>
-                            <select name="airport_service" class="form-control" id="airport_type_of_service">
+                            <select class="form-control" id="airport_type_of_service">
                                 <option value="">{{__('Frontend.select')}}</option>
                             </select>
                         </div>
@@ -471,6 +474,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-4">
                             <h5><strong>{{__('Frontend.medical_insurance')}}</strong></h5>
+                            <input id="medical_id" name="medical_id" type="hidden" />
                         </div>
                     </div>
 
@@ -508,7 +512,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-12">
                             <div class="form-check">
-                                <input name="custodianship" type="checkbox" class="form-check-input" id="custodianship_check" onchange="calculateOtherService()">
+                                <input type="checkbox" class="form-check-input" id="custodianship_check" onchange="calculateOtherService()">
                                 <label class="form-check-label mb-2" for="custodianshipCheck">
                                     {{__('Frontend.custodianship_need')}}<i class="fa fa-question-circle pl-2" data-toggle="modal" data-target="#custodianshipModal" aria-hidden="true"></i>
                                 </label>
@@ -623,25 +627,25 @@
     <script>
         var token = "{{csrf_token()}}";
 
-        var accomm_rooms_meals_url = "{{route('course.rooms_meals')}}";
-        var accomm_meals_url = "{{route('course.meals')}}";
-        var accomm_durations_url = "{{route('course.accomm_durations')}}";
+        var accomm_rooms_meals_url = "{{route('frontend.course.rooms_meals')}}";
+        var accomm_meals_url = "{{route('frontend.course.meals')}}";
+        var accomm_durations_url = "{{route('frontend.course.accomm_durations')}}";
         
-        var calculate_url = "{{route('course.calculate')}}";
-        var calculate_accommodation_url = "{{route('course.calculate.accommodation')}}";
-        var calculate_discount_url = "{{route('course.calculate.discount')}}";
-        var reload_calculate_url = "{{route('course.calculate.reset.program')}}";
-        var reset_accommodation_url = "{{route('course.calculate.reset.accommodation')}}";
-        var reset_other_service_url = "{{route('course.calculate.reset.other_service')}}";
+        var calculate_url = "{{route('frontend.course.calculate')}}";
+        var calculate_accommodation_url = "{{route('frontend.course.calculate.accommodation')}}";
+        var calculate_discount_url = "{{route('frontend.course.calculate.discount')}}";
+        var reload_calculate_url = "{{route('frontend.course.calculate.reset.program')}}";
+        var reset_accommodation_url = "{{route('frontend.course.calculate.reset.accommodation')}}";
+        var reset_other_service_url = "{{route('frontend.course.calculate.reset.other_service')}}";
         
-        var airport_names_url = "{{route('course.airport.names')}}";
-        var airport_services_url = "{{route('course.airport.services')}}";
-        var airport_fee_url = "{{route('course.airport.fee')}}";
-        var medical_deductibles_url = "{{route('course.medical.deductibles')}}";
-        var medical_durations_url = "{{route('course.medical.durations')}}";
-        var medical_fee_url = "{{route('course.medical.fee')}}";
+        var airport_names_url = "{{route('frontend.course.airport.names')}}";
+        var airport_services_url = "{{route('frontend.course.airport.services')}}";
+        var airport_fee_url = "{{route('frontend.course.airport.fee')}}";
+        var medical_deductibles_url = "{{route('frontend.course.medical.deductibles')}}";
+        var medical_durations_url = "{{route('frontend.course.medical.durations')}}";
+        var medical_fee_url = "{{route('frontend.course.medical.fee')}}";
 
-        var other_service_fee_url = "{{route('course.other_service.fee')}}";
+        var other_service_fee_url = "{{route('frontend.course.other_service.fee')}}";
 
         $(document).ready(function () {
             setTimeout(function() {
@@ -649,6 +653,7 @@
             }, 1000);
         });
 
+        var fill_course_form = false;
         function checkPreloader() {
             if ($('#preloader').length) {
                 setTimeout(function() {
@@ -660,135 +665,196 @@
         }
 
         function fillCourseForm() {
-            @if (isset($course_details->study_mode))
-                $('#study_mode').val('{{$course_details->study_mode}}');
-            @endif
-            @if (isset($course_details->age_selected))
-                $('#under_age').val('');
-                $('#under_age').val('{{$course_details->age_selected}}').trigger('change');
-            @endif
+            if (!fill_course_form) {
+                @if (isset($course_details->study_mode) && $course_details->study_mode)
+                    $('#study_mode').val('{{$course_details->study_mode}}');
+                @else
+                    fill_course_form = true;
+                @endif
+                @if (isset($course_details->age_selected) && $course_details->age_selected)
+                    $('#under_age').val('');
+                    $('#under_age').val('{{$course_details->age_selected}}').trigger('change');
+                @else
+                    fill_course_form = true;
+                @endif
+            }
         }
 
         function callbackCalculateCourse(type) {
             if (type == 'requested_for_under_age') {
-                @if (isset($course_details->program_id))
+                @if (isset($course_details->program_id) && $course_details->program_id)
                     $('#get_program_name').val('');
                     $('#get_program_name').val('{{$course_details->program_id}}').trigger('change');
+                @else
+                    fill_course_form = true;
                 @endif
             } else if (type == 'select_program') {
-                @if (isset($course_details->date_selected))
+                @if (isset($course_details->date_selected) && $course_details->date_selected)
                     $('#datepick').val('');
                     $('#datepick').val('{{$course_details->date_selected}}').trigger('change');
+                @else
+                    fill_course_form = true;
                 @endif
             } else if (type == 'date_selected') {
-                @if (isset($course_details->program_duration))
+                @if (isset($course_details->program_duration) && $course_details->program_duration)
                     $('#program_duration').val('');
                     $('#program_duration').val('{{$course_details->program_duration}}').trigger('change');
+                @else
+                    fill_course_form = true;
                 @endif
             } else if (type == 'duration') {
-                @if (isset($course_details->accommodation_id))
+                @if (isset($course_details->accommodation_id) && $course_details->accommodation_id)
                     $('#accom_type').val('');
-                    $('#accom_type').val('{{$course_details->accommodation_id}}').trigger('change');
+                    $('#accom_type').val('{{$course_details->accom_type}}').trigger('change');
+                @else
+                    fill_course_form = true;
                 @endif
                 calculateOtherService();
             }
         }
 
-        function callbackChangeAccommodationType() {
-            @if (isset($course_details->room_type))
-                @if ($course_details->room_type)
-                    $('#room_type').val('');
-                    $('#room_type').val('{{$course_details->room_type}}').trigger('change');
-                @else
-                    @if (isset($course_details->airport_provider))
+        function callbackChangeAccommodation(type) {
+            if (!fill_course_form) {
+                if (type == 'accom_type') {
+                    @if (isset($course_details->room_type))
+                        @if ($course_details->room_type)
+                            $('#room_type').val('');
+                            $('#room_type').val('{{$course_details->room_type}}').trigger('change');
+                        @else
+                            @if (isset($course_details->airport_provider) && $course_details->airport_provider)
+                                $('#airport_service_provider').val('');
+                                $('#airport_service_provider').val('{{$course_details->airport_provider}}').trigger('change');
+                            @else
+                                @if (isset($course_details->company_name) && $course_details->company_name)
+                                    $('#medical_company_name').val('');
+                                    $('#medical_company_name').val('{{$course_details->company_name}}').trigger('change');
+                                @else
+                                    fill_course_form = true;
+                                @endif
+                            @endif
+                        @endif
+                    @else
+                        fill_course_form = true;
+                    @endif
+                } else if (type == 'room_type') {
+                    @if (isset($course_details->meal_type))
+                        @if ($course_details->meal_type)
+                            $('#meal_type').val('');
+                            $('#meal_type').val('{{$course_details->meal_type}}').trigger('change');
+                        @else
+                            @if (isset($course_details->airport_provider) && $course_details->airport_provider)
+                                $('#airport_service_provider').val('');
+                                $('#airport_service_provider').val('{{$course_details->airport_provider}}').trigger('change');
+                            @else
+                                @if (isset($course_details->company_name) && $course_details->company_name)
+                                    $('#medical_company_name').val('');
+                                    $('#medical_company_name').val('{{$course_details->company_name}}').trigger('change');
+                                @else
+                                    fill_course_form = true;
+                                @endif
+                            @endif
+                        @endif
+                    @endif
+                } else if (type == 'meal_type') {
+                    @if (isset($course_details->accommodation_duration) && $course_details->accommodation_duration)
+                        $('#accom_duration').val('');
+                        $('#accom_duration').val('{{$course_details->accommodation_duration}}').trigger('change');
+                    @else
+                        @if (isset($course_details->airport_provider) && $course_details->airport_provider)
+                            $('#airport_service_provider').val('');
+                            $('#airport_service_provider').val('{{$course_details->airport_provider}}').trigger('change');
+                        @else
+                            @if (isset($course_details->company_name) && $course_details->company_name)
+                                $('#medical_company_name').val('');
+                                $('#medical_company_name').val('{{$course_details->company_name}}').trigger('change');
+                            @else
+                                fill_course_form = true;
+                            @endif
+                        @endif
+                    @endif
+                } else if (type == 'calculate') {
+                    @if (isset($course_details->airport_provider) && $course_details->airport_provider)
                         $('#airport_service_provider').val('');
                         $('#airport_service_provider').val('{{$course_details->airport_provider}}').trigger('change');
+                    @else
+                        @if (isset($course_details->company_name) && $course_details->company_name)
+                            $('#medical_company_name').val('');
+                            $('#medical_company_name').val('{{$course_details->company_name}}').trigger('change');
+                        @else
+                            fill_course_form = true;
+                        @endif
                     @endif
-                @endif
-            @endif
-            @if (isset($course_details->meal_type))
-                @if ($course_details->meal_type)
-                    $('#meal_type').val('');
-                    $('#meal_type').val('{{$course_details->meal_type}}').trigger('change');
-                @else
-                    @if (isset($course_details->airport_provider))
-                        $('#airport_service_provider').val('');
-                        $('#airport_service_provider').val('{{$course_details->airport_provider}}').trigger('change');
-                    @endif
-                @endif
-            @endif
-        }
-
-        function callbackChangeAccommodationMealType() {
-            @if (isset($course_details->accommodation_duration))
-                $('#accom_duration').val('');
-                $('#accom_duration').val('{{$course_details->accommodation_duration}}').trigger('change');
-            @endif
-        }
-
-        function callbackCalcuateAccommodation() {
-            @if (isset($course_details->airport_provider))
-                @if ($course_details->airport_provider)
-                    $('#airport_service_provider').val('');
-                    $('#airport_service_provider').val('{{$course_details->airport_provider}}').trigger('change');
-                @else
-                    @if (isset($course_details->company_name))
-                        $('#medical_company_name').val('');
-                        $('#medical_company_name').val('{{$course_details->company_name}}').trigger('change');
-                    @endif
-                @endif
-            @endif
-        }
-
-        function callbackChangeAirportServiceProvider() {
-            @if (isset($course_details->airport_name))
-                @if ($course_details->airport_name)
-                    $('#airport_name').val('');
-                    $('#airport_name').val('{{$course_details->airport_name}}').trigger('change');
-                @else
-                    @if (isset($course_details->company_name))
-                        $('#medical_company_name').val('');
-                        $('#medical_company_name').val('{{$course_details->company_name}}').trigger('change');
-                    @endif
-                @endif
-            @endif
-        }
-
-        function callbackChangeAirportName() {
-            @if (isset($course_details->airport_service))
-                @if ($course_details->airport_service)
-                    $('#airport_type_of_service').val('');
-                    $('#airport_type_of_service').val('{{$course_details->airport_service}}').trigger('change');
-                @else
-                    @if (isset($course_details->company_name))
-                        $('#medical_company_name').val('');
-                        $('#medical_company_name').val('{{$course_details->company_name}}').trigger('change');
-                    @endif
-                @endif
-            @endif
-        }
-
-        function callbackCalculateOtherService(type) {
-            if (type == 'airport') {
-                @if (isset($course_details->company_name))
-                    $('#medical_company_name').val('');
-                    $('#medical_company_name').val('{{$course_details->company_name}}').trigger('change');
-                @endif
+                }
             }
         }
 
-        function callbackChangeMedicalCompanyName() {
-            @if (isset($course_details->deductible_up_to))
-                $('#medical_deductible_up_to').val('');
-                $('#medical_deductible_up_to').val('{{$course_details->deductible_up_to}}').trigger('change');
-            @endif
+        function callbackChangeAirport(type) {
+            if (!fill_course_form) {
+                if (type == 'service_provider') {
+                    @if (isset($course_details->airport_name))
+                        @if ($course_details->airport_name)
+                            $('#airport_name').val('');
+                            $('#airport_name').val('{{$course_details->airport_name}}').trigger('change');
+                        @else
+                            @if (isset($course_details->company_name))
+                                $('#medical_company_name').val('');
+                                $('#medical_company_name').val('{{$course_details->company_name}}').trigger('change');
+                            @else
+                                fill_course_form = true;
+                            @endif
+                        @endif
+                    @endif
+                } else if (type == 'name') {
+                    @if (isset($course_details->airport_service))
+                        @if ($course_details->airport_service)
+                            $('#airport_type_of_service').val('');
+                            $('#airport_type_of_service').val('{{$course_details->airport_service}}').trigger('change');
+                        @else
+                            @if (isset($course_details->company_name))
+                                $('#medical_company_name').val('');
+                                $('#medical_company_name').val('{{$course_details->company_name}}').trigger('change');
+                            @else
+                                fill_course_form = true;
+                            @endif
+                        @endif
+                    @endif
+                }
+            }
         }
 
-        function callbackChangeMedicalDeductibleUpTo() {
-            @if (isset($course_details->duration))
-                $('#medical_duration').val('');
-                $('#medical_duration').val('{{$course_details->duration}}').trigger('change');
-            @endif
+        function callbackChangeMedical() {
+            if (!fill_course_form) {
+                if (type == 'company_name') {
+                    @if (isset($course_details->deductible_up_to))
+                        $('#medical_deductible_up_to').val('');
+                        $('#medical_deductible_up_to').val('{{$course_details->deductible_up_to}}').trigger('change');
+                    @else
+                        fill_course_form = true;
+                    @endif
+                } else if (type == 'deductible_up_to') {
+                    @if (isset($course_details->duration))
+                        $('#medical_duration').val('');
+                        $('#medical_duration').val('{{$course_details->duration}}').trigger('change');
+                    @else
+                        fill_course_form = true;
+                    @endif
+                }
+            }
+        }
+
+        function callbackCalculateOtherService(type) {
+            if (!fill_course_form) {
+                if (type == 'airport') {
+                    @if (isset($course_details->company_name))
+                        $('#medical_company_name').val('');
+                        $('#medical_company_name').val('{{$course_details->company_name}}').trigger('change');
+                    @else
+                        fill_course_form = true;
+                    @endif
+                } else if (type == 'medical') {
+                    fill_course_form = true;
+                }
+            }
         }
 
         function highlightStar(obj) {

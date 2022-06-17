@@ -1,5 +1,9 @@
 @extends('superadmin.layouts.app')
 
+@section('title')
+    {{__('SuperAdmin/backend.currencies')}}
+@endsection
+
 @section('content')
     <div class="page-header">
         <div class="card">

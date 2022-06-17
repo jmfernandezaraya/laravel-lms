@@ -1,25 +1,29 @@
 <?php
 
 namespace App\Http\Controllers\SchoolAdmin;
+
 use App\Http\Controllers\Controller;
+
+use App\Models\User;
+use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\CourseAccommodation;
 use App\Models\SuperAdmin\CourseAirport;
 use App\Models\SuperAdmin\Choose_Language;
 use App\Models\SuperAdmin\CourseProgram;
 use App\Models\SuperAdmin\CourseProgramUnderAgeFee;
-use Illuminate\Http\Request;
-use App\Models\User;
-use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\School;
+
+use Illuminate\Http\Request;
+
 use Storage;
 
 class CourseControllerSchoolAdmin extends Controller
 {
     function index()
     {
-        $schools  = School::whereId(auth()->user()->userSchool->school_id)->with('userSchool')->with('courses')->first();
+        $schools = School::whereIn('id', auth()->user()->school)->with('userSchool')->with('courses')->get();
 
-        return view('schooladmin.courses.index' , compact('schools') );
+        return view('schooladmin.course.index', compact('schools'));
     }
 
     // Function to get all city, country and branch with school id
@@ -50,16 +54,15 @@ class CourseControllerSchoolAdmin extends Controller
         $schools = $schools->get();
         $choose_languages = Choose_Language::all();
         \Session::has('program_unique_id') ? \Session::forget('program_unique_id') : '';
-        return view('schooladmin.courses.add', compact('schools', 'choose_languages'));
+        
+        return view('schooladmin.course.add', compact('schools', 'choose_languages'));
     }
 
     function store(Request $r)
     {
         extract($r->all());
 
-        $course_id = 1615713555;
-
-        for($count=0; $count <= $program_increment; $count++) {
+        for ($count = 0; $count <= $program_increment; $count++) {
             $program = new CourseProgram;
             $program->course_unique_id = $course_id;
 
@@ -266,21 +269,12 @@ class CourseControllerSchoolAdmin extends Controller
         }*/
         $data['data'] = 'Data Saved Successfully';
         return response()->json($data);
-        //$this->validate($r, $rules);
-    }
-
-    function delete($id)
-    {
-        if (User::find($id)->delete()) {
-            toastr()->success('Deleted Successfully');
-            return back();
-        }
     }
 
     function edit($id)
     {
-        $school = User::find($id)->first();
-        return view('schooladmin.school_admin.edit', compact('school'));
+        $course = Course::where('unique_id', $id)->first();
+        return view('schooladmin.course.edit', compact('course'));
     }
 
     function update(Request $r, $id)
@@ -324,6 +318,14 @@ class CourseControllerSchoolAdmin extends Controller
         }
     }
 
+
+    function delete($id)
+    {
+        if (User::find($id)->delete()) {
+            toastr()->success('Deleted Successfully');
+            return back();
+        }
+    }
 
     public function programSessionSave(Request $request){
 

@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\UserCourseBookedDetails;
+use App\Models\CourseApplication;
 use App\Notifications\CourseNotificationToStudent;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -46,8 +46,8 @@ class CourseAutoSendNotification extends Command
     {
         $twoWeek = Carbon::now()->addWeeks(4)->format('Y-m-d');
         $oneWeek = Carbon::now()->addWeek()->format('Y-m-d');
-        $coursemodal = UserCourseBookedDetails::with('getCourseProgram')->join('courses_programs', 'user_course_booked_details.course_program_id', 'course_programs.unique_id')
-            ->select('user_course_booked_details.*', 'courses_programs.program_start_date AS psd')
+        $coursemodal = CourseApplication::with('getCourseProgram')->join('courses_programs', 'course_applications.course_program_id', 'course_programs.unique_id')
+            ->select('course_applications.*', 'courses_programs.program_start_date AS psd')
             ->where('courses_programs.program_start_date', $twoWeek)->orWhere('courses_programs.program_start_date', $oneWeek)
             ->get();
 

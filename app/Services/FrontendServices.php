@@ -38,7 +38,7 @@ class FrontendServices {
                     $course_study_time_names .= $course_study_time->name;
                 }
     
-                $url = route('course.single', ['school_id' => $course->school_id, 'program_id' => $course->unique_id]);
+                $url = route('frontend.course.single', ['school_id' => $course->school_id, 'program_id' => $course->unique_id]);
                 $output_html .= "<div class='sub-cources mt-3'>
                     <div class='row'>
                         <div class='col-md-2'>

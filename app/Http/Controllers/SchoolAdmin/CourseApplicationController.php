@@ -4,14 +4,16 @@ namespace App\Http\Controllers\SchoolAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SchoolAdminManageStudentRequest;
+
 use App\Mail\SendMailToSuperAdminUserCourseApproveStatus;
 use App\Mail\SendMailToUserCourseApproveStatus;
 use App\Mail\SendMessageToSuperAdminRelatedToCourse;
-use App\Models\SchoolAdmin\ReplyToSendSchoolMessage;
-use App\Models\SuperAdmin\SendSchoolMessage;
-use App\Models\SuperAdmin\UserCourseBookedDetailsApproved;
+
 use App\Models\User;
-use App\Models\UserCourseBookedDetails;
+use App\Models\CourseApplication;
+use App\Models\SchoolAdmin\ReplyToSchoolAdminMessage;
+use App\Models\SuperAdmin\ToSchoolAdminMessage;
+use App\Models\SuperAdmin\CourseApplicationApprove;
 
 /**
  * Class CourseApplicationController
@@ -39,10 +41,9 @@ class CourseApplicationController extends Controller
         if (auth('schooladmin')->user()->userSchool()->count() > 0 && isset(auth('schooladmin')->user()->userSchool->school->courses)) {
             $collect = collect(auth('schooladmin')->user()->userSchool->school->courses);
             $course_id = $collect->pluck('unique_id');
-
         }
 
-        $data['booked_details'] = UserCourseBookedDetails::with('userBookDetailsApproved')->whereIn('course_id', $course_id)->get();
+        $data['booked_details'] = CourseApplication::with('courseApplicationApprove')->whereIn('course_id', $course_id)->get();
 
         return view('schooladmin.course_application.index', $data);
     }
@@ -54,13 +55,13 @@ class CourseApplicationController extends Controller
      */
     public function approve($id, $value)
     {
-        $user_course_booked_details = UserCourseBookedDetails::findOrFail($id);
+        $course_applications = CourseApplication::findOrFail($id);
         $super_admin = User::where('user_type', 'super_admin')->first();
-        $user = User::find($user_course_booked_details->user_id);
-        \Mail::send(new SendMailToSuperAdminUserCourseApproveStatus($super_admin, $user_course_booked_details, $value));
-        \Mail::send(new SendMailToUserCourseApproveStatus($user, $user_course_booked_details, $value));
+        $user = User::find($course_applications->user_id);
+        \Mail::send(new SendMailToSuperAdminUserCourseApproveStatus($super_admin, $course_applications, $value));
+        \Mail::send(new SendMailToUserCourseApproveStatus($user, $course_applications, $value));
 
-        UserCourseBookedDetailsApproved::updateOrCreate(['user_course_booked_details_id' => $id], ['status' => $value]);
+        CourseApplicationApprove::updateOrCreate(['course_application_id' => $id], ['status' => $value]);
 
         toastSuccess('Message Sent Successfully');
 
@@ -73,7 +74,7 @@ class CourseApplicationController extends Controller
      */
     public function viewMessage($id)
     {
-        $data['chatMessage'] = SendSchoolMessage::whereUserId(auth()->id())->whereId($id)->first();
+        $data['chatMessage'] = ToSchoolAdminMessage::whereUserId(auth()->id())->whereId($id)->first();
 
         return view('schooladmin.course_application.view_message', $data);
     }
@@ -97,7 +98,7 @@ class CourseApplicationController extends Controller
         }
 
         $user = User::find(auth()->id());
-        ReplyToSendSchoolMessage::updateOrCreate(['send_school_message_id' => $request->send_school_message_id, 'user_id' => auth()->id()], ['send_school_message_id' => $request->send_school_message_id,
+        ReplyToSchoolAdminMessage::updateOrCreate(['to_school_admin_message_id' => $request->to_school_admin_message_id, 'user_id' => auth()->id()], ['to_school_admin_message_id' => $request->to_school_admin_message_id,
             'user_id' => auth()->id(),
             'subject' => $request->subject,
             'attachment' => $attachment,

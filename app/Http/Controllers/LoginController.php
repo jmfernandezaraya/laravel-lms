@@ -41,11 +41,20 @@ class LoginController extends Controller
     {
         $route = '/dashboard';
         $credentials = $request->only('email', 'password');
+        $credentials['email'] = strtolower($credentials['email']);
 
         if (Auth::attempt($credentials)) {
-            $reroute = \Session::has('program_unique_id') ? 'reservation_detail' : $route;
-            $route = \Session::has('visa_form') ? 'frontend.visa' : $reroute;
+            $reroute = \Session::has('program_unique_id') ? route('frontend.course.register.detail') : $route;
+            $route = \Session::has('visa_form') ? route('frontend.visa') : $reroute;
+            
+            $course_details = \Session::get('course_details');
+            $course_details_old = \Session::get('course_details_old');
+
             $request->session()->regenerate();
+            
+            \Session::put('course_details', $course_details);
+            \Session::put('course_details_old', $course_details_old);
+
             return redirect()->intended($route);
         }
 
@@ -72,7 +81,7 @@ class LoginController extends Controller
     public function register()
     {
         if (auth()->check()) {
-            $reroute = \Session::has('program_unique_id') ? redirect()->route('course.register.detail') : redirect()->route('land_page');
+            $reroute = \Session::has('program_unique_id') ? redirect()->route('frontend.course.register.detail') : redirect()->route('land_page');
 
             return \Session::has('visa_form') ? redirect()->route('frontend.visa') : $reroute;
         }
@@ -122,8 +131,10 @@ class LoginController extends Controller
             'password' => 'required|min:8|confirmed',
         ]);
 
+        $credentials = $request->only('email', 'password', 'password_confirmation', 'token');
+        $credentials['email'] = strtolower($credentials['email']);
         $status = \Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
+            $credentials,
             function ($user, $password) use ($request) {
                 $user->forceFill([
                     'password' => \Hash::make($password)
@@ -179,9 +190,10 @@ class LoginController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function superAdminauthenticate(Request $request)
+    public function superAdminAuthenticate(Request $request)
     {
         $credentials = $request->only('email', 'password');
+        $credentials['email'] = strtolower($credentials['email']);
         $route = '/';
 
         if (auth('superadmin')->attempt($credentials)) {
@@ -262,13 +274,18 @@ class LoginController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function schoolAdminauthenticate(Request $request)
+    public function schoolAdminAuthenticate(Request $request)
     {
         $credentials = $request->only('email', 'password');
+        $credentials['email'] = strtolower($credentials['email']);
         if (auth('schooladmin')->attempt($credentials)) {
-            if (auth('schooladmin')->user()->isSchoolAdmin() == true) {
+            if (auth('schooladmin')->user()->user_type == 'school_admin') {
                 $request->session()->regenerate();
                 return redirect()->route('schooladmin.dashboard');
+            } else {
+                return back()->withErrors([
+                    'email' => __('Frontend.credentials_error'),
+                ])->withInput();
             }
         }
 
@@ -299,6 +316,7 @@ class LoginController extends Controller
     public function branchAdminauthenticate(Request $request)
     {
         $credentials = $request->only('email', 'password');
+        $credentials['email'] = strtolower($credentials['email']);
 
         if (auth('branch_admin')->attempt($credentials)) {
             if (auth('branch_admin')->user()->isBranchAdmin() == true) {

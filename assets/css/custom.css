@@ -634,3 +634,29 @@ form > * {
 #collapseRegistrationForm .col-form-label {
     font-weight: bold;
 }
+
+.message-item .message-header {
+    position: relative;
+    background-color: #97d0db;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    border-radius: 5px;
+}
+.message-item .message-header .message-user-image {
+    margin-right: 10px;
+}
+.message-item .message-header .message-user-image img {
+    width: 35px;
+}
+.message-item .message-header .message-time {
+    position: absolute;
+    right: 5px;
+}
+.message-item .message-body {
+    padding: 7px;
+    border: 1px solid #aaa;
+}
+.message-item .message-body > div {
+    padding: 5px 0;
+}

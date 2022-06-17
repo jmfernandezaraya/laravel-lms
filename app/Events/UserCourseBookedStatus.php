@@ -2,27 +2,27 @@
 
 namespace App\Events;
 
-use App\Models\UserCourseBookedDetails;
+use App\Models\CourseApplication;
 
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class UserCourseBookedStatus
+class CourseApplicationStatus
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $userCourseBookedStatus;
+    public $courseApplicationStatus;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(UserCourseBookedDetails $userCourseBookedStatus)
+    public function __construct(CourseApplication $courseApplicationStatus)
     {
-        $this->userCourseBookedStatus = $userCourseBookedStatus;
+        $this->courseApplicationStatus = $courseApplicationStatus;
     }
 
     /**

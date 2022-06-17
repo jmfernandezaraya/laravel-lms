@@ -11,6 +11,7 @@ use App\Models\Country;
 use App\Models\SchoolAdmin;
 use App\Models\User;
 use App\Models\SuperAdmin\School;
+use App\Models\SuperAdmin\UserSchool;
 
 use Illuminate\Http\Request;
 
@@ -127,6 +128,23 @@ class SchoolAdminController extends Controller
                     'add' => $request->can_add_course ?? 0,
                     'edit' => $request->can_edit_course ?? 0]
                 );
+            }
+            if ($user->school && is_array($user->school)) {
+                foreach ($user->school as $user_school_id) {
+                    $user_school = UserSchool::where('user_id', $user->id)->where('school_id', $user_school_id)->first();
+                    if (!$user_school) {
+                        $new_user_school = new UserSchool;
+                        $new_user_school->user_id = $user->id;
+                        $new_user_school->school_id = $user_school_id;
+                        $new_user_school->save();
+                    }
+                }
+            }
+            $user_schools = UserSchool::where('user_id', $user->id)->get();
+            foreach ($user_schools as $user_school) {
+                if (!in_array($user_school->id, is_array($user->school) ? $user->school : [])) {
+                    $user_school->delete();
+                }
             }
         });
 
@@ -283,6 +301,23 @@ class SchoolAdminController extends Controller
                 'add' => $request->can_add_course ?? 0,
                 'edit' => $request->can_edit_course ?? 0]
             );
+        }
+        if ($user->school && is_array($user->school)) {
+            foreach ($user->school as $user_school_id) {
+                $user_school = UserSchool::where('user_id', $user->id)->where('school_id', $user_school_id)->first();
+                if (!$user_school) {
+                    $new_user_school = new UserSchool;
+                    $new_user_school->user_id = $user->id;
+                    $new_user_school->school_id = $user_school_id;
+                    $new_user_school->save();
+                }
+            }
+        }
+        $user_schools = UserSchool::where('user_id', $user->id)->get();
+        foreach ($user_schools as $user_school) {
+            if (!in_array($user_school->school_id, is_array($user->school) ? $user->school : [])) {
+                $user_school->delete();
+            }
         }
         $saved = __('SuperAdmin/backend.data_saved');
         return response()->json(['success' => true, 'data' => $saved]);

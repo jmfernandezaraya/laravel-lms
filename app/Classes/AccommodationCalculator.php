@@ -358,39 +358,39 @@ class AccommodationCalculator extends FrontendCalculator
         $multiply['summer'] = 0 ;
         if (!($this->getProgramStartDateFromFrontend() > $this->getAccommodationSummerEndDate()) && !($this->getFrontEndDate() < $this->getAccommodationSummerStartDate())) {
             if ($this->getProgramStartDateFromFrontend() <= $this->getAccommodationSummerStartDate() && $this->getFrontEndDate() >= $this->getAccommodationSummerEndDate()) {
-                $multiply['summer'] = $this->compareBetweenTwoDates($this->getAccommodationSummerStartDate(), $this->getAccommodationSummerEndDate());
+                $multiply['summer'] = compareBetweenTwoDates($this->getAccommodationSummerStartDate(), $this->getAccommodationSummerEndDate());
             } elseif ($this->getProgramStartDateFromFrontend() <= $this->getAccommodationSummerStartDate() && $this->getFrontEndDate() <= $this->getAccommodationSummerEndDate()) {
-                $multiply['summer'] = $this->compareBetweenTwoDates($this->getAccommodationSummerStartDate(), $this->getFrontEndDate());
+                $multiply['summer'] = compareBetweenTwoDates($this->getAccommodationSummerStartDate(), $this->getFrontEndDate());
             } elseif ($this->getProgramStartDateFromFrontend() >= $this->getAccommodationSummerStartDate() && $this->getFrontEndDate() <= $this->getAccommodationSummerEndDate()) { 
-                $multiply['summer'] = $this->compareBetweenTwoDates($this->getProgramStartDateFromFrontend(), $this->getFrontEndDate());
+                $multiply['summer'] = compareBetweenTwoDates($this->getProgramStartDateFromFrontend(), $this->getFrontEndDate());
             } elseif ($this->getProgramStartDateFromFrontend() >= $this->getAccommodationSummerStartDate() && $this->getFrontEndDate() >= $this->getAccommodationSummerEndDate()) {
-                $multiply['summer'] = $this->compareBetweenTwoDates($this->getProgramStartDateFromFrontend(), $this->getAccommodationSummerEndDate());
+                $multiply['summer'] = compareBetweenTwoDates($this->getProgramStartDateFromFrontend(), $this->getAccommodationSummerEndDate());
             }
         }
 
         $multiply['peak'] = 0;
         if (!($this->getProgramStartDateFromFrontend() > $this->getAccommodationPeakEndDate()) && !($this->getFrontEndDate() < $this->getAccommodationPeakStartDate())) {
             if ($this->getProgramStartDateFromFrontend() <= $this->getAccommodationPeakStartDate() && $this->getFrontEndDate() >= $this->getAccommodationPeakEndDate()) {
-                $multiply['peak'] = $this->compareBetweenTwoDates($this->getAccommodationPeakStartDate(), $this->getAccommodationPeakEndDate());
+                $multiply['peak'] = compareBetweenTwoDates($this->getAccommodationPeakStartDate(), $this->getAccommodationPeakEndDate());
             } elseif ($this->getProgramStartDateFromFrontend() <= $this->getAccommodationPeakStartDate() && $this->getFrontEndDate() <= $this->getAccommodationPeakEndDate()) {
-                $multiply['peak'] = $this->compareBetweenTwoDates($this->getAccommodationPeakStartDate(), $this->getFrontEndDate());
+                $multiply['peak'] = compareBetweenTwoDates($this->getAccommodationPeakStartDate(), $this->getFrontEndDate());
             } elseif ($this->getProgramStartDateFromFrontend() >= $this->getAccommodationPeakStartDate() && $this->getFrontEndDate() <= $this->getAccommodationPeakEndDate()) { 
-                $multiply['peak'] = $this->compareBetweenTwoDates($this->getProgramStartDateFromFrontend(), $this->getFrontEndDate());
+                $multiply['peak'] = compareBetweenTwoDates($this->getProgramStartDateFromFrontend(), $this->getFrontEndDate());
             } elseif ($this->getProgramStartDateFromFrontend() >= $this->getAccommodationPeakStartDate() && $this->getFrontEndDate() >= $this->getAccommodationPeakEndDate()) {
-                $multiply['peak'] = $this->compareBetweenTwoDates($this->getProgramStartDateFromFrontend(), $this->getAccommodationPeakEndDate());
+                $multiply['peak'] = compareBetweenTwoDates($this->getProgramStartDateFromFrontend(), $this->getAccommodationPeakEndDate());
             }
         }
 
         $multiply['christmas'] = 0;
         if (!($this->getProgramStartDateFromFrontend() > $this->christmas_end_date) && !($this->getFrontEndDate() < $this->christmas_start_date)) {
             if ($this->getProgramStartDateFromFrontend() <= $this->christmas_start_date && $this->getFrontEndDate() >= $this->christmas_end_date) {
-                $multiply['christmas'] = $this->compareBetweenTwoDates($this->christmas_start_date, $this->christmas_end_date);
+                $multiply['christmas'] = compareBetweenTwoDates($this->christmas_start_date, $this->christmas_end_date);
             } elseif ($this->getProgramStartDateFromFrontend() <= $this->christmas_start_date && $this->getFrontEndDate() <= $this->christmas_end_date) {
-                $multiply['christmas'] = $this->compareBetweenTwoDates($this->christmas_start_date, $this->getFrontEndDate());
+                $multiply['christmas'] = compareBetweenTwoDates($this->christmas_start_date, $this->getFrontEndDate());
             } elseif ($this->getProgramStartDateFromFrontend() >= $this->christmas_start_date && $this->getFrontEndDate() <= $this->christmas_end_date) {
-                $multiply['christmas'] = $this->compareBetweenTwoDates($this->getProgramStartDateFromFrontend(), $this->getFrontEndDate());
+                $multiply['christmas'] = compareBetweenTwoDates($this->getProgramStartDateFromFrontend(), $this->getFrontEndDate());
             } elseif ($this->getProgramStartDateFromFrontend() >= $this->christmas_start_date && $this->getFrontEndDate() >= $this->christmas_end_date) {
-                $multiply['christmas'] = $this->compareBetweenTwoDates($this->getProgramStartDateFromFrontend(), $this->christmas_end_date);
+                $multiply['christmas'] = compareBetweenTwoDates($this->getProgramStartDateFromFrontend(), $this->christmas_end_date);
             }
         }
 

@@ -109,7 +109,7 @@ class CourseController extends Controller
 
     public function index()
     {
-        // Return $this->getEndDate('03/01/2021', 2);
+        // Return getEndDate('03/01/2021', 2);
         Session::forget('accom_unique_id');
         Session::forget('airport_id');
         Session::forget('medical_id');
@@ -184,7 +184,7 @@ class CourseController extends Controller
                 $this->calculator->setPeakDateFromDbProgram($program_get->peak_time_end_date);
                 $this->calculator->setPeakStartDate($program_get->peak_time_start_date);
                 $this->calculator->setPeakEndDate($program_get->peak_time_end_date);
-                $this->calculator->setFrontEndDate($this->getEndDate($r->date_set, (int)$r->value));
+                $this->calculator->setFrontEndDate(getEndDate($r->date_set, (int)$r->value));
                 $this->calculator->setProgramStartDateFromFrontend(Carbon::create($r->date_set)->format('Y-m-d'));
                 $summer_week_fee = $program_get->summer_fee_per_week * $this->calculator->CompareDatesAndGetResult()['summer_date_program'];
                 $peakfee = $program_get->peak_time_fee_per_week * $this->calculator->CompareDatesAndGetResult()['peak_date_program'];
@@ -210,11 +210,6 @@ class CourseController extends Controller
         }
 
         return response($data);
-    }
-
-    private function getEndDate($date, $weeks)
-    {
-        return Carbon::create($date)->addWeeks($weeks)->format('Y-m-d');
     }
 
     /**
@@ -321,7 +316,7 @@ class CourseController extends Controller
                 }
             }
             $this->calculator->setDiscount($discount);
-            $this->calculator->setFrontEndDate($this->getEndDate($r->date_set, $r->value));
+            $this->calculator->setFrontEndDate(getEndDate($r->date_set, $r->value));
             $this->calculator->setFixedProgramCost($program_getting->program_cost);
             $this->calculator->setDiscountEndDate($program_getting->discount_end_date);
             $this->calculator->setGetProgramWeeks($r->value);
@@ -366,7 +361,7 @@ class CourseController extends Controller
             $this->calculator->setAccommodationPeakStartDate($accomodation->peak_time_fee_start_date);
             $this->calculator->setAccommodationPeakEndDate($accomodation->peak_time_fee_end_date);
             in_array($request->age, $accomodation->age_range) ? $this->calculator->setAccommodationUnderageFee($accomodation->under_age_fee_per_week * (int)$request->id) : 0;
-            $this->calculator->setFrontEndDate($this->getEndDate($request->date_set, (int)$request->id));
+            $this->calculator->setFrontEndDate(getEndDate($request->date_set, (int)$request->id));
             $this->calculator->setProgramStartDateFromFrontend(Carbon::create($request->date_set)->format('Y-m-d'));
             $this->calculator->setAccommodationSummerStartDate($accomodation->summer_fee_start_date);
             $this->calculator->setAccommodationSummerEndDate($accomodation->summer_fee_end_date);

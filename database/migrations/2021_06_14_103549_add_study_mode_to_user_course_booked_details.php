@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class addStudyModeToUserCourseBookedDetails extends Migration
+class addStudyModeToCourseApplication extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class addStudyModeToUserCourseBookedDetails extends Migration
      */
     public function up()
     {
-        Schema::table('user_course_booked_details', function (Blueprint $table) {
+        Schema::table('course_applications', function (Blueprint $table) {
             $table->string('study_mode_selected');
             $table->integer('age_selected');
         });
@@ -26,7 +26,7 @@ class addStudyModeToUserCourseBookedDetails extends Migration
      */
     public function down()
     {
-        Schema::table('user_course_booked_details', function (Blueprint $table) {
+        Schema::table('course_applications', function (Blueprint $table) {
             //
         });
     }

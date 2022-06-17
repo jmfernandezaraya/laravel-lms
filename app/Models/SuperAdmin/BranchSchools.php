@@ -8,7 +8,7 @@ use App\Models\User;
  * Class BranchSchools
  * @package App\Models\SuperAdmin
  */
-class BranchSchools extends UsersSchools
+class BranchSchools extends UserSchool
 {
     /**
      * @var string

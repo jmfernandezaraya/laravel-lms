@@ -38,8 +38,8 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $booked_course->created_at }}</td>
                                 <td>{{ ucwords($booked_course->fname) }} {{ ucwords($booked_course->lname) }}</td>
-                                <td>{{ ucwords($booked_course->userBookDetailsApproved->email ?? $booked_course->email) }}</td>
-                                <td>{{ ucwords($booked_course->userBookDetailsApproved->mobile ?? $booked_course->mobile) }}</td>
+                                <td>{{ ucwords($booked_course->courseApplicationApprove->email ?? $booked_course->email) }}</td>
+                                <td>{{ ucwords($booked_course->courseApplicationApprove->mobile ?? $booked_course->mobile) }}</td>
                                 <td>{{ $booked_course->course->school->name ? (app()->getLocale() == 'en' ? ($booked_course->course->school->name->name ?? '-') : ($booked_course->course->school->name->name_ar ?? '-')) : '-' }} {{ app()->getLocale() == 'en' ? ($booked_course->course->school->branch_name ?? '') : ($booked_course->course->school->branch_name_ar ?? '') }}</td>
                                 <td>{{ $booked_course->course->school->city ? (app()->getLocale() == 'en' ? ($booked_course->course->school->city->name ?? '-') : ($booked_course->course->school->city->name_ar ?? '-')) : '-' }}</td>
                                 <td>{{ $booked_course->course->school->country ? (app()->getLocale() == 'en' ? ($booked_course->course->school->country->name ?? '-') : ($booked_course->course->school->country->name_ar ?? '-')) : '-' }}</td>
@@ -47,12 +47,12 @@
                                 <td>{{ ucwords($booked_course->start_date) }}</td>
                                 <td>{{ ucwords($booked_course->program_duration) }}</td>
                                 <td>{{ ucwords($booked_course->program_cost) }}</td>
-                                <td>{{ ucwords($booked_course->paid_amount) }}</td>
-                                <td>{{ isset($booked_course->userBookDetailsApproved->approve) ? ($booked_course->userBookDetailsApproved->approve == 1 ? __("Frontend.application_recevied") : __("Frontend.send_to_school_admin") ) : __("Frontend.application_recevied") }}</td>
+                                <td>{{ ucwords($booked_course->deposit_price) }}</td>
+                                <td>{{ isset($booked_course->courseApplicationApprove->approve) ? ($booked_course->courseApplicationApprove->approve == 1 ? __("Frontend.application_recevied") : __("Frontend.send_to_school_admin") ) : __("Frontend.application_recevied") }}</td>
 
                                 <td>
                                     <div class="btn-group">
-                                        <a href="{{route('dashboard.course_application', $booked_course->id)}}" class="btn btn-info btn-sm fa fa-eye"></a>
+                                        <a href="{{route('frontend.dashboard.course_application', $booked_course->id)}}" class="btn btn-info btn-sm fa fa-eye"></a>
                                     </div>
                                 </td>
                             </tr>

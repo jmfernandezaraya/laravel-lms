@@ -73,15 +73,15 @@ class SettingController extends Controller
         }
 
         $now = Carbon::now()->format('Y-m-d');
-        $course_ids = array_unique(CourseProgram::where('discount_per_week', '<>', ' -')->where('discount_per_week', '<>', ' %')
-            ->where(function($query) use ($now) {
-                $query->where(function($sub_query) use ($now) {
-                    $sub_query->where('discount_start_date', '<=', $now)->where('discount_end_date', '>=', $now);
-                })->orWhere(function($sub_query) use ($now) {
-                    $sub_query->whereNotNull('x_week_selected')->where('x_week_start_date', '<=', $now)->where('x_week_end_date', '>=', $now);
-                });
-            })->pluck('course_unique_id')->toArray());
-        $school_ids = array_unique(Course::whereIn('unique_id', $course_ids)->where('display', true)->where('deleted', false)->pluck('school_id')->toArray());
+        // $course_ids = array_unique(CourseProgram::where('discount_per_week', '<>', ' -')->where('discount_per_week', '<>', ' %')
+        //     ->where(function($query) use ($now) {
+        //         $query->where(function($sub_query) use ($now) {
+        //             $sub_query->where('discount_start_date', '<=', $now)->where('discount_end_date', '>=', $now);
+        //         })->orWhere(function($sub_query) use ($now) {
+        //             $sub_query->whereNotNull('x_week_selected')->where('x_week_start_date', '<=', $now)->where('x_week_end_date', '>=', $now);
+        //         });
+        //     })->pluck('course_unique_id')->toArray());
+        $school_ids = array_unique(Course::where('promotion', true)->where('display', true)->where('deleted', false)->pluck('school_id')->toArray());
         $schools = School::whereIn('id', $school_ids)->where('is_active', true)->get();
         
         $countries = Country::with('cities')->get();

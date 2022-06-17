@@ -77,7 +77,7 @@
 <body>
     <img src="{{$logo}}" class="logo"/>
 
-    <h2 class="title">{{__('Mail.course_booked.reservation_qutation')}}</h3>
+    <h2 class="title">{{__('mail.reservation_qutation')}}</h3>
 
     <table class="table table-bordered">
         <tbody>
@@ -108,7 +108,7 @@
             <tr>
                 <td>
                     {{ $course->program_name }}, {{ $course->lessons_per_week }} {{__('Frontend.lessons')}} / {{ $course->hours_per_week }} {{__('Frontend.hours_per_week')}}<br />
-                    {{ $program_start_date }} {{__('Frontend.to')}} {{ $program_end_date }} ( {{ $course_booked_detail->program_duration }} {{__('Frontend.weeks')}} )
+                    {{ $program_start_date }} {{__('Frontend.to')}} {{ $program_end_date }} ( {{ $course_application->program_duration }} {{__('Frontend.weeks')}} )
                 </td>
                 <td>{{ toFixedNumber($program_cost['value']) }}</td>
                 <td>{{ toFixedNumber($program_cost['converted_value']) }}</td>
@@ -180,7 +180,7 @@
                 <tr>
                     <td>
                         {{$accommodation->type}} - {{$accommodation->room_type}} - {{$accommodation->meal}}<br />
-                        {{$accommodation_start_date}} to {{$accommodation_end_date}} ( {{$course_booked_detail->accommodation_duration}} {{__('Frontend.weeks')}} )
+                        {{$accommodation_start_date}} to {{$accommodation_end_date}} ( {{$course_application->accommodation_duration}} {{__('Frontend.weeks')}} )
                     </td>
                     <td>{{ toFixedNumber($accommodation_fee['value']) }}</td>
                     <td>{{ toFixedNumber($accommodation_fee['converted_value']) }}</td>
@@ -261,8 +261,8 @@
                     <tr>
                         <td>
                             {{__('Frontend.transport')}}<br />
-                            {{__('Frontend.service_provider')}}: {{ $course_booked_detail->airport_provider }}<br />
-                            {{ $course_booked_detail->airport_name }} - {{ $course_booked_detail->airport_service }}<br />
+                            {{__('Frontend.service_provider')}}: {{ $course_application->airport_provider }}<br />
+                            {{ $course_application->airport_name }} - {{ $course_application->airport_service }}<br />
                         </td>
                         <td>{{ toFixedNumber($airport_pickup_fee['value']) }}</td>
                         <td>{{ toFixedNumber($airport_pickup_fee['converted_value']) }}</td>
@@ -272,8 +272,8 @@
                     <tr>
                         <td>
                             {{__('Frontend.medical_insurance')}}<br />
-                            {{__('Frontend.company_name')}}: {{ $course_booked_detail->company_name }}<br />
-                            {{ $medical_start_date }} - {{ $medical_end_date }} ( {{ $course_booked_detail->duration }} {{__('Frontend.weeks')}} )<br />
+                            {{__('Frontend.company_name')}}: {{ $course_application->company_name }}<br />
+                            {{ $medical_start_date }} - {{ $medical_end_date }} ( {{ $course_application->duration }} {{__('Frontend.weeks')}} )<br />
                         </td>
                         <td>{{ toFixedNumber($medical_insurance_fee['value']) }}</td>
                         <td>{{ toFixedNumber($medical_insurance_fee['converted_value']) }}</td>
@@ -313,8 +313,8 @@
             @if (!isset($course_register_details->financial_guarantee))
                 <tr>
                     <th>{{__('Frontend.total_amount_paid')}}</th>
-                    <th>{{ toFixedNumber($amount_paid['value']) }} {{ $currency['cost'] }}</th>
-                    <th>{{ toFixedNumber($amount_paid['converted_value']) }} {{ $currency['converted'] }}</th>
+                    <th>{{ toFixedNumber($deposit_price['value']) }} {{ $currency['cost'] }}</th>
+                    <th>{{ toFixedNumber($deposit_price['converted_value']) }} {{ $currency['converted'] }}</th>
                 </tr>
             @endif
             <tr>

@@ -8,7 +8,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-use App\Models\UserCourseBookedDetails;
+use App\Models\CourseApplication;
 
 use Storage;
 use PDF;
@@ -44,7 +44,7 @@ class CourseBooked extends Mailable
         Storage::disk('public')->put('pdf/course_booked_' . $this->request->id . '.pdf', $pdf->output());
 
         $mail = $this->markdown('mail/course_booked', ['data' => (object)[
-            'customer_name' => $this->request->user->first_name_en . ' ' . $this->request->user->last_name_en,
+            'customer_name' => $this->request->locale == 'en' ? ($this->request->user->first_name_en . ' ' . $this->request->user->last_name_en) : ($this->request->user->first_name_ar . ' ' . $this->request->user->last_name_ar),
             'customer_no' => $this->request->user->id,
             'website_link' => url('/')
         ]])->subject(__('Mail.course_booked.subject'));

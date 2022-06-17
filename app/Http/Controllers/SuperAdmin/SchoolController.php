@@ -16,7 +16,7 @@ use App\Models\SchoolName;
 use App\Models\SuperAdmin\Choose_Nationality;
 use App\Models\SuperAdmin\School;
 use App\Models\SuperAdmin\SchoolNationality;
-use App\Models\UserCourseBookedDetails;
+use App\Models\CourseApplication;
 
 use App\Http\Requests\SuperAdmin\AddSchoolRequest;
 
@@ -427,7 +427,7 @@ class SchoolController extends Controller
      */
     public function destroy($id)
     {
-        $school_ids = UserCourseBookedDetails::pluck('school_id')->toArray();
+        $school_ids = CourseApplication::pluck('school_id')->toArray();
 
         if (in_array($id, $school_ids)) {
             toastr()->error(__('SuperAdmin/backend.customer_registered_with_this_school'));

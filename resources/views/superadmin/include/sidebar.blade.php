@@ -34,7 +34,7 @@
                 <div class="collapse" id="blogs">
                     <ul class="nav flex-column sub-menu">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{route('superadmin.blogs.index')}}">{{__('SuperAdmin/dashboard.view')}}</a>
+                            <a class="nav-link" href="{{route('superadmin.blog.index')}}">{{__('SuperAdmin/dashboard.view')}}</a>
                         </li>
                     </ul>
                 </div>
@@ -91,7 +91,7 @@
                 <div class="collapse" id="course_application">
                     <ul class="nav flex-column sub-menu">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{route('superadmin.manage_application.index')}}">{{__('SuperAdmin/dashboard.view')}}</a>
+                            <a class="nav-link" href="{{route('superadmin.course_application.index')}}">{{__('SuperAdmin/dashboard.view')}}</a>
                         </li>
                     </ul>
                 </div>

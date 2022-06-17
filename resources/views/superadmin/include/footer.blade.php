@@ -815,16 +815,20 @@
         $('#custodianincrement').val(custodian_clone);
     }
 
-    function toggleAllCheck(table_index) {
+    function toggleAllCheck(table_index, col_index) {
         var table_el = $($('table')[table_index]);
-        var header_select_el = table_el.find('thead th[data-filter="checkbox"] input[type="checkbox"]');
-        var body_select_els = table_el.find('tbody tr td input[type="checkbox"]');
+        var header_select_el = $(table_el.find('thead tr[class="filters"] th')[col_index]).find('input[type="checkbox"]');
+        var body_row_els = table_el.find('tbody tr');
 
-        for (var select_index = 0; select_index < body_select_els.length; select_index++) {
+        for (var row_index = 0; row_index < body_row_els.length; row_index++) {
             if (header_select_el.is(':checked')) {
-                $(body_select_els[select_index]).prop('checked', true);
-            } else {                
-                $(body_select_els[select_index]).prop('checked', false);
+                if ($($($(body_row_els[row_index]).find('td')[col_index]).find('input[type="checkbox"]')).length) {
+                    $($($(body_row_els[row_index]).find('td')[col_index]).find('input[type="checkbox"]')).prop('checked', true);
+                }
+            } else {
+                if ($($($(body_row_els[row_index]).find('td')[col_index]).find('input[type="checkbox"]')).length) {
+                    $($($(body_row_els[row_index]).find('td')[col_index]).find('input[type="checkbox"]')).prop('checked', false);
+                }
             }
         }
     }
@@ -1502,105 +1506,107 @@
         if ($('table') && $('table').length) {
             for (var table_index = 0; table_index < $('table').length; table_index++) {
                 var table_el = $($('table')[table_index]);
-                if (table_el.hasClass('table-filtered') && table_el.find('tbody tr').length) {
-                    table_el.find('thead tr').clone(true).addClass('filters').appendTo(table_el.find('thead'));
-                    table_el.DataTable({
-                        orderCellsTop: true,
-                        fixedHeader: true,
-                        initComplete: function () {
-                            var api = this.api();
+                if (!table_el.hasClass('table-no-drawable')) {
+                    if (table_el.hasClass('table-filtered') && table_el.find('tbody tr').length) {
+                        table_el.find('thead tr').clone(true).addClass('filters').appendTo(table_el.find('thead'));
+                        table_el.DataTable({
+                            orderCellsTop: true,
+                            fixedHeader: true,
+                            initComplete: function () {
+                                var api = this.api();
+                    
+                                // For each column
+                                api.columns().eq(0).each(function (colIdx) {
+                                    // Set the header cell to contain the input element
+                                    var cell = $('.filters th').eq(
+                                        $(api.column(colIdx).header()).index()
+                                    );
+                                    var title = $(cell).text();
+                                    if (typeof $(cell).data('filter') != 'undefined') {
+                                        if ($(cell).data('filter') == 'input') {
+                                            $(cell).html('<input type="text" placeholder="' + title + '" />');
                 
-                            // For each column
-                            api.columns().eq(0).each(function (colIdx) {
-                                // Set the header cell to contain the input element
-                                var cell = $('.filters th').eq(
-                                    $(api.column(colIdx).header()).index()
-                                );
-                                var title = $(cell).text();
-                                if (typeof $(cell).data('filter') != 'undefined') {
-                                    if ($(cell).data('filter') == 'input') {
-                                        $(cell).html('<input type="text" placeholder="' + title + '" />');
-            
-                                        // On every keypress in this input
-                                        $('input', $('.filters th').eq($(api.column(colIdx).header()).index()))
-                                        .off('keyup change')
-                                        .on('keyup change', function (e) {
-                                            e.stopPropagation();
+                                            // On every keypress in this input
+                                            $('input', $('.filters th').eq($(api.column(colIdx).header()).index()))
+                                            .off('keyup change')
+                                            .on('keyup change', function (e) {
+                                                e.stopPropagation();
 
-                                            // Get the search value
-                                            $(this).attr('title', $(this).val());
-                                            var regexr = '({search})'; //$(this).parents('th').find('select').val();
+                                                // Get the search value
+                                                $(this).attr('title', $(this).val());
+                                                var regexr = '({search})'; //$(this).parents('th').find('select').val();
 
-                                            var cursorPosition = this.selectionStart;
-                                            // Search the column for that value
-                                            api.column(colIdx).search(
-                                                this.value != ''
-                                                    ? regexr.replace('{search}', '(((' + this.value + ')))')
-                                                    : '',
-                                                this.value != '',
-                                                this.value == ''
-                                            ).draw();
+                                                var cursorPosition = this.selectionStart;
+                                                // Search the column for that value
+                                                api.column(colIdx).search(
+                                                    this.value != ''
+                                                        ? regexr.replace('{search}', '(((' + this.value + ')))')
+                                                        : '',
+                                                    this.value != '',
+                                                    this.value == ''
+                                                ).draw();
 
-                                            $(this).focus()[0].setSelectionRange(cursorPosition, cursorPosition);
-                                        });
-                                    } else if ($(cell).data('filter') == 'select' && typeof $(cell).data('select') != 'undefined' && $(cell).data('select')) {
-                                        var select_html = '<select>';
-                                        var selects = $(cell).data('select').toString().split(",");
-                                        select_html += '<option value=""></option>';
-                                        for (var select_index = 0; select_index < selects.length; select_index++) {
-                                            select_html += '<option value="' + selects[select_index] + '">' + selects[select_index] + '</option>';
+                                                $(this).focus()[0].setSelectionRange(cursorPosition, cursorPosition);
+                                            });
+                                        } else if ($(cell).data('filter') == 'select' && typeof $(cell).data('select') != 'undefined' && $(cell).data('select')) {
+                                            var select_html = '<select>';
+                                            var selects = $(cell).data('select').toString().split(",");
+                                            select_html += '<option value=""></option>';
+                                            for (var select_index = 0; select_index < selects.length; select_index++) {
+                                                select_html += '<option value="' + selects[select_index] + '">' + selects[select_index] + '</option>';
+                                            }
+                                            select_html += '</select>';
+                                            $(cell).html(select_html);
+
+                                            // On every keypress in this input
+                                            $('select', $('.filters th').eq($(api.column(colIdx).header()).index()))
+                                            .off('change')
+                                            .on('change', function (e) {
+                                                e.stopPropagation();
+
+                                                // Get the search value
+                                                $(this).attr('title', $(this).val());
+                                                var regexr = '({search})'; //$(this).parents('th').find('select').val();
+
+                                                var cursorPosition = this.selectionStart;
+                                                // Search the column for that value
+                                                api.column(colIdx).search(
+                                                    this.value != ''
+                                                        ? regexr.replace('{search}', '(((' + this.value + ')))')
+                                                        : '',
+                                                    this.value != '',
+                                                    this.value == ''
+                                                ).draw();
+                                            });
+                                        } else if ($(cell).data('filter') == 'checkbox') {
+                                            $(cell).html('<input type="checkbox" onclick="toggleAllCheck(' + table_index + ', ' + colIdx + ')"/>');
+                                        } else {
+                                            $(cell).html('<p></p>');
                                         }
-                                        select_html += '</select>';
-                                        $(cell).html(select_html);
-
-                                        // On every keypress in this input
-                                        $('select', $('.filters th').eq($(api.column(colIdx).header()).index()))
-                                        .off('change')
-                                        .on('change', function (e) {
-                                            e.stopPropagation();
-
-                                            // Get the search value
-                                            $(this).attr('title', $(this).val());
-                                            var regexr = '({search})'; //$(this).parents('th').find('select').val();
-
-                                            var cursorPosition = this.selectionStart;
-                                            // Search the column for that value
-                                            api.column(colIdx).search(
-                                                this.value != ''
-                                                    ? regexr.replace('{search}', '(((' + this.value + ')))')
-                                                    : '',
-                                                this.value != '',
-                                                this.value == ''
-                                            ).draw();
-                                        });
-                                    } else if ($(cell).data('filter') == 'checkbox') {
-                                        $(cell).html('<input type="checkbox" onclick="toggleAllCheck(' + table_index + ')"/>');
                                     } else {
                                         $(cell).html('<p></p>');
                                     }
-                                } else {
-                                    $(cell).html('<p></p>');
-                                }
-                            });
-                        },
-                        lengthMenu: table_el.data('length') ? [
-                            table_el.data('length').split(":")[0].split(","),
-                            table_el.data('length').split(":")[1].split(","),
-                        ] : [
-                            [10, 25, 50, 100, -1],
-                            [10, 25, 50, 100, 'All']
-                        ]
-                    });
-                } else {
-                    if (table_el.data('length')) {
-                        table_el.DataTable({
-                            lengthMenu: [
+                                });
+                            },
+                            lengthMenu: table_el.data('length') ? [
                                 table_el.data('length').split(":")[0].split(","),
                                 table_el.data('length').split(":")[1].split(","),
+                            ] : [
+                                [10, 25, 50, 100, -1],
+                                [10, 25, 50, 100, 'All']
                             ]
                         });
                     } else {
-                        table_el.DataTable();
+                        if (table_el.data('length')) {
+                            table_el.DataTable({
+                                lengthMenu: [
+                                    table_el.data('length').split(":")[0].split(","),
+                                    table_el.data('length').split(":")[1].split(","),
+                                ]
+                            });
+                        } else {
+                            table_el.DataTable();
+                        }
                     }
                 }
             }

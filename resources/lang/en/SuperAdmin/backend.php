@@ -2,6 +2,21 @@
 
 return [
     'site_name' => 'Link Forsa',
+    
+    'login' => 'Log In',
+    'login_description' => 'Log In Description',
+    'logout' => 'Log Out',
+    'email_phone' => 'Email / Phone',
+    'password' => 'Password',
+    'confirm_password' => 'Confirm Password',
+    'recovery_email' => 'Reset Password',
+    'remember_me' => 'Remember Me',
+    'are_you_member' => 'Are you a member',
+    'do_not_have_an_account' => 'Don\'t Have an account?',
+    'forgot_password' => 'Forgot Password',
+    'forgot_password_description' => 'Forgot Password',
+    'sign_up' => 'Sign Up',
+    'login_now' => 'Login Now',
 
     'dashboard' => 'Dashboard',
     'total_customers' => 'Total Customers',
@@ -131,7 +146,15 @@ return [
     'school_names' => 'School Names',
 
     'study_mode' => 'Study Mode',
+    'your_age' => 'Your Age',
+    'registration_fee' => 'Registration Fee',
+    'express_mailing' => 'EXPRESS MAILING',
+    'express_mailing_description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec elementum dolor elementum dolor consectetur tincidunt. Duis a est consectetur dui egestas placerat. Suspendisse auctor erat sed ipsum dapibus consequat.',
+    'accommodation_fees' => 'Accommodation Fees',
+    'register_now' => 'Register Now',
+    'program_fees' => 'Program Fees',
 
+    'promotion' => 'Promotion',
     'program_type' => 'Program Type',
     'choose_program_type' => 'Choose Program Type',
     'choose_lang' => 'Choose Language',
@@ -381,6 +404,7 @@ return [
 
     'comments' => 'Comments',
     'user_name' => 'User Name',
+    'user_email' => 'User Email',
     'rated' => 'Rated',
     'rating_details' => 'Rating Details',
     'approved' => 'Approved',
@@ -391,6 +415,8 @@ return [
     'save_form_name' => 'Save Form Name',
     'subject' => 'Subject',
     'message' => 'Message',
+    'message_sent_thank_you' => 'Your message has been sent. Thank you!',
+    'attachments' => 'Attachments',
     
     'name' => 'Name',
     'contact_number' => 'Contact Number',

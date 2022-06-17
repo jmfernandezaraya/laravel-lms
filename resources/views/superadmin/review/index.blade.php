@@ -34,7 +34,7 @@
                         @foreach ($reviews as $review)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ isset($review->course_booked_details->school) ? (app()->getLocale() == 'en' ? $review->course_booked_details->school->name : $review->course_booked_details->school->name_ar) : '-' }}</td>
+                                <td>{{ isset($review->course_applications->school) ? (app()->getLocale() == 'en' ? $review->course_applications->school->name : $review->course_applications->school->name_ar) : '-' }}</td>
                                 <td>{{ $review->review }}</td>
                                 <td>{{ app()->getLocale() == 'en' ? $review->user->first_name_en . ' ' . $review->user->last_name_en : $review->user->first_name_ar . ' ' . $review->user->last_name_ar }}</td>
                                 <td>{{ toFixedNumber($review->rated()) }}</td>

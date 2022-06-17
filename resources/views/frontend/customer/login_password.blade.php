@@ -13,7 +13,7 @@
         <div class="container" data-aos="fade-up">
             <div class="row">
                 <div class="col-lg-6 offset-lg-3 col-md-6 offset-md-3">
-                    <form class="login-password-form" method="POST" action="{{route('dashboard.login_password.update')}}" id="LoginPasswordForm">
+                    <form class="login-password-form" method="POST" action="{{route('frontend.dashboard.login_password.update')}}" id="LoginPasswordForm">
                         {{csrf_field()}}
 
                         <div class="alert-success" style="display: none">
@@ -132,7 +132,7 @@
                     $(this).removeClass('show');
                 } else if ($(this).hasClass('verify-email')) {
                     $.ajax({
-                        url: "route('dashboard.verify_email')",
+                        url: "route('frontend.dashboard.verify_email')",
                         method: 'POST',
                         data: { email: $('input[name="email"]').val() },
                         cache: false,
@@ -165,7 +165,7 @@
                     });
                 } else if ($(this).hasClass('phone-verify')) {
                     $.ajax({
-                        url: "route('dashboard.verify_phone')",
+                        url: "route('frontend.dashboard.verify_phone')",
                         method: 'POST',
                         data: { email: $('input[name="email"]').val() },
                         cache: false,
@@ -204,7 +204,7 @@
             var formdata = new FormData($('#LoginPasswordForm')[0]);
             
             $.ajax({
-                url: "{{route('dashboard.login_password.update')}}",
+                url: "{{route('frontend.dashboard.login_password.update')}}",
                 method: 'POST',
                 data: formdata,
                 cache: false,

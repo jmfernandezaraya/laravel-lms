@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\SchoolAdmin;
 
-use App\Models\SuperAdmin\SendSchoolMessage;
+use App\Models\SuperAdmin\ToSchoolAdminMessage;
 use Livewire\Component;
 
 /**
@@ -18,7 +18,7 @@ class NotificationMessages extends Component
      */
     public function render()
     {
-        $check_messages = $data['count'] = SendSchoolMessage::where('user_id', auth()->id());
+        $check_messages = $data['count'] = ToSchoolAdminMessage::where('user_id', auth()->id());
         $data['messages'] = $check_messages->get();
 
         return view('livewire.school-admin.notification-messages', $data);
@@ -29,7 +29,7 @@ class NotificationMessages extends Component
      */
     public function updateMessageSeen()
     {
-        $set_status = SendSchoolMessage::where(['user_id' => auth()->id(), 'seen' => 0])->get();
+        $set_status = ToSchoolAdminMessage::where(['user_id' => auth()->id(), 'seen' => 0])->get();
         if ($set_status->isNotEmpty()) {
             foreach ($set_status as $status) {
                 $status->seen = 1;

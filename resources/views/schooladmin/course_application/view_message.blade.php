@@ -56,7 +56,7 @@
     <center><h3>Reservation Details</h3></center>
     <div class="row">
         <div class="col-lg-12" style="display: inline; float:left">
-            <form enctype="multipart/form-data" method="post" action="{{route('schooladmin.manage_application.send_message_to_super_admin')}}" id="sendschoolmessage">
+            <form enctype="multipart/form-data" method="post" action="{{route('schooladmin.manage_application.send_message_to_super_admin')}}" id="ToSchoolAdminMessage">
                 {{csrf_field()}}
                 <center><h5>Message Received From SuperAdmin</h5></center>
                 <div class="p-2 mb-2" style="background: lightgray; color:black">
@@ -74,12 +74,12 @@
                     <input class="form-control" type="file" multiple="" name="attachment[]">
                     <h4> Message </h4>
                     <textarea class="form-control" rows="3" id="textareaid2" aria-hidden="true"></textarea>
-                    <input hidden value="{{$chatMessage->id}}" name="send_school_message_id">
+                    <input hidden value="{{$chatMessage->id}}" name="to_school_admin_message_id">
                     <input hidden="" name="message" id="messageid2">
                     <input hidden="" name="to_email" value="{{\App\Models\User::where('user_type', 'super_admin')->first()['email']}}">
                     <input hidden="" name="user_id" value="{{\App\Models\User::where('user_type', 'super_admin')->first()['id']}}">
                 </div>
-                <button type="button" onclick="getContent('textareaid2', 'messageid2'); submitFormAction('sendschoolmessage')" class="btn btn-primary mt-1 choose">{{__('SuperAdmin/backend.submit')}}</button>
+                <button type="button" onclick="getContent('textareaid2', 'messageid2'); submitFormAction('ToSchoolAdminMessage')" class="btn btn-primary mt-1 choose">{{__('SuperAdmin/backend.submit')}}</button>
             </form>
         </div>
     </div>

@@ -9,7 +9,7 @@
 
 
     <div class="col-12 grid-margin stretch-card">
-        <form id ="formaction" class="forms-sample" method="post" action = "{{route('schooladmin.blogs.update', $blog->id)}}">
+        <form id ="formaction" class="forms-sample" method="post" action = "{{route('schooladmin.blog.update', $blog->id)}}">
             {{csrf_field()}}
         <div class="card">
             <div class="card-body">
