@@ -166,7 +166,7 @@ class FrontPageController extends Controller
     public function destroy($id)
     {
         $delete = FrontPage::findorFail($id);
-        $deleted = __('SuperAdmin/backend.data_deleted');
+        $deleted = __('SuperAdmin/backend.data_deleted_successfully');
 
         if ($delete->image != '' && $delete->image != null && file_exists($delete->image)) {
             unlink($delete->image);

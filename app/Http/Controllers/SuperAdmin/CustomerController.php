@@ -52,8 +52,8 @@ class CustomerController extends Controller
     {
         try {
             (new User($request->validated()))->save();
-            $saved = __('SuperAdmin/backend.data_saved');
-            return redirect(route('superadmin.customer.index'));
+            $saved = __('SuperAdmin/backend.data_saved_successfully');
+            return redirect()->route('superadmin.customer.index');
         } catch (ValidationException $e) {
             return response()->json(['errors' => $e->errors()]);
         } catch (NotReadableException $e) {
@@ -106,7 +106,7 @@ class CustomerController extends Controller
         $save = $validate->validated();
 
         $customers->fill($save)->save();
-        $saved = __('SuperAdmin/backend.data_saved');
+        $saved = __('SuperAdmin/backend.data_saved_successfully');
         return response()->json(['success' => true, 'data' => $saved]);
     }
 
@@ -119,7 +119,7 @@ class CustomerController extends Controller
     public function destroy($id)
     {
         $delete = User::findorFail($id);
-        $deleted = __('SuperAdmin/backend.data_deleted');
+        $deleted = __('SuperAdmin/backend.data_deleted_successfully');
 
         if ($delete->image != '' && $delete->image != null && file_exists($delete->image)) {
             unlink($delete->image);

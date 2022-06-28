@@ -201,8 +201,8 @@
                                                 <tr>
                                                     <td>
                                                         <p>{{__('Frontend.transport')}}</p>
-                                                        <p>{{__('Frontend.service_provider')}}: {{ $course_application->airport_provider }}</p>
-                                                        <p>{{ $course_application->airport_name }} - {{ $course_application->airport_service }}</p>
+                                                        <p>{{__('Frontend.service_provider')}}: {{ $airport_provider }}</p>
+                                                        <p>{{ $airport_name }} - {{ $airport_service }}</p>
                                                     </td>
                                                     <td>{{ toFixedNumber($airport_pickup_fee['value']) }}</td>
                                                     <td>{{ toFixedNumber($airport_pickup_fee['converted_value']) }}</td>
@@ -212,8 +212,8 @@
                                                 <tr>
                                                     <td>
                                                         <p>{{__('Frontend.medical_insurance')}}</p>
-                                                        <p>{{__('Frontend.company_name')}}: {{ $course_application->company_name }}</p>
-                                                        <p>{{ $medical_start_date }} - {{ $medical_end_date }} ( {{ $course_application->duration }} {{__('Frontend.weeks')}} )</p>
+                                                        <p>{{__('Frontend.company_name')}}: {{ $company_name }}</p>
+                                                        <p>{{ $medical_start_date }} - {{ $medical_end_date }} ( {{ $course_application->medical_duration }} {{__('Frontend.weeks')}} )</p>
                                                     </td>
                                                     <td>{{ toFixedNumber($medical_insurance_fee['value']) }}</td>
                                                     <td>{{ toFixedNumber($medical_insurance_fee['converted_value']) }}</td>
@@ -555,7 +555,7 @@
                                     </div>
                                     <div class="row border-top-bottom form-group">
                                         <div class="col-md-12">
-                                            <p>{{__('Frontend.registration_cancelation_conditions_description')}}</p>
+                                            {!! app()->getLocale() == 'en' ? $course_application->registration_cancelation_conditions : $course_application->registration_cancelation_conditions_ar !!}
                                         </div>
                                     </div>
                                     <div class="row form-group">
@@ -708,13 +708,13 @@
                                             </tr>
                                             <tr>
                                                 <td>{{__('Frontend.total_cost')}}</td>
-                                                <td>{{ toFixedNumber($total_cost['value']) }}</td>
-                                                <td>{{ toFixedNumber($total_cost['converted_value']) }}</td>
+                                                <td>{{ toFixedNumber($total_cost_fixed['value']) }}</td>
+                                                <td>{{ toFixedNumber($total_cost_fixed['converted_value']) }}</td>
                                             </tr>
                                             <tr>
                                                 <td>{{__('Frontend.total_amount_paid')}}</td>
-                                                <td>{{ toFixedNumber($deposit_price['value']) }}</td>
-                                                <td>{{ toFixedNumber($deposit_price['converted_value']) }}</td>
+                                                <td>{{ toFixedNumber($amount_paid['value']) }}</td>
+                                                <td>{{ toFixedNumber($amount_paid['converted_value']) }}</td>
                                             </tr>
                                             <tr>
                                                 <td>{{__('Frontend.total_amount_refunded')}}</td>
@@ -744,33 +744,6 @@
                                         @csrf
 
                                         <h5 class="text-center">{{__('Frontend.contact_center_admin')}}</h5>
-
-                                        <div class="row">
-                                            @foreach ($student_messages as $student_message)
-                                                <div class="col-md-12">
-                                                    <div class="form-group">
-                                                        <label for="From" class="col-form-label">{{__('Frontend.From')}}</label>
-                                                        @if (app()->getLocale() == 'en')
-                                                            {{ $course_application->User->first_name }} {{ $course_application->User->last_name }}
-                                                        @else
-                                                            {{ $course_application->User->first_name_ar }} {{ $course_application->User->last_name_ar }}
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <div class="form-group">
-                                                        <label for="subject" class="col-form-label">{{__('Frontend.subject')}}</label>
-                                                        {{ $student_message->subject }}
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <div class="form-group">
-                                                        <label for="message" class="col-form-label">{{__('Frontend.message')}}</label>
-                                                        {{ $student_message->created_at->format('d M Y') }}
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                        </div>
                                         
                                         <div class="row">
                                             <div class="col-md-12">
@@ -793,11 +766,69 @@
                                             </div>
                                         </div>
 
-                                        <input hidden name="to_email" value="{{ $course_application->User->email }}" />
-                                        <input hidden name="user_id" value="{{ $course_application->user_id }}" />
+                                        <input hidden name="type" value="to_admin" />
+                                        <input hidden name="type_id" value="{{ $course_application->id }}" />
 
                                         <button type="button" onclick="submitFormAction('contact_center_admin');" class="btn btn-primary px-3">{{__('Frontend.send')}}</button>
                                     </form>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            @foreach ($student_messages as $student_message)
+                                                <div class="message-item">
+                                                    <div class="message-header">
+                                                        <div class="message-user-image">
+                                                            @if ($student_message->fromUser->image)
+                                                                <img src="{{ $student_message->fromUser->image }}" alt="profile">
+                                                            @else
+                                                                <img src="{{ asset('assets/images/user.png') }}" alt="profile">
+                                                            @endif
+                                                        </div>
+                                                        <div class="message-user-name">
+                                                            @if (app()->getLocale() == 'en')
+                                                                {{ $student_message->fromUser->first_name_en }} {{ $student_message->fromUser->last_name_en }}
+                                                            @else
+                                                                {{ $student_message->fromUser->first_name_ar }} {{ $student_message->fromUser->last_name_ar }}
+                                                            @endif
+                                                            @if ($student_message->type == 'to_student')
+                                                                <i class="bx bxs-chevron-left"></i>
+                                                            @else
+                                                                <i class="bx bxs-chevron-right"></i>
+                                                            @endif
+                                                        </div>
+                                                        <div class="message-time">
+                                                            {{ $student_message->created_at->format('d M Y') }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="message-body">
+                                                        <div>
+                                                            <strong>{{__('SuperAdmin/backend.subject')}}: </strong>{{ $student_message->subject }}
+                                                        </div>
+                                                        <div>
+                                                            <strong>{{__('SuperAdmin/backend.message')}}: </strong>{!! $student_message->message !!}
+                                                        </div>
+                                                        <div>
+                                                            <strong>{{__('SuperAdmin/backend.attachments')}}: </strong>
+                                                            @if ($student_message->attachments)
+                                                                @foreach ($student_message->attachments as $message_attachment)
+                                                                    @php $attachment_ext = strtolower(pathinfo($message_attachment, PATHINFO_EXTENSION)); @endphp
+                                                                    <a href="{{ $message_attachment }}" target="_blank">
+                                                                        @if ($attachment_ext == 'doc' || $attachment_ext == 'docx')
+                                                                            <i class="bx bxs-file-doc"></i>
+                                                                        @elseif ($attachment_ext == 'pdf')
+                                                                            <i class="bx bxs-file-pdf"></i>
+                                                                        @elseif ($attachment_ext == 'jpg' || $attachment_ext == 'bmp' || $attachment_ext == 'png')
+                                                                            <i class="bx bxs-file-image"></i>
+                                                                        @endif
+                                                                    </a>
+                                                                @endforeach
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

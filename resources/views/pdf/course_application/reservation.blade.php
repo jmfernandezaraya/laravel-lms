@@ -77,7 +77,7 @@
 <body>
     <img src="{{$logo}}" class="logo"/>
 
-    <h2 class="title">{{__('mail.reservation_qutation')}}</h3>
+    <h2 class="title">{{__('Mail.reservation_qutation')}}</h3>
 
     <table class="table table-bordered">
         <tbody>
@@ -261,8 +261,8 @@
                     <tr>
                         <td>
                             {{__('Frontend.transport')}}<br />
-                            {{__('Frontend.service_provider')}}: {{ $course_application->airport_provider }}<br />
-                            {{ $course_application->airport_name }} - {{ $course_application->airport_service }}<br />
+                            {{__('Frontend.service_provider')}}: {{ $airport_provider }}<br />
+                            {{ $airport_name }} - {{ $airport_service }}<br />
                         </td>
                         <td>{{ toFixedNumber($airport_pickup_fee['value']) }}</td>
                         <td>{{ toFixedNumber($airport_pickup_fee['converted_value']) }}</td>
@@ -272,8 +272,8 @@
                     <tr>
                         <td>
                             {{__('Frontend.medical_insurance')}}<br />
-                            {{__('Frontend.company_name')}}: {{ $course_application->company_name }}<br />
-                            {{ $medical_start_date }} - {{ $medical_end_date }} ( {{ $course_application->duration }} {{__('Frontend.weeks')}} )<br />
+                            {{__('Frontend.company_name')}}: {{ $company_name }}<br />
+                            {{ $medical_start_date }} - {{ $medical_end_date }} ( {{ $course_application->medical_duration }} {{__('Frontend.weeks')}} )<br />
                         </td>
                         <td>{{ toFixedNumber($medical_insurance_fee['value']) }}</td>
                         <td>{{ toFixedNumber($medical_insurance_fee['converted_value']) }}</td>

@@ -32,6 +32,7 @@ return [
     'how_to_apply' => 'How to Apply',
     'apply_for_visa' => 'Apply For Visa',
     'why_book_with_us' => 'Why book with us',
+    'subscribe' => 'Subscribe',
     
     'login' => 'Log In',
     'login_description' => 'Log In Description',

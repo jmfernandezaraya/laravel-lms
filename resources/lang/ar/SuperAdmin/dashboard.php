@@ -16,6 +16,7 @@ return [
 	'home_page' => 'Home Page',
     'header_footer' => 'Header & Footer',
 	'settings' => 'Settings',
+	'site' => 'Site',
 	'currency' => 'Currency',
 	'total_schools' => 'جميع المدارس',
 	'total_school_admin' => 'جميع حسابات المدارس',

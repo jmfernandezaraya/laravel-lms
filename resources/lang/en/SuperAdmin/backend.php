@@ -48,6 +48,8 @@ return [
     'tiktok' => 'TikTok',
     'youtube' => 'YouTube',
     'pinterest' => 'Pinterest',
+    'skype' => 'Skype',
+    'linkedin' => 'Linkedin',
 
     'yes' => 'Yes',
     'no' => 'No',
@@ -98,6 +100,8 @@ return [
     'data_removed_successfully' => 'Data Removed Successfully',
     'data_deleted_successfully' => 'Data Deleted Successfully',
     'data_destroyed_successfully' => 'Data Destroyed Successfully',
+    'data_saved_successfully' => 'Data Saved Successfully',
+    'data_updated_successfully' => 'Data Updated Successfully',
 
     'manage_blogs' => 'Manage Blogs',
     'add_blog' => 'Add Blog',
@@ -439,9 +443,6 @@ return [
     'photos' => 'Photos',
     'cancel' => 'Cancel',
     'submit' => 'Submit',
-    'data_saved' => 'Data Saved Successfully',
-    'data_deleted' => 'Data Deleted Successfully',
-    'data_updated' => 'Data Updated Successfully',
     'update' => 'Update',
     'manage_formbuilder' => 'Manage Form Builder',
 
@@ -703,6 +704,7 @@ return [
     
     'course_application' => 'Course Application',
     'course_application_details' => 'Course Application Details',
+    'course_application_can_not_update' => 'Course Application can not update',
     'date_created' => 'Date Created',
     'mobile' => 'Mobile',
     'programme_name' => 'Programme Name',
@@ -848,6 +850,11 @@ return [
     'would_you_recommend_this_school' => 'Would you recommend this school',
     'use_my_full_name_for_the_rating_and_review' => 'Use my full name for the rating and review',
 
+    'edit_site_setting' => 'Edit Site Setting',
+    'phone_number' => 'Phone Number',
+    'registration_cancelation_conditions' => 'Registration Cancelation Conditions',
+    'newsletter' => 'Newsletter',
+
     'edit_home_page' => 'Edit Home Page',
     'hero' => 'Hero',
     'background' => 'Background',
@@ -861,6 +868,8 @@ return [
     'header' => 'Header',
     'footer' => 'Footer',
     'logo' => 'Logo',
+    'copyright' => 'CopyRight',
+    'menus' => 'Menus',
     'menu' => 'Menu',
     'sub_menu' => 'Sub Menu',
     'item' => 'Item',

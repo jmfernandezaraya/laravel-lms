@@ -9,37 +9,64 @@
                 <div class="row">
                     <div class="col-lg-3 col-md-6 footer-contact">
                         <img src="{{ getFooterLogo() ? getStorageImages('setting', getFooterLogo()) : asset('public/frontend/assets/img/logo.png') }}" class="img-fluid" alt="" style="width: 50%;">
-                        <p>Lorem Ipsum is simply</p>
-                        <p>dummy text of the printing</p>
-                        <p>and typesetting industry.</p>
-                        <p><strong>Phone:</strong> +1 1234 1234 55</p>
-                        <p><strong>Email:</strong> Linkforsa@gmail.com</p>
+                        <div>{!! getFooterDescription() !!}</div>
+                        <p><strong>{{__('Frontend.phone')}}:</strong> {{ getSiteEmail() }}</p>
+                        <p><strong>{{__('Frontend.email')}}:</strong> {{ getSitePhone() }}</p>
                     </div>
 
-                    <div class="col-lg-2 col-md-6 footer-links">
-                        <h4>Useful Links</h4>
-                        <ul>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Find a school</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Get advice</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Why book with us</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 footer-links">
-                        <h4>Our Services</h4>
-                        <ul>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Services1</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Services2</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Services3</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Services4</a></li>
-                        </ul>
-                    </div>
+                    @php $footer_menu = getFooterMenu(); @endphp
+                    @foreach ($footer_menu as $footer_menu_section)
+                        <div class="col-lg-2 col-md-6 footer-links">
+                            <h4>{!! app()->getLocale() == 'en' ? $footer_menu_section['title'] : $footer_menu_section['title_ar'] !!}</h4>
+                            <ul>
+                                @foreach ($footer_menu_section['menu'] as $footer_menu)
+                                    <li class="{{ count($footer_menu['sub_menu']) ? 'drop-down' : '' }}">
+                                        <i class="bx bx-chevron-right"></i>
+                                        <a href="{{ $footer_menu['type'] == 'page' ? getPageUrl($footer_menu['page']) : '' }}">
+                                            @if ($footer_menu['type'] == 'page')
+                                                {{ getPageTitle($footer_menu['page']) }}
+                                            @else
+                                                @if (app()->getLocale() == 'en')
+                                                    {{ $footer_menu['label'] }}
+                                                @else
+                                                    {{ $footer_menu['label_ar'] }}
+                                                @endif
+                                            @endif
+                                        </a>
+                                        @if (count($footer_menu['sub_menu']))
+                                            <ul>
+                                                @foreach ($footer_menu['sub_menu'] as $footer_menu_sub)
+                                                    <li>
+                                                        <a href="{{ $footer_menu_sub['type'] == 'page' ? getPageUrl($footer_menu_sub['page']) : '' }}">
+                                                            @if ($footer_menu_sub['type'] == 'page')
+                                                                {{ getPageTitle($footer_menu_sub['page']) }}
+                                                            @else
+                                                                @if (app()->getLocale() == 'en')
+                                                                    {{ $footer_menu_sub['label'] }}
+                                                                @else
+                                                                    {{ $footer_menu_sub['label_ar'] }}
+                                                                @endif
+                                                            @endif
+                                                        </a>
+                                                        @if (count($footer_menu_sub['menu']))
+                                                            <ul>
+                                                            </ul>
+                                                        @endif
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        @endif
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endforeach
 
                     <div class="col-lg-4 col-md-6 footer-newsletter">
-                        <h4>Join Our Newsletter</h4>
-                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                        <input type="email" name="email"><input type="submit" value="Subscribe">
+                        <h4>{!! getSiteNewsletter()['title'] !!}</h4>
+                        <div>{!! getSiteNewsletter()['description'] !!}</div>
+                        <input type="email" name="email">
+                        <input type="submit" value="{{__('Frontend.subscribe')}}">
                     </div>
                 </div>
             </div>
@@ -48,19 +75,42 @@
         <div class="container d-md-flex py-4">
             <div class="mr-md-auto text-center text-md-left">
                 <div class="copyright">
-                    &copy; Copyright <strong><span>Linkforsa</span></strong>. All Rights Reserved
+                    {!! getFooterCopyright() !!}
                 </div>
                 <div class="credits">
-                    Designed by <a href="http://reinsoft.tech/">Reinsoft</a>
+                    {!! getFooterCredits() !!}
                 </div>
             </div>
 
             <div class="social-links text-center text-md-right pt-3 pt-md-0">
-                <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-                <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-                <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-                <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-                <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+                @php $socials = getSocials(); @endphp
+                @if (isset($socials['twitter']) && $socials['twitter'])
+                    <a href="{{ $socials['twitter'] }}" class="twitter" target="_blank"><i class="bx bxl-twitter"></i></a>
+                @endif
+                @if (isset($socials['facebook']) && $socials['facebook'])
+                    <a href="{{ $socials['facebook'] }}" class="facebook" target="_blank"><i class="bx bxl-facebook"></i></a>
+                @endif
+                @if (isset($socials['instagram']) && $socials['instagram'])
+                    <a href="{{ $socials['instagram'] }}" class="instagram" target="_blank"><i class="bx bxl-instagram"></i></a>
+                @endif
+                @if (isset($socials['snapchat']) && $socials['snapchat'])
+                    <a href="{{ $socials['snapchat'] }}" class="google-plus" target="_blank"><i class="bx bxl-snapchat"></i></a>
+                @endif
+                @if (isset($socials['youtube']) && $socials['youtube'])
+                    <a href="{{ $socials['youtube'] }}" class="google-plus" target="_blank"><i class="bx bxl-youtube"></i></a>
+                @endif
+                @if (isset($socials['tiktok']) && $socials['tiktok'])
+                    <a href="{{ $socials['tiktok'] }}" class="tiktok" target="_blank"><i class="bx bxl-tiktok"></i></a>
+                @endif
+                @if (isset($socials['pinterest']) && $socials['pinterest'])
+                    <a href="{{ $socials['pinterest'] }}" class="pinterest" target="_blank"><i class="bx bxl-pinterest"></i></a>
+                @endif
+                @if (isset($socials['skype']) && $socials['skype'])
+                    <a href="{{ $socials['skype'] }}" class="skype" target="_blank"><i class="bx bxl-skype"></i></a>
+                @endif
+                @if (isset($socials['linkedin']) && $socials['linkedin'])
+                    <a href="{{ $socials['linkedin'] }}" class="linkedin" target="_blank"><i class="bx bxl-linkedin"></i></a>
+                @endif
             </div>
         </div>
     </footer><!-- End Footer -->
@@ -70,7 +120,6 @@
     <div id="preloader"></div>
 
     <!-- Vendor JS Files -->
-    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js" integrity="sha256-eTyxS0rkjpLEo16uXTS0uVCS4815lc40K2iVpWDvdSY=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.js"></script>
     

@@ -73,7 +73,7 @@
             <table class="table">
                 <tbody>
                     <tr>
-                        <td><p>{{__('Frontend.registration_cancelation_conditions_description')}}</p></td>
+                        <td>{!! app()->getLocale() == 'en' ? $course_application->registration_cancelation_conditions : $course_application->registration_cancelation_conditions_ar !!}</td>
                     </tr>
                     <tr>
                         <td>

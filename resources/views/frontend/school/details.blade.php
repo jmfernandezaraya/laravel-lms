@@ -473,7 +473,7 @@
                             <p>{{__('Frontend.date_of_study')}}</p>
                         </div>
                         <div class="col-md-3">
-                            <p>{{ $school_top_review_course_application->start_date->format('d M Y') }} - {{ $school_top_review_course_application->end_date->format('d M Y') }}</p>
+                            <p>{{ $school_top_review_course_application->start_date ? date('d M Y', strtotime($school_top_review_course_application->start_date)) : '' }} - {{ $school_top_review_course_application->end_date ? date('d M Y', strtotime($school_top_review_course_application->end_date)) : '' }}</p>
                         </div>
                     </div>
                     <div class="row">

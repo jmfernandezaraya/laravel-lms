@@ -660,3 +660,16 @@ form > * {
 .message-item .message-body > div {
     padding: 5px 0;
 }
+
+.bg-danger {
+    background-color: #fe7c96;
+}
+.color-white {
+    color: #ffffff;
+}
+.color-danger {
+    color: #fe7c96;
+}
+.cursor-default {
+    cursor: default;
+}

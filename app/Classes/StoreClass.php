@@ -34,7 +34,7 @@ class StoreClass {
 		return $this;
 	}
 
-	public  function saveToModelSchoolAdmin() {
+	public function saveToModelSchoolAdmin() {
 		try {
 			//Starting If condition form the form english
 			if($this->request->has('en')) {
@@ -76,7 +76,7 @@ class StoreClass {
 				//Session::put('input1', $input);
 				
 				$data['success'] = true;
-				$data['data'] =__('SuperAdmin/backend.data_saved');
+				$data['data'] =__('SuperAdmin/backend.data_saved_successfully');
 				return response()->json($data);
 			}
 			
@@ -120,7 +120,7 @@ class StoreClass {
 				if($save){
 					$this->my_unique_id(1);
 					$data['success'] = true;
-					$data['data'] = __('SuperAdmin/backend.data_saved');
+					$data['data'] = __('SuperAdmin/backend.data_saved_successfully');
 					return response()->json($data);
 				}
 				$data['errors'] = 'Soime';
@@ -133,7 +133,7 @@ class StoreClass {
 		}
 	}
 	
-	public  function saveToModelSchool() {
+	public function saveToModelSchool() {
 		try {
 			ini_set('max_execution_time', 999999999999);
 			
@@ -230,7 +230,7 @@ class StoreClass {
 				\Cache::put('input1', $input, $seconds = 10);
 									
 				$data['success'] = true;
-				$data['data'] = __('SuperAdmin/backend.data_saved');
+				$data['data'] = __('SuperAdmin/backend.data_saved_successfully');
 				return response()->json($data);
 			}
 
@@ -280,7 +280,7 @@ class StoreClass {
 					Session::forget('logo');
 					
 					$data['success'] = true;
-					$data['data'] = __('SuperAdmin/backend.data_saved');
+					$data['data'] = __('SuperAdmin/backend.data_saved_successfully');
 					
 					return response()->json($data);	
 				}

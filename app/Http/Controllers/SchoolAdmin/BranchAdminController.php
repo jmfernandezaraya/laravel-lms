@@ -93,7 +93,7 @@ class BranchAdminController extends Controller
             $user->editCoursePermission()->create(['delete' => $request->can_delete_course ?? 0, 'add' => $request->can_add_course ?? 0, 'edit' => $request->can_edit_course ?? 0]);
         });
 
-        $saved = __('SuperAdmin/backend.data_saved');
+        $saved = __('SuperAdmin/backend.data_saved_successfully');
         return response()->json(['success' => 'success', 'data' => $saved]);
     }
 

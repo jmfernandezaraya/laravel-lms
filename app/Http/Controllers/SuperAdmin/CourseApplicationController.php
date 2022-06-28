@@ -15,15 +15,20 @@ use App\Models\Calculator;
 use App\Models\CourseApplication;
 use App\Models\Message;
 
+use App\Models\SuperAdmin\Choose_Accommodation_Under_Age;
+use App\Models\SuperAdmin\Choose_Custodian_Under_Age;
 use App\Models\SuperAdmin\Choose_Program_Age_Range;
+use App\Models\SuperAdmin\Choose_Program_Under_Age;
 use App\Models\SuperAdmin\Choose_Start_Day;
 use App\Models\SuperAdmin\Choose_Study_Mode;
 use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\CourseProgram;
 use App\Models\SuperAdmin\CourseAccommodation;
+use App\Models\SuperAdmin\CourseAccommodationUnderAge;
 use App\Models\SuperAdmin\CourseAirport;
 use App\Models\SuperAdmin\CourseAirportFee;
 use App\Models\SuperAdmin\CourseMedical;
+use App\Models\SuperAdmin\CourseCustodian;
 use App\Models\SuperAdmin\CourseApplicationApprove;
 use App\Models\SuperAdmin\School;
 use App\Models\SuperAdmin\TransactionRefund;
@@ -50,7 +55,9 @@ class CourseApplicationController extends Controller
      */
     public function index()
     {
-        $data['booked_details'] = CourseApplication::with('User', 'course', 'courseApplicationApprove')->get();
+        $data['booked_details'] = CourseApplication::whereHas('transaction', function($query)
+            { $query->whereNotNull('response')->where('response', '<>', ''); })
+            ->with('User', 'course', 'courseApplicationApprove')->get();
 
         return view('superadmin.course_application.index', $data);
     }
@@ -64,57 +71,63 @@ class CourseApplicationController extends Controller
 
     public function store(Request $request)
     {
+        $data = [
+            'success' => true,
+            'message' => ''
+        ];
+
         try {
-            $sendfiles = [];
+            $send_files = [];
             if ($request->type_of_submit == 'send_message_to_school') {
                 $rules = [
-                    'attachment[]' => 'mimes:doc,docx,pdf,jpg,bmp,png',
+                    'attachment.*' => 'sometimes|mimes:doc,docx,pdf,jpg,jpeg,bmp,png',
                     'subject' => 'required',
                     'message' => 'required',
                     'type' => 'required',
                     'type_id' => 'required',
                 ];
                 $validation = \Validator::make($request->all(), $rules, [
-                    'attachment.*.required' => "Attachment needs to be doc,docx,pdf,jpg,bmp,png",
+                    'attachment.*.required' => "Attachment needs to be doc,docx,pdf,jpg,jpeg,bmp,png",
                     'subject.required' => "Subject required",
                     'message.required' => "Message required",
                     'type.required' => "Type required",
                     'type_id.required' => "Type ID required"
                 ]);
                 if ($validation->fails()) {
-                    $success = 'error';
+                    $data['success'] = false;
                     $data['message'] = $validation->errors();
                 } else {
-                    $requestsave = $request->only('subject', 'message', 'type', 'type_id');
-                    $requestsave['attachments'] = [];
+                    $request_save = $request->only('subject', 'message', 'type', 'type_id');
+                    $request_save['attachments'] = [];
                     if ($request->has("attachment")) {
                         foreach ($request->file('attachment') as $attachment) {
                             $attachment_file = $attachment->getClientOriginalName();
                             $attachment_file_name = pathinfo($attachment_file, PATHINFO_FILENAME);
                             $attachment_file_ext = pathinfo($attachment_file, PATHINFO_EXTENSION);
                             $attachment_file = $attachment_file_name . '_' . time() . '.' . $attachment_file_ext;
-                            $requestsave['attachments'][] = '/public/attachments/' . $attachment_file;
-                            $sendfiles[] = $attachment->move('public/attachments', $attachment_file);
+                            $request_save['attachments'][] = '/public/attachments/' . $attachment_file;
+                            $send_files[] = $attachment->move('public/attachments', $attachment_file);
                         }
                     }
 
                     $course_application = CourseApplication::with('course.school.userSchools')->whereId($request->type_id)->first();
                     if ($course_application->course->school->userSchools) {
                         foreach ($course_application->course->school->userSchools as $user_school) {
-                            $requestsave['from_user'] = auth()->user()->id;
-                            $requestsave['to_user'] = $user_school->user_id;
-                            Message::create($requestsave);
+                            $request_save['from_user'] = auth()->user()->id;
+                            $request_save['to_user'] = $user_school->user_id;
+                            Message::create($request_save);
             
                             $mail_pdf_data = array();
-                            $mail_pdf_data['subject'] = $requestsave['subject'];
-                            $mail_pdf_data['message'] = $requestsave['message'];
-                            $mail_pdf_data['user'] = \App\Models\User::find($requestsave['to_user']);
+                            $mail_pdf_data['subject'] = $request_save['subject'];
+                            $mail_pdf_data['message'] = $request_save['message'];
+                            $mail_pdf_data['user'] = \App\Models\User::find($request_save['to_user']);
                             $mail_pdf_data['locale'] = app()->getLocale();
     
-                            \Mail::to($request->to_email)->send(new SendMessageToSchoolAdmin((object)$mail_pdf_data, $sendfiles));
+                            \Mail::to($request->to_email)->send(new SendMessageToSchoolAdmin((object)$mail_pdf_data, $send_files));
                         }
                     }
-                    $success = __('SuperAdmin/backend.message_sent_thank_you');
+
+                    $data['message'] = __('SuperAdmin/backend.message_sent_thank_you');
                 }
             } elseif ($request->type_of_submit == 'update_reservation') {
                 $event = CourseApplication::whereId($request->id)->first();
@@ -123,53 +136,53 @@ class CourseApplicationController extends Controller
 
                 event(new CourseApplicationStatus($event));
 
-                $success = __('SuperAdmin/backend.data_updated');
+                $data['message'] = __('SuperAdmin/backend.data_updated_successfully');
             } elseif ($request->type_of_submit == 'send_message_to_student') {
                 $rules = [
-                    'attachment[]' => 'mimes:doc,docx,pdf,jpg,bmp,png',
+                    'attachment.*' => 'sometimes|mimes:doc,docx,pdf,jpg,jpeg,bmp,png',
                     'subject' => 'required',
                     'message' => 'required',
                     'type' => 'required',
                     'type_id' => 'required',
                 ];
                 $validation = \Validator::make($request->all(), $rules, [
-                    'attachment.*.required' => "Attachment needs to be doc,docx,pdf,jpg,bmp,png",
+                    'attachment.*.required' => "Attachment needs to be doc,docx,pdf,jpg,jpeg,bmp,png",
                     'subject.required' => "Subject required",
                     'message.required' => "Message required",
                     'type.required' => "Type required",
                     'type_id.required' => "Type ID required"
                 ]);
                 if ($validation->fails()) {
-                    $success = 'error';
+                    $data['success'] = false;
                     $data['message'] = $validation->errors();
                 } else {
-                    $requestsave = $request->only('subject', 'message', 'type', 'type_id');
-                    $requestsave['attachments'] = [];
+                    $request_save = $request->only('subject', 'message', 'type', 'type_id');
+                    $request_save['attachments'] = [];
                     if ($request->has("attachment")) {
                         foreach ($request->file('attachment') as $attachment) {
                             $attachment_file = $attachment->getClientOriginalName();
                             $attachment_file_name = pathinfo($attachment_file, PATHINFO_FILENAME);
                             $attachment_file_ext = pathinfo($attachment_file, PATHINFO_EXTENSION);
                             $attachment_file = $attachment_file_name . '_' . time() . '.' . $attachment_file_ext;
-                            $requestsave['attachments'][] = '/public/attachments/' . $attachment_file;
-                            $sendfiles[] = $attachment->move('public/attachments', $attachment_file);
+                            $request_save['attachments'][] = '/public/attachments/' . $attachment_file;
+                            $send_files[] = $attachment->move('public/attachments', $attachment_file);
                         }
                     }
 
                     $course_application = CourseApplication::whereId($request->type_id)->first();
-                    $requestsave['from_user'] = auth()->user()->id;
-                    $requestsave['to_user'] = $course_application->user_id;
-                    Message::create($requestsave);
+                    $request_save['from_user'] = auth()->user()->id;
+                    $request_save['to_user'] = $course_application->user_id;
+                    Message::create($request_save);
     
                     $mail_pdf_data = array();
-                    $mail_pdf_data['subject'] = $requestsave['subject'];
-                    $mail_pdf_data['message'] = $requestsave['message'];
-                    $mail_pdf_data['user'] = \App\Models\User::find($requestsave['to_user']);
+                    $mail_pdf_data['subject'] = $request_save['subject'];
+                    $mail_pdf_data['message'] = $request_save['message'];
+                    $mail_pdf_data['user'] = \App\Models\User::find($request_save['to_user']);
                     $mail_pdf_data['locale'] = app()->getLocale();
 
-                    \Mail::to($request->to_email)->send(new SendMessageToStudent((object)$mail_pdf_data, $sendfiles));
+                    \Mail::to($request->to_email)->send(new SendMessageToStudent((object)$mail_pdf_data, $send_files));
     
-                    $success = __('SuperAdmin/backend.message_sent_thank_you');
+                    $data['message'] = __('SuperAdmin/backend.message_sent_thank_you');
                 }
             } else {
                 if ($request->amount == '-') {
@@ -219,13 +232,12 @@ class CourseApplicationController extends Controller
                     $txnrefund->save();
                 }
 
-                $success = __('SuperAdmin/backend.data_updated');
+                $data['message'] = __('SuperAdmin/backend.data_updated_successfully');
             }
         } catch (\Exception $e) {
-            $success = 'error';
+            $success = false;
             $data['message'] = $e->getMessage();
         }
-        $data['success'] = $success;
         
         return response($data);
     }
@@ -238,7 +250,7 @@ class CourseApplicationController extends Controller
      */
     public function edit($id)
     {
-        $data = getCourseApplicationPrintData($id);
+        $data = getCourseApplicationPrintData($id, auth('superadmin')->user()->id, true);
         $test = '';
 
         return view('superadmin.course_application.edit', $data, compact('test'));
@@ -274,7 +286,7 @@ class CourseApplicationController extends Controller
             'comments' => $request->comments,
         ]);
 
-        return redirect()->route('superadmin.manage_application.index')->with(['success' => "Updated Successfully"]);
+        return redirect()->route('superadmin.course_application.index')->with(['success' => "Updated Successfully"]);
     }
 
     /**
@@ -337,7 +349,7 @@ class CourseApplicationController extends Controller
                 $course_application->airport_provider = $airport->service_provider_ar;
             }
         }
-        $airport_fee = CourseAirportFee::where('unique_id', $course_application->ariport_fee_id)->first();
+        $airport_fee = CourseAirportFee::where('unique_id', $course_application->airport_fee_id)->first();
         if ($airport_fee) {
             if (app()->getLocale() == 'en') {
                 $course_application->airport_name = $airport_fee->name;
@@ -367,11 +379,27 @@ class CourseApplicationController extends Controller
     public function updateCourse(Request $request)
     {
         $course_application = CourseApplication::find($request->id);
+        $paid_amount = $amount_added = $amount_refunded = 0;
+        if ($course_application->transaction) {
+            $paid_amount = $course_application->transaction->amount;
+            $transaction_refunds = TransactionRefund::where('transaction_id', $course_application->transaction->order_id)->get();
+            foreach ($transaction_refunds as $transaction_refund) {
+                $amount_added += $transaction_refund->amount_added;
+                $amount_refunded += $transaction_refund->amount_refunded;
+            }
+        }
+        $amount_paid = $course_application->paid_amount + $amount_added - $amount_refunded;
+        $amount_due = $course_application->total_cost_fixed - $amount_paid;
+        if ($course_application->status == 'application_cancelled' || $course_application->status == 'completed' || $amount_due == 0) {
+            //toastSuccess(__('SuperAdmin/backend.course_application_can_not_update'));
+            //return redirect()->route('superadmin.course_application.index');
+        }
+
         $course = Course::where('unique_id', $request->program_id)->first();
         $course_program = CourseProgram::with('courseUnderAges', 'courseTextBookFees')->where('unique_id', $request->program_unique_id)->first();
 
-        $course_application->course_id = $request->program_id;
-        $course_application->course_program_id = $request->program_unique_id;
+        $course_application->course_id = '' . $request->program_id;
+        $course_application->course_program_id = '' . $request->program_unique_id;
         $course_application->start_date = $request->date_selected;
         $course_application->end_date = (isset($request->date_selected) && isset($request->program_duration)) ? Carbon::create($request->date_selected)->addWeeks($request->program_duration)->format('Y-m-d') : null;;
         $course_application->study_mode = $request->study_mode;
@@ -396,37 +424,37 @@ class CourseApplicationController extends Controller
         $accommodation = $accommodation_query->where('start_week', '<=', (int)$request->accommodation_duration)
             ->where('end_week', '>=', (int)$request->accommodation_duration)
             ->first();
-        $course_application->accommodation_id = $accommodation ? $accommodation->unique_id : 0;
-        $course_application->accommodation_start_date = $course_application->medical_start_date = $accommodation ? Carbon::create($request->date_selected)->subDay()->format('d-m-Y') : null;
-        $course_application->accommodation_end_date = $accommodation ? Carbon::create($course_application->accommodation_start_date)->addWeeks($request->accommodation_duration)->subDay()->format('d-m-Y') : null;
-        $course_application->accommodation_duration = $accommodation ? $accommodation->accommodation_duration : null;
+        $course_application->accommodation_id = $accommodation ? '' . $accommodation->unique_id : 0;
+        $course_application->accommodation_start_date = $course_application->medical_start_date = $accommodation ? Carbon::create($request->date_selected)->subDay()->format('Y-m-d') : null;
+        $course_application->accommodation_end_date = $accommodation ? Carbon::create($course_application->accommodation_start_date)->addWeeks($request->accommodation_duration)->subDay()->format('Y-m-d') : null;
+        $course_application->accommodation_duration = $request->accommodation_duration;
         $airport = CourseAirport::whereHas('fees', function($query) use($request) {
-            $query->where(function($sub_query) use ($request) {
-                $sub_query->where('name', $request->airport_name)->orWhere('name_ar', $request->airport_name);
-            })->where(function($sub_query) use ($request) {
-                $sub_query->where('service_name', $request->airport_service)->orWhere('service_name_ar', $request->airport_service);
-            });
-        })->whereCourseUniqueId($request->program_id)->first();
+                $query->where(function($sub_query) use ($request) {
+                    $sub_query->where('name', $request->airport_name)->orWhere('name_ar', $request->airport_name);
+                })->where(function($sub_query) use ($request) {
+                   $sub_query->where('service_name', $request->airport_service)->orWhere('service_name_ar', $request->airport_service);
+                });
+            })->whereCourseUniqueId($request->program_id)->first();
         $course_application->airport_id = $airport ? $airport->unique_id : null;
-        $course_application->airport_provider = $airport ? (app()->getLocale() == 'en' ? $airport->service_provider : $airport->service_provider_ar) : null;
+        // $course_application->airport_provider = $airport ? (app()->getLocale() == 'en' ? $airport->service_provider : $airport->service_provider_ar) : null;
         $airport_fee = $airport ? CourseAirportFee::where(function($query) use ($request) {
             $query->where('name', $request->airport_name)->orWhere('name_ar', $request->airport_name);
         })->where(function($query) use ($request) {
             $query->where('service_name', $request->airport_service)->orWhere('service_name_ar', $request->airport_service);
         })->where('course_airport_unique_id', $airport->unique_id)->first() : null;
         $course_application->airport_fee_id = $airport_fee ? $airport_fee->unique_id : null;
-        $course_application->airport_name = $airport_fee ? (app()->getLocale() == 'en' ? $airport_fee->name : $airport_fee->name_ar) : null;
-        $course_application->airport_service = $airport_fee ? (app()->getLocale() == 'en' ? $airport_fee->service_name : $airport_fee->service_name_ar) : null;
+        // $course_application->airport_name = $airport_fee ? (app()->getLocale() == 'en' ? $airport_fee->name : $airport_fee->name_ar) : null;
+        // $course_application->airport_service = $airport_fee ? (app()->getLocale() == 'en' ? $airport_fee->service_name : $airport_fee->service_name_ar) : null;
         $medical = CourseMedical::whereHas('fees', function($query) use($request) {
-            $query->where('start_date', '<=', $request->duration)->where('end_date', '>=', $request->duration);
-        })->where(function($sub_query) use ($request) {
-            $sub_query->where('company_name', $request->company_name)->orWhere('company_name_ar', $request->company_name);
-        })->whereCourseUniqueId($request->program_id)
-        ->where('deductible', $request->deductible_up_to)->first();
+                if ($request->duration) $query->where('start_date', '<=', $request->duration)->where('end_date', '>=', $request->duration);
+            })->where(function($query) use ($request) {
+                $query->where('company_name', $request->company_name)->orWhere('company_name_ar', $request->company_name);
+            })->whereCourseUniqueId($request->program_id)
+            ->where('deductible', $request->deductible_up_to)->first();
         $course_application->medical_id = $medical ? $medical->unique_id : null;
-        $course_application->medical_company = $medical ? (app()->getLocale() == 'en' ? $medical->company_name : $medical->company_name_ar) : null;
-        $course_application->medical_deductible = $medical ? $medical->deductible : null;
-        $course_application->medical_end_date = Carbon::create($course_application->medical_start_date)->addWeeks($request->duration ?? 0)->subDay()->format('d-m-Y');
+        // $course_application->medical_company = $medical ? (app()->getLocale() == 'en' ? $medical->company_name : $medical->company_name_ar) : null;
+        // $course_application->medical_deductible = $medical ? $medical->deductible : null;
+        $course_application->medical_end_date = Carbon::create($course_application->medical_start_date)->addWeeks($request->duration ?? 0)->subDay()->format('Y-m-d');
         $course_application->medical_duration = $request->duration ?? null;
 
         $under_age = $request->age_selected == null ? [] : $request->age_selected;
@@ -457,7 +485,7 @@ class CourseApplicationController extends Controller
                 }
             }
             $course_application->text_book_fee = $program_text_book_fee;
-            if ($request->courier_fee == 'true') {
+            if ($request->courier_fee == 'on') {
                 $course_application->courier_fee = $course_program->courier_fee ?? 0;
             } else {
                 $course_application->courier_fee = 0;
@@ -486,17 +514,17 @@ class CourseApplicationController extends Controller
                     }
                 }
                 $dates_and_get_result['peak_date_program'] = 0;
-                if (!($start_date > $this->peak_end_date) && !($front_end_date < $this->peak_start_date)) {
-                    if ($front_end_date >= $this->peak_end_date && $start_date <= $this->peak_start_date) {
-                        $dates_and_get_result['peak_date_program'] = compareBetweenTwoDates($this->peak_start_date, $this->peak_end_date);
-                    } elseif (($front_end_date < $this->peak_end_date && $this->peak_start_date > $start_date)) {
-                        $dates_and_get_result['peak_date_program'] = $front_end_date < $this->peak_end_date ?
-                            compareBetweenTwoDates($front_end_date, $this->peak_start_date) :
-                            compareBetweenTwoDates($front_end_date, $this->peak_end_date);
-                    } elseif ($front_end_date <= $this->peak_end_date && $front_end_date >= $this->peak_start_date) {
+                if (!($start_date > $course_program->peak_end_date) && !($front_end_date < $course_program->peak_start_date)) {
+                    if ($front_end_date >= $course_program->peak_end_date && $start_date <= $course_program->peak_start_date) {
+                        $dates_and_get_result['peak_date_program'] = compareBetweenTwoDates($course_program->peak_start_date, $course_program->peak_end_date);
+                    } elseif (($front_end_date < $course_program->peak_end_date && $course_program->peak_start_date > $start_date)) {
+                        $dates_and_get_result['peak_date_program'] = $front_end_date < $course_program->peak_end_date ?
+                            compareBetweenTwoDates($front_end_date, $course_program->peak_start_date) :
+                            compareBetweenTwoDates($front_end_date, $course_program->peak_end_date);
+                    } elseif ($front_end_date <= $course_program->peak_end_date && $front_end_date >= $course_program->peak_start_date) {
                         $dates_and_get_result['peak_date_program'] = compareBetweenTwoDates($start_date, $front_end_date);
-                    } elseif ($front_end_date >= $this->peak_end_date && $start_date >= $this->peak_start_date) {
-                        $dates_and_get_result['peak_date_program'] = compareBetweenTwoDates($start_date, $this->peak_end_date);
+                    } elseif ($front_end_date >= $course_program->peak_end_date && $start_date >= $course_program->peak_start_date) {
+                        $dates_and_get_result['peak_date_program'] = compareBetweenTwoDates($start_date, $course_program->peak_end_date);
                     }
                 }
                 
@@ -518,7 +546,7 @@ class CourseApplicationController extends Controller
                     $divide = 0;
                 } else {
                     $divide = (int)((int)$request->program_duration / (int)$course_program->x_week_selected);
-                }            
+                }
                 $course_application->discount_fee = $program_total_cost = $course_program->program_cost * $divide * $course_program->how_many_week_free;
                 if (checkBetweenDate($course_program->discount_start_date, $course_program->discount_end_date, Carbon::now()->format('Y-m-d'))) {
                     $explode_first = explode(" ", $course_program->discount_per_week);
@@ -540,7 +568,7 @@ class CourseApplicationController extends Controller
                 $explode_first = explode(" ", $course_program->discount_per_week);
                 $number = $explode_first[0];
                 $cal_symbol = $explode_first[1];
-                $totals = $course_program->program_cost;
+                $totals = $course_program->program_cost * $request->program_duration;
                 if ($cal_symbol == '%') {
                     $total_discount = ((float)$totals / 100) * $number;
                 } else {
@@ -552,18 +580,13 @@ class CourseApplicationController extends Controller
         }
         
         if ($accommodation) {
-            $course_application->accommodation_fee = $accommodation->fee_per_week * $request->duration;
+            $course_application->accommodation_fee = $accommodation->fee_per_week * $request->accommodation_duration;
             if ($accommodation->program_duration && $request->program_duration >= $accommodation->program_duration) {
                 $course_application->accommodation_placement_fee = 0;
             } else {
                 $course_application->accommodation_placement_fee = $accommodation->placement_fee ?? 0;
             }
             $course_application->accommodation_deposit_fee = $accommodation->deposit_fee == null ? 0 : $accommodation->deposit_fee;
-            if ($request->special_diet == 'true') {
-                $course_application->accommodation_deposit_fee = $accommodation->special_diet_fee * $request->duration;
-            } else {
-                $course_application->accommodation_deposit_fee = 0;
-            }
             $request_age = 0;
             if ($program_age_range) {
                 $request_age = $program_age_range->age;
@@ -579,7 +602,7 @@ class CourseApplicationController extends Controller
                 }
             }
             
-            $accommodation_front_end_date = getEndDate($date_set, (int)$request->duration);
+            $accommodation_front_end_date = getEndDate($date_set, (int)$request->accommodation_duration);
             $dates_and_get_weeks_accommodation['summer'] = 0 ;
             if (!($start_date > $accommodation->summer_fee_end_date) && !($accommodation_front_end_date < $accommodation->summer_fee_start_date)) {
                 if ($start_date <= $accommodation->summer_fee_start_date && $accommodation_front_end_date >= $accommodation->summer_fee_end_date) {
@@ -616,12 +639,12 @@ class CourseApplicationController extends Controller
                     $dates_and_get_weeks_accommodation['christmas'] = compareBetweenTwoDates($start_date, $accommodation->christmas_fee_end_date);
                 }
             }
-            $course_application->accommodation_under_age_fee = $under_age_fee_per_week * (int)$request->duration;
+            $course_application->accommodation_under_age_fee = $under_age_fee_per_week * (int)$request->accommodation_duration;
             $course_application->accommodation_christmas_fee = $accommodation->christmas_fee_per_week * $dates_and_get_weeks_accommodation['christmas'];
             $accommodation_discount_total = 0;
             if (checkBetweenDate($accommodation->x_week_start_date, $accommodation->x_week_end_date, Carbon::now()->format('Y-m-d'))) {
                 if ($accommodation->x_week_selected) {
-                    $accommodation_discount_total = $accommodation->fee_per_week * (int)((int)$request->duration / (int)$accommodation->x_week_selected) * $accommodation->how_many_week_free;
+                    $accommodation_discount_total = $accommodation->fee_per_week * (int)((int)$request->accommodation_duration / (int)$accommodation->x_week_selected) * $accommodation->how_many_week_free;
                 } else {
                     $accommodation_discount_total = 0;
                 }
@@ -629,12 +652,16 @@ class CourseApplicationController extends Controller
                 $get_symbol = explode(" ", $accommodation->discount_per_week);
     
                 // We are calculating discount based on % or - here
-                $accommodation_discount_total = $get_symbol[1] == '%' ? (($accommodation->fee_per_week * $request->duration / 100) * $get_symbol[0]) : ((float)$accommodation->discount_per_week * (float)$request->duration);
+                $accommodation_discount_total = $get_symbol[1] == '%' ? (($accommodation->fee_per_week * $request->accommodation_duration / 100) * $get_symbol[0]) : ((float)$accommodation->discount_per_week * (float)$request->accommodation_duration);
             }
             $course_application->accommodation_discount_fee = $accommodation_discount_total;
             $course_application->accommodation_peak_fee = $accommodation->peak_time_fee_per_week * $dates_and_get_weeks_accommodation['peak'];
             $course_application->accommodation_summer_fee = $accommodation->summer_fee_per_week * $dates_and_get_weeks_accommodation['summer'];
-            $course_application->accommodation_special_diet_fee = 0;
+            if ($request->special_diet == 'on') {
+                $course_application->accommodation_special_diet_fee = $accommodation->special_diet_fee * $request->accommodation_duration;
+            } else {
+                $course_application->accommodation_special_diet_fee = 0;
+            }
         }
 
         $airport_pickup_fee = 0;
@@ -680,21 +707,21 @@ class CourseApplicationController extends Controller
         $course_application->total_cost =
             ($course_application->program_cost ?? 0) + ($course_application->registration_fee ?? 0) + ($course_application->text_book_fee ?? 0)
             + ($course_application->summer_fees ?? 0) + ($course_application->peak_time_fees ?? 0) + ($course_application->under_age_fees ?? 0)
-            + ($course_application->courier_fee ?? 0)
+            + ($course_application->courier_fee ?? 0) - ($course_application->discount_fee ?? 0)
             + ($course_application->accommodation_fee ?? 0) + ($course_application->accommodation_placement_fee ?? 0) + ($course_application->accommodation_special_diet_fee ?? 0)
             + ($course_application->accommodation_deposit_fee ?? 0) + ($course_application->accommodation_summer_fee ?? 0) + ($course_application->accommodation_peak_fee ?? 0)
-            + ($course_application->accommodation_christmas_fee ?? 0) + ($course_application->accommodation_under_age_fee ?? 0)
-            + ($course_application->accommodation_special_diet_fee ?? 0)
-            + ($course_application->airport_pickup_fee ?? 0) + ($course_application->medical_insurance_fee ?? 0) + ($course_application->custodian_fee ?? 0)
-            - ($course_application->discount_fee ?? 0) - ($course_application->accommodation_discount ?? 0);
+            + ($course_application->accommodation_christmas_fee ?? 0) + ($course_application->accommodation_under_age_fee ?? 0) - ($course_application->accommodation_discount_fee ?? 0)
+            + ($course_application->airport_pickup_fee ?? 0) + ($course_application->medical_insurance_fee ?? 0) + ($course_application->custodian_fee ?? 0);
         $course_application->sub_total = $course_application->total_cost + $course_application->total_discount;
+        $course_application->total_cost_fixed = getCurrencyConvertedValue($course_application->course_id, $course_application->total_cost);
+        $course_application->total_balance = $course_application->total_cost - $course_application->deposit_price;
         $course_application->save();
 
-        toastSuccess('Updated Successfully');
+        toastSuccess(__('SuperAdmin/backend.data_updated_successfully'));
 
         \Mail::send(new UpdatedCourseApplication($course_application->email));
 
-        return redirect(route('superadmin.manage_application.index'));
+        return redirect()->route('superadmin.course_application.index');
     }
 
     public function print(Request $request)
@@ -711,7 +738,7 @@ class CourseApplicationController extends Controller
             $data['errors'] = $validate->errors();
             return response($data);
         } else {
-            $pdf_data = getCourseApplicationPrintData($request->id);
+            $pdf_data = getCourseApplicationPrintData($request->id, auth('superadmin')->user()->id, true);
             $pdf_data['logo'] = asset('public/frontend/assets/img/logo.png');
             
             if ($request->section == 'reservation') {

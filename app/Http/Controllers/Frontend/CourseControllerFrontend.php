@@ -130,8 +130,8 @@ class CourseControllerFrontend extends Controller
                 }
             }
         }
-        if (isset($course_details->ariport_fee_id)) {
-            $airport_fee = CourseAirportFee::where('unique_id', $course_details->ariport_fee_id)->first();
+        if (isset($course_details->airport_fee_id)) {
+            $airport_fee = CourseAirportFee::where('unique_id', $course_details->airport_fee_id)->first();
             if ($airport_fee) {
                 if (app()->getLocale() == 'en') {
                     $course_details->airport_name = $airport_fee->name;
@@ -428,7 +428,7 @@ class CourseControllerFrontend extends Controller
             $accommodation_options = "<option value='' selected>$select</option>";
             foreach ($accommodations as $accommodation) {
                 $accommodation_type = app()->getLocale() == 'en' ? $accommodation->type : $accommodation->type_ar;
-                $accommodation_options .= "<option value=" . $accommodation_type . ">" . $accommodation_type . "</option>";
+                $accommodation_options .= "<option value='" . $accommodation_type . "'>" . $accommodation_type . "</option>";
             }
             $data['accommodations'] = $accommodation_options;
             $data['accommodations_visible'] = count($accommodations) ? true : false;
@@ -1066,33 +1066,39 @@ class CourseControllerFrontend extends Controller
         } else {
             $accommodation_query->whereMealAr($request->meal_type);
         }
-        $accommodation = $accommodation_query->where('start_week', '<=', (int)$request->program_duration)
-            ->where('end_week', '>=', (int)$request->program_duration)
-            ->first();
+        $accommodations = $accommodation_query->get();
 
-        $min_duration = $max_duration = 0;
+        $accommodation_durations = [];
         $accommodation_id = 0;
-        if ($accommodation) {
-            $accommodation_id = $accommodation->unique_id;
+        foreach ($accommodations as $accommodation) {
+            if (!$accommodation_id) $accommodation_id = $accommodation->unique_id;
             $min_duration = (int)$accommodation->start_week;
             $max_duration = (int)$accommodation->end_week + $christmas_weeks;
-            if ($accommodation->available_date == 'selected_dates') {
-                if ($accommodation->available_days) {
-                    for ($loop_max_duration = $max_duration; $loop_max_duration >= (int)$accommodation->start_week; $loop_max_duration--) {
-                        $accommodation_duration_date = \Carbon\Carbon::create($date_set)->addWeeks($loop_max_duration)->format('m/d/Y');
-                        if (strpos($accommodation->available_days, $accommodation_duration_date) != false) {
-                            $max_duration = $loop_max_duration;
-                            break;
+            for ($loop_duration = $min_duration; $loop_duration <= $max_duration; $loop_duration++) {
+                if ($loop_duration <= $request->program_duration + $christmas_weeks) {
+                    if ($accommodation->available_date == 'selected_dates') {
+                        if ($accommodation->available_days) {
+                            $accommodation_duration_date = \Carbon\Carbon::create($date_set)->addWeeks($loop_duration)->format('m/d/Y');
+                            if (strpos($accommodation->available_days, $accommodation_duration_date) != false) {
+                                if (!in_array($loop_duration, $accommodation_durations)) {
+                                    $accommodation_durations[] = $loop_duration;
+                                }
+                            }
+                        }
+                    } else {
+                        if (!in_array($loop_duration, $accommodation_durations)) {
+                            $accommodation_durations[] = $loop_duration;
                         }
                     }
                 }
             }
         }
+        sort($accommodation_durations);
 
         $select = __('SuperAdmin/backend.select');
         $duration_html = "<option value='' selected>$select</option>";
-        for ($i = ($min_duration ? $min_duration : 1); $i <= $max_duration; $i++) {
-            $duration_html .= "<option value=$i>$i</option>";
+        foreach ($accommodation_durations as $duration) {
+            $duration_html .= "<option value=$duration>$duration</option>";
         }
 
         $data['duration'] = $duration_html;
@@ -1331,9 +1337,11 @@ class CourseControllerFrontend extends Controller
 
         if ($request->medical_company_name && $request->medical_deductible && $request->medical_duration) {
             $medical = CourseMedical::whereHas('fees', function($query) use($request) {
-                    $query->where('start_date', '<=', $request->medical_duration)->where('end_date', '>=', $request->medical_duration);
-                })->where(function($sub_query) use ($request) {
-                    $sub_query->where('company_name', $request->medical_company_name)->orWhere('company_name_ar', $request->medical_company_name);
+                    if ($request->duration) {
+                        $query->where('start_date', '<=', $request->duration)->where('end_date', '>=', $request->duration);
+                    }
+                })->where(function($query) use ($request) {
+                    $query->where('company_name', $request->medical_company_name)->orWhere('company_name_ar', $request->medical_company_name);
                 })->whereCourseUniqueId(\Session::get('course_unique_id'))
                 ->where('deductible', $request->medical_deductible)->first();
         }

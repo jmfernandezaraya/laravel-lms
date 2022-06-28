@@ -586,6 +586,12 @@ function submitForm(object, method = 'POST') {
                 for (var error in data.errors) {
                     $('.alert-danger ul').append('<li>' + data.errors[error] + '</li>');
                 }
+
+                if (data.reload) {
+                    setTimeout(function() {
+                        location.reload();
+                    });
+                }
             } else if (data.catch_error) {
                 document.documentElement.scrollTop = 0;
                 $("#loader").hide();
@@ -890,7 +896,6 @@ function calcuateAccommodation() {
             special_diet: $("#special_diet_check").is(':checked'),
         }, function (data) {
             reloadCourseCalclulator();
-            resetOtherService(true);
 
             $("#accommodation_fees #accommodation_fee .cost_value").html(data.accom_fee.value);
             $("#accommodation_fees #accommodation_fee .converted_value").html(parseFloat(data.accom_fee.converted_value).toFixed(2));
@@ -1044,9 +1049,9 @@ function calculateOtherService(type) {
         $("#AirportPickupModal .modal-body").html(data.airport_note);
         $("#MedicalInsuranceModal .modal-body").html(data.medical_note);
         
-        $('#airport_id').html(data.airport_id);
-        $('#airport_fee_id').html(data.airport_fee_id);
-        $('#medical_id').html(data.medical_id);
+        $('#airport_id').val(data.airport_id);
+        $('#airport_fee_id').val(data.airport_fee_id);
+        $('#medical_id').val(data.medical_id);
 
         if (typeof callbackCalculateOtherService === "function") {
             callbackCalculateOtherService(type);
@@ -1057,11 +1062,13 @@ function calculateOtherService(type) {
 function resetOtherService(init = false) {
     if (init) {
         $('#airport_service_provider')[0].selectedIndex = '';
+        $("#airport_name")[0].selectedIndex = '';
         $("#airport_type_of_service")[0].selectedIndex = '';
         $('#airport_id').val('');
         $('#airport_fee_id').val('');
 
         $('#medical_company_name')[0].selectedIndex = '';
+        $('#medical_deductible_up_to')[0].selectedIndex = '';
         $('#medical_duration')[0].selectedIndex = '';
         $('#medical_id').val('');
 
@@ -1258,7 +1265,6 @@ function submitCourseForm(object) {
                     $('.alert-danger ul').append('<li>' + data.errors[error] + '</li>');
                 }
             } else if (data.catch_error) {
-                console.log(data.catch_error);
                 document.documentElement.scrollTop = 0;
                 $("#loader").hide();
 
@@ -1270,6 +1276,10 @@ function submitCourseForm(object) {
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
                 document.documentElement.scrollTop = 0;
+            }
+
+            if (typeof handleResizePageContent === "function") {
+                handleResizePageContent();
             }
         }
     });
@@ -2823,8 +2833,8 @@ function submitFormAction(id) {
         success: function (data) {
             $("#loader").hide();
 
-            if (data.success != 'error') {
-                toastr.success(data.success);
+            if (data.success == true || data.success == 'success') {
+                toastr.success(data.message);
             } else {
                 if (Array.isArray(data.message) || typeof data.message === 'object') {
                     for (message in data.message) {
@@ -2833,6 +2843,11 @@ function submitFormAction(id) {
                 } else {
                     toastr.error(data.message);
                 }
+            }
+            if (data.reload) {
+                setTimeout(function() {
+                    location.reload();
+                });
             }
         },
         error: function (data) {

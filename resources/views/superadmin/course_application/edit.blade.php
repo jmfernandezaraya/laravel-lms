@@ -216,8 +216,8 @@
                                         <tr>
                                             <td>
                                                 {{__('SuperAdmin/backend.transport')}}<br />
-                                                {{__('SuperAdmin/backend.service_provider')}}: {{ $course_application->airport_provider }}<br />
-                                                {{ $course_application->airport_name }} - {{ $course_application->airport_service }}<br />
+                                                {{__('SuperAdmin/backend.service_provider')}}: {{ $airport_provider }}<br />
+                                                {{ $airport_name }} - {{ $airport_service }}<br />
                                             </td>
                                             <td>{{ toFixedNumber($airport_pickup_fee['value']) }}</td>
                                             <td>{{ toFixedNumber($airport_pickup_fee['converted_value']) }}</td>
@@ -227,8 +227,8 @@
                                         <tr>
                                             <td>
                                                 {{__('SuperAdmin/backend.medical_insurance')}}<br />
-                                                {{__('SuperAdmin/backend.company_name')}}: {{ $course_application->company_name }}<br />
-                                                {{ $medical_start_date }} - {{ $medical_end_date }} ( {{ $course_application->duration }} {{__('SuperAdmin/backend.weeks')}} )<br />
+                                                {{__('SuperAdmin/backend.company_name')}}: {{ $company_name }}<br />
+                                                {{ $medical_start_date }} - {{ $medical_end_date }} ( {{ $course_application->medical_duration }} {{__('SuperAdmin/backend.weeks')}} )<br />
                                             </td>
                                             <td>{{ toFixedNumber($medical_insurance_fee['value']) }}</td>
                                             <td>{{ toFixedNumber($medical_insurance_fee['converted_value']) }}</td>
@@ -267,19 +267,21 @@
                                 @if (!isset($course_register_details->financial_guarantee))
                                     <tr>
                                         <th>{{__('SuperAdmin/backend.total_amount_paid')}}</th>
-                                        <th>{{ toFixedNumber($deposit_price['value']) }} {{ $currency['cost'] }}</th>
-                                        <th>{{ toFixedNumber($deposit_price['converted_value']) }} {{ $currency['converted'] }}</th>
+                                        <th>{{ toFixedNumber($amount_paid['value']) }} {{ $currency['cost'] }}</th>
+                                        <th>{{ toFixedNumber($amount_paid['converted_value']) }} {{ $currency['converted'] }}</th>
                                     </tr>
                                 @endif
                                 <tr>
                                     <th>{{__('SuperAdmin/backend.total_balance_due')}}</th>
-                                    <th class="highlight-value">{{ toFixedNumber($total_balance['value']) }} {{ $currency['cost'] }}</th>
-                                    <th class="highlight-value">{{ toFixedNumber($total_balance['converted_value']) }} {{ $currency['converted'] }}</th>
+                                    <th class="highlight-value">{{ toFixedNumber($amount_due['value']) }} {{ $currency['cost'] }}</th>
+                                    <th class="highlight-value">{{ toFixedNumber($amount_due['converted_value']) }} {{ $currency['converted'] }}</th>
                                 </tr>
                             </thead>
                         </table>
                         
-                        <a href="{{route('superadmin.course_application.course.edit', ['id' => $course_application->id])}}" class="btn btn-primary px-5">Edit</a>
+                        @if ($can_edit)
+                            <a href="{{route('superadmin.course_application.course.edit', ['id' => $course_application->id])}}" class="btn btn-primary px-5">{{__('SuperAdmin/backend.edit')}}</a>
+                        @endif
                         <button type="button" class="btn btn-primary float-right px-5" onclick="printCourseApplication('reservation')">{{__('SuperAdmin/backend.print')}}</button>
                     </div>
                 </div>
@@ -568,7 +570,7 @@
                         </div>
                         <div class="row border-top-bottom form-group">
                             <div class="col-md-12">
-                                <p>{{__('SuperAdmin/backend.registration_cancelation_conditions_description')}}</p>
+                                {!! app()->getLocale() == 'en' ? $course_application->registration_cancelation_conditions : $course_application->registration_cancelation_conditions_ar !!}
                             </div>
                         </div>
                         <div class="row form-group">
@@ -783,13 +785,13 @@
                                     </tr>
                                     <tr>
                                         <td>{{__('SuperAdmin/backend.total_cost')}}</td>
-                                        <td>{{ toFixedNumber($total_cost['value']) }}</td>
-                                        <td>{{ toFixedNumber($total_cost['converted_value']) }}</td>
+                                        <td>{{ toFixedNumber($total_cost_fixed['value']) }}</td>
+                                        <td>{{ toFixedNumber($total_cost_fixed['converted_value']) }}</td>
                                     </tr>
                                     <tr>
                                         <td>{{__('SuperAdmin/backend.total_amount_paid')}}</td>
-                                        <td>{{ toFixedNumber($deposit_price['value'] + $amount_added['value']) }}</td>
-                                        <td>{{ toFixedNumber($deposit_price['converted_value'] + $amount_added['converted_value']) }}</td>
+                                        <td>{{ toFixedNumber($amount_paid['value']) }}</td>
+                                        <td>{{ toFixedNumber($amount_paid['converted_value']) }}</td>
                                     </tr>
                                     <tr>
                                         <td>{{__('SuperAdmin/backend.total_amount_refunded')}}</td>
@@ -852,7 +854,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     @foreach ($student_messages as $student_message)
-                                        <div class="message-item">
+                                        <div class="message-item <?php echo ($student_message->type == 'to_student') ? 'send' : 'receive' ?>">
                                             <div class="message-header">
                                                 <div class="message-user-image">
                                                     @if ($student_message->fromUser->image)
@@ -866,6 +868,11 @@
                                                         {{ $student_message->fromUser->first_name_en }} {{ $student_message->fromUser->last_name_en }}
                                                     @else
                                                         {{ $student_message->fromUser->first_name_ar }} {{ $student_message->fromUser->last_name_ar }}
+                                                    @endif
+                                                    @if ($student_message->type == 'to_student')
+                                                        <i class="mdi mdi-arrow-right-bold"></i>
+                                                    @else
+                                                        <i class="mdi mdi-arrow-left-bold"></i>
                                                     @endif
                                                 </div>
                                                 <div class="message-time">
@@ -942,7 +949,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         @foreach ($school_messages as $school_message)
-                                            <div class="message-item">
+                                            <div class="message-item <?php echo ($school_message->type == 'to_school_admin') ? 'send' : 'receive' ?>">
                                                 <div class="message-header">
                                                     <div class="message-user-image">
                                                         @if ($school_message->fromUser->image)
@@ -956,6 +963,11 @@
                                                             {{ $school_message->fromUser->first_name_en }} {{ $school_message->fromUser->last_name_en }}
                                                         @else
                                                             {{ $school_message->fromUser->first_name_ar }} {{ $school_message->fromUser->last_name_ar }}
+                                                        @endif
+                                                        @if ($school_message->type == 'to_school_admin')
+                                                            <i class="mdi mdi-arrow-right-bold"></i>
+                                                        @else
+                                                            <i class="mdi mdi-arrow-left-bold"></i>
                                                         @endif
                                                     </div>
                                                     <div class="message-time">
@@ -1002,7 +1014,7 @@
     </div>
 
     @section('js')
-        <script>            
+        <script>
             function printCourseApplication(section) {
                 $.ajax({
                     url: "{{route('superadmin.course_application.print')}}",

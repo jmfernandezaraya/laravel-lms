@@ -44,7 +44,7 @@ class CourseFormController extends Controller
         });
         $this->my_unique_id(1);
 
-        $data['data'] = __('SuperAdmin/backend.data_saved');
+        $data['data'] = __('SuperAdmin/backend.data_saved_successfully');
 
         $id = $get_id['id'];
         $opiton_name = $get_id['name'];
@@ -104,7 +104,7 @@ class CourseFormController extends Controller
         });
         $this->my_unique_id(1);
 
-        $data['data'] = __('SuperAdmin/backend.data_saved');
+        $data['data'] = __('SuperAdmin/backend.data_saved_successfully');
 
         $id = $get_id['id'];
         $opiton_name = $get_id['name'];
@@ -157,7 +157,7 @@ class CourseFormController extends Controller
         });
         $this->my_unique_id(1);
 
-        $data['data'] = __('SuperAdmin/backend.data_saved');
+        $data['data'] = __('SuperAdmin/backend.data_saved_successfully');
 
         $id = $get_id['id'];
         $opiton_name = $get_id['name'];
@@ -210,7 +210,7 @@ class CourseFormController extends Controller
         });
         $this->my_unique_id(1);
 
-        $data['data'] = __('SuperAdmin/backend.data_saved');
+        $data['data'] = __('SuperAdmin/backend.data_saved_successfully');
 
         $id = $get_id['id'];
         $opiton_name = $get_id['name'];
@@ -263,7 +263,7 @@ class CourseFormController extends Controller
         });
         $this->my_unique_id(1);
 
-        $data['data'] = __('SuperAdmin/backend.data_saved');
+        $data['data'] = __('SuperAdmin/backend.data_saved_successfully');
 
         $id = $get_id['id'];
         $opiton_name = $get_id['name'];
@@ -317,7 +317,7 @@ class CourseFormController extends Controller
         });
         $this->my_unique_id(1);
 
-        $data['data'] = __('SuperAdmin/backend.data_saved');
+        $data['data'] = __('SuperAdmin/backend.data_saved_successfully');
 
         $id = $get_id['id'];
         $opiton_name = $get_id['name'];
@@ -370,7 +370,7 @@ class CourseFormController extends Controller
         });
         $this->my_unique_id(1);
 
-        $data['data'] = __('SuperAdmin/backend.data_saved');
+        $data['data'] = __('SuperAdmin/backend.data_saved_successfully');
 
         $id = $get_id['id'];
         $opiton_name = $get_id['name'];
@@ -423,7 +423,7 @@ class CourseFormController extends Controller
         });
         $this->my_unique_id(1);
 
-        $data['data'] = __('SuperAdmin/backend.data_saved');
+        $data['data'] = __('SuperAdmin/backend.data_saved_successfully');
 
         $id = $get_id['id'];
         $opiton_name = $get_id['age'];
@@ -476,7 +476,7 @@ class CourseFormController extends Controller
         });
         $this->my_unique_id(1);
 
-        $data['data'] = __('SuperAdmin/backend.data_saved');
+        $data['data'] = __('SuperAdmin/backend.data_saved_successfully');
 
         $id = $get_id['id'];
         $opiton_name = $get_id['age'];
@@ -529,7 +529,7 @@ class CourseFormController extends Controller
         });
         $this->my_unique_id(1);
 
-        $data['data'] = __('SuperAdmin/backend.data_saved');
+        $data['data'] = __('SuperAdmin/backend.data_saved_successfully');
 
         $id = $get_id['id'];
         $opiton_name = $get_id['age'];
@@ -582,7 +582,7 @@ class CourseFormController extends Controller
         });
         $this->my_unique_id(1);
 
-        $data['data'] = __('SuperAdmin/backend.data_saved');
+        $data['data'] = __('SuperAdmin/backend.data_saved_successfully');
 
         $id = $get_id['id'];
         $opiton_name = $get_id['age'];
@@ -635,7 +635,7 @@ class CourseFormController extends Controller
         });
         $this->my_unique_id(1);
 
-        $data['data'] = __('SuperAdmin/backend.data_saved');
+        $data['data'] = __('SuperAdmin/backend.data_saved_successfully');
 
         $id = $get_id['id'];
         $opiton_name = $get_id['age'];

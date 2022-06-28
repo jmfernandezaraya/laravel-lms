@@ -39,7 +39,7 @@
     <div class="page-content">
         <div class="card">
             <div class="card-body">
-                <form id ="blogForm" class="forms-sample" method="post" action="{{route('superadmin.blog.store')}}">
+                <form id ="blogForm" class="forms-sample" method="post" action="{{route('superadmin.blog.store')}}" onsubmit="getCkEditorsData()">
                     {{csrf_field()}}
 
                     <div class="row">
@@ -66,7 +66,7 @@
                     </div>
 
                     <a class="btn btn-light" href="{{url()->previous()}}">{{__('SuperAdmin/backend.cancel')}}</a>
-                    <button type="button" onclick="submitForm($(this).parents().find('#blogForm'))" class="btn btn-primary">{{__('SuperAdmin/backend.submit')}}</button>
+                    <button type="submit" class="btn btn-primary">{{__('SuperAdmin/backend.submit')}}</button>
                 </div>
             </div>
         </form>

@@ -24,10 +24,8 @@ class CurrencyRequest extends FormRequest
     public function rules()
     {
         return [
-            'currency_name' => 'unique:currency_exchange_rates|required',
-            'exchange_rate' => 'required',
-            'language_id' => 'required'
+            'name' => 'required',
+            'exchange_rate' => 'required|numeric|min:0|not_in:0',
         ];
-
     }
 }

@@ -304,7 +304,7 @@ class SchoolController extends Controller
         }
 
         $data['success'] = true;
-        $data['data'] = __('SuperAdmin/backend.data_saved');
+        $data['data'] = __('SuperAdmin/backend.data_saved_successfully');
         return response($data);
     }
 
@@ -637,7 +637,7 @@ class SchoolController extends Controller
         }        
         
         $data['success'] = true;
-        $data['data'] = __('SuperAdmin/backend.data_saved');
+        $data['data'] = __('SuperAdmin/backend.data_saved_successfully');
 
         return response()->json($data);
     }
@@ -689,7 +689,7 @@ class SchoolController extends Controller
         }
         
         $data['success'] = true;
-        $data['data'] = __('SuperAdmin/backend.data_saved');
+        $data['data'] = __('SuperAdmin/backend.data_saved_successfully');
 
         return response()->json($data);
     }
@@ -745,7 +745,7 @@ class SchoolController extends Controller
         });
         $this->my_unique_id(1);
 
-        $data['data'] = __('SuperAdmin/backend.data_saved');
+        $data['data'] = __('SuperAdmin/backend.data_saved_successfully');
 
         $id = $get_id['id'];
         $opiton_name = $get_id['name'];

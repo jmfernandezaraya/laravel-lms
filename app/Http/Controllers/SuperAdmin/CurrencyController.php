@@ -56,7 +56,7 @@ class CurrencyController extends Controller
     {
         $currency->fill($request->validated())->save();
 
-        toastr()->success(__('SuperAdmin/backend.data_saved'));
+        toastr()->success(__('SuperAdmin/backend.data_saved_successfully'));
 
         return redirect()->route('superadmin.setting.currency.index');
     }
@@ -93,18 +93,9 @@ class CurrencyController extends Controller
      * @param $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CurrencyRequest $request, $id)
     {
         $currency = CurrencyExchangeRate::find($id);
-        $rules = [
-            'name' => 'required',
-            'exchange_rate' => 'required|numeric|min:0|not_in:0',
-        ];
-        $this->validate($request, $rules);
-        $currency->name = $request->name;
-        $currency->exchange_rate = $request->exchange_rate;
-        $currency->save();
-
         $currency_ratio = $currency->exchange_rate / $request->exchange_rate;
 
         $course_ids = Course::where('currency', $id)->pluck('unique_id')->toArray();
@@ -113,22 +104,26 @@ class CurrencyController extends Controller
         }
         $course_applications = CourseApplication::whereIn('course_id', $course_ids)->get();
         foreach ($course_applications as $course_application) {
+            $paid_amount = 0;
             $amount_added = 0;
             $amount_refunded = 0;
             if ($course_application->transaction) {
+                $paid_amount = $course_application->transaction->amount;
                 $transaction_refunds = TransactionRefund::where('transaction_id', $course_application->transaction->order_id)->get();
                 foreach ($transaction_refunds as $transaction_refund) {
                     $amount_added += $transaction_refund->amount_added;
                     $amount_refunded += $transaction_refund->amount_refunded;
                 }
             }
-            $amount_due = $course_application->total_cost - $course_application->deposit_price - $amount_added + $amount_refunded;
-            if ($course_application->status == 'application_cancelled' || $course_application->status == 'completed' || $amount_due == 0) {
-                $course_application->total_cost = $course_application->total_cost * $currency_ratio;
+            $amount_paid = $course_application->paid_amount + $amount_added - $amount_refunded;
+            $amount_due = $course_application->total_cost_fixed - $amount_paid;
+            if (($course_application->status != 'application_cancelled' && $course_application->status != 'completed') && $amount_due != 0) {
+                $course_application->total_cost_fixed = $course_application->total_cost * $currency_ratio;
             }
-            $course_application->deposit_price = $course_application->deposit_price * $currency_ratio;
             $course_application->save();
         }
+
+        $currency->fill($request->validated())->save();
 
         return redirect()->route('superadmin.setting.currency.index');
     }
@@ -165,7 +160,7 @@ class CurrencyController extends Controller
         }
 
         $currency->delete();
-        toastr()->success(__('SuperAdmin/backend.data_deleted'));
+        toastr()->success(__('SuperAdmin/backend.data_deleted_successfully'));
         return back();
     }
 }

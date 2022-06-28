@@ -17,6 +17,7 @@ use Ghanem\Rating\Models\Rating;
 use App\Models\User;
 use App\Models\CourseApplication;
 use App\Models\Review;
+use App\Models\Message;
 
 use App\Models\SuperAdmin\Choose_Accommodation_Age_Range;
 use App\Models\SuperAdmin\Choose_Program_Age_Range;
@@ -129,14 +130,14 @@ class CustomerController extends Controller
     
     public function courseApplication()
     {
-        $booked_courses = CourseApplication::where('user_id', auth()->user()->id)->with('courseApplicationApprove')->get();
+        $booked_courses = CourseApplication::where('user_id', auth()->user()->id)->where('paid', 1)->with('courseApplicationApprove')->get();
 
         return view('frontend.customer.course_applications', compact('booked_courses'));
     }
     
     public function detailCourseApplication($id)
     {
-        $data = getCourseApplicationPrintData($id);
+        $data = getCourseApplicationPrintData($id, auth()->user()->id);
         $test = '';
         return view('frontend.customer.course_application', $data, compact('test'));
     }
@@ -155,7 +156,7 @@ class CustomerController extends Controller
             $data['errors'] = $validate->errors();
             return response($data);
         } else {
-            $pdf_data = getCourseApplicationPrintData($request->id);
+            $pdf_data = getCourseApplicationPrintData($request->id, auth()->user()->id);
             $pdf_data['logo'] = asset('public/frontend/assets/img/logo.png');
             
             if ($request->section == 'reservation') {
@@ -185,44 +186,41 @@ class CustomerController extends Controller
         $data['success'] = true;
 
         $rules = [
-            'attachment.*' => 'sometimes|mimes:doc,docx,pdf',
+            'attachment.*' => 'sometimes|mimes:doc,docx,pdf,jpg,jpeg,bmp,png',
             'subject' => 'required',
             'message' => 'required',
-            'to_email' => 'required',
+            'type' => 'required',
+            'type_id' => 'required',
         ];
         $validate = Validator::make($request->all(), $rules);
         if ($validate->fails()) {
             $data['success'] = false;
             $data['errors'] = $validate->errors();
         } else {
-            $request_save = $request->only('attachment', 'subject', 'message', 'to_email');
+            $request_save = $request->only('subject', 'message', 'type', 'type_id');
 
             $attachments = [];
             $send_files = [];
             if ($request->has("attachment")) {
                 foreach ($request->file('attachment') as $request_attachment) {
-                    $attach = $request_attachment->getClientOriginalName();
-                    $attachments[] = $request_attachment->getClientOriginalName();
-                    $send_files[] = $request_attachment->move('public/attachments', $attach);
+                    $attachment_file = $attachment->getClientOriginalName();
+                    $attachment_file_name = pathinfo($attachment_file, PATHINFO_FILENAME);
+                    $attachment_file_ext = pathinfo($attachment_file, PATHINFO_EXTENSION);
+                    $attachment_file = $attachment_file_name . '_' . time() . '.' . $attachment_file_ext;
+                    $request_save['attachments'][] = '/public/attachments/' . $attachment_file;
+                    $send_files[] = $attachment->move('public/attachments', $attachment_file);
                 }
             }
+            
+            $course_application = CourseApplication::whereId($request->type_id)->first();
+            $request_save['from_user'] = auth()->user()->id;
+            $super_admins = User::where('user_type', 'super_admin')->get();
+            foreach ($super_admins as $super_admin) {
+                $request_save['to_user'] = $super_admin->id;
+                Message::create($request_save);
 
-            $user = User::find(auth()->user()->id);
-            // ReplyToSchoolAdminMessage::updateOrCreate(
-            //     [
-            //         'to_school_admin_message_id' => $request->to_school_admin_message_id,
-            //         'user_id' => auth()->user()->id
-            //     ],
-            //     [
-            //         'to_school_admin_message_id' => $request->to_school_admin_message_id,
-            //         'user_id' => auth()->user()->id,
-            //         'subject' => $request->subject,
-            //         'attachment' => $attachment,
-            //         'message' => $request->message
-            //     ]
-            // );
-    
-            \Mail::send(new ContactCenterAdmin($user, \Arr::except($request->all(), 'attachment'), $send_files));
+                \Mail::send(new ContactCenterAdmin($super_admin, $request_save, $send_files));
+            }
 
             $data['message'] = __('Frontend.message_sent_thank_you');
         }

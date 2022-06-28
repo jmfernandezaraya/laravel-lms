@@ -21,11 +21,11 @@ class ContactCenterAdmin extends Mailable implements ShouldQueue
      * @return void
      */
 
-    public function __construct(User $user, array $request, array $file)
+    public function __construct(User $user, array $request, array $files)
     {
         $this->user = $user;
         $this->request = $request;
-        $this->file = $file;
+        $this->files = $files;
     }
 
     /**
@@ -37,14 +37,14 @@ class ContactCenterAdmin extends Mailable implements ShouldQueue
     public function build()
     {
         $data = $this->request;
-        $mails = $this->markdown('mail/contact_center_admin', ['data' => $data])->to($this->request['to_email'])->subject($this->request['subject']);
+        $mail = $this->markdown('mail/contact_center_admin', ['data' => $data])->to($this->request['to_email'])->subject($this->request['subject']);
 
-        if (!empty($this->file)) {
-            foreach ($this->file as $files) {
-                $mails->attach(public_path('attachments/' . $files));
+        if ($this->files) {
+            foreach ($this->files as $file) {
+                $mail = $mail->attach($file);
             }
         }
 
-        return $mails;
+        return $mail;
     }
 }

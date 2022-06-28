@@ -304,6 +304,60 @@
                                 </div>
                             </div>
 
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label><h4>{{__('SuperAdmin/backend.description')}}</h4></label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <div class="english">
+                                        <textarea class="form-control ckeditor-input" name="footer_description" id="footer_description" placeholder="{{__('SuperAdmin/backend.description')}}">{!! isset($setting_value['footer']['description']) ? $setting_value['footer']['description'] : '' !!}</textarea>
+                                    </div>
+                                    <div class="arabic">
+                                        <textarea class="form-control ckeditor-input" name="footer_description_ar" id="hero_description_ar" placeholder="{{__('SuperAdmin/backend.description')}}">{!! isset($setting_value['footer']['description_ar']) ? $setting_value['footer']['description_ar'] : '' !!}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label><h4>{{__('SuperAdmin/backend.copyright')}}</h4></label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <div class="english">
+                                        <textarea class="form-control ckeditor-input" name="footer_copyright" id="footer_copyright" placeholder="{{__('SuperAdmin/backend.copyright')}}">{!! isset($setting_value['footer']['copyright']) ? $setting_value['footer']['copyright'] : '' !!}</textarea>
+                                    </div>
+                                    <div class="arabic">
+                                        <textarea class="form-control ckeditor-input" name="footer_copyright_ar" id="footer_copyright_ar" placeholder="{{__('SuperAdmin/backend.copyright')}}">{!! isset($setting_value['footer']['copyright_ar']) ? $setting_value['footer']['copyright_ar'] : '' !!}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label><h4>{{__('SuperAdmin/backend.credits')}}</h4></label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <div class="english">
+                                        <textarea class="form-control ckeditor-input" name="footer_credits" id="footer_credits" placeholder="{{__('SuperAdmin/backend.credits')}}">{!! isset($setting_value['footer']['credits']) ? $setting_value['footer']['credits'] : '' !!}</textarea>
+                                    </div>
+                                    <div class="arabic">
+                                        <textarea class="form-control ckeditor-input" name="footer_credits_ar" id="footer_credits_ar" placeholder="{{__('SuperAdmin/backend.credits')}}">{!! isset($setting_value['footer']['credits_ar']) ? $setting_value['footer']['credits_ar'] : '' !!}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label><h4>{{__('SuperAdmin/backend.menus')}}</h4></label>
+                                </div>
+                            </div>
+
                             <script>
                                 window.addEventListener('load', function() {
                                     footer_menu_section_clone = {{isset($setting_value['footer']['menu']) && count($setting_value['footer']['menu']) ? count($setting_value['footer']['menu']) - 1 : 0}};
@@ -313,17 +367,32 @@
                             <input hidden id="footer_menu_section_increment" name="footermenusectionincrement" value="{{isset($setting_value['footer']['menu']) && count($setting_value['footer']['menu']) ? count($setting_value['footer']['menu']) - 1 : 0}}">
                             @if (isset($setting_value['footer']['menu']) && count($setting_value['footer']['menu']))
                                 @foreach ($setting_value['footer']['menu'] as $footer_menu_section)
-                                    <div id="footer_menu_section_clone{{$loop->iteration - 1}}" class="footer-menu-section-clone clone">
+                                    <div id="footer_menu_section_clone{{$loop->iteration - 1}}" class="footer-menu-section-clone clone border border-dark p-2 mb-2">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <label><h4>{{__('SuperAdmin/backend.menu')}}</h4></label>
+                                                <label><h5>{{__('SuperAdmin/backend.title')}}</h5></label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <div class="english">
+                                                    <textarea class="form-control ckeditor-input" name="footer_menu_title[]" id="footer_menu_title{{$loop->iteration - 1}}" placeholder="{{__('SuperAdmin/backend.title')}}">{!! isset($footer_menu_section['title']) ? $footer_menu_section['title'] : '' !!}</textarea>
+                                                </div>
+                                                <div class="arabic">
+                                                    <textarea class="form-control ckeditor-input" name="footer_menu_title_ar[]" id="footer_menu_title_ar{{$loop->iteration - 1}}" placeholder="{{__('SuperAdmin/backend.title')}}">{!! isset($footer_menu_section['title_ar']) ? $footer_menu_section['title_ar'] : '' !!}</textarea>
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <input hidden id="footer_menu_increment{{$loop->iteration - 1}}" name="footermenuincrement[]" value="{{isset($footer_menu_section) && count($footer_menu_section) ? count($footer_menu_section) - 1 : 0}}">
-                                        @if (isset($footer_menu_section))
-                                            @foreach ($footer_menu_section as $footer_menu)
-                                                <div id="footer_menu{{$loop->parent->iteration - 1}}_clone{{$loop->iteration - 1}}" class="footer-menu-clone clone">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label><h5>{{__('SuperAdmin/backend.menu')}}</h5></label>
+                                            </div>
+                                        </div>
+                                        <input hidden id="footer_menu_increment{{$loop->iteration - 1}}" name="footermenuincrement[]" value="{{isset($footer_menu_section['menu']) && count($footer_menu_section['menu']) ? count($footer_menu_section['menu']) - 1 : 0}}">
+                                        @if (isset($footer_menu_section['menu']))
+                                            @foreach ($footer_menu_section['menu'] as $footer_menu)
+                                                <div id="footer_menu{{$loop->parent->iteration - 1}}_clone{{$loop->iteration - 1}}" class="footer-menu-clone clone border border-dark p-2 mb-2">
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <label>{{__('SuperAdmin/backend.item')}}:</label>
@@ -442,7 +511,7 @@
                                                 </div>
                                             @endforeach
                                         @else
-                                            <div id="footer_menu{{$loop->iteration - 1}}_clone0" class="footer-menu-clone clone">
+                                            <div id="footer_menu{{$loop->iteration - 1}}_clone0" class="footer-menu-clone clone border border-dark p-2 mb-2">
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <label>{{__('SuperAdmin/backend.item')}}:</label>
@@ -537,15 +606,31 @@
                                     </div>
                                 @endforeach
                             @else
-                                <div id="footer_menu_section_clone0" class="footer-menu-section-clone clone">
+                                <div id="footer_menu_section_clone0" class="footer-menu-section-clone clone border border-dark p-2 mb-2">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <label><h4>{{__('SuperAdmin/backend.menu')}}</h4></label>
+                                            <label><h5>{{__('SuperAdmin/backend.title')}}</h5></label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-md-12">
+                                            <div class="english">
+                                                <textarea class="form-control ckeditor-input" name="footer_menu_title[]" id="footer_menu_title0" placeholder="{{__('SuperAdmin/backend.title')}}"></textarea>
+                                            </div>
+                                            <div class="arabic">
+                                                <textarea class="form-control ckeditor-input" name="footer_menu_title_ar[]" id="footer_menu_title_ar0" placeholder="{{__('SuperAdmin/backend.title')}}"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label><h5>{{__('SuperAdmin/backend.menu')}}</h5></label>
                                         </div>
                                     </div>
 
                                     <input hidden id="footer_menu_increment0" name="footermenuincrement[]" value="0">
-                                    <div id="footer_menu0_clone0" class="footer-menu-clone clone">
+                                    <div id="footer_menu0_clone0" class="footer-menu-clone clone border border-dark p-2 mb-2">
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label>{{__('SuperAdmin/backend.item')}}:</label>
@@ -640,46 +725,8 @@
                             @endif
                         </div>
                     </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="row">
-                                <div class="form-group col-md-12">
-                                    <label><h3>{{__('SuperAdmin/backend.social')}}</h3></label>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <label>{{__('SuperAdmin/backend.twitter')}}:</label>
-                                    <input type="text" class="form-control" name="social_twitter" value="{{ isset($setting_value['social']['twitter']) ? $setting_value['social']['twitter'] : '' }}" />
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <label>{{__('SuperAdmin/backend.facebook')}}:</label>
-                                    <input type="text" class="form-control" name="social_facebook" value="{{ isset($setting_value['social']['facebook']) ? $setting_value['social']['facebook'] : '' }}" />
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <label>{{__('SuperAdmin/backend.instagram')}}:</label>
-                                    <input type="text" class="form-control" name="social_instagram" value="{{ isset($setting_value['social']['instagram']) ? $setting_value['social']['instagram'] : '' }}" />
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <label>{{__('SuperAdmin/backend.snapchat')}}:</label>
-                                    <input type="text" class="form-control" name="social_snapchat" value="{{ isset($setting_value['social']['snapchat']) ? $setting_value['social']['snapchat'] : '' }}" />
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <label>{{__('SuperAdmin/backend.youtube')}}:</label>
-                                    <input type="text" class="form-control" name="social_youtube" value="{{ isset($setting_value['social']['youtube']) ? $setting_value['social']['youtube'] : '' }}" />
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <label>{{__('SuperAdmin/backend.tiktok')}}:</label>
-                                    <input type="text" class="form-control" name="social_tiktok" value="{{ isset($setting_value['social']['tiktok']) ? $setting_value['social']['tiktok'] : '' }}" />
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <label>{{__('SuperAdmin/backend.pinterest')}}:</label>
-                                    <input type="text" class="form-control" name="social_pinterest" value="{{ isset($setting_value['social']['pinterest']) ? $setting_value['social']['pinterest'] : '' }}" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <button type="button" onclick="submitForm($(this).parents().find('#headerFooterForm'))" class="btn btn-gradient-primary mr-2">{{__('SuperAdmin/backend.submit')}}</button>
+                    <button type="button" onclick="submitFormAction('headerFooterForm')" class="btn btn-gradient-primary mr-2">{{__('SuperAdmin/backend.submit')}}</button>
                     <a class="btn btn-light" href="{{url()->previous()}}">{{__('SuperAdmin/backend.cancel')}}</a>
                 </form>
             </div>

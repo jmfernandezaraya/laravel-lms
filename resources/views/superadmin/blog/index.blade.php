@@ -41,7 +41,7 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ ucwords($blog->{'title_' . get_language()}) }}</td>
                                 <td class="show-read-more">
-                                    <p>{!! ucwords($blog->{'description_'. get_language()}) !!}</p>
+                                    <p>{!! $blog->{'description_'. get_language()} !!}</p>
                                 </td>
                                 <td>{{ $blog->created_at }}</td>
                                 @if (auth('superadmin')->user()->permission['blog_manager'] || auth('superadmin')->user()->permission['blog_edit'])
@@ -86,8 +86,8 @@
                     var newStr = myStr.substring(0, maxLength);
                     var removedStr = myStr.substring(maxLength, $.trim(myStr).length);
                     $(this).empty().html(newStr);
-                    $(this).append('  < a href="javascript:void(0);" class = "read-more" > read more... < /a>');
-                    $(this).append(' < span class = "more-text" > ' + removedStr + ' < /span>');
+                    $(this).append(' <a href="javascript:void(0);" class="read-more">' + '{{__("SuperAdmin/backend.read_more")}}' + '...</a>');
+                    $(this).append('<span class="more-text"> ' + removedStr + ' </span>');
                     }
                 });
                 $(".read-more").click(function() {

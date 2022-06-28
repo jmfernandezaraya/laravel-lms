@@ -55,7 +55,7 @@ class AssignCoursePermissionToUserService
             }
         }
 
-        toastr()->success(__('SuperAdmin/backend.data_saved'));
+        toastr()->success(__('SuperAdmin/backend.data_saved_successfully'));
 
         return back();
     }

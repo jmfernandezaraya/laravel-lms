@@ -128,7 +128,7 @@ class LoginController extends Controller
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
-            'password' => 'required|min:8|confirmed',
+            'password' => 'required|confirmed',
         ]);
 
         $credentials = $request->only('email', 'password', 'password_confirmation', 'token');

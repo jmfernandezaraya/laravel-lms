@@ -48,6 +48,8 @@ return [
     'tiktok' => 'TikTok',
     'youtube' => 'YouTube',
     'pinterest' => 'Pinterest',
+    'skype' => 'Skype',
+    'linkedin' => 'Linkedin',
 
     'yes' => 'نعم',
     'no' => 'لا',
@@ -96,8 +98,10 @@ return [
     'data_paused_successfully' => 'Data Paused Successfully',
     'data_played_successfully' => 'Data Played Successfully',
     'data_removed_successfully' => 'تم حذف البيانات بنجاح',
-    'data_deleted_successfully' => 'Data Deleted Successfully',
+    'data_deleted_successfully' => 'تم حذف البيانات بنجاح',
     'data_destroyed_successfully' => 'Data Destroyed Successfully',
+    'data_saved_successfully' => 'تم حفظ البيانات بنجاح',
+    'data_updated_successfully' => 'تم تحديث البيانات بنجاح',
 
     'manage_blogs' => 'ادارة المدونات',
     'add_blog' => 'إضافة مدونة',
@@ -437,9 +441,6 @@ return [
     'photos' => 'صور المدرسة',
     'cancel' => 'الغاء',
     'submit' => 'حفظ',
-    'data_saved' => 'تم حفظ البيانات بنجاح',
-    'data_deleted' => 'تم حذف البيانات بنجاح',
-    'data_updated' => 'تم تحديث البيانات بنجاح',
     'update' => 'تحديث',
     'manage_formbuilder' => 'ادارة منشئ النماذج',
 
@@ -701,8 +702,10 @@ return [
     'add_exchange_rate' => 'أضف سعر الصرف',
     'update_exchange_rate' => 'تحديث سعر الصرف',
     'website_link' => 'رابط الموقع',
+    
     'course_application' => 'ادارة طلبات الدورات',
     'course_application_details' => 'Course Application Details',
+    'course_application_can_not_update' => 'Course Application can not update',
     'date_created' => 'Date Created',
     'mobile' => 'Mobile',
     'programme_name' => 'Programme Name',
@@ -848,6 +851,11 @@ return [
     'would_you_recommend_this_school' => 'Would you recommend this school',
     'use_my_full_name_for_the_rating_and_review' => 'Use my full name for the rating and review',
     
+    'edit_site_setting' => 'Edit Site Setting',
+    'phone_number' => 'Phone Number',
+    'registration_cancelation_conditions' => 'Registration Cancelation Conditions',
+    'newsletter' => 'Newsletter',
+    
     'edit_home_page' => 'Edit Home Page',
     'hero' => 'Hero',
     'background' => 'Background',
@@ -861,6 +869,8 @@ return [
     'header' => 'Header',
     'footer' => 'Footer',
     'logo' => 'شعار المدرسة',
+    'copyright' => 'CopyRight',
+    'menus' => 'Menus',
     'menu' => 'Menu',
     'sub_menu' => 'Sub Menu',
     'item' => 'Item',

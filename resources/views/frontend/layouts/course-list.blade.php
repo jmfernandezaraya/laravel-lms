@@ -7,7 +7,7 @@
             data-school="{{ $course->school->name ? (app()->getLocale() == 'en' ? ($course->school->name->name ?? '-') : ($course->school->name->name_ar ?? '-')) : '-' }}"
             data-city="{{ $course_ratings }}"
         >
-            <a href="{{route('frontend.school.details', $course->school->id)}}">
+            <a href="{{route('frontend.course.single', ['school_id' => $course->school->id, 'program_id' => $course->unique_id])}}">
                 <div class="school-logo" style="background-image: url('{{ $course->school->logo }}')"></div>
                 @if ($course->course_program)
                     <div class="program-content">

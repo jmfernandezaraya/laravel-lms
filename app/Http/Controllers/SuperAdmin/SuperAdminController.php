@@ -119,7 +119,7 @@ class SuperAdminController extends Controller
             }
         });
 
-        $saved = __('SuperAdmin/backend.data_saved');
+        $saved = __('SuperAdmin/backend.data_saved_successfully');
         return response()->json(['success' => 'success', 'data' => $saved]);
     }
 
@@ -246,7 +246,7 @@ class SuperAdminController extends Controller
             ]);
         }
         
-        $saved = __('SuperAdmin/backend.data_saved');
+        $saved = __('SuperAdmin/backend.data_saved_successfully');
         return response()->json(['success' => $saved]);
     }
 }

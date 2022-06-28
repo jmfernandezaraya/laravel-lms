@@ -148,7 +148,7 @@ class SchoolAdminController extends Controller
             }
         });
 
-        $saved = __('SuperAdmin/backend.data_saved');
+        $saved = __('SuperAdmin/backend.data_saved_successfully');
         return response()->json(['success' => true, 'data' => $saved]);
     }
 
@@ -319,7 +319,7 @@ class SchoolAdminController extends Controller
                 $user_school->delete();
             }
         }
-        $saved = __('SuperAdmin/backend.data_saved');
+        $saved = __('SuperAdmin/backend.data_saved_successfully');
         return response()->json(['success' => true, 'data' => $saved]);
     }
 }

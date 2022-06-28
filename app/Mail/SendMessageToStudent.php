@@ -42,7 +42,7 @@ class SendMessageToStudent extends Mailable
         ]])->subject(__('Mail.message_from_website'));
         if ($this->files) {
             foreach ($this->files as $file) {
-                $mail = $mail->attach($this->file);
+                $mail = $mail->attach($file);
             }
         }
     }

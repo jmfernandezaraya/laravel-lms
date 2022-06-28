@@ -41,7 +41,10 @@
         <link rel="stylesheet" href="{{ asset('public/frontend/assets/css/style.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
 
+        @toastr_css
         @yield('css')
+
+        <script src="{{asset('assets/vendors/js/vendor.bundle.base.js')}}"></script>
     </head>
 
     <body>

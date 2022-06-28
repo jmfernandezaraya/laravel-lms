@@ -213,21 +213,21 @@
                                 <div class="row">
                                     <div class="form-group col-md-3">
                                         <label for="input">{{__("Frontend.accommodation_type")}}:</label>
-                                        <select id="accom_type" class="form-control">
+                                        <select name="accom_type" id="accom_type" class="form-control">
                                             <option value="">{{__('SuperAdmin/backend.select_option')}}</option>
                                         </select>
                                     </div>
 
                                     <div class="form-group col-md-3">
                                         <label for="input">{{__('SuperAdmin/backend.room_type')}}:</label>
-                                        <select class="form-control" id="room_type" name="room_type">
+                                        <select name="room_type" class="form-control" id="room_type">
                                             <option value="">{{__('SuperAdmin/backend.select_option')}}</option>
                                         </select>
                                     </div>
 
                                     <div class="form-group col-md-3">
                                         <label for="input">{{__('SuperAdmin/backend.meal_type')}}:</label>
-                                        <select class="form-control" id="meal_type" name="meal_type">
+                                        <select name="meal_type" class="form-control" id="meal_type">
                                             <option value="">{{__('SuperAdmin/backend.select_option')}}</option>
                                         </select>
                                     </div>
@@ -377,14 +377,14 @@
 
                                 <div class="form-group col-md-4">
                                     <label for="input">{{__('SuperAdmin/backend.airport_name')}}:</label>
-                                    <select class="form-control" id="airport_name">
+                                    <select name="airport_name" class="form-control" id="airport_name">
                                         <option value="">{{__('SuperAdmin/backend.select')}}</option>
                                     </select>
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <label for="input">{{__('SuperAdmin/backend.type_of_service')}}:</label>
-                                    <select class="form-control" id="airport_type_of_service">
+                                    <select name="airport_service" class="form-control" id="airport_type_of_service">
                                         <option value="">{{__('SuperAdmin/backend.select')}}</option>
                                     </select>
                                 </div>
@@ -589,6 +589,12 @@
 
         function fillCourseForm() {
             if (!fill_course_form) {
+                @if ((float)$course_application->courier_fee)
+                    $('#checked_courier_fee').prop("checked", true);
+                @endif
+                @if ((float)$course_application->accommodation_special_diet_fee)
+                    $('#special_diet_check').prop("checked", true);
+                @endif
                 @if (isset($course_application->study_mode) && $course_application->study_mode)
                     $('#study_mode').val('{{$course_application->study_mode}}');
                 @else
@@ -604,35 +610,37 @@
         }
 
         function callbackCalculateCourse(type) {
-            if (type == 'requested_for_under_age') {
-                @if (isset($course_application->course_id) && $course_application->course_id)
-                    $('#get_program_name').val('');
-                    $('#get_program_name').val('{{$course_application->course_id}}').trigger('change');
-                @else
-                    fill_course_form = true;
-                @endif
-            } else if (type == 'select_program') {
-                @if (isset($course_application->start_date) && $course_application->start_date)
-                    $('#datepick').val('');
-                    $('#datepick').val('{{ $course_application->start_date->format("d-m-Y") }}').trigger('change');
-                @else
-                    fill_course_form = true;
-                @endif
-            } else if (type == 'date_selected') {
-                @if (isset($course_application->program_duration) && $course_application->program_duration)
-                    $('#program_duration').val('');
-                    $('#program_duration').val('{{$course_application->program_duration}}').trigger('change');
-                @else
-                    fill_course_form = true;
-                @endif
-            } else if (type == 'duration') {
-                @if (isset($course_application->accommodation_id) && $course_application->accommodation_id)
-                    $('#accom_type').val('');
-                    $('#accom_type').val('{{$course_application->accom_type}}').trigger('change');
-                @else
-                    fill_course_form = true;
-                @endif
-                calculateOtherService();
+            if (!fill_course_form) {
+                if (type == 'requested_for_under_age') {
+                    @if (isset($course_application->course_id) && $course_application->course_id)
+                        $('#get_program_name').val('');
+                        $('#get_program_name').val('{{$course_application->course_id}}').trigger('change');
+                    @else
+                        fill_course_form = true;
+                    @endif
+                } else if (type == 'select_program') {
+                    @if (isset($course_application->start_date) && $course_application->start_date)
+                        $('#datepick').val('');
+                        $('#datepick').val('{{ $course_application->start_date->format("d-m-Y") }}').trigger('change');
+                    @else
+                        fill_course_form = true;
+                    @endif
+                } else if (type == 'date_selected') {
+                    @if (isset($course_application->program_duration) && $course_application->program_duration)
+                        $('#program_duration').val('');
+                        $('#program_duration').val('{{$course_application->program_duration}}').trigger('change');
+                    @else
+                        fill_course_form = true;
+                    @endif
+                } else if (type == 'duration') {
+                    @if (isset($course_application->accommodation_id) && $course_application->accommodation_id)
+                        $('#accom_type').val('');
+                        $('#accom_type').val('{{$course_application->accom_type}}').trigger('change');
+                    @else
+                        fill_course_form = true;
+                    @endif
+                    calculateOtherService();
+                }
             }
         }
 
@@ -755,9 +763,9 @@
                         fill_course_form = true;
                     @endif
                 } else if (type == 'deductible_up_to') {
-                    @if (isset($course_application->duration))
+                    @if (isset($course_application->medical_duration))
                         $('#medical_duration').val('');
-                        $('#medical_duration').val('{{$course_application->duration}}').trigger('change');
+                        $('#medical_duration').val('{{$course_application->medical_duration}}').trigger('change');
                     @else
                         fill_course_form = true;
                     @endif

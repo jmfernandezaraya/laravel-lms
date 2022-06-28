@@ -142,9 +142,8 @@ class SettingController extends Controller
         $home_page->setting_value = serialize($setting_value);
         $home_page->save();
 
-        toastr()->success(__('SuperAdmin/backend.data_saved'));
-        return back();
-    }    
+        return response()->json(['success' => 'success', 'message' => __('SuperAdmin/backend.data_saved_successfully'), 'reload' => true]);
+    }
 
     public function viewHeaderFooter(Request $request)
     {
@@ -163,7 +162,7 @@ class SettingController extends Controller
     {
         $header_footer = Setting::where('setting_key', 'header_footer')->first();
         if (!$header_footer) {
-            $header_footer = new FrontPage;
+            $header_footer = new Setting;
             $header_footer->setting_key = 'header_footer';
             $header_footer_setting_value = [];
         } else {
@@ -176,17 +175,14 @@ class SettingController extends Controller
             ],
             'footer' => [
                 'logo' => '',
+                'description' => '',
+                'description_ar' => '',
+                'copyright' => '',
+                'copyright_ar' => '',
+                'credits' => '',
+                'credits_ar' => '',                
                 'menu' => []
             ],
-            'social' => [
-                'twitter' => '',
-                'facebook' => '',
-                'instagram' => '',
-                'snapchat' => '',
-                'youtube' => '',
-                'tiktok' => '',
-                'pinterest' => '',
-            ]
         ];
 
         if (isset($request->header_logo) && $request->header_logo) {
@@ -231,8 +227,19 @@ class SettingController extends Controller
         }
         $setting_value['footer']['logo'] = isset($request->footer_logo) && $request->footer_logo ? $this->storeImage->saveImage() : 
             (isset($header_footer_setting_value['footer']['logo']) ? $header_footer_setting_value['footer']['logo'] : '');
+        $setting_value['footer']['description'] = isset($request->footer_description) ? $request->footer_description : '';
+        $setting_value['footer']['description_ar'] = isset($request->footer_description_ar) ? $request->footer_description_ar : '';
+        $setting_value['footer']['copyright'] = isset($request->footer_copyright) ? $request->footer_copyright : '';
+        $setting_value['footer']['copyright_ar'] = isset($request->footer_copyright_ar) ? $request->footer_copyright_ar : '';
+        $setting_value['footer']['credits'] = isset($request->footer_credits) ? $request->footer_credits : '';
+        $setting_value['footer']['credits_ar'] = isset($request->footer_credits_ar) ? $request->footer_credits_ar : '';
         for ($footer_menu_section_index = 0; $footer_menu_section_index <= $request->footermenusectionincrement; $footer_menu_section_index++) {
             if (isset($request->footermenuincrement[$footer_menu_section_index]) && $request->footermenuincrement[$footer_menu_section_index]) {
+                $footer_menu_section = [
+                    'title' => $request->footer_menu_title[$footer_menu_section_index],
+                    'title_ar' => $request->footer_menu_title_ar[$footer_menu_section_index],
+                    'menu' => [],
+                ];
                 for ($footer_menu_index = 0; $footer_menu_index <= $request->footermenuincrement[$footer_menu_section_index]; $footer_menu_index++) {
                     if (isset($request->footer_menu_type[$footer_menu_section_index][$footer_menu_index]) && $request->footer_menu_type[$footer_menu_section_index][$footer_menu_index]) {
                         $footer_menu = [
@@ -255,12 +262,65 @@ class SettingController extends Controller
                                 }
                             }
                         }
-                        $footer_menu_section[] = $footer_menu;
+                        $footer_menu_section['menu'][] = $footer_menu;
                     }
                 }
                 $setting_value['footer']['menu'][] = $footer_menu_section;
             }
         }
+        
+        $header_footer->setting_value = serialize($setting_value);
+        $header_footer->save();
+
+        return response()->json(['success' => 'success', 'message' => __('SuperAdmin/backend.data_saved_successfully'), 'reload' => true]);
+    }
+    
+    public function viewSite(Request $request)
+    {
+        $setting_value = null;
+        $site = Setting::where('setting_key', 'site')->first();
+        if ($site) {
+            $setting_value = unserialize($site->setting_value);
+        }
+
+        $front_pages = FrontPage::all();
+        
+        return view('superadmin.setting.site', compact('setting_value', 'setting_value', 'front_pages'));
+    }
+
+    public function updateSite(Request $request)
+    {
+        $site = Setting::where('setting_key', 'site')->first();
+        if (!$site) {
+            $site = new Setting;
+            $site->setting_key = 'site';
+            $site_setting_value = [];
+        } else {
+            $site_setting_value = unserialize($site->setting_value);
+        }
+        $setting_value = [
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'registration_cancelation_conditions' => $request->registration_cancelation_conditions,
+            'newsletter' => [
+                'title' => $request->newsletter_title,
+                'title_ar' => $request->newsletter_title_ar,
+                'description' => $request->newsletter_description,
+                'description_ar' => $request->newsletter_description_ar,
+            ],
+            'social' => [
+                'twitter' => '',
+                'facebook' => '',
+                'instagram' => '',
+                'snapchat' => '',
+                'youtube' => '',
+                'tiktok' => '',
+                'pinterest' => '',
+                'skype' => '',
+                'linkedin' => '',
+            ]
+        ];
+        
 
         if (isset($request->social_twitter)) {
             $setting_value['social']['twitter'] = $request->social_twitter;
@@ -283,11 +343,16 @@ class SettingController extends Controller
         if (isset($request->social_pinterest)) {
             $setting_value['social']['pinterest'] = $request->social_pinterest;
         }
-        
-        $header_footer->setting_value = serialize($setting_value);
-        $header_footer->save();
+        if (isset($request->social_skype)) {
+            $setting_value['social']['skype'] = $request->social_skype;
+        }
+        if (isset($request->social_linkedin)) {
+            $setting_value['social']['linkedin'] = $request->social_linkedin;
+        }
 
-        toastr()->success(__('SuperAdmin/backend.data_saved'));
-        return back();
+        $site->setting_value = serialize($setting_value);
+        $site->save();
+
+        return response()->json(['success' => 'success', 'message' => __('SuperAdmin/backend.data_saved_successfully'), 'reload' => true]);
     }
 }

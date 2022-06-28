@@ -76,7 +76,9 @@ class BlogController extends Controller
             $blog->display = true;
             $blog->save();
             
-            return redirect(route('superadmin.blog.index'));
+            toastr()->success(__('SuperAdmin/backend.data_saved_successfully'));
+
+            return redirect()->route('superadmin.blog.index');
         } catch (NotReadableException $e) {
             $exception = __('SuperAdmin/backend.errors.image_required');
             return response()->json(['catch_error' => $exception]);
@@ -124,7 +126,7 @@ class BlogController extends Controller
         $save = $validate->validated();
 
         $blog->fill($save)->save();
-        $saved = __('SuperAdmin/backend.data_saved');
+        $saved = __('SuperAdmin/backend.data_saved_successfully');
         return response()->json(['data' => $saved]);
     }
 
@@ -137,7 +139,7 @@ class BlogController extends Controller
     public function destroy($id)
     {
         $delete = Blog::findorFail($id);
-        $deleted = __('SuperAdmin/backend.data_deleted');
+        $deleted = __('SuperAdmin/backend.data_deleted_successfully');
 
         if ($delete->image != '' && $delete->image != null && file_exists($delete->image)) {
             unlink($delete->image);

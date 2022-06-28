@@ -1403,6 +1403,16 @@ section {
   margin-bottom: 30px;
 }
 
+#footer .footer-top .footer-links h1,
+#footer .footer-top .footer-links h2,
+#footer .footer-top .footer-links h3,
+#footer .footer-top .footer-links h4,
+#footer .footer-top .footer-links h5,
+#footer .footer-top .footer-links h6,
+#footer .footer-top .footer-links p {
+  margin-bottom: 0px;
+}
+
 #footer .footer-top .footer-links ul {
   list-style: none;
   padding: 0;

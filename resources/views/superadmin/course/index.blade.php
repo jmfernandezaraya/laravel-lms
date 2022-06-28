@@ -82,7 +82,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td><input type="checkbox" data-id="{{$course->unique_id}}" /></td>
-                                <td>                                    
+                                <td>
                                     @if (auth('superadmin')->user()->permission['course_manager'])
                                         @if (checkCoursePromotion($course->unique_id))
                                             <form method="post" action="{{route('superadmin.course.promotion', $course->unique_id)}}">
@@ -92,7 +92,7 @@
                                                 <button class="btn btn-{{ $course->promotion ? 'info' : 'danger' }} btn-sm fa fa-{{ $course->promotion ? 'check' : 'times' }}"></button>
                                             </form>
                                         @else
-                                        <button class="btn btn-danger btn-sm fa fa-times" type="button"></button>
+                                            <i class="fa fa-times px-3 py-2 m-2 color-danger cursor-default"></i>
                                         @endif
                                     @endif
                                 </td>

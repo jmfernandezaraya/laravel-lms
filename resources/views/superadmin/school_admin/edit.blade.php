@@ -79,7 +79,7 @@
                             <input value="{{ $school_admin->contact }}" name="contact" class="form-control" id="contact" placeholder="{{__('SuperAdmin/backend.contact_no')}}" type="number">
                         </div>
                         <div class="form-group col-md-6">
-                            @if($school_admin->image == null || $users->image == '')
+                            @if($school_admin->image == null || $school_admin->image == '')
                                 <img src="{{ asset('/assets/images/no-image.jpg') }}" id="previewImg" alt="Uploaded Image Preview Holder" width="550px" height="250px" style="border-radius:3px;border:5px;" />
                             @else
                                 <img src="{{asset($school_admin->image)}}" id="previewImg" alt="Uploaded Image Preview Holder" width="550px" height="250px" style="border-radius:3px;border:5px;" />

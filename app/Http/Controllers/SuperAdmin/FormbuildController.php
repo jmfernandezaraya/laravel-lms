@@ -57,7 +57,7 @@ class FormbuildController extends Controller
 
 
         Formbuilder::create(['visa_form_id' => $request->visa_id, 'form_name' => $request->form_name, 'form_data' => json_encode($change_name), 'active' => 1]);
-            $success = __('SuperAdmin/backend.data_saved');
+            $success = __('SuperAdmin/backend.data_saved_successfully');
             toastr()->success($success);
             return view('superadmin.visa.formbuilder');
     }
@@ -98,7 +98,7 @@ class FormbuildController extends Controller
         $formbuilder->form_data = json_encode($change_name);
 
         $formbuilder->save();
-        toastr()->success(__('SuperAdmin/backend.data_updated'));
+        toastr()->success(__('SuperAdmin/backend.data_updated_successfully'));
 
         return back();
     }
@@ -112,7 +112,7 @@ class FormbuildController extends Controller
     public function destroy($id)
     {
         Formbuilder::find($id)->delete();
-            $deleted = __('SuperAdmin/backend.data_deleted');
+            $deleted = __('SuperAdmin/backend.data_deleted_successfully');
             toastr()->success($deleted);
             return back();
     }

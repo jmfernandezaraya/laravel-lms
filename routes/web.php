@@ -366,6 +366,9 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => '
         Route::get('home_page', 'SettingController@viewHomePage')->name('home_page');
         Route::post('home_page', 'SettingController@updateHomePage')->name('home_page.update');
 
+        Route::get('site', 'SettingController@viewSite')->name('site');
+        Route::post('site', 'SettingController@updateSite')->name('site.update');
+
         Route::post('image_upload', 'SettingController@upload')->name('upload');
         
         Route::group(['prefix' => 'front_page', 'as' => 'front_page.'], function () {

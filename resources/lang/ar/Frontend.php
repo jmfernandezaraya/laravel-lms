@@ -32,6 +32,7 @@ return [
     'how_to_apply' => 'كيفية التقديم',
     'apply_for_visa' => 'التقديم على الفيزا',
     'why_book_with_us' => 'Why book with us',
+    'subscribe' => 'Subscribe',
 
     'login' => 'تسجيل الدخول',
     'login_description' => 'Log In Description',

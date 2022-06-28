@@ -133,7 +133,7 @@ class SchoolController extends Controller
         $schools->fill($r->validated() + $input)->save();
 
         $data['success'] = true;
-        $data['data'] = __('SuperAdmin/backend.data_saved');
+        $data['data'] = __('SuperAdmin/backend.data_saved_successfully');
 
         return response($data);
     }
@@ -170,7 +170,7 @@ class SchoolController extends Controller
         $delete = DB::table('schools')->whereId($id)->delete();
 
         if ($delete) {
-            toastr()->success(__('SuperAdmin/backend.data_deleted'));
+            toastr()->success(__('SuperAdmin/backend.data_deleted_successfully'));
             return back();
         }
     }

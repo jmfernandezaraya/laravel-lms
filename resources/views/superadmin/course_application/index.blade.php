@@ -57,7 +57,7 @@
                                 <td>{{ $details->start_date }}</td>
                                 <td>{{ $details->program_duration }}</td>
                                 <td>{{ $details->other_currency }}</td>
-                                <td>{{ $details->deposit_price }}</td>
+                                <td>{{ toFixedNumber(getCurrencyConvertedValue($details->course_id, $details->deposit_price)) }}</td>
                                 <td>{{ isset($details->courseApplicationApprove->approve) ? ucwords($details->courseApplicationApprove->approve  == 1 ? 'Application Recevived' : 'Send To School Admin' ) : 'Application Recevived' }}</td>
                                 @if (auth('superadmin')->user()->permission['course_application_manager'] || auth('superadmin')->user()->permission['course_application_edit'])
                                     <td>

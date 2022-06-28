@@ -209,6 +209,9 @@
                         </li>
                     @endif
                     <li class="nav-item">
+                        <a class="nav-link" href="{{route('superadmin.setting.site')}}">{{__('SuperAdmin/dashboard.site')}}</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{{route('superadmin.setting.home_page')}}">{{__('SuperAdmin/dashboard.home_page')}}</a>
                     </li>
                     <li class="nav-item">

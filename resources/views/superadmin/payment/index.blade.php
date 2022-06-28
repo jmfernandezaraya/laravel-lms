@@ -41,37 +41,39 @@
                     </thead>
                     <tbody>
                         @foreach($payments as $payment)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>
-                                    @if ($payment->response)
-                                        {{ $payment->response['order']['transaction']['ref'] }}
-                                    @else
-                                        -
-                                    @endif
-                                </td>
-                                <td>{{ $payment->order_id }}</td>
-                                <td>{{ $payment->amount }}</td>
-                                <td>{{ $payment->description }}</td>
-                                <td>{{ $payment->billing_fname }}</td>
-                                <td>{{ $payment->billing_sname }}</td>
-                                <td>{{ $payment->billing_address_1 . " " . $payment->billing_address_2 }}</td>
-                                <td>{{ $payment->billing_city }}</td>
-                                <td>{{ $payment->billing_region }}</td>
-                                <td>{{ $payment->billing_country }}</td>
-                                <td>{{ $payment->billing_zip }}</td>
-                                <td>{{ $payment->billing_email }}</td>
-                                <td>{{ $payment->status == 1 ? __('SuperAdmin/backend.success') : __('SuperAdmin/backend.failed') }}</td>
-                                <td>{{ $payment->created_at }}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <a href="" class="btn btn-info btn-sm fa fa-pencil"></a>
-                                        <form action="" method="post">
-                                            <button onclick="return confirmDelete()" class="btn btn-danger btn-sm fa fa-trash"></button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
+                            @if ($payment->response)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>
+                                        @if (isset($payment->response['order']))
+                                            {{ $payment->response['order']['transaction']['ref'] }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                    <td>{{ $payment->order_id }}</td>
+                                    <td>{{ $payment->amount }}</td>
+                                    <td>{{ $payment->description }}</td>
+                                    <td>{{ $payment->billing_fname }}</td>
+                                    <td>{{ $payment->billing_sname }}</td>
+                                    <td>{{ $payment->billing_address_1 . " " . $payment->billing_address_2 }}</td>
+                                    <td>{{ $payment->billing_city }}</td>
+                                    <td>{{ $payment->billing_region }}</td>
+                                    <td>{{ $payment->billing_country }}</td>
+                                    <td>{{ $payment->billing_zip }}</td>
+                                    <td>{{ $payment->billing_email }}</td>
+                                    <td>{{ $payment->status == 1 ? __('SuperAdmin/backend.success') : __('SuperAdmin/backend.failed') }}</td>
+                                    <td>{{ $payment->created_at }}</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="" class="btn btn-info btn-sm fa fa-pencil"></a>
+                                            <form action="" method="post">
+                                                <button onclick="return confirmDelete()" class="btn btn-danger btn-sm fa fa-trash"></button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endif
                         @endforeach
                     </tbody>
                 </table>

@@ -112,7 +112,7 @@ class ReviewController extends Controller
         $save = $validate->validated();
 
         $review->fill($save)->save();
-        $saved = __('SuperAdmin/backend.data_saved');
+        $saved = __('SuperAdmin/backend.data_saved_successfully');
         return response()->json(['data' => $saved, 'success' => true]);
     }
 
@@ -125,7 +125,7 @@ class ReviewController extends Controller
     public function destroy($id)
     {
         $delete = Review::findorFail($id);
-        $deleted = __('SuperAdmin/backend.data_deleted');
+        $deleted = __('SuperAdmin/backend.data_deleted_successfully');
         $delete->delete();
         return back()->with(['message' => $deleted]);
     }

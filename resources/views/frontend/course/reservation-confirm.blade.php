@@ -37,7 +37,7 @@
                         </div>
                         <div class="row border-top-bottom form-group">
                             <div class="col-md-12">
-                                <p>{{__('Frontend.registration_cancelation_conditions_description')}}</p>
+                                <p>{!! $registration_cancel_description !!}</p>
                             </div>
                         </div>
                         <div class="row form-group">
