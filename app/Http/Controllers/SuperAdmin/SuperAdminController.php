@@ -42,14 +42,14 @@ class SuperAdminController extends Controller
         ];
 
         $validator = \Validator::make($request->all(), $rules, [
-            'first_name_en.required' => __('SuperAdmin/backend.errors.first_name_english'),
-            'first_name_ar.required' => __('SuperAdmin/backend.errors.first_name_arabic'),
-            'last_name_ar.required' => __('SuperAdmin/backend.errors.last_name_arabic'),
-            'last_name_en.required' => __('SuperAdmin/backend.errors.last_name_english'),
-            'image.required' => __('SuperAdmin/backend.errors.image_required'),
-            'contact.required' => __('SuperAdmin/backend.errors.contact_required'),
-            'email.required' => __('SuperAdmin/backend.errors.email_required'),
-            'image.mimes' => __('SuperAdmin/backend.errors.image_must_be_in')]);
+            'first_name_en.required' => __('Admin/backend.errors.first_name_english'),
+            'first_name_ar.required' => __('Admin/backend.errors.first_name_arabic'),
+            'last_name_ar.required' => __('Admin/backend.errors.last_name_arabic'),
+            'last_name_en.required' => __('Admin/backend.errors.last_name_english'),
+            'image.required' => __('Admin/backend.errors.image_required'),
+            'contact.required' => __('Admin/backend.errors.contact_required'),
+            'email.required' => __('Admin/backend.errors.email_required'),
+            'image.mimes' => __('Admin/backend.errors.image_must_be_in')]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()]);
@@ -69,6 +69,7 @@ class SuperAdminController extends Controller
         unset($requested_save['course_display']);
         unset($requested_save['course_delete']);
         unset($requested_save['currency_permission']);
+        unset($requested_save['currency_add']);
         unset($requested_save['currency_edit']);
         unset($requested_save['course_application_permission']);
         unset($requested_save['course_application_edit']);
@@ -88,8 +89,12 @@ class SuperAdminController extends Controller
             $image_name = 'public/images/user_images/' . $filename;
         }
         \DB::transaction(function () use ($request, $requested_save, $image_name) {
-            $user = User::create($requested_save + ['user_type' => 'super_admin', 'image' => $image_name, 'password' => \Hash::make($request->password)]);
-            if (auth('superadmin')->user()->permission['user_manager'] || auth('superadmin')->user()->permission['user_permission']) {
+            if ($image_name) {
+                $user = User::create($requested_save + ['user_type' => 'super_admin', 'image' => $image_name, 'password' => \Hash::make($request->password)]);
+            } else {
+                $user = User::create($requested_save + ['user_type' => 'super_admin', 'password' => \Hash::make($request->password)]);
+            }
+            if (can('can_manage_user' || 'can_permission_user')) {
                 $user->permission()->create([
                     'blog_manager' => $request->blog_permission == 'manager',
                     'blog_add' => ($request->blog_permission == 'subscriber' && $request->blog_add) ?? 0,
@@ -103,7 +108,8 @@ class SuperAdminController extends Controller
                     'course_display' => ($request->course_permission == 'subscriber' && $request->course_display) ?? 0,
                     'course_delete' => ($request->course_permission == 'subscriber' && $request->course_delete) ?? 0,
                     'currency_manager' => $request->currency_permission == 'manager',
-                    'currency_deit' => ($request->currency_permission == 'subscriber' && $request->currency_edit) ?? 0,
+                    'currency_add' => ($request->currency_permission == 'subscriber' && $request->currency_add) ?? 0,
+                    'currency_edit' => ($request->currency_permission == 'subscriber' && $request->currency_edit) ?? 0,
                     'course_application_manager' => $request->course_application_permission == 'manager',
                     'course_application_edit' => ($request->course_application_permission == 'subscriber' && $request->course_application_edit) ?? 0,
                     'course_application_chanage_status' => ($request->course_application_permission == 'subscriber' && $request->course_application_chanage_status) ?? 0,
@@ -119,7 +125,7 @@ class SuperAdminController extends Controller
             }
         });
 
-        $saved = __('SuperAdmin/backend.data_saved_successfully');
+        $saved = __('Admin/backend.data_saved_successfully');
         return response()->json(['success' => 'success', 'data' => $saved]);
     }
 
@@ -138,7 +144,7 @@ class SuperAdminController extends Controller
 
         $deleted = $deleted->delete();
         if ($deleted) {
-            toastr()->success(__('SuperAdmin/backend.deleted_successfully'));
+            toastr()->success(__('Admin/backend.deleted_successfully'));
             return back();
         }
     }
@@ -164,14 +170,14 @@ class SuperAdminController extends Controller
         ];
 
         $validator = \Validator::make($request->all(), $rules, [
-            'first_name_en.required' => __('SuperAdmin/backend.errors.first_name_english'),
-            'first_name_ar.required' => __('SuperAdmin/backend.errors.first_name_arabic'),
-            'last_name_ar.required' => __('SuperAdmin/backend.errors.last_name_arabic'),
-            'last_name_en.required' => __('SuperAdmin/backend.errors.last_name_english'),
-            'image.required' => __('SuperAdmin/backend.errors.image_required'),
-            'contact.required' => __('SuperAdmin/backend.errors.contact_required'),
-            'email.required' => __('SuperAdmin/backend.errors.email_required'),
-            'image.mimes' => __('SuperAdmin/backend.errors.image_must_be_in'),]);
+            'first_name_en.required' => __('Admin/backend.errors.first_name_english'),
+            'first_name_ar.required' => __('Admin/backend.errors.first_name_arabic'),
+            'last_name_ar.required' => __('Admin/backend.errors.last_name_arabic'),
+            'last_name_en.required' => __('Admin/backend.errors.last_name_english'),
+            'image.required' => __('Admin/backend.errors.image_required'),
+            'contact.required' => __('Admin/backend.errors.contact_required'),
+            'email.required' => __('Admin/backend.errors.email_required'),
+            'image.mimes' => __('Admin/backend.errors.image_must_be_in'),]);
 
         $password = $request->has('password') ? \Hash::make($request->password) : null;
         
@@ -193,6 +199,7 @@ class SuperAdminController extends Controller
         unset($requested_save['course_display']);
         unset($requested_save['course_delete']);
         unset($requested_save['currency_permission']);
+        unset($requested_save['currency_add']);
         unset($requested_save['currency_edit']);
         unset($requested_save['course_application_permission']);
         unset($requested_save['course_application_edit']);
@@ -213,11 +220,19 @@ class SuperAdminController extends Controller
         }
 
         if ($request->has('password')) {
-            $user->fill($requested_save + ['user_type' => 'super_admin', 'image' => $image_name, 'password' => $password])->save();
+            if ($image_name) {
+                $user->fill($requested_save + ['user_type' => 'super_admin', 'image' => $image_name, 'password' => $password])->save();
+            } else {
+                $user->fill($requested_save + ['user_type' => 'super_admin', 'password' => $password])->save();
+            }
         } else {
-            $user->fill($requested_save + ['user_type' => 'super_admin', 'image' => $image_name])->save();
+            if ($image_name) {
+                $user->fill($requested_save + ['user_type' => 'super_admin', 'image' => $image_name])->save();
+            } else {
+                $user->fill($requested_save + ['user_type' => 'super_admin'])->save();
+            }
         }
-        if (auth('superadmin')->user()->permission['user_manager'] || auth('superadmin')->user()->permission['user_permission']) {            
+        if (can('can_manage_user' || 'can_permission_user')) {
             $user->permission()->updateOrCreate(['user_id' => $user->id], [
                 'blog_manager' => $request->blog_permission == 'manager',
                 'blog_add' => ($request->blog_permission == 'subscriber' && $request->blog_add) ?? 0,
@@ -231,6 +246,7 @@ class SuperAdminController extends Controller
                 'course_display' => ($request->course_permission == 'subscriber' && $request->course_display) ?? 0,
                 'course_delete' => ($request->course_permission == 'subscriber' && $request->course_delete) ?? 0,
                 'currency_manager' => $request->currency_permission == 'manager',
+                'currency_add' => ($request->currency_permission == 'subscriber' && $request->currency_add) ?? 0,
                 'currency_edit' => ($request->currency_permission == 'subscriber' && $request->currency_edit) ?? 0,
                 'course_application_manager' => $request->course_application_permission == 'manager',
                 'course_application_edit' => ($request->course_application_permission == 'subscriber' && $request->course_application_edit) ?? 0,
@@ -246,7 +262,7 @@ class SuperAdminController extends Controller
             ]);
         }
         
-        $saved = __('SuperAdmin/backend.data_saved_successfully');
+        $saved = __('Admin/backend.data_saved_successfully');
         return response()->json(['success' => $saved]);
     }
 }

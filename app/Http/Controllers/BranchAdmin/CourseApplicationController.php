@@ -106,6 +106,6 @@ class CourseApplicationController extends Controller
 
         \Mail::send(new SendMessageToSuperAdminRelatedToCourse($user, \Arr::except($request->all(), 'attachment'), $sendfile));
 
-        return response(['success' => __("SuperAdmin/backend.upload") . __("SuperAdmin/backend.errors.success")]);
+        return response(['success' => __("Admin/backend.upload") . __("Admin/backend.errors.success")]);
     }
 }

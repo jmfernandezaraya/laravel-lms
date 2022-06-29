@@ -116,7 +116,7 @@ class CourseDetailsSchoolAdminController extends Controller
 
         $to_be_updated->under_age_fee_per_week = $request->under_age_fee_per_week;
         $to_be_updated->save();
-        toastr(__('SuperAdmin/backend.data_updated_successfully'), 'success');
+        toastr(__('Admin/backend.data_updated_successfully'), 'success');
         return back();
     }
 
@@ -139,7 +139,7 @@ class CourseDetailsSchoolAdminController extends Controller
         $access = $to_be_updated->can_edit_by_school_admin == 1 ? 0 : 1;
         $to_be_updated->can_edit_by_school_admin = $access;
         $to_be_updated->save();
-        toastr(__('SuperAdmin/backend.data_updated_successfully'), 'success');
+        toastr(__('Admin/backend.data_updated_successfully'), 'success');
         return back();
     }
 
@@ -160,7 +160,7 @@ class CourseDetailsSchoolAdminController extends Controller
     {
         CourseAirport::where('unique_id', $id)->delete();
 
-        toastr()->success(__('SuperAdmin/backend.data_removed_successfully'));
+        toastr()->success(__('Admin/backend.data_removed_successfully'));
         return back();
     }
 
@@ -180,7 +180,7 @@ class CourseDetailsSchoolAdminController extends Controller
     public function courseProgramDelete($id)
     {
         CourseProgram::where('unique_id', $id)->delete();
-        toastr()->success(__('SuperAdmin/backend.data_removed_successfully'));
+        toastr()->success(__('Admin/backend.data_removed_successfully'));
         return back();
     }
 
@@ -215,7 +215,7 @@ class CourseDetailsSchoolAdminController extends Controller
             "about_program" => $request->about_program,
             "about_program_ar" => $request->about_program_ar,
         ]);
-        toastr()->success(__('SuperAdmin/backend.data_removed_successfully'));
+        toastr()->success(__('Admin/backend.data_removed_successfully'));
         return back();
     }
 
@@ -264,7 +264,7 @@ class CourseDetailsSchoolAdminController extends Controller
             "christmas_fee_end_date" => $request->christmas_fee_end_date,
         ];
         CourseAccommodation::where('unique_id', $request->id)->update($array);
-        toastr()->success(__('SuperAdmin/backend.data_removed_successfully'));
+        toastr()->success(__('Admin/backend.data_removed_successfully'));
         return back();
     }
 
@@ -284,7 +284,7 @@ class CourseDetailsSchoolAdminController extends Controller
     public function courseAccommodationUnderAgeDelete($id)
     {
         CourseAccommodationUnderAge::find($id)->delete();
-        toastr()->success(__('SuperAdmin/backend.data_removed_successfully'));
+        toastr()->success(__('Admin/backend.data_removed_successfully'));
         return back();
     }
 
@@ -307,7 +307,7 @@ class CourseDetailsSchoolAdminController extends Controller
         $input = $request->except('_token', 'id');
         $airport->fill($input)->save();
 
-        toastr()->success(__('SuperAdmin/backend.data_updated_successfully'));
+        toastr()->success(__('Admin/backend.data_updated_successfully'));
         return back();
     }
 
@@ -329,7 +329,7 @@ class CourseDetailsSchoolAdminController extends Controller
         $medical = CourseMedicalFee::where('unique_id', $request->id);
         $medical->fill($request->except('_token', 'id'))->save();
 
-        toastr()->success(__('SuperAdmin/backend.data_updated_successfully'));
+        toastr()->success(__('Admin/backend.data_updated_successfully'));
 
         return back();
     }
@@ -352,7 +352,7 @@ class CourseDetailsSchoolAdminController extends Controller
         $courseprogram = CourseProgram::where('unique_id', $request->id);
 
         $courseprogram->fill($request->except('_token', 'id'))->save();
-        toastr(__('SuperAdmin/backend.data_updated_successfully'), 'success');
+        toastr(__('Admin/backend.data_updated_successfully'), 'success');
         return $courseprogram;
     }
 
@@ -373,7 +373,7 @@ class CourseDetailsSchoolAdminController extends Controller
     {
         CourseAccommodationUnderAge::find($request->id)->update(['under_age_fee_per_week' => $request->under_age_fee_per_week, 'under_age' => $request->under_age]);
 
-        toastr()->success(__('SuperAdmin/backend.data_updated_successfully'));
+        toastr()->success(__('Admin/backend.data_updated_successfully'));
 
         return back();
     }

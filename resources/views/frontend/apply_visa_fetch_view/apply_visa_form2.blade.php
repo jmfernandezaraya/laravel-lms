@@ -18,7 +18,7 @@
                     <div class="form-group col-md-6">
                         <label for="inputapply">@lang('Frontend.visaform.applying_from')</label>
                         <select onchange = "getNationality($(this).val())" name='apply_form' class="form-control" id="apply_from_frontend">
-                            <option value="">@lang('SuperAdmin/backend.select_option') </option>
+                            <option value="">@lang('Admin/backend.select_option') </option>
                             @foreach ($apply_from as $apply_froms)
                                 <option {{session()->get('visa_form')['apply_form'] == $apply_froms->id ? 'selected' : ''}} value="{{$apply_froms->id}}">{{$apply_froms->{'apply_from_'.get_language() } }} </option>
                             @endforeach
@@ -35,7 +35,7 @@
                     <div class="form-group col-md-6">
                         <label for="inputvisa1">what is your Nationality</label>
                         <select  name="nationality" class="form-control" id="nationality_select_frontend">
-                            <option value="">@lang('SuperAdmin/backend.select_option') </option>
+                            <option value="">@lang('Admin/backend.select_option') </option>
                             @foreach ($nationality as $nationalitys)
                                 <option {{session()->get('visa_form')['nationality'] == $nationalitys->id ? 'selected' : ''}} value="{{$nationalitys->id}}">{{$nationalitys->{'nationality_'.get_language() } }} </option>
                             @endforeach
@@ -48,7 +48,7 @@
                         <label for="inputtravel">where do you want to travel?</label>
                         <!--  <input type="password" class="form-control" id="inputPassword4" placeholder="Password"> -->
                         <select onchange="getTypeOfVisa($(this).val())" name="travel" class="form-control" id="travel_select_frontend">
-                            <option value="">@lang('SuperAdmin/backend.select_option') </option>
+                            <option value="">@lang('Admin/backend.select_option') </option>
                             @foreach ($travel as $travels)
                                 <option {{session()->get('visa_form')['travel'] == $travels->id ? 'selected' : ''}} value="{{$travels->id}}">{{$travels->{'travel_'.get_language() } }} </option>
                             @endforeach
@@ -60,7 +60,7 @@
                     <div class="form-group col-md-6">
                         <label for="inputvisa3">Type of visa</label>
                         <select name="type_of_visa" data-url="{{route('frontend.visa_details')}}" onchange="getApplicationCenter($(this).val())" class="form-control" id="type_of_visa">
-                            <option value="">@lang('SuperAdmin/backend.select_option') </option>
+                            <option value="">@lang('Admin/backend.select_option') </option>
                             @foreach ($visa as $visas)
                                 <option {{session()->get('visa_form')['type_of_visa'] == $visas->id ? 'selected' : ''}} value="{{$visas->id}}">{{$visas->{'visa_'.get_language() } }} </option>
                             @endforeach
@@ -72,7 +72,7 @@
                     <div class="form-group col-md-6">
                         <label for="inputappliccation">@lang('Frontend.visaform.choose_visa_application_center')</label>
                         <select name="visa_center" class="form-control mt-2" id="visa_select_frontend" onchange="getNumberOfPeople($(this))">
-                            <option value="">@lang('SuperAdmin/backend.select_option') </option>
+                            <option value="">@lang('Admin/backend.select_option') </option>
                             @foreach ($visa_center as $visa_centers)
                                 <option {{session()->get('visa_form')['visa_center'] == $visa_centers->id ? 'selected' : ''}} value="{{$visa_centers->id}}">{{$visa_centers->{'application_center_'.get_language() } }} </option>
                             @endforeach
@@ -133,7 +133,7 @@
                             <div class="col-md-4 text-right">
                                 <h6 id="total">0 SAR</h6>
                                 <input hidden id="total_value" name="total_value" value="">
-                                <button type="submit" class="btn btn-primary">@lang('SuperAdmin/backend.apply_now')</button>
+                                <button type="submit" class="btn btn-primary">@lang('Admin/backend.apply_now')</button>
                             </div>
                         </div>
                     </div>

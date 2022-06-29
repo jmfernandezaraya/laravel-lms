@@ -1,5 +1,181 @@
 <?php
 
+function can_manage_blog() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['blog_manager'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['blog_manager'] == 1 ? true : false;
+    }
+}
+function can_add_blog() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['blog_add'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['blog_add'] == 1 ? true : false;
+    }
+}
+function can_edit_blog() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['blog_edit'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['blog_edit'] == 1 ? true : false;
+    }
+}
+function can_manage_school() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['school_manager'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['school_manager'] == 1 ? true : false;
+    }
+}
+function can_add_school() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['school_add'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['school_add'] == 1 ? true : false;
+    }
+}
+function can_edit_school() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['school_edit'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['school_edit'] == 1 ? true : false;
+    }
+}
+function can_manage_course() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['course_manager'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['course_manager'] == 1 ? true : false;
+    }
+}
+function can_add_course() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['course_add'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['course_add'] == 1 ? true : false;
+    }
+}
+function can_edit_course() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['course_edit'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['course_edit'] == 1 ? true : false;
+    }
+}
+function can_display_course() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['course_display'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['course_display'] == 1 ? true : false;
+    }
+}
+function can_delete_course() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['course_delete'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['course_delete'] == 1 ? true : false;
+    }
+}
+function can_manage_currency() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['currency_manager'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return false;
+    }
+}
+function can_add_currency() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['currency_add'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return false;
+    }
+}
+function can_edit_currency() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['currency_edit'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return false;
+    }
+}
+function can_manage_course_application() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['course_application_manager'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['course_application_manager'] == 1 ? true : false;
+    }
+}
+function can_edit_course_application() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['course_application_edit'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['course_application_edit'] == 1 ? true : false;
+    }
+}
+function can_chanage_status_course_application() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['course_application_chanage_status'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['course_application_chanage_status'] == 1 ? true : false;
+    }
+}
+function can_payment_refund_course_application() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['course_application_payment_refund'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['course_application_payment_refund'] == 1 ? true : false;
+    }
+}
+function can_contact_student_course_application() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['course_application_contact_student'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['course_application_contact_student'] == 1 ? true : false;
+    }
+}
+function can_contact_school_course_application() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['course_application_contact_school'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['course_application_contact_school'] == 1 ? true : false;
+    }
+}
+function can_manage_user() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['user_manager'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return false;
+    }
+}
+function can_add_user() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['user_add'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return false;
+    }
+}
+function can_edit_user() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['user_edit'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return false;
+    }
+}
+function can_delete_user() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['user_delete'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return false;
+    }
+}
+function can_permission_user() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['user_permission'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return false;
+    }
+}
+
 /**
  * @return string
  */
@@ -506,23 +682,18 @@ function getSitePhone()
     return $site_phone;
 }
 
-function getRegistrationCancelationConditions()
+function getCourseReservationLinks()
 {
-    $site_registration_cancelation_conditions = '';
+    $site_course_reservation_links = [];
     $site = \App\Models\Setting::where('setting_key', 'site')->first();
     if ($site) {
         $content = unserialize($site->setting_value);
-        if (isset($content['registration_cancelation_conditions'])) {
-            $front_page = \App\Models\FrontPage::where('id', $content['registration_cancelation_conditions'])->first();
-            if (app()->getLocale() == 'en') {
-                $site_registration_cancelation_conditions = $front_page->content;
-            } else {
-                $site_registration_cancelation_conditions = $front_page->content_ar;
-            }
+        if (isset($content['course_reservation_links'])) {
+            $site_course_reservation_links = $content['course_reservation_links'];
         }
     }
 
-    return $site_registration_cancelation_conditions;
+    return $site_course_reservation_links;
 }
 
 function getSiteNewsletter()
@@ -738,14 +909,6 @@ function getCourseApplicationPrintData($id, $user_id, $is_admin = false)
 {
     $course_application = \App\Models\CourseApplication::with('course', 'User', 'courseApplicationStatusus')->whereId($id)->firstOrFail();
 
-    $program_age_ranges = \App\Models\SuperAdmin\Choose_Program_Age_Range::whereIn('unique_id', [$course_application->age_selected])->pluck('age')->toArray();
-    $data['min_age'] = ''; $data['max_age'] = '';
-    if (!empty($program_age_ranges) && count($program_age_ranges)) {
-        $data['min_age'] = $program_age_ranges[0];
-        $data['max_age'] = $program_age_ranges[count($program_age_ranges) - 1];
-    }
-    $program_under_age = \App\Models\SuperAdmin\Choose_Program_Under_Age::whereIn('age', $program_age_ranges)->value('unique_id');
-
     $data['course_application'] = $course_application;
     $data['program_start_date'] = Carbon\Carbon::create($course_application->start_date)->format('d-m-Y');
     $data['accommodation_start_date'] = $data['medical_start_date'] = Carbon\Carbon::create($course_application->start_date)->subDay()->format('d-m-Y');
@@ -755,6 +918,14 @@ function getCourseApplicationPrintData($id, $user_id, $is_admin = false)
     $data['school'] = \App\Models\SuperAdmin\School::find($course_application->school_id);
     $data['course'] = isset($course_application->course_id) ? \App\Models\SuperAdmin\Course::where('unique_id', $course_application->course_id)->first() : null;
     $data['program'] = isset($course_application->course_program_id) ? \App\Models\SuperAdmin\CourseProgram::where('unique_id', $course_application->course_program_id)->first() : null;
+    $data['min_age'] = ''; $data['max_age'] = '';
+    $age_ranges = $data['program'] ? $data['program']->program_age_range : [];
+    $program_age_ranges = \App\Models\SuperAdmin\Choose_Program_Age_Range::whereIn('unique_id', $age_ranges)->orderBy('age', 'asc')->pluck('age')->toArray();
+    if (!empty($program_age_ranges) && count($program_age_ranges)) {
+        $data['min_age'] = $program_age_ranges[0];
+        $data['max_age'] = $program_age_ranges[count($program_age_ranges) - 1];
+    }
+    $program_under_age = \App\Models\SuperAdmin\Choose_Program_Under_Age::whereIn('age', $program_age_ranges)->value('unique_id');
     $data['program_text_book_fee'] = isset($course_application->course_program_id) ? \App\Models\SuperAdmin\CourseProgramTextBookFee::where('course_program_id', $course_application->course_program_id)->
         where('text_book_start_date', '<=', $course_application->course_program_id)->where('text_book_end_date', '>=', $course_application->course_program_id)->first() : null;
     $data['program_under_age_fee'] = isset($course_application->course_program_id) ? \App\Models\SuperAdmin\CourseProgramUnderAgeFee::where('course_program_id', $course_application->course_program_id)->
@@ -778,7 +949,7 @@ function getCourseApplicationPrintData($id, $user_id, $is_admin = false)
 
     $default_currency = getDefaultCurrency();
 
-    $program_total = $course_application->total_cost - $course_application->accommodation_total - $course_application->accommodation_special_diet_fee
+    $program_total = $course_application->total_cost - $course_application->accommodation_total
             - $course_application->airport_pickup_fee - $course_application->medical_insurance_fee + $course_application->discount_fee + $course_application->accommodation_discount_fee;
 
     $calculator_values = getCurrencyConvertedValues($course_application->course_id,
@@ -853,6 +1024,7 @@ function getCourseApplicationPrintData($id, $user_id, $is_admin = false)
     $currency_exchange_rate = \App\Models\SuperAdmin\CurrencyExchangeRate::where('id', $data['course'] ? $data['course']->currency : 0)->first() ?? null;
     $currency_exchange_rate_value = $currency_exchange_rate ? (float)$currency_exchange_rate->exchange_rate : 1;
     $amount_paid = $course_application->paid_amount + $amount_added;
+    $amount_balance = $course_application->total_cost_fixed - $amount_paid;
     $amount_due = $course_application->total_cost_fixed - $amount_paid + $amount_refunded;
     $data['can_edit'] = true;
     if ($course_application->status == 'application_cancelled' || $course_application->status == 'completed' || $amount_due == 0) {
@@ -862,6 +1034,7 @@ function getCourseApplicationPrintData($id, $user_id, $is_admin = false)
     $data['amount_paid'] = [ 'value' => (float)($amount_paid / $currency_exchange_rate_value), 'converted_value' => (float)$amount_paid ];
     $data['amount_added'] = [ 'value' => (float)($amount_added / $currency_exchange_rate_value), 'converted_value' => (float)$amount_added ];
     $data['amount_refunded'] = [ 'value' => (float)($amount_refunded / $currency_exchange_rate_value), 'converted_value' => (float)$amount_refunded ];
+    $data['amount_balance'] = [ 'value' => (float)($amount_balance / $currency_exchange_rate_value), 'converted_value' => (float)$amount_balance ];
     $data['amount_due'] = [ 'value' => (float)($amount_due / $currency_exchange_rate_value), 'converted_value' => (float)$amount_due ];
     $data['currency'] = [ 'cost' => $calculator_values['currency'], 'converted' => $default_currency['currency'] ];
     $data['today'] = Carbon\Carbon::now()->format('d-m-Y');
@@ -881,7 +1054,7 @@ function getCourseApplicationPrintData($id, $user_id, $is_admin = false)
                     $sub_query->where('type', 'to_admin')->where('from_user', $user_id);
                 });
             }
-        })->orderBy('created_at', 'asc')->get();
+        })->orderBy('id', 'asc')->get();
     $data['user_school'] = null;
     $data['school_messages'] = [];
     if ($course_application->course->school->userSchool != null) {
@@ -899,7 +1072,7 @@ function getCourseApplicationPrintData($id, $user_id, $is_admin = false)
                 })->orWhere(function($sub_query) use ($user_id, $school_user_ids) {
                     $sub_query->where('type', 'to_admin')->whereIn('from_user', $school_user_ids)->where('to_user', $user_id);
                 });
-            })->orderBy('created_at', 'asc')->get();
+            })->orderBy('id', 'asc')->get();
     }
 
     return $data;

@@ -1,4 +1,4 @@
-@extends('schooladmin.layouts.app')
+@extends('admin.layouts.app')
 @section('content')
 
 @section('css')
@@ -93,21 +93,21 @@
     <div class="card">
         <div class="card-body">
             <div style="text-align: center;">
-                <h4 class="card-title">@lang('SuperAdmin/backend.add_course') </h4>
-                <change>{{__('SuperAdmin/backend.in_english')}}</change>
+                <h4 class="card-title">@lang('Admin/backend.add_course') </h4>
+                <change>{{__('Admin/backend.in_english')}}</change>
             </div>
 
-            @include('schooladmin.include.alert')
+            @include('admin.include.alert')
             <div id="menu">
                 <ul class="lang text-right current_page_itemm">
                     <li class="current_page_item selected">
                         <a class="" href="#" onclick="changeLanguage('english', 'arabic')">
-                            <img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}
+                            <img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('Admin/backend.english')}}
                         </a>
                     </li>
                     <li>
                         <a href="#" onclick="changeLanguage('arabic', 'english')"; fillForm('form1', 'form2')">
-                            <img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}
+                            <img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('Admin/backend.arabic')}}
                         </a>
                     </li>
                 </ul>

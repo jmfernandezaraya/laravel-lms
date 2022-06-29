@@ -93,7 +93,7 @@ class SuperAdminEditUserCourse
     public function calculatorCourse(Request $r)
     {
         $data['is_true'] = true;
-        $select = __('SuperAdmin/backend.select_option');
+        $select = __('Admin/backend.select_option');
 
         $data['is_true'] = false;
         $data['success'] = false;
@@ -172,7 +172,7 @@ class SuperAdminEditUserCourse
                 ->where('age_range', 'LIKE', '%' . $r->under_age . '%')
                 ->get()->collect()->unique('type')->values()->all();
 
-            $select = __('SuperAdmin/backend.select');
+            $select = __('Admin/backend.select');
             $option = "<option value= ''>$select</option>";
             foreach ($accoms as $accom) {
                 $selected = $r->has('accom_id') && $r->accom_id == $accom->unique_id ? 'selected' : '';

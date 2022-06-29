@@ -31,11 +31,11 @@
         var add_accomm_under_range_url = "{{route('superadmin.accomm_under_age.add')}}";
         var delete_accomm_under_range_url = "{{route('superadmin.accomm_under_age.delete')}}";
         
-        var url_school_country_list = "{{route('superadmin.school.country.list')}}";
-        var url_school_city_list = "{{route('superadmin.school.city.list')}}";
-        var url_school_branch_list = "{{route('superadmin.school.branch.list')}}";
-        var select_option = "{{__('SuperAdmin/backend.select_option')}}";
-        var search = "{{__('SuperAdmin/backend.search')}}";
+        var url_school_country_list = "{{route('admin.school.country.list')}}";
+        var url_school_city_list = "{{route('admin.school.city.list')}}";
+        var url_school_branch_list = "{{route('admin.school.branch.list')}}";
+        var select_option = "{{__('Admin/backend.select_option')}}";
+        var search = "{{__('Admin/backend.search')}}";
 
         var formnum = 0;
         var rowNum = 0;
@@ -151,7 +151,7 @@
             var fees = $(var1).next().next().find('#fees_under_age').val();
             rowNum++;
 
-            $.post("{{route('superadmin.course.store')}}", {
+            $.post("{{route('admin.course.store')}}", {
                 _token: "{{csrf_token()}}",
                 yes: 'yes',
                 under_age: var1,
@@ -258,9 +258,9 @@
             });
         });
 
-        var addschoolurl = "{{route('superadmin.school.store')}}";
-        var in_arabic = "{{__('SuperAdmin/backend.in_arabic')}}";
-        var in_english = "{{__('SuperAdmin/backend.in_english')}}";
+        var addschoolurl = "{{route('admin.school.store')}}";
+        var in_arabic = "{{__('Admin/backend.in_arabic')}}";
+        var in_english = "{{__('Admin/backend.in_english')}}";
     </script>
 
     <script>

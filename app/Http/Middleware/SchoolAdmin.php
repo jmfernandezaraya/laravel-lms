@@ -17,18 +17,22 @@ class SchoolAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if(config('app.env') == 'local'){
+        if (config('app.env') == 'local') {
             $user = User::whereUserType('school_admin')->first();
-            if(auth('superadmin')->check()){
+            if (auth('superadmin')->check()) {
                 auth('superadmin')->logout();
             }
             auth('schooladmin')->login($user);
 
             return $next($request);
         }
-       
-        if(auth('schooladmin')->check() && auth('schooladmin')->user()->isSchoolAdmin()){
-            return $next($request);
+        
+        if (auth('schooladmin')->check()) {
+            if (auth('schooladmin')->user()->user_type == 'school_admin') {
+                return $next($request);
+            } else {
+                auth('schooladmin')->logout();
+            }
         }
 
         return redirect()->route('schoollogin');

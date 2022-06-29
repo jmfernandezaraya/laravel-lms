@@ -1,7 +1,7 @@
-@extends('superadmin.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title')
-    {{__('SuperAdmin/backend.currencies')}}
+    {{__('Admin/backend.currencies')}}
 @endsection
 
 @section('content')
@@ -9,12 +9,12 @@
         <div class="card">
             <div class="card-body">
                 <div style="text-align: center;">
-                    <h1 class="card-title">{{__('SuperAdmin/backend.currencies')}}</h1>
+                    <h1 class="card-title">{{__('Admin/backend.currencies')}}</h1>
                 </div>
 
-                @if (auth('superadmin')->user()->permission['course_manager'])
+                @if (can_manage_currency() || can_add_currency())
                     <a href="{{route('superadmin.setting.currency.create')}}" type="button" class="btn btn-primary btn-sm pull-right">
-                        <i class="fa fa-plus"></i>&nbsp;{{__('SuperAdmin/backend.add')}}
+                        <i class="fa fa-plus"></i>&nbsp;{{__('Admin/backend.add')}}
                     </a>
                 @endif
             </div>
@@ -28,12 +28,12 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>{{__('SuperAdmin/backend.currency')}}</th>
-                            <th>{{__('SuperAdmin/backend.exchange_rate')}}</th>
-                            <th>{{__('SuperAdmin/backend.default')}}</th>
-                            <th>{{__('SuperAdmin/backend.created_on')}}</th>
-                            @if (auth('superadmin')->user()->permission['course_manager'] || auth('superadmin')->user()->permission['currency_deit'])
-                                <th>{{__('SuperAdmin/backend.action')}}</th>
+                            <th>{{__('Admin/backend.currency')}}</th>
+                            <th>{{__('Admin/backend.exchange_rate')}}</th>
+                            <th>{{__('Admin/backend.default')}}</th>
+                            <th>{{__('Admin/backend.created_on')}}</th>
+                            @if (can_manage_course() || can_edit_course())
+                                <th>{{__('Admin/backend.action')}}</th>
                             @endif
                         </tr>
                     </thead>
@@ -43,20 +43,20 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $currency->name }}</td>
                                 <td>{{ $currency->exchange_rate }}</td>
-                                <td>{{ $currency->is_default ? __('SuperAdmin/backend.default') : '' }}</td>
+                                <td>{{ $currency->is_default ? __('Admin/backend.default') : '' }}</td>
                                 <td>{{ $currency->created_at->diffForHumans() }}</td>
-                                @if (auth('superadmin')->user()->permission['course_manager'] || auth('superadmin')->user()->permission['currency_deit'])
+                                @if (can_manage_currency() || can_edit_currency())
                                     <td>
                                         <div class="btn-group">
-                                            @if (auth('superadmin')->user()->permission['course_manager'] || auth('superadmin')->user()->permission['currency_deit'])
+                                            @if (can_manage_currency() || can_edit_currency())
                                                 <a href="{{route('superadmin.setting.currency.edit', $currency->id)}}" class="btn btn-info btn-sm fa fa-pencil"></a>
                                             @endif
                                             
-                                            @if (auth('superadmin')->user()->permission['course_manager'])
+                                            @if (can_manage_currency())
                                                 @if(!$currency->is_default)
                                                     <form action="{{route('superadmin.setting.currency.set_default', $currency->id)}}" method="POST">
                                                         @csrf
-                                                        <button type="submit" onclick="return confirm('{{__('SuperAdmin/backend.confirm_set_default')}}')" class="btn btn-primary btn-sm fa fa-check"></button>
+                                                        <button type="submit" onclick="return confirm('{{__('Admin/backend.confirm_set_default')}}')" class="btn btn-primary btn-sm fa fa-check"></button>
                                                     </form>
                                                 @endif
 

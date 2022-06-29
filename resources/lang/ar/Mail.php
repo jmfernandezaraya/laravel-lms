@@ -16,6 +16,7 @@ return [
     'reservation_qutation' => 'عرض السعر',
     'registration_date' => 'تاريخ التسجيل',
     'customer_name' => 'اسم العميل',
+    'name' => 'Name',
     'email' => 'البريد الالكتروني',
     'customer' => 'العميل',
     'customer_no' => 'رقم القعميل #',

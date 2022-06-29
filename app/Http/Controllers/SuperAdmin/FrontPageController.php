@@ -78,9 +78,9 @@ class FrontPageController extends Controller
             'slug' => 'required',
         ];
         $validate = \Validator::make($request->all(), $rules, [
-            'title.required' => __('SuperAdmin/backend.errors.title_in_english'),
-            'title_ar.required' => __('SuperAdmin/backend.errors.title_in_arabic'),
-            'slug.required' => __('SuperAdmin/backend.errors.slug'),
+            'title.required' => __('Admin/backend.errors.title_in_english'),
+            'title_ar.required' => __('Admin/backend.errors.title_in_arabic'),
+            'slug.required' => __('Admin/backend.errors.slug'),
         ]);
         if ($validate->fails()) {
             return response()->json(['errors' => $validate->errors()]);
@@ -97,11 +97,11 @@ class FrontPageController extends Controller
             $front_page->route = isset($request->route) ? true : false;
             $front_page->save();
             
-            toastr()->success(__('SuperAdmin/backend.front_page_added_successfully'));
+            toastr()->success(__('Admin/backend.front_page_added_successfully'));
 
-            return back()->with(['message' => __('SuperAdmin/backend.front_page_added_successfully')]);
+            return back()->with(['message' => __('Admin/backend.front_page_added_successfully')]);
         } catch (NotReadableException $e) {
-            $exception = __('SuperAdmin/backend.errors.image_required');
+            $exception = __('Admin/backend.errors.image_required');
             return response()->json(['catch_error' => $exception]);
         } catch (\Exception $e) {
             return response()->json(['catch_error' => $e->getMessage()]);
@@ -135,9 +135,9 @@ class FrontPageController extends Controller
             'slug' => 'required',
         ];
         $validate = \Validator::make($request->all(), $rules, [
-            'title.required' => __('SuperAdmin/backend.errors.title_in_english'),
-            'title_ar.required' => __('SuperAdmin/backend.errors.title_in_arabic'),
-            'slug.required' => __('SuperAdmin/backend.errors.slug'),
+            'title.required' => __('Admin/backend.errors.title_in_english'),
+            'title_ar.required' => __('Admin/backend.errors.title_in_arabic'),
+            'slug.required' => __('Admin/backend.errors.slug'),
         ]);
         if ($validate->fails()) {
             return response()->json(['errors' => $validate->errors()]);
@@ -152,9 +152,9 @@ class FrontPageController extends Controller
         $front_page->route = isset($request->route) ? true : false;
         $front_page->save();
 
-        toastr()->success(__('SuperAdmin/backend.front_page_updated_successfully'));
+        toastr()->success(__('Admin/backend.front_page_updated_successfully'));
 
-        return back()->with(['message' => __('SuperAdmin/backend.front_page_updated_successfully')]);
+        return back()->with(['message' => __('Admin/backend.front_page_updated_successfully')]);
     }
 
     /**
@@ -166,14 +166,14 @@ class FrontPageController extends Controller
     public function destroy($id)
     {
         $delete = FrontPage::findorFail($id);
-        $deleted = __('SuperAdmin/backend.data_deleted_successfully');
+        $deleted = __('Admin/backend.data_deleted_successfully');
 
         if ($delete->image != '' && $delete->image != null && file_exists($delete->image)) {
             unlink($delete->image);
         }
         $delete->delete();
 
-        toastr()->success(__('SuperAdmin/backend.front_page_deleted_successfully'));
+        toastr()->success(__('Admin/backend.front_page_deleted_successfully'));
 
         return back()->with(['message' => $deleted]);
     }
@@ -222,7 +222,7 @@ class FrontPageController extends Controller
         $new_front_page->updated_at = null;
         $new_front_page->save();
         
-        toastr()->success(__('SuperAdmin/backend.front_page_cloned_successfully'));
+        toastr()->success(__('Admin/backend.front_page_cloned_successfully'));
         return back();
     }
 
@@ -241,7 +241,7 @@ class FrontPageController extends Controller
             }
         });
         if ($db) {
-            toastr()->success(__('SuperAdmin/backend.front_page_paused_successfully'));
+            toastr()->success(__('Admin/backend.front_page_paused_successfully'));
         }
         return back();
     }
@@ -261,7 +261,7 @@ class FrontPageController extends Controller
             }
         });
         if ($db) {
-            toastr()->success(__('SuperAdmin/backend.front_page_played_successfully'));
+            toastr()->success(__('Admin/backend.front_page_played_successfully'));
         }
         return back();
     }

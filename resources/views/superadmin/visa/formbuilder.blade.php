@@ -1,4 +1,4 @@
-@extends('superadmin.layouts.app')
+@extends('admin.layouts.app')
 @section('css')
     <link rel="stylesheet" href="{{asset('assets/dist/css/bootstrap-multiselect.css')}}" type="text/css">
     <style>
@@ -88,7 +88,7 @@
 @endsection
 
 @section('content')
-    @include('superadmin.include.modals')
+    @include('admin.include.modals')
     <div id="form_builder"></div>
 
     <div id="render-container"></div>

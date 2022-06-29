@@ -67,7 +67,7 @@ class RatingController extends Controller
     {
         (new Rating)->updateRating($id, ['approved' => '1']);
 
-        toastr()->success(__('SuperAdmin/backend.rating_approved'));
+        toastr()->success(__('Admin/backend.rating_approved'));
         return back();
     }
 }

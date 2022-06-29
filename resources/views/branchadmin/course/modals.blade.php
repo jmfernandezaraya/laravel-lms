@@ -5,22 +5,22 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel9">@lang('SuperAdmin/backend.add') </h5>
+                <h5 class="modal-title" id="exampleModalLabel9">@lang('Admin/backend.add') </h5>
                 <button type="button" id="close_this" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="exampleInputname">@lang('SuperAdmin/backend.name_in_english')</label>
-                    <input type="name" class="form-control" id="program_type_english" aria-describedby="emailHelp" placeholder="@lang('SuperAdmin/backend.name_in_english')">
+                    <label for="exampleInputname">@lang('Admin/backend.name_in_english')</label>
+                    <input type="name" class="form-control" id="program_type_english" aria-describedby="emailHelp" placeholder="@lang('Admin/backend.name_in_english')">
                     <br>
-                    <label for="exampleInputname">@lang('SuperAdmin/backend.name_in_arabic')</label>
-                    <input type="name" class="form-control" id="program_type_arabic" aria-describedby="emailHelp" placeholder="@lang('SuperAdmin/backend.name_in_arabic')">
+                    <label for="exampleInputname">@lang('Admin/backend.name_in_arabic')</label>
+                    <input type="name" class="form-control" id="program_type_arabic" aria-describedby="emailHelp" placeholder="@lang('Admin/backend.name_in_arabic')">
                 </div>
             </div>
             <div class="modal-footer pt-0">
-                <button type="button" onclick="addProgramType($('#program_type_english').val(), $('#program_type_arabic').val())" class="btn btn-primary">@lang('SuperAdmin/backend.submit')</button>
+                <button type="button" onclick="addProgramType($('#program_type_english').val(), $('#program_type_arabic').val())" class="btn btn-primary">@lang('Admin/backend.submit')</button>
             </div>
         </div>
     </div>
@@ -32,23 +32,23 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel9">@lang('SuperAdmin/backend.add') </h5>
+                <h5 class="modal-title" id="exampleModalLabel9">@lang('Admin/backend.add') </h5>
                 <button type="button" id="close_this" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="exampleInputname">@lang('SuperAdmin/backend.name_in_english')</label>
-                    <input type="name" class="form-control" id="study_mode_english" aria-describedby="emailHelp" placeholder="@lang('SuperAdmin/backend.name_in_english')">
+                    <label for="exampleInputname">@lang('Admin/backend.name_in_english')</label>
+                    <input type="name" class="form-control" id="study_mode_english" aria-describedby="emailHelp" placeholder="@lang('Admin/backend.name_in_english')">
                     <br>
-                    <label for="exampleInputname">@lang('SuperAdmin/backend.name_in_arabic')</label>
+                    <label for="exampleInputname">@lang('Admin/backend.name_in_arabic')</label>
 
-                    <input type="name" class="form-control" id="study_mode_arabic" aria-describedby="emailHelp" placeholder="@lang('SuperAdmin/backend.name_in_arabic')">
+                    <input type="name" class="form-control" id="study_mode_arabic" aria-describedby="emailHelp" placeholder="@lang('Admin/backend.name_in_arabic')">
                 </div>
             </div>
             <div class="modal-footer pt-0">
-                <button type="button" onclick="addStudyTime($('#study_mode_english').val(), $('#study_mode_arabic').val())" class="btn btn-primary">@lang('SuperAdmin/backend.submit')</button>
+                <button type="button" onclick="addStudyTime($('#study_mode_english').val(), $('#study_mode_arabic').val())" class="btn btn-primary">@lang('Admin/backend.submit')</button>
             </div>
         </div>
     </div>
@@ -59,23 +59,23 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel9">@lang('SuperAdmin/backend.add') </h5>
+                <h5 class="modal-title" id="exampleModalLabel9">@lang('Admin/backend.add') </h5>
                 <button type="button" id="close_this" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="exampleInputname">@lang('SuperAdmin/backend.name_in_english')</label>
-                    <input type="name" class="form-control" id="start_day_english" aria-describedby="emailHelp" placeholder="@lang('SuperAdmin/backend.name_in_english')">
+                    <label for="exampleInputname">@lang('Admin/backend.name_in_english')</label>
+                    <input type="name" class="form-control" id="start_day_english" aria-describedby="emailHelp" placeholder="@lang('Admin/backend.name_in_english')">
                     <br>
-                    <label for="exampleInputname">@lang('SuperAdmin/backend.name_in_arabic')</label>
+                    <label for="exampleInputname">@lang('Admin/backend.name_in_arabic')</label>
 
-                    <input type="name" class="form-control" id="start_day_arabic" aria-describedby="emailHelp" placeholder="@lang('SuperAdmin/backend.name_in_arabic')">
+                    <input type="name" class="form-control" id="start_day_arabic" aria-describedby="emailHelp" placeholder="@lang('Admin/backend.name_in_arabic')">
                 </div>
             </div>
             <div class="modal-footer pt-0">
-                <button type="button" onclick="addStartDay($('#start_day_english').val(), $('#start_day_arabic').val())" class="btn btn-primary">@lang('SuperAdmin/backend.submit')</button>
+                <button type="button" onclick="addStartDay($('#start_day_english').val(), $('#start_day_arabic').val())" class="btn btn-primary">@lang('Admin/backend.submit')</button>
             </div>
         </div>
     </div>
@@ -86,22 +86,22 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel9">@lang('SuperAdmin/backend.add') </h5>
+                <h5 class="modal-title" id="exampleModalLabel9">@lang('Admin/backend.add') </h5>
                 <button type="button" id="close_this" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="exampleInputname">@lang('SuperAdmin/backend.age_in_english')</label>
-                    <input type="number" class="form-control" id="program_age_english" aria-describedby="emailHelp" placeholder="@lang('SuperAdmin/backend.age_in_english')">
+                    <label for="exampleInputname">@lang('Admin/backend.age_in_english')</label>
+                    <input type="number" class="form-control" id="program_age_english" aria-describedby="emailHelp" placeholder="@lang('Admin/backend.age_in_english')">
                     <br>
-                    <label for="exampleInputname">@lang('SuperAdmin/backend.age_in_arabic')</label>
-                    <input type="number" class="form-control" id="program_age_arabic" aria-describedby="emailHelp" placeholder="@lang('SuperAdmin/backend.age_in_arabic')">
+                    <label for="exampleInputname">@lang('Admin/backend.age_in_arabic')</label>
+                    <input type="number" class="form-control" id="program_age_arabic" aria-describedby="emailHelp" placeholder="@lang('Admin/backend.age_in_arabic')">
                 </div>
             </div>
             <div class="modal-footer pt-0">
-                <button type="button" onclick="addProgramAgeRange($('#program_age_english').val(), $('#program_age_arabic').val())" class="btn btn-primary">@lang('SuperAdmin/backend.submit')</button>
+                <button type="button" onclick="addProgramAgeRange($('#program_age_english').val(), $('#program_age_arabic').val())" class="btn btn-primary">@lang('Admin/backend.submit')</button>
             </div>
         </div>
     </div>
@@ -112,22 +112,22 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="ProgramUnderAgeModalLabel">@lang('SuperAdmin/backend.add') </h5>
+                <h5 class="modal-title" id="ProgramUnderAgeModalLabel">@lang('Admin/backend.add') </h5>
                 <button type="button" id="close_this" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="exampleInputname">@lang('SuperAdmin/backend.age_in_english')</label>
-                    <input type="number" class="form-control" id="program_under_age_english" aria-describedby="emailHelp" placeholder="@lang('SuperAdmin/backend.age_in_english')">
+                    <label for="exampleInputname">@lang('Admin/backend.age_in_english')</label>
+                    <input type="number" class="form-control" id="program_under_age_english" aria-describedby="emailHelp" placeholder="@lang('Admin/backend.age_in_english')">
                     <br>
-                    <label for="exampleInputname">@lang('SuperAdmin/backend.age_in_arabic')</label>
-                    <input type="number" class="form-control" id="program_under_age_arabic" aria-describedby="emailHelp" placeholder="@lang('SuperAdmin/backend.age_in_arabic')">
+                    <label for="exampleInputname">@lang('Admin/backend.age_in_arabic')</label>
+                    <input type="number" class="form-control" id="program_under_age_arabic" aria-describedby="emailHelp" placeholder="@lang('Admin/backend.age_in_arabic')">
                 </div>
             </div>
             <div class="modal-footer pt-0">
-                <button type="button" onclick="addProgramUnderAgeRange($('#program_under_age_english').val(), $('#program_under_age_arabic').val())" class="btn btn-primary">@lang('SuperAdmin/backend.submit')</button>
+                <button type="button" onclick="addProgramUnderAgeRange($('#program_under_age_english').val(), $('#program_under_age_arabic').val())" class="btn btn-primary">@lang('Admin/backend.submit')</button>
             </div>
         </div>
     </div>
@@ -138,22 +138,22 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel9">@lang('SuperAdmin/backend.add') </h5>
+                <h5 class="modal-title" id="exampleModalLabel9">@lang('Admin/backend.add') </h5>
                 <button type="button" id="close_this" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="exampleInputname">@lang('SuperAdmin/backend.age_in_english')</label>
-                    <input type="number" class="form-control" id="accom_age_english" aria-describedby="emailHelp" placeholder="@lang('SuperAdmin/backend.age_in_english')">
+                    <label for="exampleInputname">@lang('Admin/backend.age_in_english')</label>
+                    <input type="number" class="form-control" id="accom_age_english" aria-describedby="emailHelp" placeholder="@lang('Admin/backend.age_in_english')">
                     <br>
-                    <label for="exampleInputname">@lang('SuperAdmin/backend.age_in_arabic')</label>
-                    <input type="number" class="form-control" id="accom_age_arabic" aria-describedby="emailHelp" placeholder="@lang('SuperAdmin/backend.age_in_arabic')">
+                    <label for="exampleInputname">@lang('Admin/backend.age_in_arabic')</label>
+                    <input type="number" class="form-control" id="accom_age_arabic" aria-describedby="emailHelp" placeholder="@lang('Admin/backend.age_in_arabic')">
                 </div>
             </div>
             <div class="modal-footer pt-0">
-                <button type="button" onclick="AddAccomAgeRange($('#accom_age_english').val(), $('#accom_age_arabic').val())" class="btn btn-primary">@lang('SuperAdmin/backend.submit')</button>
+                <button type="button" onclick="AddAccomAgeRange($('#accom_age_english').val(), $('#accom_age_arabic').val())" class="btn btn-primary">@lang('Admin/backend.submit')</button>
             </div>
         </div>
     </div>
@@ -164,24 +164,24 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel9">@lang('SuperAdmin/backend.add') </h5>
+                <h5 class="modal-title" id="exampleModalLabel9">@lang('Admin/backend.add') </h5>
                 <button type="button" id="close_this" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="exampleInputname">@lang('SuperAdmin/backend.age_in_english')</label>
-                    <input type="number" class="form-control" id="english_value" aria-describedby="emailHelp" placeholder="@lang('SuperAdmin/backend.age_in_english')">
+                    <label for="exampleInputname">@lang('Admin/backend.age_in_english')</label>
+                    <input type="number" class="form-control" id="english_value" aria-describedby="emailHelp" placeholder="@lang('Admin/backend.age_in_english')">
                     <br>
-                    <label for="exampleInputname">@lang('SuperAdmin/backend.age_in_arabic')</label>
+                    <label for="exampleInputname">@lang('Admin/backend.age_in_arabic')</label>
 
-                    <input type="number" class="form-control" id="arabic_value" aria-describedby="emailHelp" placeholder="@lang('SuperAdmin/backend.age_in_arabic')">
+                    <input type="number" class="form-control" id="arabic_value" aria-describedby="emailHelp" placeholder="@lang('Admin/backend.age_in_arabic')">
                 </div>
             </div>
             <div class="modal-footer pt-0">
-                <button type="button" onclick="AddAccomCustodianAgeRange($(this).parent().parent().find('input[id=english_value]').val(), $(this).parent().parent().find('input[id=arabic_value]').val())" class="btn btn-primary">@lang('SuperAdmin/backend.submit')</button>
-                {{--onclick="AddAccomCustodianAgeRange($('#accom_age_english').val(), $('#accom_age_arabic').val())" class="btn btn-primary">@lang('SuperAdmin/backend.submit')</button>--}}
+                <button type="button" onclick="AddAccomCustodianAgeRange($(this).parent().parent().find('input[id=english_value]').val(), $(this).parent().parent().find('input[id=arabic_value]').val())" class="btn btn-primary">@lang('Admin/backend.submit')</button>
+                {{--onclick="AddAccomCustodianAgeRange($('#accom_age_english').val(), $('#accom_age_arabic').val())" class="btn btn-primary">@lang('Admin/backend.submit')</button>--}}
             </div>
         </div>
     </div>
@@ -192,23 +192,23 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel9">@lang('SuperAdmin/backend.add') </h5>
+                <h5 class="modal-title" id="exampleModalLabel9">@lang('Admin/backend.add') </h5>
                 <button type="button" id="close_this" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="exampleInputname">@lang('SuperAdmin/backend.age_in_english')</label>
-                    <input type="number" class="form-control" id="english_value" aria-describedby="emailHelp" placeholder="@lang('SuperAdmin/backend.age_in_english')">
+                    <label for="exampleInputname">@lang('Admin/backend.age_in_english')</label>
+                    <input type="number" class="form-control" id="english_value" aria-describedby="emailHelp" placeholder="@lang('Admin/backend.age_in_english')">
                     <br>
-                    <label for="exampleInputname">@lang('SuperAdmin/backend.age_in_arabic')</label>
-                    <input type="number" class="form-control" id="arabic_value" aria-describedby="emailHelp" placeholder="@lang('SuperAdmin/backend.age_in_arabic')">
+                    <label for="exampleInputname">@lang('Admin/backend.age_in_arabic')</label>
+                    <input type="number" class="form-control" id="arabic_value" aria-describedby="emailHelp" placeholder="@lang('Admin/backend.age_in_arabic')">
                 </div>
             </div>
             <div class="modal-footer pt-0">
-                <button type="button" onclick="AddAccomUnderAgeRange($(this).parent().parent().find('input[id=english_value]').val(), $(this).parent().parent().find('input[id=arabic_value]').val())" class="btn btn-primary">@lang('SuperAdmin/backend.submit')</button>
-                {{--onclick="AddAccomCustodianAgeRange($('#accom_age_english').val(), $('#accom_age_arabic').val())" class="btn btn-primary">@lang('SuperAdmin/backend.submit')</button>--}}
+                <button type="button" onclick="AddAccomUnderAgeRange($(this).parent().parent().find('input[id=english_value]').val(), $(this).parent().parent().find('input[id=arabic_value]').val())" class="btn btn-primary">@lang('Admin/backend.submit')</button>
+                {{--onclick="AddAccomCustodianAgeRange($('#accom_age_english').val(), $('#accom_age_arabic').val())" class="btn btn-primary">@lang('Admin/backend.submit')</button>--}}
             </div>
         </div>
     </div>
@@ -219,23 +219,23 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel2">@lang('SuperAdmin/backend.add') </h5>
+                <h5 class="modal-title" id="exampleModalLabel2">@lang('Admin/backend.add') </h5>
                 <button type="button" id="close_this" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="exampleInputname"> @lang('SuperAdmin/backend.name_in_english') </label>
-                    <input type="name" class="form-control" id="language_in_english" aria-describedby="emailHelp" placeholder="@lang('SuperAdmin/backend.name_in_english')">
+                    <label for="exampleInputname"> @lang('Admin/backend.name_in_english') </label>
+                    <input type="name" class="form-control" id="language_in_english" aria-describedby="emailHelp" placeholder="@lang('Admin/backend.name_in_english')">
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputname"> @lang('SuperAdmin/backend.name_in_arabic') </label>
-                    <input type="name" class="form-control" id="language_in_arabic" aria-describedby="emailHelp" placeholder="@lang('SuperAdmin/backend.name_in_arabic')">
+                    <label for="exampleInputname"> @lang('Admin/backend.name_in_arabic') </label>
+                    <input type="name" class="form-control" id="language_in_arabic" aria-describedby="emailHelp" placeholder="@lang('Admin/backend.name_in_arabic')">
                 </div>
             </div>
             <div class="modal-footer pt-0">
-                <button onclick="addLanguage($('#language_in_english').val(), $('#language_in_arabic').val())" type="button" class="btn btn-primary">@lang('SuperAdmin/backend.submit')</button>
+                <button onclick="addLanguage($('#language_in_english').val(), $('#language_in_arabic').val())" type="button" class="btn btn-primary">@lang('Admin/backend.submit')</button>
             </div>
         </div>
     </div>
@@ -246,23 +246,23 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel2">@lang('SuperAdmin/backend.add') </h5>
+                <h5 class="modal-title" id="exampleModalLabel2">@lang('Admin/backend.add') </h5>
                 <button type="button" id="close_this" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="exampleInputname"> @lang('SuperAdmin/backend.name_in_english') </label>
-                    <input type="name" class="form-control" id="language_in_english" aria-describedby="emailHelp" placeholder="@lang('SuperAdmin/backend.name_in_english')">
+                    <label for="exampleInputname"> @lang('Admin/backend.name_in_english') </label>
+                    <input type="name" class="form-control" id="language_in_english" aria-describedby="emailHelp" placeholder="@lang('Admin/backend.name_in_english')">
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputname"> @lang('SuperAdmin/backend.name_in_arabic') </label>
-                    <input type="name" class="form-control" id="language_in_arabic" aria-describedby="emailHelp" placeholder="@lang('SuperAdmin/backend.name_in_arabic')">
+                    <label for="exampleInputname"> @lang('Admin/backend.name_in_arabic') </label>
+                    <input type="name" class="form-control" id="language_in_arabic" aria-describedby="emailHelp" placeholder="@lang('Admin/backend.name_in_arabic')">
                 </div>
             </div>
             <div class="modal-footer pt-0">
-                <button onclick="addLanguage($('#language_in_english').val(), $('#language_in_arabic').val())" type="button" class="btn btn-primary">@lang('SuperAdmin/backend.submit')</button>
+                <button onclick="addLanguage($('#language_in_english').val(), $('#language_in_arabic').val())" type="button" class="btn btn-primary">@lang('Admin/backend.submit')</button>
             </div>
         </div>
     </div>
@@ -273,7 +273,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">@lang('SuperAdmin/backend.apply_from_modal')</h5>
+                <h5 class="modal-title" id="exampleModalLabel">@lang('Admin/backend.apply_from_modal')</h5>
                 <button type="button" id="close_this" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -282,11 +282,11 @@
                 {{csrf_field()}}
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>@lang('SuperAdmin/backend.in_english')</label>
+                        <label>@lang('Admin/backend.in_english')</label>
                         <input type="text" name="apply_from_en" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label>@lang('SuperAdmin/backend.in_arabic')</label>
+                        <label>@lang('Admin/backend.in_arabic')</label>
                         <input type="text" name="apply_from_ar" class="form-control">
                     </div>
                 </div>
@@ -313,11 +313,11 @@
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>@lang('SuperAdmin/backend.in_english')</label>
+                        <label>@lang('Admin/backend.in_english')</label>
                         <input type="text" name="application_center_en" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label>@lang('SuperAdmin/backend.in_arabic')</label>
+                        <label>@lang('Admin/backend.in_arabic')</label>
                         <input type="text" name="application_center_ar" class="form-control">
                     </div>
                 </div>
@@ -344,11 +344,11 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>@lang('SuperAdmin/backend.in_english')</label>
+                    <label>@lang('Admin/backend.in_english')</label>
                     <input type="text" name="nationality_en" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label>@lang('SuperAdmin/backend.in_arabic')</label>
+                    <label>@lang('Admin/backend.in_arabic')</label>
                     <input type="text" name="nationality_ar" class="form-control">
                 </div>
             </div>
@@ -375,11 +375,11 @@
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>@lang('SuperAdmin/backend.in_english')</label>
+                        <label>@lang('Admin/backend.in_english')</label>
                         <input type="text" name="travel_en" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label>@lang('SuperAdmin/backend.in_arabic')</label>
+                        <label>@lang('Admin/backend.in_arabic')</label>
                         <input type="text" name="travel_ar" class="form-control">
                     </div>
                 </div>
@@ -406,11 +406,11 @@
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>@lang('SuperAdmin/backend.in_english')</label>
+                        <label>@lang('Admin/backend.in_english')</label>
                         <input type="text" name="visa_en" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label>@lang('SuperAdmin/backend.in_arabic')</label>
+                        <label>@lang('Admin/backend.in_arabic')</label>
                         <input type="text" name="visa_ar" class="form-control">
                     </div>
                 </div>
@@ -431,20 +431,20 @@
             <form method="POST" action="{{route('superadmin.visa.store')}}">
                 @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">{{__('SuperAdmin/backend.save_form_name')}}</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">{{__('Admin/backend.save_form_name')}}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label class="">{{__('SuperAdmin/backend.save_form_name')}}</label>
+                        <label class="">{{__('Admin/backend.save_form_name')}}</label>
                         <input type="text" class="form-control" name="form_name">
                     </div>
                     <div class="form-group">
-                        <label class="">@lang('SuperAdmin/backend.visa_form.select_visa_form_id')</label>
+                        <label class="">@lang('Admin/backend.visa_form.select_visa_form_id')</label>
                         <select name="visa_id" class="form-control" id="visa_form_id_modal">
-                            <option value="">@lang('SuperAdmin/backend.select_option')</option>
+                            <option value="">@lang('Admin/backend.select_option')</option>
                             @foreach(\App\Models\SuperAdmin\VisaForm::all() as $applyform)
                                 <option value="{{$applyform->id}}">{{$applyform->id }}</option>
                             @endforeach

@@ -1,7 +1,7 @@
-@extends('superadmin.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title')
-    {{__('SuperAdmin/backend.add_school_admin')}}
+    {{__('Admin/backend.add_school_admin')}}
 @endsection
 
 @section('content')
@@ -9,13 +9,13 @@
         <div class="card">
             <div class="card-body">
                 <div style="text-align: center;">
-                    <h1 class="card-title">{{__('SuperAdmin/backend.add_school_admin')}}</h1>
+                    <h1 class="card-title">{{__('Admin/backend.add_school_admin')}}</h1>
                     <change>
                         <div class="english">
-                            {{__('SuperAdmin/backend.in_english')}}
+                            {{__('Admin/backend.in_english')}}
                         </div>
                         <div class="arabic">
-                            {{__('SuperAdmin/backend.in_arabic')}}
+                            {{__('Admin/backend.in_arabic')}}
                         </div>
                     </change>
                 </div>
@@ -23,15 +23,15 @@
                 <div id="menu">
                     <ul class="lang text-right current_page_itemm">
                         <li class="{{app()->getLocale() == 'en' ? 'current_page_item selected' : ''}}">
-                            <a onclick="changeLanguage('english', 'arabic')"><img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}</a>
+                            <a onclick="changeLanguage('english', 'arabic')"><img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('Admin/backend.english')}}</a>
                         </li>
                         <li class="{{app()->getLocale() == 'ar' ? 'current_page_item selected' : ''}}">
-                            <a onclick="changeLanguage('arabic', 'english')"><img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}</a>
+                            <a onclick="changeLanguage('arabic', 'english')"><img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('Admin/backend.arabic')}}</a>
                         </li>
                     </ul>
                 </div>
 
-                @include('superadmin.include.alert')
+                @include('admin.include.alert')
             </div>
         </div>
     </div>
@@ -44,97 +44,162 @@
                     
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="first_name">{{__('SuperAdmin/backend.first_name')}}</label>
+                            <label for="first_name">{{__('Admin/backend.first_name')}}</label>
                             <div class="english">
-                                <input name="first_name_en" value="{{old('first_name_en')}}" class="form-control" id="first_name_en" placeholder="{{__('SuperAdmin/backend.first_name')}}" type="text">
+                                <input name="first_name_en" value="{{old('first_name_en')}}" class="form-control" id="first_name_en" placeholder="{{__('Admin/backend.first_name')}}" type="text">
                             </div>
                             <div class="arabic">
-                                <input name="first_name_ar" value="{{old('first_name_ar')}}" class="form-control" id="first_name_ar" placeholder="{{__('SuperAdmin/backend.first_name')}}" type="text">
+                                <input name="first_name_ar" value="{{old('first_name_ar')}}" class="form-control" id="first_name_ar" placeholder="{{__('Admin/backend.first_name')}}" type="text">
                             </div>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="last_name">{{__('SuperAdmin/backend.last_name')}}</label>
+                            <label for="last_name">{{__('Admin/backend.last_name')}}</label>
                             <div class="english">
-                                <input name="last_name_en" value="{{old('last_name_en')}}" class="form-control" id="last_name_en" placeholder="{{__('SuperAdmin/backend.last_name')}}" type="text">
+                                <input name="last_name_en" value="{{old('last_name_en')}}" class="form-control" id="last_name_en" placeholder="{{__('Admin/backend.last_name')}}" type="text">
                             </div>
                             <div class="arabic">
-                                <input name="last_name_ar" value="{{old('last_name_ar')}}" class="form-control" id="last_name_ar" placeholder="{{__('SuperAdmin/backend.last_name')}}" type="text">
+                                <input name="last_name_ar" value="{{old('last_name_ar')}}" class="form-control" id="last_name_ar" placeholder="{{__('Admin/backend.last_name')}}" type="text">
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="email">{{__('SuperAdmin/backend.email')}}</label>
-                            <input name="email" value="{{old('email')}}" class="form-control" id="email" placeholder="{{__('SuperAdmin/backend.first_name')}}" type="email">
+                            <label for="email">{{__('Admin/backend.email')}}</label>
+                            <input name="email" value="{{old('email')}}" class="form-control" id="email" placeholder="{{__('Admin/backend.first_name')}}" type="email">
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="password">{{__('SuperAdmin/backend.enter_password')}}</label>
-                            <input name="password" value="{{old('password')}}" class="form-control" id="password" placeholder="{{__('SuperAdmin/backend.enter_password')}}" type="password">
+                            <label for="password">{{__('Admin/backend.enter_password')}}</label>
+                            <input name="password" value="{{old('password')}}" class="form-control" id="password" placeholder="{{__('Admin/backend.enter_password')}}" type="password">
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="contact_no">{{__('SuperAdmin/backend.contact_no')}}</label>
-                            <input value="{{old('contact')}}" name="contact" class="form-control" id="exampleSelectGender" placeholder="{{__('SuperAdmin/backend.contact_no')}}" type="number">
+                            <label for="contact_no">{{__('Admin/backend.contact_no')}}</label>
+                            <input value="{{old('contact')}}" name="contact" class="form-control" id="exampleSelectGender" placeholder="{{__('Admin/backend.contact_no')}}" type="number">
                         </div>
                         <div class="form-group col-md-6">
                             <img src="{{ asset('/assets/images/no-image.jpg') }}" id="previewImg" alt="Uploaded Image Preview Holder" width="550px" height="250px" style="border-radius:3px;border:5px;" />
-                            <label>{{__('SuperAdmin/backend.profile_image_if_any')}}</label>
+                            <label>{{__('Admin/backend.profile_image_if_any')}}</label>
                             <input type="file" onchange="previewFile(this)" class="form-control" name="image">
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="name">{{__('SuperAdmin/backend.choose_school')}}:</label>
+                            <label for="name">{{__('Admin/backend.choose_school')}}:</label>
                             <select onchange="changeSchool()" class="form-control" id="school_name" name="school_name">
-                                <option value="">{{__('SuperAdmin/backend.select_school')}}</option>
+                                <option value="">{{__('Admin/backend.select_school')}}</option>
                                 @foreach ($choose_schools as $choose_school)
                                     <option value="{{ $choose_school }}">{{ $choose_school }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="country_name">{{__('SuperAdmin/backend.choose_country')}}:</label>
+                            <label for="country_name">{{__('Admin/backend.choose_country')}}:</label>
                             <select onchange="changeCountry()" class="3col active" id="country_name" name="country[]" multiple="multiple">
                             </select>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="city_name">{{__('SuperAdmin/backend.choose_city')}}:</label>
+                            <label for="city_name">{{__('Admin/backend.choose_city')}}:</label>
                             <select onchange="changeCity()" class="3col active" id="city_name" name="city[]" multiple="multiple">
                             </select>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="branch">{{__('SuperAdmin/backend.branch')}}</label>
+                            <label for="branch">{{__('Admin/backend.branch')}}</label>
                             <select class="3col active" name="branch[]" id="branch_choose" multiple="multiple">
                             </select>
                         </div>
                     </div>
-                    @if (auth('superadmin')->user()->permission['user_manager'] || auth('superadmin')->user()->permission['user_permission'])
+                    
+                    @if (can_manage_user() || can_permission_user())
                         <div class="row">
                             <div class="form-group col-md-12">
-                                <div class="form-check">
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <input name="can_add_course" type="checkbox" class="form-check-input" id="can_add_course" value='1' checked />
-                                    <label for="can_add_course">{{__('SuperAdmin/backend.can_add_course')}}</label>
+                                <h4>{{__('Admin/backend.permissions')}}</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="school_permission">{{__('Admin/backend.school')}}</label>
+                                <select name="school_permission" id="school_permission" class="form-control">
+                                    <option value="">{{__('Admin/backend.select_role')}}</option>
+                                    <option value="subscriber" selected>{{__('Admin/backend.subscriber')}}</option>
+                                    <option value="manager">{{__('Admin/backend.manager')}}</option>
+                                </select>
+                                <div class="school-permissions" style="display: none">
+                                    <div class="form-check">
+                                        <input name="school_add" type="checkbox" class="form-check-inline" value='1'>
+                                        <label for="school_add">{{__('Admin/backend.add')}}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="school_edit" type="checkbox" class="form-check-inline" value='1'>
+                                        <label for="school_edit">{{__('Admin/backend.edit')}}</label>
+                                    </div>
                                 </div>
-                                <div class="form-check">
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <input name="can_edit_course" type="checkbox" class="form-check-input" id="can_edit_course" value='1' checked />
-                                    <label for="can_edit_course">{{__('SuperAdmin/backend.can_edit_course')}}</label>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="course_permission">{{__('Admin/backend.course')}}</label>
+                                <select name="course_permission" id="course_permission" class="form-control">
+                                    <option value="">{{__('Admin/backend.select_role')}}</option>
+                                    <option value="subscriber" selected>{{__('Admin/backend.subscriber')}}</option>
+                                    <option value="manager">{{__('Admin/backend.manager')}}</option>
+                                </select>
+                                <div class="course-permissions" style="display: none">
+                                    <div class="form-check">
+                                        <input name="course_add" type="checkbox" class="form-check-inline" value='1'>
+                                        <label for="course_add">{{__('Admin/backend.add')}}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="course_edit" type="checkbox" class="form-check-inline" value='1'>
+                                        <label for="course_edit">{{__('Admin/backend.edit')}}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="course_display" type="checkbox" class="form-check-inline" value='1'>
+                                        <label for="course_display">{{__('Admin/backend.display')}}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="course_delete" type="checkbox" class="form-check-inline" value='1'>
+                                        <label for="course_delete">{{__('Admin/backend.delete')}}</label>
+                                    </div>
                                 </div>
-                                <div class="form-check">
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <input name="can_delete_course" type="checkbox" class="form-check-input" id="can_delete_course" value='1' checked />
-                                    <label for="can_delete_course">{{__('SuperAdmin/backend.can_delete_course')}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="course_application_permission">{{__('Admin/backend.course_application')}}</label>
+                                <select name="course_application_permission" id="course_application_permission" class="form-control">
+                                    <option value="">{{__('Admin/backend.select_role')}}</option>
+                                    <option value="subscriber" selected>{{__('Admin/backend.subscriber')}}</option>
+                                    <option value="manager">{{__('Admin/backend.manager')}}</option>
+                                </select>
+                                <div class="course-application-permissions" style="display: none">
+                                    <div class="form-check">
+                                        <input name="course_application_edit" type="checkbox" class="form-check-inline" value='1'>
+                                        <label for="course_application_edit">{{__('Admin/backend.edit')}}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="course_application_chanage_status" type="checkbox" class="form-check-inline" value='1'>
+                                        <label for="course_application_chanage_status">{{__('Admin/backend.chanage_status')}}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="course_application_payment_refund" type="checkbox" class="form-check-inline" value='1'>
+                                        <label for="course_application_payment_refund">{{__('Admin/backend.payments_refunds_statement')}}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="course_application_contact_student" type="checkbox" class="form-check-inline" value='1'>
+                                        <label for="course_application_contact_student">{{__('Admin/backend.contact_center_student')}}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="course_application_contact_school" type="checkbox" class="form-check-inline" value='1'>
+                                        <label for="course_application_contact_school">{{__('Admin/backend.contact_center_school')}}</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     @endif
 
-                    <button onclick="submitForm($(this).parents().find('#SchoolAdminForm'))" type="button" class="btn btn-gradient-primary mr-2">{{__('SuperAdmin/backend.submit')}}</button>
-                    <a class="btn btn-light" href="{{url()->previous()}}">{{__('SuperAdmin/backend.cancel')}}</a>
+                    <button onclick="submitForm($(this).parents().find('#SchoolAdminForm'))" type="button" class="btn btn-gradient-primary mr-2">{{__('Admin/backend.submit')}}</button>
+                    <a class="btn btn-light" href="{{url()->previous()}}">{{__('Admin/backend.cancel')}}</a>
                 </div>
             </div>
         </form>

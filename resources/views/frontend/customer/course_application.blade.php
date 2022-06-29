@@ -785,10 +785,14 @@
                                                             @endif
                                                         </div>
                                                         <div class="message-user-name">
-                                                            @if (app()->getLocale() == 'en')
-                                                                {{ $student_message->fromUser->first_name_en }} {{ $student_message->fromUser->last_name_en }}
+                                                            @if ($student_message->type == 'to_admin')
+                                                                {{ $course_application->fname ." " . $course_application->mname . " " . $course_application->lname }}
                                                             @else
-                                                                {{ $student_message->fromUser->first_name_ar }} {{ $student_message->fromUser->last_name_ar }}
+                                                                @if (app()->getLocale() == 'en')
+                                                                    {{ $student_message->fromUser->first_name_en }} {{ $student_message->fromUser->last_name_en }}
+                                                                @else
+                                                                    {{ $student_message->fromUser->first_name_ar }} {{ $student_message->fromUser->last_name_ar }}
+                                                                @endif
                                                             @endif
                                                             @if ($student_message->type == 'to_student')
                                                                 <i class="bx bxs-chevron-left"></i>
@@ -802,13 +806,13 @@
                                                     </div>
                                                     <div class="message-body">
                                                         <div>
-                                                            <strong>{{__('SuperAdmin/backend.subject')}}: </strong>{{ $student_message->subject }}
+                                                            <strong>{{__('Admin/backend.subject')}}: </strong>{{ $student_message->subject }}
                                                         </div>
                                                         <div>
-                                                            <strong>{{__('SuperAdmin/backend.message')}}: </strong>{!! $student_message->message !!}
+                                                            <strong>{{__('Admin/backend.message')}}: </strong>{!! $student_message->message !!}
                                                         </div>
                                                         <div>
-                                                            <strong>{{__('SuperAdmin/backend.attachments')}}: </strong>
+                                                            <strong>{{__('Admin/backend.attachments')}}: </strong>
                                                             @if ($student_message->attachments)
                                                                 @foreach ($student_message->attachments as $message_attachment)
                                                                     @php $attachment_ext = strtolower(pathinfo($message_attachment, PATHINFO_EXTENSION)); @endphp

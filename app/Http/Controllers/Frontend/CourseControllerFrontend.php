@@ -424,7 +424,7 @@ class CourseControllerFrontend extends Controller
                     }
                     return $under_age_flag && $date_flag;
                 })->unique('type')->all();
-            $select = __('SuperAdmin/backend.select');
+            $select = __('Admin/backend.select');
             $accommodation_options = "<option value='' selected>$select</option>";
             foreach ($accommodations as $accommodation) {
                 $accommodation_type = app()->getLocale() == 'en' ? $accommodation->type : $accommodation->type_ar;
@@ -1095,7 +1095,7 @@ class CourseControllerFrontend extends Controller
         }
         sort($accommodation_durations);
 
-        $select = __('SuperAdmin/backend.select');
+        $select = __('Admin/backend.select');
         $duration_html = "<option value='' selected>$select</option>";
         foreach ($accommodation_durations as $duration) {
             $duration_html .= "<option value=$duration>$duration</option>";

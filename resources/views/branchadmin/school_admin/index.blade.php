@@ -5,20 +5,20 @@
 		<div class="card">
 			<div class="card-body table table-responsive">
 				<center>
-					<h1 class="card-title">{{__('SuperAdmin/backend.school_admin_details')}}</h1>
+					<h1 class="card-title">{{__('Admin/backend.school_admin_details')}}</h1>
 				</center>
-				<a href="{{route('branch_admin.create')}}" type="button" class="btn btn-primary btn-sm pull-right"><i class="fa fa-plus"></i>&nbsp;{{__('SuperAdmin/backend.add')}}</a>
+				<a href="{{route('branch_admin.create')}}" type="button" class="btn btn-primary btn-sm pull-right"><i class="fa fa-plus"></i>&nbsp;{{__('Admin/backend.add')}}</a>
 				<table class="table table-hover table-bordered">
 					<thead>
 						<tr>
 							<th>#</th>
-							<th>{{__('SuperAdmin/backend.first_name')}}</th>
-							<th>{{__('SuperAdmin/backend.last_name')}}</th>
-							<th>{{__('SuperAdmin/backend.email')}}</th>
-							<th>{{__('SuperAdmin/backend.contact_no')}}</th>
-							<th>{{__('SuperAdmin/backend.profile_image')}}</th>
-							<th>{{__('SuperAdmin/backend.created_on')}}</th>
-							<th>{{__('SuperAdmin/backend.action')}}</th>
+							<th>{{__('Admin/backend.first_name')}}</th>
+							<th>{{__('Admin/backend.last_name')}}</th>
+							<th>{{__('Admin/backend.email')}}</th>
+							<th>{{__('Admin/backend.contact_no')}}</th>
+							<th>{{__('Admin/backend.profile_image')}}</th>
+							<th>{{__('Admin/backend.created_on')}}</th>
+							<th>{{__('Admin/backend.action')}}</th>
 						</tr>
 					</thead>
 					<tbody>

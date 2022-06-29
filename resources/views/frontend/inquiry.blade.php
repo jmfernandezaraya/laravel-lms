@@ -25,16 +25,16 @@
             @endif
             <div class="left">
                 <div class="form-group">
-                    <label>{{__('SuperAdmin/backend.first_name')}}</label>
-                    <input type="text" name="first_name" class="form-control" placeholder="{{__('SuperAdmin/backend.first_name')}}">
+                    <label>{{__('Admin/backend.first_name')}}</label>
+                    <input type="text" name="first_name" class="form-control" placeholder="{{__('Admin/backend.first_name')}}">
                 </div>
                 <div class="form-group">
-                    <label>{{__('SuperAdmin/backend.last_name')}}</label>
-                    <input type="text" name="last_name" class="form-control" placeholder="{{__('SuperAdmin/backend.last_name')}}">
+                    <label>{{__('Admin/backend.last_name')}}</label>
+                    <input type="text" name="last_name" class="form-control" placeholder="{{__('Admin/backend.last_name')}}">
                 </div>
                 <div class="form-group">
-                    <label>{{__('SuperAdmin/backend.email')}}</label>
-                    <input type="email" name="email" class="form-control" placeholder="{{__('SuperAdmin/backend.email')}}">
+                    <label>{{__('Admin/backend.email')}}</label>
+                    <input type="email" name="email" class="form-control" placeholder="{{__('Admin/backend.email')}}">
                 </div>
                 <div class="form-group">
                     <label>@lang('Frontend.phone')</label>
@@ -45,7 +45,7 @@
                     <textarea name="message" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                     <div class="validate"></div>
                 </div>
-                <div class="text-center"><button type="submit" class="btn btn-primary">@lang('SuperAdmin/backend.submit')</button></div>
+                <div class="text-center"><button type="submit" class="btn btn-primary">@lang('Admin/backend.submit')</button></div>
             </div>
         </div>
     </form>

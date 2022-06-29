@@ -98,13 +98,13 @@
 </style>
 @endsection
 
-@include('superadmin.course.scripts')
+@include('admin.course.scripts')
 <div class="col-12 grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
             <div style="text-align: center;">
-                <h4 class="card-title">@lang('SuperAdmin/backend.add_airport_fee') </h4>
-                <change>{{__('SuperAdmin/backend.in_english')}}</change>
+                <h4 class="card-title">@lang('Admin/backend.add_airport_fee') </h4>
+                <change>{{__('Admin/backend.in_english')}}</change>
             </div>
 
             @include('superadmin.include.alert')
@@ -112,12 +112,12 @@
                 <ul class="lang text-right current_page_itemm">
                     <li class="current_page_item selected">
                         <a class="" href="#" onclick="changeLanguage('english', 'arabic')">
-                            <img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}
+                            <img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('Admin/backend.english')}}
                         </a>
                     </li>
                     <li>
                         <a href="#" onclick="changeLanguage('arabic', 'english')"; fillForm('form1', 'form2')">
-                            <img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}
+                            <img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('Admin/backend.arabic')}}
                         </a>
                     </li>
                 </ul>
@@ -126,25 +126,25 @@
             <div id="show_form"></div>
 
             <div class="first-form">
-                <form class="forms-sample" method="POST" action="{{route("superadmin.course.store")}}" id="courseform">
+                <form class="forms-sample" method="POST" action="{{route("admin.course.store")}}" id="courseform">
                     {{csrf_field()}}
                     <div id="accom_program_duration_clone">
                         <input hidden id="airportincrement" name="airportincrement" value=0>
                         <div class="form-group">
                             <label>
-                                <h2>{{__('SuperAdmin/backend.airport_fee')}}</h2></label>
+                                <h2>{{__('Admin/backend.airport_fee')}}</h2></label>
                             <div class="row">
                                 <div class="col-md-3">
-                                    <label>{{__('SuperAdmin/backend.airport_name')}}:</label>
-                                    <input class="form-control" type="text" name="name_en[]" placeholder="{{__('SuperAdmin/backend.airport_name')}}">
+                                    <label>{{__('Admin/backend.airport_name')}}:</label>
+                                    <input class="form-control" type="text" name="name_en[]" placeholder="{{__('Admin/backend.airport_name')}}">
                                 </div>
                                 <div class="col-md-3">
-                                    <label>@lang('SuperAdmin/backend.airport_service_name'):</label>
-                                    <input class="form-control" type="text" name="service_name_en[]" placeholder="{{__('SuperAdmin/backend.service_name')}}">
+                                    <label>@lang('Admin/backend.airport_service_name'):</label>
+                                    <input class="form-control" type="text" name="service_name_en[]" placeholder="{{__('Admin/backend.service_name')}}">
                                 </div>
                                 <div class="col-md-3">
-                                    <label>@lang('SuperAdmin/backend.airport_service_fee'):</label>
-                                    <input class="form-control" type="number" name="service_fee[]" placeholder="{{__('SuperAdmin/backend.airport_service_fee')}}">
+                                    <label>@lang('Admin/backend.airport_service_fee'):</label>
+                                    <input class="form-control" type="number" name="service_fee[]" placeholder="{{__('Admin/backend.airport_service_fee')}}">
                                 </div>
                             </div>
                         </div>
@@ -152,8 +152,8 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-md-3">
-                                    <label>@lang('SuperAdmin/backend.program_duration'):</label>
-                                    <input class="form-control" type="text" name="week_selected_fee[]" placeholder="{{__('SuperAdmin/backend.if_program_duration_airport_fee')}}">
+                                    <label>@lang('Admin/backend.program_duration'):</label>
+                                    <input class="form-control" type="text" name="week_selected_fee[]" placeholder="{{__('Admin/backend.if_program_duration_airport_fee')}}">
                                 </div>
                                 <div class="col-md-3">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i>
@@ -169,19 +169,19 @@
                         <input id="medicalincrement" hidden value=0 name="medicalincrement">
                         <div class="form-group">
                             <label>
-                                <h2>{{__('SuperAdmin/backend.medical_insurance_cost')}}</h2></label>
+                                <h2>{{__('Admin/backend.medical_insurance_cost')}}</h2></label>
                             <div class="row">
                                 <div class="col-md-3">
-                                    <label>@lang('SuperAdmin/backend.medical_insurance_fee'):</label>
-                                    <input class="form-control" type="text" name="medical_fees_per_week[]" placeholder="{{__('SuperAdmin/backend.medical_insurance_fee_pw')}}" style="width:200px">
+                                    <label>@lang('Admin/backend.medical_insurance_fee'):</label>
+                                    <input class="form-control" type="text" name="medical_fees_per_week[]" placeholder="{{__('Admin/backend.medical_insurance_fee_pw')}}" style="width:200px">
                                 </div>
                                 <div class="col-md-3">
-                                    <label>@lang('SuperAdmin/backend.medical_insurance_duration_start'):</label>
-                                    <input class="form-control" type="number" name="medical_start_date[]" placeholder="@lang('SuperAdmin/backend.medical_insurance_duration_end')">
+                                    <label>@lang('Admin/backend.medical_insurance_duration_start'):</label>
+                                    <input class="form-control" type="number" name="medical_start_date[]" placeholder="@lang('Admin/backend.medical_insurance_duration_end')">
                                 </div>
                                 <div class="col-md-3">
-                                    <label>@lang('SuperAdmin/backend.medical_end_date'):</label>
-                                    <input class="form-control" type="number" name="medical_end_date[]" placeholder="{{__('SuperAdmin/backend.medical_insurance_duration_end')}}">
+                                    <label>@lang('Admin/backend.medical_end_date'):</label>
+                                    <input class="form-control" type="number" name="medical_end_date[]" placeholder="{{__('Admin/backend.medical_insurance_duration_end')}}">
                                 </div>
                                 <div class="col-md-3">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i>
@@ -191,16 +191,16 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>@lang('SuperAdmin/backend.medical_insurance_note'):</label>
+                        <label>@lang('Admin/backend.medical_insurance_note'):</label>
                         <div class="row">
                             <div class="col-md-12">
                                 <input value="" hidden id="medical_insurance_note_value" name="medical_insurance_note_en" value="">
-                                <textarea class="form-control" name="" id="medical_insurance_note" placeholder="@lang('SuperAdmin/backend.medical_insurance_note')"></textarea>
+                                <textarea class="form-control" name="" id="medical_insurance_note" placeholder="@lang('Admin/backend.medical_insurance_note')"></textarea>
                             </div>
                         </div>
                     </div>
                     
-                    <button type="button" onclick="getContent('medical_insurance_note', 'medical_insurance_note_value'); submitOtherServiceForm($(this))" class="btn btn-primary">@lang('SuperAdmin/backend.submit')</button>
+                    <button type="button" onclick="getContent('medical_insurance_note', 'medical_insurance_note_value'); submitOtherServiceForm($(this))" class="btn btn-primary">@lang('Admin/backend.submit')</button>
                 </form>
             </div>
         </div>

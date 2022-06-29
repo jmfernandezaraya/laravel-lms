@@ -1,23 +1,23 @@
-@extends('schooladmin.layouts.app')
+@extends('admin.layouts.app')
 @section('content')
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body table table-responsive">
 
-                <center><h1 class="card-title">{{__('SuperAdmin/backend.branch_admin_details')}}</h1></center>
-                <a href="{{route('schooladmin.branch_admin.create')}}" type="button" class="btn btn-primary btn-sm pull-right"><i class="fa fa-plus"></i>&nbsp;{{__('SuperAdmin/backend.add')}}</a>
+                <center><h1 class="card-title">{{__('Admin/backend.branch_admin_details')}}</h1></center>
+                <a href="{{route('schooladmin.branch_admin.create')}}" type="button" class="btn btn-primary btn-sm pull-right"><i class="fa fa-plus"></i>&nbsp;{{__('Admin/backend.add')}}</a>
                 <table class="table table-hover table-bordered">
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th>{{__('SuperAdmin/backend.first_name')}}</th>
-                        <th>{{__('SuperAdmin/backend.last_name')}}</th>
-                        <th>{{__('SuperAdmin/backend.email')}}</th>
-                        <th>{{__('SuperAdmin/backend.contact_no')}}</th>
-                        <th>{{__('SuperAdmin/backend.profile_image')}}</th>
+                        <th>{{__('Admin/backend.first_name')}}</th>
+                        <th>{{__('Admin/backend.last_name')}}</th>
+                        <th>{{__('Admin/backend.email')}}</th>
+                        <th>{{__('Admin/backend.contact_no')}}</th>
+                        <th>{{__('Admin/backend.profile_image')}}</th>
                         <th>Permissions Given</th>
-                        <th>{{__('SuperAdmin/backend.created_on')}}</th>
-                        <th>{{__('SuperAdmin/backend.action')}}</th>
+                        <th>{{__('Admin/backend.created_on')}}</th>
+                        <th>{{__('Admin/backend.action')}}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -60,8 +60,8 @@
                             <td>{{$school->created_at->diffForHumans()}}</td>
                             <td>
                                 <div class="btn-group">
-                                    <a href  = "{{route('superadmin.school_admin.edit', $school->id)}}" class="btn btn-info btn-sm fa fa-pencil"></a>
-                                    <form action="{{route('superadmin.school_admin.destroy', $school->id)}}" method="post">
+                                    <a href  = "{{route('admin.school_admin.edit', $school->id)}}" class="btn btn-info btn-sm fa fa-pencil"></a>
+                                    <form action="{{route('admin.school_admin.destroy', $school->id)}}" method="post">
                                         @csrf
                                         @method('DELETE')
 

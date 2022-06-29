@@ -74,7 +74,7 @@ class VisaFormController extends Controller
 
             if ($db) {
                 $data['success'] = true;
-                $data['data'] = __('SuperAdmin/backend.errors.success');
+                $data['data'] = __('Admin/backend.errors.success');
                 return response($data);
             }
         } catch(\Exception $e){
@@ -149,7 +149,7 @@ class VisaFormController extends Controller
         });
         if ($db) {
             $data['success'] = true;
-            $data['data'] = __('SuperAdmin/backend.errors.success');
+            $data['data'] = __('Admin/backend.errors.success');
             return response($data);
 
         }

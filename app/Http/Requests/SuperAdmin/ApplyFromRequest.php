@@ -33,10 +33,10 @@ class ApplyFromRequest extends FormRequest
     {
         return [
 
-            'apply_from_en.required' => __('SuperAdmin/backend.visa_form.required_in_english'),
-            'apply_from_ar.required' => __('SuperAdmin/backend.visa_form.required_in_arabic'),
-            'apply_from_en.unique' => __('SuperAdmin/backend.visa_form.already_exists_in_english'),
-            'apply_from_ar.unique' => __('SuperAdmin/backend.visa_form.already_exists_in_arabic'),
+            'apply_from_en.required' => __('Admin/backend.visa_form.required_in_english'),
+            'apply_from_ar.required' => __('Admin/backend.visa_form.required_in_arabic'),
+            'apply_from_en.unique' => __('Admin/backend.visa_form.already_exists_in_english'),
+            'apply_from_ar.unique' => __('Admin/backend.visa_form.already_exists_in_arabic'),
 
         ];
     }

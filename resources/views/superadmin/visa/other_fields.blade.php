@@ -1,9 +1,9 @@
-@extends('superadmin.layouts.app')
+@extends('admin.layouts.app')
 @section('content')
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body table table-responsive">
-                <div style="text-align: center;"><h1 class="card-title">@lang('SuperAdmin/backend.visa_application.application_details')</h1></div>
+                <div style="text-align: center;"><h1 class="card-title">@lang('Admin/backend.visa_application.application_details')</h1></div>
 
                 <table class="table table-hover table-bordered">
                     <thead>

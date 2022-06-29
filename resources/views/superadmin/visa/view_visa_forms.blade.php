@@ -1,26 +1,26 @@
-@extends('superadmin.layouts.app')
+@extends('admin.layouts.app')
 @section('content')
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body table table-responsive">
-                <div style="text-align: center;"><h1 class="card-title">@lang('SuperAdmin/backend.visa_form.visa_form_details')</h1></div>
-                <a href="{{route('superadmin.add_visa_form')}}" type="button" class="btn btn-primary btn-sm pull-right"><i class="fa fa-plus"></i>&nbsp;{{__('SuperAdmin/backend.add')}}</a>
+                <div style="text-align: center;"><h1 class="card-title">@lang('Admin/backend.visa_form.visa_form_details')</h1></div>
+                <a href="{{route('superadmin.add_visa_form')}}" type="button" class="btn btn-primary btn-sm pull-right"><i class="fa fa-plus"></i>&nbsp;{{__('Admin/backend.add')}}</a>
                 <table class="table table-hover table-bordered">
                     <thead>
                     <tr>
                         <th>#</th>
 
-                        <th> @lang('SuperAdmin/backend.visa_form.form_id')</th>
-                        <th> @lang('SuperAdmin/backend.visa_form.applied_from')</th>
-                        <th> @lang('SuperAdmin/backend.visa_form.application_center')</th>
-                        <th> @lang('SuperAdmin/backend.visa_form.nationality')</th>
-                        <th> @lang('SuperAdmin/backend.visa_form.travel_to')</th>
-                        <th> @lang('SuperAdmin/backend.visa_form.type_of_visa')</th>
-                        <th> @lang('SuperAdmin/backend.visa_form.visa_information')</th>
-                        <th> @lang('SuperAdmin/backend.visa_form.visa_fee')</th>
-                        <th> @lang('SuperAdmin/backend.visa_form.insurance_fee')</th>
-                        <th>{{__('SuperAdmin/backend.created_on')}}</th>
-                        <th>{{__('SuperAdmin/backend.action')}}</th>
+                        <th> @lang('Admin/backend.visa_form.form_id')</th>
+                        <th> @lang('Admin/backend.visa_form.applied_from')</th>
+                        <th> @lang('Admin/backend.visa_form.application_center')</th>
+                        <th> @lang('Admin/backend.visa_form.nationality')</th>
+                        <th> @lang('Admin/backend.visa_form.travel_to')</th>
+                        <th> @lang('Admin/backend.visa_form.type_of_visa')</th>
+                        <th> @lang('Admin/backend.visa_form.visa_information')</th>
+                        <th> @lang('Admin/backend.visa_form.visa_fee')</th>
+                        <th> @lang('Admin/backend.visa_form.insurance_fee')</th>
+                        <th>{{__('Admin/backend.created_on')}}</th>
+                        <th>{{__('Admin/backend.action')}}</th>
                     </tr>
                     </thead>
                     <tbody>

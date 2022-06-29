@@ -52,12 +52,12 @@ class CustomerController extends Controller
     {
         try {
             (new User($request->validated()))->save();
-            $saved = __('SuperAdmin/backend.data_saved_successfully');
+            $saved = __('Admin/backend.data_saved_successfully');
             return redirect()->route('superadmin.customer.index');
         } catch (ValidationException $e) {
             return response()->json(['errors' => $e->errors()]);
         } catch (NotReadableException $e) {
-            $exception = __('SuperAdmin/backend.errors.image_required');
+            $exception = __('Admin/backend.errors.image_required');
             return response()->json(['catch_error' => $exception]);
         } catch (\Exception $e) {
             return response()->json(['catch_error' => $e->getMessage()]);
@@ -94,11 +94,11 @@ class CustomerController extends Controller
         ];
 
         $validate = Validator::make($request->all(), $rules, [
-            'first_name_en.required' => __('SuperAdmin/backend.errors.customer_first_name_in_english'),
-            'first_name_ar.required' => __('SuperAdmin/backend.errors.customer_first_name_in_arabic'),
-            'last_name_en.required' => __('SuperAdmin/backend.errors.customer_last_name_in_english'),
-            'last_name_ar.required' => __('SuperAdmin/backend.errors.customer_last_name_in_arabic'),
-            'email.required' => __('SuperAdmin/backend.errors.customer_email'),
+            'first_name_en.required' => __('Admin/backend.errors.customer_first_name_in_english'),
+            'first_name_ar.required' => __('Admin/backend.errors.customer_first_name_in_arabic'),
+            'last_name_en.required' => __('Admin/backend.errors.customer_last_name_in_english'),
+            'last_name_ar.required' => __('Admin/backend.errors.customer_last_name_in_arabic'),
+            'email.required' => __('Admin/backend.errors.customer_email'),
         ]);
         if ($validate->fails()) {
             return response()->json(['errors' => $validate->errors()]);
@@ -106,7 +106,7 @@ class CustomerController extends Controller
         $save = $validate->validated();
 
         $customers->fill($save)->save();
-        $saved = __('SuperAdmin/backend.data_saved_successfully');
+        $saved = __('Admin/backend.data_saved_successfully');
         return response()->json(['success' => true, 'data' => $saved]);
     }
 
@@ -119,7 +119,7 @@ class CustomerController extends Controller
     public function destroy($id)
     {
         $delete = User::findorFail($id);
-        $deleted = __('SuperAdmin/backend.data_deleted_successfully');
+        $deleted = __('Admin/backend.data_deleted_successfully');
 
         if ($delete->image != '' && $delete->image != null && file_exists($delete->image)) {
             unlink($delete->image);
@@ -147,7 +147,7 @@ class CustomerController extends Controller
             file_put_contents(public_path('images/customer_images/' .$fileName), $interventionImage);
             $CKEditorFuncNum = $request->input('CKEditorFuncNum');
             $url = asset('public/images/customer_images/' . $fileName);
-            $msg = __('SuperAdmin/backend.image_uploaded_successfully');
+            $msg = __('Admin/backend.image_uploaded_successfully');
             $response = "<script>window.parent.CKEDITOR.tools.callFunction($CKEditorFuncNum, '$url', '$msg')</script>";
 
             @header('Content-type: text/html; charset=utf-8');

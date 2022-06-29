@@ -58,10 +58,10 @@ class BlogController extends Controller
             'description_en' => 'required',
         ];
         $validate = Validator::make($request->all(), $rules, [
-            'title_ar.required' => __('SuperAdmin/backend.errors.blog_title_in_arabic'),
-            'title_en.required' => __('SuperAdmin/backend.errors.blog_title_in_english'),
-            'description_en.required' => __('SuperAdmin/backend.errors.description_en_required'),
-            'description_ar.required' => __('SuperAdmin/backend.errors.description_ar_required'),
+            'title_ar.required' => __('Admin/backend.errors.blog_title_in_arabic'),
+            'title_en.required' => __('Admin/backend.errors.blog_title_in_english'),
+            'description_en.required' => __('Admin/backend.errors.description_en_required'),
+            'description_ar.required' => __('Admin/backend.errors.description_ar_required'),
         ]);
         if ($validate->fails()) {
             return response()->json(['errors' => $validate->errors()]);
@@ -76,11 +76,11 @@ class BlogController extends Controller
             $blog->display = true;
             $blog->save();
             
-            toastr()->success(__('SuperAdmin/backend.data_saved_successfully'));
+            toastr()->success(__('Admin/backend.data_saved_successfully'));
 
             return redirect()->route('superadmin.blog.index');
         } catch (NotReadableException $e) {
-            $exception = __('SuperAdmin/backend.errors.image_required');
+            $exception = __('Admin/backend.errors.image_required');
             return response()->json(['catch_error' => $exception]);
         } catch (\Exception $e) {
             return response()->json(['catch_error' => $e->getMessage()]);
@@ -115,10 +115,10 @@ class BlogController extends Controller
             'description_en' => 'required',
         ];
         $validate = Validator::make($request->all(), $rules, [
-            'title_ar.required' => __('SuperAdmin/backend.errors.blog_title_in_arabic'),
-            'title_en.required' => __('SuperAdmin/backend.errors.blog_title_in_english'),
-            'description_en.required' => __('SuperAdmin/backend.errors.description_en_required'),
-            'description_ar.required' => __('SuperAdmin/backend.errors.description_ar_required'),
+            'title_ar.required' => __('Admin/backend.errors.blog_title_in_arabic'),
+            'title_en.required' => __('Admin/backend.errors.blog_title_in_english'),
+            'description_en.required' => __('Admin/backend.errors.description_en_required'),
+            'description_ar.required' => __('Admin/backend.errors.description_ar_required'),
         ]);
         if ($validate->fails()) {
             return response()->json(['errors' => $validate->errors()]);
@@ -126,7 +126,7 @@ class BlogController extends Controller
         $save = $validate->validated();
 
         $blog->fill($save)->save();
-        $saved = __('SuperAdmin/backend.data_saved_successfully');
+        $saved = __('Admin/backend.data_saved_successfully');
         return response()->json(['data' => $saved]);
     }
 
@@ -139,7 +139,7 @@ class BlogController extends Controller
     public function destroy($id)
     {
         $delete = Blog::findorFail($id);
-        $deleted = __('SuperAdmin/backend.data_deleted_successfully');
+        $deleted = __('Admin/backend.data_deleted_successfully');
 
         if ($delete->image != '' && $delete->image != null && file_exists($delete->image)) {
             unlink($delete->image);
@@ -189,7 +189,7 @@ class BlogController extends Controller
             }
         });
         if ($db) {
-            toastr()->success(__('SuperAdmin/backend.data_paused_successfully'));
+            toastr()->success(__('Admin/backend.data_paused_successfully'));
         }
         return back();
     }
@@ -209,7 +209,7 @@ class BlogController extends Controller
             }
         });
         if ($db) {
-            toastr()->success(__('SuperAdmin/backend.data_played_successfully'));
+            toastr()->success(__('Admin/backend.data_played_successfully'));
         }
         return back();
     }

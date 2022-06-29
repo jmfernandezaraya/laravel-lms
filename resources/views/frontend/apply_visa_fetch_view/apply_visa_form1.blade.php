@@ -18,7 +18,7 @@
                     <div class="form-group col-md-6">
                         <label for="inputapply">@lang('Frontend.visaform.applying_from')</label>
                         <select onchange="getNationality($(this).val())" name='apply_form' class="form-control" id="apply_from_frontend">
-                            <option value="">@lang('SuperAdmin/backend.select_option') </option>
+                            <option value="">@lang('Admin/backend.select_option') </option>
                             @foreach ($apply_from as $apply_froms)
                                 <option value="{{$apply_froms->id}}">{{$apply_froms->{'apply_from_'.get_language() } }} </option>
                             @endforeach
@@ -35,7 +35,7 @@
                     <div class="form-group col-md-6">
                         <label for="inputvisa1">what is your Nationality</label>
                         <select onchange="getTravel($(this).val())" name="nationality" class="form-control" id="nationality_select_frontend">
-                            <option selected value="">@lang('SuperAdmin/backend.select_option') </option>
+                            <option selected value="">@lang('Admin/backend.select_option') </option>
                         </select>
                     </div>
                 </div>
@@ -44,7 +44,7 @@
                     <div class="form-group col-md-6">
                         <label for="inputtravel">where do you want to travel?</label>
                         <select onchange="getTypeOfVisa($(this).val())" name="travel" class="form-control" id="travel_select_frontend">
-                            <option selected value="">@lang('SuperAdmin/backend.select_option') </option>
+                            <option selected value="">@lang('Admin/backend.select_option') </option>
                         </select>
                     </div>
                 </div>
@@ -53,7 +53,7 @@
                     <div class="form-group col-md-6">
                         <label for="inputvisa3">Type of visa</label>
                         <select onchange="getApplicationCenter($(this).val())" name="type_of_visa" data-url="{{route('frontend.visa_details')}}" class="form-control" id="type_of_visa">
-                            <option selected value="">@lang('SuperAdmin/backend.select_option') </option>
+                            <option selected value="">@lang('Admin/backend.select_option') </option>
                         </select>
                     </div>
                 </div>
@@ -62,7 +62,7 @@
                     <div class="form-group col-md-6">
                         <label for="inputappliccation">@lang('Frontend.visaform.choose_visa_application_center')</label>
                         <select onchange="getNumberOfPeople($(this))" name="visa_center" class="form-control mt-2" id="visa_select_frontend">
-                            <option selected value="">@lang('SuperAdmin/backend.select_option') </option>
+                            <option selected value="">@lang('Admin/backend.select_option') </option>
                         </select>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                     <div class="form-group col-md-6">
                         <label for="exampleFormControlSelect1">Enter Number of People</label>
                         <select name="people_select" data-url="{{route('frontend.visa_details')}}" onchange="getVisaDetails($(this))" class="form-control" id="getPeople">
-                            <option selected value="">{{__('SuperAdmin/backend.select_option')}}</option>
+                            <option selected value="">{{__('Admin/backend.select_option')}}</option>
                         </select>
                     </div>
                 </div>
@@ -110,7 +110,7 @@
                             <div class="col-md-4 text-right">
                                 <h6 id="total">0 SAR</h6>
                                 <input hidden id="total_value" name="total_value" value="">
-                                <button type="submit" class="btn btn-primary">@lang('SuperAdmin/backend.apply_now')</button>
+                                <button type="submit" class="btn btn-primary">@lang('Admin/backend.apply_now')</button>
                             </div>
                         </div>
                     </div>

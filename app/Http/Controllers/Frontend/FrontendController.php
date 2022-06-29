@@ -49,6 +49,7 @@ use App\Services\FrontendServices;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 
+use Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
@@ -344,7 +345,11 @@ class FrontendController extends Controller
             $data['url'] = route('frontend.course.reservation.detail');
         } catch(\Exception $e) {
             $data['errors'] = 'Something Went Wrong Check Log File';
+			$data['catch_error'] = $e->getMessage();
             $data['success'] = false;
+
+            Log::error($e->getMessage());
+
             return response()->json($data);
         }
 
@@ -479,8 +484,7 @@ class FrontendController extends Controller
         $custodian_fee = readCalculationFromDB('custodian_fee') ?? 0;
 
         $total_discount = $program_discount_fee + $accommodation_discount_fee;
-        $total_cost = (readCalculationFromDB('total') ?? 0)
-                + (readCalculationFromDB('accommodation_total') ?? 0) + (readCalculationFromDB('accommodation_special_diet_fee') ?? 0)
+        $total_cost = (readCalculationFromDB('total') ?? 0) + (readCalculationFromDB('accommodation_total') ?? 0)
                 + (readCalculationFromDB('airport_pickup_fee') ?? 0) + (readCalculationFromDB('medical_insurance_fee') ?? 0) + (readCalculationFromDB('custodian_fee') ?? 0)
                 - (readCalculationFromDB('discount_fee') ?? 0) - (readCalculationFromDB('accommodation_discount') ?? 0);
         $sub_total = $total_cost + $total_discount;
@@ -653,7 +657,9 @@ class FrontendController extends Controller
         $today = Carbon::now()->format('d-m-Y');
         $school = School::find($course_details->school_id);
 
-        return view('frontend.course.reservation-confirm', compact('today', 'school', 'course_details', 'course_register_details', 'course_reservation_details', 'registration_cancel_description'));
+        $reservation_links = getCourseReservationLinks();
+
+        return view('frontend.course.reservation-confirm', compact('today', 'school', 'course_details', 'course_register_details', 'course_reservation_details', 'registration_cancel_description', 'reservation_links'));
     }
 
     /**
@@ -800,13 +806,13 @@ class FrontendController extends Controller
             $to_be_saved['registration_cancelation_conditions_ar'] = $registration_cancel_page ? $registration_cancel_page->content_ar : '';
             $mail_pdf_data['registration_cancelation_conditions'] = app()->getLocale() == 'en' ? $to_be_saved['registration_cancelation_conditions'] : $to_be_saved['registration_cancelation_conditions_ar'];
             
-            Session::forget('accom_unique_id');
-            Session::forget('airport_id');
-            Session::forget('medical_id');
+            // Session::forget('accom_unique_id');
+            // Session::forget('airport_id');
+            // Session::forget('medical_id');
 
-            Session::forget('course_details');
-            Session::forget('course_register_details');
-            Session::forget('course_reservation_details');
+            // Session::forget('course_details');
+            // Session::forget('course_register_details');
+            // Session::forget('course_reservation_details');
 
             $mail_pdf_data['program_start_date'] = Carbon::create($course_details->date_selected)->format('d-m-Y');
             $mail_pdf_data['accommodation_start_date'] = $mail_pdf_data['medical_start_date'] = Carbon::create($course_details->date_selected)->subDay()->format('d-m-Y');
@@ -980,7 +986,7 @@ class FrontendController extends Controller
             $mail_pdf_data['locale'] = app()->getLocale();
 
             if (isset($course_reservation_details->deposit_price)) {
-                $course_application = CourseApplication::updateOrCreate($to_be_saved, $to_be_saved + ['user_id' => auth()->user()->id(), 'status' => 'received']);
+                $course_application = CourseApplication::updateOrCreate($to_be_saved, $to_be_saved + ['user_id' => auth()->id(), 'status' => 'received']);
                 $calc = Calculator::where('calc_id', request()->ip())->latest()->first();
                 $course_application_fee = $calc->replicate()->setTable('course_application_fees');
                 $course_application_fee->course_application_id = $course_application->id;
@@ -993,7 +999,7 @@ class FrontendController extends Controller
                 $course_application_data->registration_date = \Carbon\Carbon::now()->format('Y-m-d');
                 \Mail::to(auth()->user()->email)->send(new CourseBooked($course_application_data));
             } else {
-                $course_application = CourseApplication::updateOrCreate($to_be_saved, $to_be_saved + ['user_id' => auth()-user()->id(), 'paid' => 1, 'status' => 'received']);
+                $course_application = CourseApplication::updateOrCreate($to_be_saved, $to_be_saved + ['user_id' => auth()->id(), 'paid' => 1, 'status' => 'received']);
                 $calc = Calculator::where('calc_id', request()->ip())->latest()->first();
                 $course_application_fee = $calc->replicate()->setTable('course_application_fees');
                 $course_application_fee->course_application_id = $course_application->id;
@@ -1018,7 +1024,7 @@ class FrontendController extends Controller
                 $transaction->store_id = 999999;
                 $transaction->test_mode = 0;
                 $transaction->amount = $mail_pdf_data['total_balance']['converted_value'];
-                $transaction->description = __('SuperAdmin/backend.program_registration_free');
+                $transaction->description = __('Admin/backend.program_registration_free');
                 $transaction->success_url = '';
                 $transaction->canceled_url = '';
                 $transaction->declined_url = '';
@@ -1063,11 +1069,15 @@ class FrontendController extends Controller
                 $data['success'] = true;
             }
 
-            $url = $telrManager->pay(time() . rand(00, 99), $mail_pdf_data['deposit_price']['converted_value'], __('SuperAdmin/backend.program_registration_free'), $billingParams)->redirect();
+            $url = $telrManager->pay(time() . rand(00, 99), $mail_pdf_data['deposit_price']['converted_value'], __('Admin/backend.program_registration_free'), $billingParams)->redirect();
             $data['url'] = $url->getTargetUrl();
         } catch(\Exception $e) {
             $data['errors'] = 'Something Went Wrong Check Log File';
+			$data['catch_error'] = $e->getMessage();
             $data['success'] = false;
+
+            Log::error($e->getMessage());
+
             return response()->json($data);
         }
 

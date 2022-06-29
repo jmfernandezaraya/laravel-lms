@@ -341,7 +341,7 @@ class CourseController extends Controller
         $request->session_set == true || $request->set_session == 'true' ? Session::put('accom_unique_id', $request->id) : '';
 
         $accomodation = $accomodation->whereUniqueId(Session::get('accom_unique_id'))->first();
-        $select = __('SuperAdmin/backend.select');
+        $select = __('Admin/backend.select');
         $html = "<option value  = ''>$select</option>";
 
         if ($request->set_session || $request->set_session == 'true') {

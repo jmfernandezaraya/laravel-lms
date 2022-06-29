@@ -56,7 +56,7 @@ class CurrencyController extends Controller
     {
         $currency->fill($request->validated())->save();
 
-        toastr()->success(__('SuperAdmin/backend.data_saved_successfully'));
+        toastr()->success(__('Admin/backend.data_saved_successfully'));
 
         return redirect()->route('superadmin.setting.currency.index');
     }
@@ -155,12 +155,12 @@ class CurrencyController extends Controller
 
         $course_ids = Course::where('currency', $id)->pluck('unique_id')->toArray();
         if (count($course_ids)) {
-            toastr()->error(__('SuperAdmin/backend.course_has_currency'));
+            toastr()->error(__('Admin/backend.course_has_currency'));
             return back();
         }
 
         $currency->delete();
-        toastr()->success(__('SuperAdmin/backend.data_deleted_successfully'));
+        toastr()->success(__('Admin/backend.data_deleted_successfully'));
         return back();
     }
 }

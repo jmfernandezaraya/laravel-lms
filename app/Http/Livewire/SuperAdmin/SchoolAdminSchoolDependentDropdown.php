@@ -11,7 +11,7 @@ class SchoolAdminSchoolDependentDropdown extends Component
 
     public function mount()
     {
-        $select = __('SuperAdmin/backend.select');
+        $select = __('Admin/backend.select');
         $this->select = "<option value='' selected>$select</option>";
     }
 

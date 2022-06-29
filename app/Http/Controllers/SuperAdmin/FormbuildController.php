@@ -43,7 +43,7 @@ class FormbuildController extends Controller
         $validate = \Validator::make($request->all(), ['form_name' => 'unique:form_builders', 'visa_id' => 'required']);
 
         if($validate->fails()){
-        $failed  = __('SuperAdmin/backend.errors.name');
+        $failed  = __('Admin/backend.errors.name');
             toastr()->error($failed);
             return back();
         }
@@ -57,7 +57,7 @@ class FormbuildController extends Controller
 
 
         Formbuilder::create(['visa_form_id' => $request->visa_id, 'form_name' => $request->form_name, 'form_data' => json_encode($change_name), 'active' => 1]);
-            $success = __('SuperAdmin/backend.data_saved_successfully');
+            $success = __('Admin/backend.data_saved_successfully');
             toastr()->success($success);
             return view('superadmin.visa.formbuilder');
     }
@@ -98,7 +98,7 @@ class FormbuildController extends Controller
         $formbuilder->form_data = json_encode($change_name);
 
         $formbuilder->save();
-        toastr()->success(__('SuperAdmin/backend.data_updated_successfully'));
+        toastr()->success(__('Admin/backend.data_updated_successfully'));
 
         return back();
     }
@@ -112,7 +112,7 @@ class FormbuildController extends Controller
     public function destroy($id)
     {
         Formbuilder::find($id)->delete();
-            $deleted = __('SuperAdmin/backend.data_deleted_successfully');
+            $deleted = __('Admin/backend.data_deleted_successfully');
             toastr()->success($deleted);
             return back();
     }

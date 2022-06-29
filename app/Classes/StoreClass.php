@@ -76,7 +76,7 @@ class StoreClass {
 				//Session::put('input1', $input);
 				
 				$data['success'] = true;
-				$data['data'] =__('SuperAdmin/backend.data_saved_successfully');
+				$data['data'] =__('Admin/backend.data_saved_successfully');
 				return response()->json($data);
 			}
 			
@@ -120,7 +120,7 @@ class StoreClass {
 				if($save){
 					$this->my_unique_id(1);
 					$data['success'] = true;
-					$data['data'] = __('SuperAdmin/backend.data_saved_successfully');
+					$data['data'] = __('Admin/backend.data_saved_successfully');
 					return response()->json($data);
 				}
 				$data['errors'] = 'Soime';
@@ -230,7 +230,7 @@ class StoreClass {
 				\Cache::put('input1', $input, $seconds = 10);
 									
 				$data['success'] = true;
-				$data['data'] = __('SuperAdmin/backend.data_saved_successfully');
+				$data['data'] = __('Admin/backend.data_saved_successfully');
 				return response()->json($data);
 			}
 
@@ -280,7 +280,7 @@ class StoreClass {
 					Session::forget('logo');
 					
 					$data['success'] = true;
-					$data['data'] = __('SuperAdmin/backend.data_saved_successfully');
+					$data['data'] = __('Admin/backend.data_saved_successfully');
 					
 					return response()->json($data);	
 				}

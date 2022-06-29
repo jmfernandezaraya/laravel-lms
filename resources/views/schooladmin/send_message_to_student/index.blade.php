@@ -1,4 +1,4 @@
-@extends('schooladmin.layouts.app')
+@extends('admin.layouts.app')
 @section('content')
     <style>
 
@@ -15,11 +15,11 @@
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th> @lang('SuperAdmin/backend.first_name')</th>
-                        <th>{{__('SuperAdmin/backend.last_name')}}</th>
-                        <th>{{__('SuperAdmin/backend.email')}}</th>
-                        <th>{{__('SuperAdmin/backend.created_on')}}</th>
-                        <th>{{__('SuperAdmin/backend.action')}}</th>
+                        <th> @lang('Admin/backend.first_name')</th>
+                        <th>{{__('Admin/backend.last_name')}}</th>
+                        <th>{{__('Admin/backend.email')}}</th>
+                        <th>{{__('Admin/backend.created_on')}}</th>
+                        <th>{{__('Admin/backend.action')}}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -68,25 +68,25 @@ Modal Send Message STarts
 
                                         <div class="form-group">
                                             <label
-                                                for="exampleInputname">@lang('SuperAdmin/backend.email')</label>
+                                                for="exampleInputname">@lang('Admin/backend.email')</label>
                                             <input type="name" class="form-control" id="study_english"
                                                    aria-describedby="emailHelp"
                                                    value="{{$customer->email}}" name="email" readonly
-                                                   placeholder="@lang('SuperAdmin/backend.email')">
+                                                   placeholder="@lang('Admin/backend.email')">
                                             <br>
 
 
 
                                             <label
-                                                for="exampleInputname">@lang('SuperAdmin/backend.subject')</label>
+                                                for="exampleInputname">@lang('Admin/backend.subject')</label>
                                             <input type="name" class="form-control" id="study_english"
                                                    aria-describedby="emailHelp"
                                                    name="subject"
-                                                   placeholder="@lang('SuperAdmin/backend.subject')">
+                                                   placeholder="@lang('Admin/backend.subject')">
                                             <br>
 
                                             <label
-                                                for="exampleFormControlTextarea1">@lang('SuperAdmin/backend.message')</label>
+                                                for="exampleFormControlTextarea1">@lang('Admin/backend.message')</label>
                                             <textarea rows="3" id="exampleFormControlTextarea1" name="message" class="form-control"></textarea>
                                             <br>
 
@@ -105,7 +105,7 @@ Modal Send Message STarts
                                     <div class="modal-footer pt-0">
                                         <button
                                             type="submit"
-                                          class="btn btn-primary">@lang('SuperAdmin/backend.submit')</button>
+                                          class="btn btn-primary">@lang('Admin/backend.submit')</button>
                                     </div>
 
                                 </div>
@@ -126,5 +126,5 @@ Modal Send Message STarts
     </div>
 
 
-    @include('superadmin.course.modals')
+    @include('admin.course.modals')
 @endsection

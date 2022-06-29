@@ -1,9 +1,9 @@
-@extends('superadmin.layouts.app')
+@extends('admin.layouts.app')
 @section('content')
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body table table-responsive">
-                <div style="text-align: center;"><h1 class="card-title">@lang('SuperAdmin/backend.visa_application.application_details')</h1></div>
+                <div style="text-align: center;"><h1 class="card-title">@lang('Admin/backend.visa_application.application_details')</h1></div>
 
                 <table class="table table-hover table-bordered">
                     <thead>
@@ -30,7 +30,7 @@
                             <td>{{$loop->iteration}}</td>
                             <td>{{ucwords($visa->user->{'first_name_'. get_language()} )}}  {{ucwords($visa->user->{'last_name_'. get_language()} )}}</td>
                             <td>{{ucwords($visa->visaCenter->{'application_center_' .get_language() } )}}</td>
-                            <td><a href="{{route('superadmin.visa.otherfields', $visa->id)}}"class  ="btn btn-primary btn-sm">@lang('SuperAdmin/backend.click_here') </a></td>
+                            <td><a href="{{route('superadmin.visa.otherfields', $visa->id)}}"class  ="btn btn-primary btn-sm">@lang('Admin/backend.click_here') </a></td>
                             <td>{{ucwords($visa->applyingFrom->{'apply_from_'.get_language()})}}</td>
                             <td>{{ucwords($visa->people)}}</td>
                             <td>{{ucwords($visa->typeOfVisa->{'visa_' . get_language()})}}</td>

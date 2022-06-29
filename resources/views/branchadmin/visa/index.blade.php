@@ -4,14 +4,14 @@
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body table table-responsive">
-                <div style="text-align: center;"><h1 class="card-title">@lang('SuperAdmin/backend.formbuilder.form_details')</h1></div>
+                <div style="text-align: center;"><h1 class="card-title">@lang('Admin/backend.formbuilder.form_details')</h1></div>
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th> @lang('SuperAdmin/backend.formbuilder.form_name')</th>
-                            <th>{{__('SuperAdmin/backend.created_on')}}</th>
-                            <th>{{__('SuperAdmin/backend.action')}}</th>
+                            <th> @lang('Admin/backend.formbuilder.form_name')</th>
+                            <th>{{__('Admin/backend.created_on')}}</th>
+                            <th>{{__('Admin/backend.action')}}</th>
                         </tr>
                     </thead>
                     <tbody>

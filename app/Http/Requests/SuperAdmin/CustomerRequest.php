@@ -40,11 +40,11 @@ class CustomerRequest extends FormRequest
     public function messages()
     {
         return [
-            'first_name_en.required' => __('SuperAdmin/backend.errors.customer_first_name_in_english'),
-            'first_name_ar.required' => __('SuperAdmin/backend.errors.customer_first_name_in_arabic'),
-            'last_name_en.required' => __('SuperAdmin/backend.errors.customer_last_name_in_english'),
-            'last_name_ar.required' => __('SuperAdmin/backend.errors.customer_last_name_in_arabic'),
-            'email.required' => __('SuperAdmin/backend.errors.customer_email'),
+            'first_name_en.required' => __('Admin/backend.errors.customer_first_name_in_english'),
+            'first_name_ar.required' => __('Admin/backend.errors.customer_first_name_in_arabic'),
+            'last_name_en.required' => __('Admin/backend.errors.customer_last_name_in_english'),
+            'last_name_ar.required' => __('Admin/backend.errors.customer_last_name_in_arabic'),
+            'email.required' => __('Admin/backend.errors.customer_email'),
         ];
     }
 

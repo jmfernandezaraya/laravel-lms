@@ -2884,26 +2884,9 @@ function initLanguageSection() {
     }
 }
 
-function activeSidebarLinks() {
-    var location_href = window.location.href;
-    $('.sidebar .nav-item > a.nav-link').each(function() {
-        if ($(this).attr('href') && location_href.indexOf($(this).attr('href')) >= 0) {
-            $(this).addClass('active');
-            if ($(this).closest('.collapse').length) {
-                $(this).closest('.collapse').addClass('show');
-                if ($(this).closest('.collapse').closest('.nav-item').length) {
-                    $(this).closest('.collapse').closest('.nav-item').addClass('active');
-                }
-            }
-        }
-    });
-}
-
 $(document).ready(function() {
     initRating();
     initCkeditor();
     initCkeditors();
     initLanguageSection();
-    
-    activeSidebarLinks();
 });

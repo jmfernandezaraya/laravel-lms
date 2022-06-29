@@ -43,9 +43,9 @@ class ApplicationNotificationToStudent extends Notification
     {
         return (new MailMessage)
             ->to($this->data->User->email)
-            ->greeting(__('SuperAdmin/backend.please_leave_review_rating_on_course'))
-            ->line(__('SuperAdmin/backend.you_booked_course_at') . ' ' . $this->data->created_at->format('Y-m-d'))
-            ->action(__('SuperAdmin/backend.leave_review_rating'), route('frontend.dashboard.review', $this->data->id));
+            ->greeting(__('Admin/backend.please_leave_review_rating_on_course'))
+            ->line(__('Admin/backend.you_booked_course_at') . ' ' . $this->data->created_at->format('Y-m-d'))
+            ->action(__('Admin/backend.leave_review_rating'), route('frontend.dashboard.review', $this->data->id));
     }
 
     /**

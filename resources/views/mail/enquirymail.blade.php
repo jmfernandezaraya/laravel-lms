@@ -1,9 +1,9 @@
 @component('mail::message')
-{{__('SuperAdmin/backend.first_name')}} : {{$requests->first_name}}
+{{__('Admin/backend.first_name')}} : {{$requests->first_name}}
 <br>
-{{__('SuperAdmin/backend.last_name')}} : {{$requests->last_name}}
+{{__('Admin/backend.last_name')}} : {{$requests->last_name}}
 <br>
-{{__('SuperAdmin/backend.email')}} : {{$requests->email}}
+{{__('Admin/backend.email')}} : {{$requests->email}}
 <br>
 {{__('Frontend.phone')}} : {{$requests->phone}}
 <br>

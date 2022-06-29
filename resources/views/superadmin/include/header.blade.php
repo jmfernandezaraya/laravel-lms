@@ -33,12 +33,12 @@
                     </div>
                 </a>
                 <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
-                    <a class="dropdown-item" href="#"><i class="mdi mdi-cached mr-2 text-success"></i> Activity Log </a>
+                    <a class="dropdown-item" href="#"><i class="mdi mdi-cached mr-2 text-success"></i>{{__('Admin/backend.activity_log')}}</a>
                     <div class="dropdown-divider"></div>
-                    <form method="post" action="{{ route('superadmin.superadmin-logout') }}">
+                    <form method="post" action="{{ route('superadmin.logout') }}">
                         @csrf
                         <button type ="submit" class="dropdown-item">
-                        <i class="mdi mdi-logout mr-2 text-primary"></i> Signout </button>
+                        <i class="mdi mdi-logout mr-2 text-primary"></i>{{__('Admin/backend.signout')}}</button>
                     </form>
                 </div>
             </li>
@@ -53,39 +53,7 @@
                     <span class="count-symbol bg-warning"></span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="messageDropdown">
-                    <h6 class="p-3 mb-0">Messages</h6>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item preview-item">
-                        <div class="preview-thumbnail">
-                            <img src="{{ asset('assets/images/faces/face4.jpg') }}" alt="image" class="profile-pic">
-                        </div>
-                        <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                            <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Mark send you a message</h6>
-                            <p class="text-gray mb-0"> 1 Minutes ago </p>
-                        </div>
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item preview-item">
-                        <div class="preview-thumbnail">
-                            <img src="{{ asset('assets/images/faces/face2.jpg') }}" alt="image" class="profile-pic">
-                        </div>
-                        <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                            <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Cregh send you a message</h6>
-                            <p class="text-gray mb-0"> 15 Minutes ago </p>
-                        </div>
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item preview-item">
-                        <div class="preview-thumbnail">
-                            <img src="{{ asset('assets/images/faces/face3.jpg') }}" alt="image" class="profile-pic">
-                        </div>
-                        <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                            <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Profile picture updated</h6>
-                            <p class="text-gray mb-0"> 18 Minutes ago </p>
-                        </div>
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <h6 class="p-3 mb-0 text-center">4 new messages</h6>
+                    <h6 class="p-3 mb-0">{{__('Admin/backend.messages_title')}}</h6>
                 </div>
             </li>
             <li class="nav-item dropdown">
@@ -94,62 +62,24 @@
                     <span class="count-symbol bg-danger"></span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
-                    <h6 class="p-3 mb-0">Notifications</h6>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item preview-item">
-                        <div class="preview-thumbnail">
-                            <div class="preview-icon bg-success">
-                                <i class="mdi mdi-calendar"></i>
-                            </div>
-                        </div>
-                        <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                            <h6 class="preview-subject font-weight-normal mb-1">Event today</h6>
-                            <p class="text-gray ellipsis mb-0"> Just a reminder that you have an event today </p>
-                        </div>
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item preview-item">
-                        <div class="preview-thumbnail">
-                            <div class="preview-icon bg-warning">
-                                <i class="mdi mdi-settings"></i>
-                            </div>
-                        </div>
-                        <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                            <h6 class="preview-subject font-weight-normal mb-1">Settings</h6>
-                            <p class="text-gray ellipsis mb-0"> Update dashboard </p>
-                        </div>
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item preview-item">
-                        <div class="preview-thumbnail">
-                            <div class="preview-icon bg-info">
-                                <i class="mdi mdi-link-variant"></i>
-                            </div>
-                        </div>
-                        <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                            <h6 class="preview-subject font-weight-normal mb-1">Launch Admin</h6>
-                            <p class="text-gray ellipsis mb-0"> New admin wow! </p>
-                        </div>
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <h6 class="p-3 mb-0 text-center">See all notifications</h6>
+                    <h6 class="p-3 mb-0">{{__('Admin/backend.notifications')}}</h6>
                 </div>
             </li>
             <li class="nav-item nav-language dropdown">
                 <a class="nav-link dropdown-toggle" id="languageDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
                     @if (app()->getLocale() == 'en')
-                        <img class="pr-2" src="{{ asset('public/frontend/assets/img/ar.png') }}" alt="logo">{{__('SuperAdmin/backend.english')}}
+                        <img class="pr-2" src="{{ asset('public/frontend/assets/img/ar.png') }}" alt="logo">{{__('Admin/backend.english')}}
                     @else
-                        <img class="pr-2" src="{{ asset('public/frontend/assets/img/ar.png') }}" alt="logo">{{__('SuperAdmin/backend.arabic')}}
+                        <img class="pr-2" src="{{ asset('public/frontend/assets/img/ar.png') }}" alt="logo">{{__('Admin/backend.arabic')}}
                     @endif
                 </a>
                 <div class="dropdown-menu navbar-dropdown" aria-labelledby="languageDropdown">
                     <a href="{{ url('set_language/en') }}" class="dropdown-item">
-                        <img class="pr-2" src="{{ asset('public/frontend/assets/img/eng.png') }}" alt="logo">{{__('SuperAdmin/backend.english')}}
+                        <img class="pr-2" src="{{ asset('public/frontend/assets/img/eng.png') }}" alt="logo">{{__('Admin/backend.english')}}
                     </a>
                     <div class="dropdown-divider"></div>
                     <a href="{{ url('set_language/ar') }}" class="dropdown-item">
-                        <img class="pr-2" src="{{ asset('public/frontend/assets/img/ar.png') }}" alt="logo">{{__('SuperAdmin/backend.arabic')}}
+                        <img class="pr-2" src="{{ asset('public/frontend/assets/img/ar.png') }}" alt="logo">{{__('Admin/backend.arabic')}}
                     </a>
                 </div>
             </li>

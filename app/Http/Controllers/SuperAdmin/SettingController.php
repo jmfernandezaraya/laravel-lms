@@ -142,7 +142,7 @@ class SettingController extends Controller
         $home_page->setting_value = serialize($setting_value);
         $home_page->save();
 
-        return response()->json(['success' => 'success', 'message' => __('SuperAdmin/backend.data_saved_successfully'), 'reload' => true]);
+        return response()->json(['success' => 'success', 'message' => __('Admin/backend.data_saved_successfully'), 'reload' => true]);
     }
 
     public function viewHeaderFooter(Request $request)
@@ -272,7 +272,7 @@ class SettingController extends Controller
         $header_footer->setting_value = serialize($setting_value);
         $header_footer->save();
 
-        return response()->json(['success' => 'success', 'message' => __('SuperAdmin/backend.data_saved_successfully'), 'reload' => true]);
+        return response()->json(['success' => 'success', 'message' => __('Admin/backend.data_saved_successfully'), 'reload' => true]);
     }
     
     public function viewSite(Request $request)
@@ -301,7 +301,6 @@ class SettingController extends Controller
         $setting_value = [
             'email' => $request->email,
             'phone' => $request->phone,
-            'registration_cancelation_conditions' => $request->registration_cancelation_conditions,
             'newsletter' => [
                 'title' => $request->newsletter_title,
                 'title_ar' => $request->newsletter_title_ar,
@@ -318,6 +317,11 @@ class SettingController extends Controller
                 'pinterest' => '',
                 'skype' => '',
                 'linkedin' => '',
+            ],
+            'course_reservation_links' => [
+                'registration_conditions' => '',
+                'terms_and_conditions' => '',
+                'private_policy' => '',
             ]
         ];
         
@@ -349,10 +353,22 @@ class SettingController extends Controller
         if (isset($request->social_linkedin)) {
             $setting_value['social']['linkedin'] = $request->social_linkedin;
         }
+        
+        if (isset($request->course_reservation_registration_conditions)) {
+            $setting_value['course_reservation_links']['registration_conditions'] = $request->course_reservation_registration_conditions;
+        }
+        
+        if (isset($request->course_reservation_terms_and_conditions)) {
+            $setting_value['course_reservation_links']['terms_and_conditions'] = $request->course_reservation_terms_and_conditions;
+        }
+        
+        if (isset($request->course_reservation_private_policy)) {
+            $setting_value['course_reservation_links']['private_policy'] = $request->course_reservation_private_policy;
+        }
 
         $site->setting_value = serialize($setting_value);
         $site->save();
 
-        return response()->json(['success' => 'success', 'message' => __('SuperAdmin/backend.data_saved_successfully'), 'reload' => true]);
+        return response()->json(['success' => 'success', 'message' => __('Admin/backend.data_saved_successfully'), 'reload' => true]);
     }
 }

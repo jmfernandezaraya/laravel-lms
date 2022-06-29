@@ -1,4 +1,4 @@
-@extends('superadmin.layouts.app')
+@extends('admin.layouts.app')
 
 @section('css')
     <style>
@@ -105,7 +105,7 @@
     tinymceInit();
 </script>
 
-@include('superadmin.include.modals')
+@include('admin.include.modals')
 <div class="breadcrumbs" data-aos="fade-in">
     <div class="container">
         <h1 align="center">Visa Form</h1>
@@ -121,13 +121,13 @@
         <br>
         <br>
         
-        @include('superadmin.include.alert')
+        @include('admin.include.alert')
         <div class="left">
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="inputapply">I'm applying from <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#ApplyFromModal" aria-hidden="true"></i> <i class="fa fa-trash pl-3" data-url="{{route(" superadmin.delete_applying_from ")}}" onclick="deleteApplyFrom($(this))" aria-hidden="true"></i></label>
                     <select name="applying_from" class="form-control" id="applying_from">
-                        <option value="">@lang('SuperAdmin/backend.select_option')</option>
+                        <option value="">@lang('Admin/backend.select_option')</option>
                         @foreach(\App\Models\SuperAdmin\ApplyFrom::all() as $applyform)
                             <option value="{{$applyform->id}}">{{$applyform->{'apply_from_' . get_language() } }}</option>
                         @endforeach
@@ -141,7 +141,7 @@
                     <br>
 
                     <select id="application_center" name="application_center" class="form-control">
-                        <option value="">@lang('SuperAdmin/backend.select_option') </option>
+                        <option value="">@lang('Admin/backend.select_option') </option>
                         @foreach (\App\Models\SuperAdmin\VisaApplicationCenter::all() as $visa)
                             <option value="{{$visa->id}}">{{$visa->{'application_center_' . get_language() } }}</option>
                         @endforeach
@@ -157,7 +157,7 @@
                     </label>
 
                     <select id="nationality_select" name="nationality" class="form-control">
-                        <option value=''>@lang('SuperAdmin/backend.select_option') </option>
+                        <option value=''>@lang('Admin/backend.select_option') </option>
                         @foreach (\App\Models\SuperAdmin\addNationality::all() as $nationality)
                             <option value='{{$nationality->id}}'>{{$nationality->{'nationality_' . get_language() } }} </option>
                         @endforeach
@@ -169,7 +169,7 @@
                         <i class="fa fa-trash pl-3" onclick="deleteTravel($(this))" data-url="{{route('superadmin.delete_travel')}}" aria-hidden="true"></i>
                     </label>
                     <select name="to_travel" class="form-control" id="to_travel">
-                        <option value=''>@lang('SuperAdmin/backend.select_option')</option>
+                        <option value=''>@lang('Admin/backend.select_option')</option>
                         @foreach (\App\Models\SuperAdmin\AddWhereToTravel::all() as $travel)
                             <option value='{{$travel->id}}'>{{$travel->{'travel_' . get_language() } }}</option>
                         @endforeach
@@ -184,18 +184,18 @@
                         <i class="fa fa-trash pl-3" onclick="deleteTypeOfVisa($(this))" data-url="{{route('superadmin.delete_type_of_visa')}}" aria-hidden="true"></i>
                     </label>
                     <select name="type_of_visa" class="form-control" id="type_of_visa">
-                        <option value=''>@lang('SuperAdmin/backend.select_option') </option>
+                        <option value=''>@lang('Admin/backend.select_option') </option>
                         @foreach (\App\Models\SuperAdmin\AddTypeOfVisa::all() as $travel)
                             <option value='{{$travel->id}}'>{{$travel->{'visa_'. get_language()} }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="form-group col-md-6 mt-3">
-                    <label for="inputvisa4">Visa information and requirement {{__('SuperAdmin/backend.in_english')}}</label>
+                    <label for="inputvisa4">Visa information and requirement {{__('Admin/backend.in_english')}}</label>
                     <textarea name="" class="form-control" id="requirement" rows="3"></textarea>
                 </div>
                 <div class="form-group col-md-6 mt-3">
-                    <label for="inputvisa4">Visa information and requirement {{__('SuperAdmin/backend.in_arabic')}} </label>
+                    <label for="inputvisa4">Visa information and requirement {{__('Admin/backend.in_arabic')}} </label>
                     <textarea name="" class="form-control" id="requirement_ar" rows="3"></textarea>
                 </div>
             </div>
@@ -273,7 +273,7 @@
                     </div>
                 </div>
                 <div class="pull-right">
-                    <button onclick="getContent('requirement', 'input_en'); getContent('requirement_ar', 'input_ar');  submitVisaApplication($(this))" type="button" class="btn btn-primary btn-sm">{{__('SuperAdmin/backend.submit')}}</button>
+                    <button onclick="getContent('requirement', 'input_en'); getContent('requirement_ar', 'input_ar');  submitVisaApplication($(this))" type="button" class="btn btn-primary btn-sm">{{__('Admin/backend.submit')}}</button>
                 </div>
             </div>
         </div>

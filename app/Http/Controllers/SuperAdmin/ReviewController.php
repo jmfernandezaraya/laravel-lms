@@ -21,7 +21,7 @@ class ReviewController extends Controller
     {
         $reviews = Review::with('user', 'course_applications.school')->get();
 
-        return view('superadmin.review.index', compact('reviews'));
+        return view('admin.review.index', compact('reviews'));
     }
 
     /**
@@ -32,7 +32,7 @@ class ReviewController extends Controller
     public function create()
     {
         $users = User::where('user_type', 'user')->get();
-        return view('superadmin.review.add', compact('users'));
+        return view('admin.review.add', compact('users'));
     }
 
     /**
@@ -82,7 +82,7 @@ class ReviewController extends Controller
     {
         $review = Review::find($id);
         
-        return view('superadmin.review.edit', compact('review'));
+        return view('admin.review.edit', compact('review'));
     }
 
     /**
@@ -101,10 +101,10 @@ class ReviewController extends Controller
             'description_en' => 'required',
         ];
         $validate = Validator::make($request->all(), $rules, [
-            'title_ar.required' => __('SuperAdmin/backend.errors.blog_title_in_arabic'),
-            'title_en.required' => __('SuperAdmin/backend.errors.blog_title_in_english'),
-            'description_en.required' => __('SuperAdmin/backend.errors.description_en_required'),
-            'description_ar.required' => __('SuperAdmin/backend.errors.description_ar_required'),
+            'title_ar.required' => __('Admin/backend.errors.blog_title_in_arabic'),
+            'title_en.required' => __('Admin/backend.errors.blog_title_in_english'),
+            'description_en.required' => __('Admin/backend.errors.description_en_required'),
+            'description_ar.required' => __('Admin/backend.errors.description_ar_required'),
         ]);
         if ($validate->fails()) {
             return response()->json(['errors' => $validate->errors()]);
@@ -112,7 +112,7 @@ class ReviewController extends Controller
         $save = $validate->validated();
 
         $review->fill($save)->save();
-        $saved = __('SuperAdmin/backend.data_saved_successfully');
+        $saved = __('Admin/backend.data_saved_successfully');
         return response()->json(['data' => $saved, 'success' => true]);
     }
 
@@ -125,7 +125,7 @@ class ReviewController extends Controller
     public function destroy($id)
     {
         $delete = Review::findorFail($id);
-        $deleted = __('SuperAdmin/backend.data_deleted_successfully');
+        $deleted = __('Admin/backend.data_deleted_successfully');
         $delete->delete();
         return back()->with(['message' => $deleted]);
     }
@@ -136,7 +136,7 @@ class ReviewController extends Controller
         $review->approved = 1;
         $review->save();
 
-        toastr()->success(__('SuperAdmin/backend.review_approved'));
+        toastr()->success(__('Admin/backend.review_approved'));
         return back();
     }
 
@@ -146,7 +146,7 @@ class ReviewController extends Controller
         $review->approved = 0;
         $review->save();
 
-        toastr()->success(__('SuperAdmin/backend.review_disapproved'));
+        toastr()->success(__('Admin/backend.review_disapproved'));
         return back();
     }
 }

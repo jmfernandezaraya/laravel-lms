@@ -1,7 +1,7 @@
-@extends('superadmin.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title')
-    {{__('SuperAdmin/backend.payment_received')}}
+    {{__('Admin/backend.payment_received')}}
 @endsection
 
 @section('content')
@@ -9,7 +9,7 @@
         <div class="card">
             <div class="card-body">
                 <div style="text-align: center;">
-                    <h1 class="card-title">{{__('SuperAdmin/backend.payment_received')}}</h1>
+                    <h1 class="card-title">{{__('Admin/backend.payment_received')}}</h1>
                 </div>
             </div>
         </div>
@@ -22,21 +22,21 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>{{__('SuperAdmin/backend.transaction_reference')}}</th>
-                            <th>{{__('SuperAdmin/backend.order_id')}}</th>
-                            <th>{{__('SuperAdmin/backend.amount')}}</th>
-                            <th>{{__('SuperAdmin/backend.description')}}</th>
-                            <th>{{__('SuperAdmin/backend.first_name')}}</th>
-                            <th>{{__('SuperAdmin/backend.last_name')}}</th>
-                            <th>{{__('SuperAdmin/backend.billing_address')}}</th>
-                            <th>{{__('SuperAdmin/backend.billing_city')}}</th>
-                            <th>{{__('SuperAdmin/backend.billing_region')}}</th>
-                            <th>{{__('SuperAdmin/backend.billing_country')}}</th>
-                            <th>{{__('SuperAdmin/backend.billing_zip')}}</th>
-                            <th>{{__('SuperAdmin/backend.billing_email')}}</th>
-                            <th>{{__('SuperAdmin/backend.status')}}</th>
-                            <th>{{__('SuperAdmin/backend.dated')}}</th>
-                            <th>{{__('SuperAdmin/backend.action')}}</th>
+                            <th>{{__('Admin/backend.transaction_reference')}}</th>
+                            <th>{{__('Admin/backend.order_id')}}</th>
+                            <th>{{__('Admin/backend.amount')}}</th>
+                            <th>{{__('Admin/backend.description')}}</th>
+                            <th>{{__('Admin/backend.first_name')}}</th>
+                            <th>{{__('Admin/backend.last_name')}}</th>
+                            <th>{{__('Admin/backend.billing_address')}}</th>
+                            <th>{{__('Admin/backend.billing_city')}}</th>
+                            <th>{{__('Admin/backend.billing_region')}}</th>
+                            <th>{{__('Admin/backend.billing_country')}}</th>
+                            <th>{{__('Admin/backend.billing_zip')}}</th>
+                            <th>{{__('Admin/backend.billing_email')}}</th>
+                            <th>{{__('Admin/backend.status')}}</th>
+                            <th>{{__('Admin/backend.dated')}}</th>
+                            <th>{{__('Admin/backend.action')}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -62,7 +62,7 @@
                                     <td>{{ $payment->billing_country }}</td>
                                     <td>{{ $payment->billing_zip }}</td>
                                     <td>{{ $payment->billing_email }}</td>
-                                    <td>{{ $payment->status == 1 ? __('SuperAdmin/backend.success') : __('SuperAdmin/backend.failed') }}</td>
+                                    <td>{{ $payment->status == 1 ? __('Admin/backend.success') : __('Admin/backend.failed') }}</td>
                                     <td>{{ $payment->created_at }}</td>
                                     <td>
                                         <div class="btn-group">

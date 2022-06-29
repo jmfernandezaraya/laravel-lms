@@ -1,7 +1,7 @@
-@extends('superadmin.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title')
-    {{__('SuperAdmin/backend.super_admin_details')}}
+    {{__('Admin/backend.super_admin_details')}}
 @endsection
 
 @section('content')
@@ -9,12 +9,12 @@
         <div class="card">
             <div class="card-body">
                 <div style="text-align: center;">
-                    <h1 class="card-title">{{__('SuperAdmin/backend.super_admin_details')}}</h1>
+                    <h1 class="card-title">{{__('Admin/backend.super_admin_details')}}</h1>
                 </div>
 
-                @if (auth('superadmin')->user()->permission['user_manager'] || auth('superadmin')->user()->permission['user_add'])
+                @if (can_manage_user() || can_add_user())
                     <a href="{{route('superadmin.user.super_admin.create')}}" type="button" class="btn btn-primary btn-sm pull-right">
-                        <i class="fa fa-plus"></i>&nbsp;{{__('SuperAdmin/backend.add')}}
+                        <i class="fa fa-plus"></i>&nbsp;{{__('Admin/backend.add')}}
                     </a>
                 @endif
             </div>
@@ -28,14 +28,14 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>{{__('SuperAdmin/backend.first_name')}}</th>
-                            <th>{{__('SuperAdmin/backend.last_name')}}</th>
-                            <th>{{__('SuperAdmin/backend.email')}}</th>
-                            <th>{{__('SuperAdmin/backend.contact_no')}}</th>
-                            <th>{{__('SuperAdmin/backend.profile_image')}}</th>
-                            <th>{{__('SuperAdmin/backend.created_on')}}</th>
-                            @if (auth('superadmin')->user()->permission['user_manager'] || auth('superadmin')->user()->permission['user_edit'] || auth('superadmin')->user()->permission['user_delete'])
-                                <th>{{__('SuperAdmin/backend.action')}}</th>
+                            <th>{{__('Admin/backend.first_name')}}</th>
+                            <th>{{__('Admin/backend.last_name')}}</th>
+                            <th>{{__('Admin/backend.email')}}</th>
+                            <th>{{__('Admin/backend.contact_no')}}</th>
+                            <th>{{__('Admin/backend.profile_image')}}</th>
+                            <th>{{__('Admin/backend.created_on')}}</th>
+                            @if (can_manage_user() || can_edit_user() || can_delete_user())
+                                <th>{{__('Admin/backend.action')}}</th>
                             @endif
                         </tr>
                     </thead>
@@ -55,14 +55,14 @@
                                     @endif
                                 </td>
                                 <td>{{ $super_admin->created_at->diffForHumans() }}</td>
-                                @if (auth('superadmin')->user()->permission['user_manager'] || auth('superadmin')->user()->permission['user_edit'] || auth('superadmin')->user()->permission['user_delete'])
+                                @if (can_manage_user() || can_edit_user() || can_delete_user())
                                     <td>
                                         <div class="btn-group">
-                                            @if (auth('superadmin')->user()->permission['user_manager'] || auth('superadmin')->user()->permission['user_edit'])
+                                            @if (can_manage_user() || can_edit_user())
                                                 <a href="{{route('superadmin.user.super_admin.edit', $super_admin->id)}}" class="btn btn-info btn-sm fa fa-pencil"></a>
                                             @endif
                                             
-                                            @if (auth('superadmin')->user()->permission['user_manager'] || auth('superadmin')->user()->permission['user_delete'])
+                                            @if (can_manage_user() || can_delete_user())
                                                 <form action="{{route('superadmin.user.super_admin.destroy', $super_admin->id)}}" method="post">
                                                     @csrf
                                                     @method('DELETE')

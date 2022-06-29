@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 
 use App\Models\City;
 use App\Models\Country;
-use App\Models\SchoolAdmin;
 use App\Models\User;
 use App\Models\SuperAdmin\School;
 use App\Models\SuperAdmin\UserSchool;
@@ -72,15 +71,15 @@ class SchoolAdminController extends Controller
         ];
 
         $validator = \Validator::make($request->all(), $rules, [
-            'first_name_en.required' => __('SuperAdmin/backend.errors.first_name_english'),
-            'first_name_ar.required' => __('SuperAdmin/backend.errors.first_name_arabic'),
-            'last_name_ar.required' => __('SuperAdmin/backend.errors.last_name_arabic'),
-            'last_name_en.required' => __('SuperAdmin/backend.errors.last_name_english'),
-            'password.required' => __('SuperAdmin/backend.errors.password_required'),
-            'image.required' => __('SuperAdmin/backend.errors.image_required'),
-            'contact.required' => __('SuperAdmin/backend.errors.contact_required'),
-            'email.required' => __('SuperAdmin/backend.errors.email_required'),
-            'image.mimes' => __('SuperAdmin/backend.errors.image_must_be_in'),
+            'first_name_en.required' => __('Admin/backend.errors.first_name_english'),
+            'first_name_ar.required' => __('Admin/backend.errors.first_name_arabic'),
+            'last_name_ar.required' => __('Admin/backend.errors.last_name_arabic'),
+            'last_name_en.required' => __('Admin/backend.errors.last_name_english'),
+            'password.required' => __('Admin/backend.errors.password_required'),
+            'image.required' => __('Admin/backend.errors.image_required'),
+            'contact.required' => __('Admin/backend.errors.contact_required'),
+            'email.required' => __('Admin/backend.errors.email_required'),
+            'image.mimes' => __('Admin/backend.errors.image_must_be_in'),
             'school_name.required' => 'School Name is Required']);
 
         if ($validator->fails()) {
@@ -90,9 +89,20 @@ class SchoolAdminController extends Controller
         $requested_save = $validator->validated();
         unset($requested_save['image']);
         unset($requested_save['school_name']);
-        unset($requested_save['can_delete_course']);
-        unset($requested_save['can_add_course']);
-        unset($requested_save['can_edit_course']);
+        unset($requested_save['school_permission']);
+        unset($requested_save['school_add']);
+        unset($requested_save['school_edit']);
+        unset($requested_save['course_permission']);
+        unset($requested_save['course_add']);
+        unset($requested_save['course_edit']);
+        unset($requested_save['course_display']);
+        unset($requested_save['course_delete']);
+        unset($requested_save['course_application_permission']);
+        unset($requested_save['course_application_edit']);
+        unset($requested_save['course_application_chanage_status']);
+        unset($requested_save['course_application_payment_refund']);
+        unset($requested_save['course_application_contact_student']);
+        unset($requested_save['course_application_contact_school']);
 
         $user_type = 'school_admin';
         if (!is_null($request->city) && !is_null($request->country) && !is_null($request->branch)) {
@@ -121,13 +131,28 @@ class SchoolAdminController extends Controller
             $requested_save['branch'] = School::whereIn('branch_name_ar', $request->branch ?? [])->pluck('branch_name')->toArray();
         }
         \DB::transaction(function () use ($request, $requested_save, $image_name, $user_type) {
-            $user = User::create($requested_save + ['user_type' => $user_type, 'image' => $image_name, 'password' => \Hash::make($request->password)]);
-            if (auth('superadmin')->user()->permission['user_manager'] || auth('superadmin')->user()->permission['user_permission']) {
-                $user->editCoursePermission()->create([
-                    'delete' => $request->can_delete_course ?? 0,
-                    'add' => $request->can_add_course ?? 0,
-                    'edit' => $request->can_edit_course ?? 0]
-                );
+            if ($image_name) {
+                $user = User::create($requested_save + ['user_type' => $user_type, 'image' => $image_name, 'password' => \Hash::make($request->password)]);
+            } else {
+                $user = User::create($requested_save + ['user_type' => $user_type, 'password' => \Hash::make($request->password)]);
+            }
+            if (can('can_manage_user' || 'can_permission_user')) {
+                $user->permission()->create([
+                    'school_manager' => $request->school_permission == 'manager',
+                    'school_add' => ($request->school_permission == 'subscriber' && $request->school_add) ?? 0,
+                    'school_edit' => ($request->school_permission == 'subscriber' && $request->school_edit) ?? 0,
+                    'course_manager' => $request->course_permission == 'manager',
+                    'course_add' => ($request->course_permission == 'subscriber' && $request->course_add) ?? 0,
+                    'course_edit' => ($request->course_permission == 'subscriber' && $request->course_edit) ?? 0,
+                    'course_display' => ($request->course_permission == 'subscriber' && $request->course_display) ?? 0,
+                    'course_delete' => ($request->course_permission == 'subscriber' && $request->course_delete) ?? 0,
+                    'course_application_manager' => $request->course_application_permission == 'manager',
+                    'course_application_edit' => ($request->course_application_permission == 'subscriber' && $request->course_application_edit) ?? 0,
+                    'course_application_chanage_status' => ($request->course_application_permission == 'subscriber' && $request->course_application_chanage_status) ?? 0,
+                    'course_application_payment_refund' => ($request->course_application_permission == 'subscriber' && $request->course_application_payment_refund) ?? 0,
+                    'course_application_contact_student' => ($request->course_application_permission == 'subscriber' && $request->course_application_contact_student) ?? 0,
+                    'course_application_contact_school' => ($request->course_application_permission == 'subscriber' && $request->course_application_contact_school) ?? 0,
+                ]);
             }
             if ($user->school && is_array($user->school)) {
                 foreach ($user->school as $user_school_id) {
@@ -148,7 +173,7 @@ class SchoolAdminController extends Controller
             }
         });
 
-        $saved = __('SuperAdmin/backend.data_saved_successfully');
+        $saved = __('Admin/backend.data_saved_successfully');
         return response()->json(['success' => true, 'data' => $saved]);
     }
 
@@ -240,14 +265,14 @@ class SchoolAdminController extends Controller
         ];
 
         $validator = \Validator::make($request->all(), $rules, [
-            'first_name_en.required' => __('SuperAdmin/backend.errors.first_name_english'),
-            'first_name_ar.required' => __('SuperAdmin/backend.errors.first_name_arabic'),
-            'last_name_ar.required' => __('SuperAdmin/backend.errors.last_name_arabic'),
-            'last_name_en.required' => __('SuperAdmin/backend.errors.last_name_english'),
-            'image.required' => __('SuperAdmin/backend.errors.image_required'),
-            'contact.required' => __('SuperAdmin/backend.errors.contact_required'),
-            'email.required' => __('SuperAdmin/backend.errors.email_required'),
-            'image.mimes' => __('SuperAdmin/backend.errors.image_must_be_in'),
+            'first_name_en.required' => __('Admin/backend.errors.first_name_english'),
+            'first_name_ar.required' => __('Admin/backend.errors.first_name_arabic'),
+            'last_name_ar.required' => __('Admin/backend.errors.last_name_arabic'),
+            'last_name_en.required' => __('Admin/backend.errors.last_name_english'),
+            'image.required' => __('Admin/backend.errors.image_required'),
+            'contact.required' => __('Admin/backend.errors.contact_required'),
+            'email.required' => __('Admin/backend.errors.email_required'),
+            'image.mimes' => __('Admin/backend.errors.image_must_be_in'),
             'school_name.required' => 'School Name is Required']);
 
         $password = $request->has('password') ? \Hash::make($request->password) : null;
@@ -259,9 +284,20 @@ class SchoolAdminController extends Controller
         $requested_save = $validator->validated();
         unset($requested_save['image']);
         unset($requested_save['school_name']);
-        unset($requested_save['can_delete_course']);
-        unset($requested_save['can_add_course']);
-        unset($requested_save['can_edit_course']);
+        unset($requested_save['school_permission']);
+        unset($requested_save['school_add']);
+        unset($requested_save['school_edit']);
+        unset($requested_save['course_permission']);
+        unset($requested_save['course_add']);
+        unset($requested_save['course_edit']);
+        unset($requested_save['course_display']);
+        unset($requested_save['course_delete']);
+        unset($requested_save['course_application_permission']);
+        unset($requested_save['course_application_edit']);
+        unset($requested_save['course_application_chanage_status']);
+        unset($requested_save['course_application_payment_refund']);
+        unset($requested_save['course_application_contact_student']);
+        unset($requested_save['course_application_contact_school']);
 
         $image_name = null;
         if ($request->has('image')) {
@@ -286,21 +322,36 @@ class SchoolAdminController extends Controller
             $requested_save['branch'] = School::whereIn('branch_name_ar', $request->branch ?? [])->pluck('branch_name')->toArray();
         }
 
-        $course['can_add_course'] = $request->can_add_course ?? false;
-        $course['can_edit_course'] = $request->can_edit_course ?? false;
-        $course['can_delete_course'] = $request->can_delete_course ?? false;
-
         if ($request->has('password')) {
-            $user->fill($requested_save + ['user_type' => 'school_admin', 'image' => $image_name, 'password' => $password])->save();
+            if ($image_name) {
+                $user->fill($requested_save + ['user_type' => 'school_admin', 'image' => $image_name, 'password' => $password])->save();
+            } else {
+                $user->fill($requested_save + ['user_type' => 'school_admin', 'password' => $password])->save();
+            }
         } else {
-            $user->fill($requested_save + ['user_type' => 'school_admin', 'image' => $image_name])->save();
+            if ($image_name) {
+                $user->fill($requested_save + ['user_type' => 'school_admin', 'image' => $image_name])->save();
+            } else {
+                $user->fill($requested_save + ['user_type' => 'school_admin'])->save();
+            }
         }
-        if (auth('superadmin')->user()->permission['user_manager'] || auth('superadmin')->user()->permission['user_permission']) {
-            $user->editCoursePermission()->updateOrCreate(['user_id' => $user->id], [
-                'delete' => $request->can_delete_course ?? 0,
-                'add' => $request->can_add_course ?? 0,
-                'edit' => $request->can_edit_course ?? 0]
-            );
+        if (can('can_manage_user' || 'can_permission_user')) {
+            $user->permission()->updateOrCreate(['user_id' => $user->id], [
+                'school_manager' => $request->school_permission == 'manager',
+                'school_add' => ($request->school_permission == 'subscriber' && $request->school_add) ?? 0,
+                'school_edit' => ($request->school_permission == 'subscriber' && $request->school_edit) ?? 0,
+                'course_manager' => $request->course_permission == 'manager',
+                'course_add' => ($request->course_permission == 'subscriber' && $request->course_add) ?? 0,
+                'course_edit' => ($request->course_permission == 'subscriber' && $request->course_edit) ?? 0,
+                'course_display' => ($request->course_permission == 'subscriber' && $request->course_display) ?? 0,
+                'course_delete' => ($request->course_permission == 'subscriber' && $request->course_delete) ?? 0,
+                'course_application_manager' => $request->course_application_permission == 'manager',
+                'course_application_edit' => ($request->course_application_permission == 'subscriber' && $request->course_application_edit) ?? 0,
+                'course_application_chanage_status' => ($request->course_application_permission == 'subscriber' && $request->course_application_chanage_status) ?? 0,
+                'course_application_payment_refund' => ($request->course_application_permission == 'subscriber' && $request->course_application_payment_refund) ?? 0,
+                'course_application_contact_student' => ($request->course_application_permission == 'subscriber' && $request->course_application_contact_student) ?? 0,
+                'course_application_contact_school' => ($request->course_application_permission == 'subscriber' && $request->course_application_contact_school) ?? 0,
+            ]);
         }
         if ($user->school && is_array($user->school)) {
             foreach ($user->school as $user_school_id) {
@@ -319,7 +370,7 @@ class SchoolAdminController extends Controller
                 $user_school->delete();
             }
         }
-        $saved = __('SuperAdmin/backend.data_saved_successfully');
+        $saved = __('Admin/backend.data_saved_successfully');
         return response()->json(['success' => true, 'data' => $saved]);
     }
 }

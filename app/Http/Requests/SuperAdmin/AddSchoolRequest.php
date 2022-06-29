@@ -64,9 +64,9 @@ class AddSchoolRequest extends FormRequest
     public function messages()
     {
         return [
-            'multiple_photos.*.required' => __('SuperAdmin/backend.messages.multiple_photos_required'),
-            'logos.*.required' => __('SuperAdmin/backend.messages.logos_required'),
-            'video_url.*.required' => __('SuperAdmin/backend.messages.video_url_required'),
+            'multiple_photos.*.required' => __('Admin/backend.messages.multiple_photos_required'),
+            'logos.*.required' => __('Admin/backend.messages.logos_required'),
+            'video_url.*.required' => __('Admin/backend.messages.video_url_required'),
         ];
     }
 }

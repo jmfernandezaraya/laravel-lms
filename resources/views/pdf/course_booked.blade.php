@@ -79,11 +79,11 @@
 
     <table class="table-bold">
         <tr>
-            <td>{{__('Mail.customer_name')}}: {{ $user->first_name_en . ' ' . $user->last_name_en}}</td>
+            <td>{{__('Mail.customer_name')}}: {{ $fname ." " . $mname . " " . $lname }}</td>
             <td>{{__('Mail.registration_date')}}: {{$registration_date}}</td>
         </tr>
         <tr>
-            <td>{{__('Mail.email')}}: {{$user->email}}</td>
+            <td>{{__('Mail.email')}}: {{$email}}</td>
             <td></td>
         </tr>
         <tr>

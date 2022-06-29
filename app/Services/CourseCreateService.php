@@ -149,8 +149,8 @@ class CourseCreateService
                     $course_program->select_day_week = $request->select_day_week[$count] ?? null;
                     $course_program->available_days = $request->available_days[$count] ?? null;
                     
-                    $course_program->deposit = $request->deposit[$count] . " " . (isset($request->deposit_symbol[$count]) ? $request->deposit_symbol[$count] : "");
-                    $course_program->discount_per_week = $request->discount_per_week[$count] . " " . (isset($request->discount_per_week_symbol[$count]) ? $request->discount_per_week_symbol[$count] : "");
+                    $course_program->deposit = (isset($request->deposit[$count]) ? $request->deposit[$count] : "") . " " . (isset($request->deposit_symbol[$count]) ? $request->deposit_symbol[$count] : "");
+                    $course_program->discount_per_week = (isset($request->discount_per_week[$count]) ? $request->discount_per_week[$count] : "") . " " . (isset($request->discount_per_week_symbol[$count]) ? $request->discount_per_week_symbol[$count] : "");
                     $course_program->discount_start_date = $request->discount_start_date[$count] ?? null;
                     $course_program->discount_end_date = $request->discount_end_date[$count] ?? null;
     
@@ -249,9 +249,9 @@ class CourseCreateService
             $new_course_program->about_courier = $course_program->about_courier;
             $new_course_program->about_courier_ar = $course_program->about_courier_ar;
 
-            $new_course_program->deposit = $course_program->deposit . " " . $course_program->deposit_symbol ?? '';
+            $new_course_program->deposit = $course_program->deposit . " " . ($course_program->deposit_symbol ?? '');
 
-            $new_course_program->discount_per_week = $course_program->discount_per_week . " " . $course_program->discount_per_week_symbol ?? '';
+            $new_course_program->discount_per_week = ($course_program->discount_per_week ?? '') . " " . ($course_program->discount_per_week_symbol ?? '');
             $new_course_program->discount_start_date = $course_program->discount_start_date ?? null;
             $new_course_program->discount_end_date = $course_program->discount_end_date ?? null;
 
@@ -340,7 +340,7 @@ class CourseCreateService
             $new_course_accommodation->start_date = $course_accomodation->start_date ?? null;
             $new_course_accommodation->end_date = $course_accomodation->end_date ?? null;
             
-            $new_course_accommodation->discount_per_week = $course_accomodation->discount_per_week . " " . $course_accomodation->discount_per_week_symbol ?? '';
+            $new_course_accommodation->discount_per_week = ($course_accomodation->discount_per_week ?? '') . " " . ($course_accomodation->discount_per_week_symbol ?? '');
             $new_course_accommodation->discount_per_week_symbol = $course_accomodation->discount_per_week_symbol ?? null;
             $new_course_accommodation->discount_start_date = $course_accomodation->discount_start_date ?? null;
             $new_course_accommodation->discount_end_date = $course_accomodation->discount_end_date ?? null;
@@ -559,7 +559,7 @@ class CourseCreateService
                 $new_course_accommodation->start_date = $start_date[$accom] ?? null;
                 $new_course_accommodation->end_date = $end_date[$accom] ?? null;
                 
-                $new_course_accommodation->discount_per_week = $discount_per_week[$accom] ?? '' . " " . (isset($discount_per_week_symbol[$accom]) ? $discount_per_week_symbol[$accom] : '');
+                $new_course_accommodation->discount_per_week = (isset($discount_per_week[$accom]) ? $discount_per_week[$accom] : '') . " " . (isset($discount_per_week_symbol[$accom]) ? $discount_per_week_symbol[$accom] : '');
                 $new_course_accommodation->discount_per_week_symbol = (isset($discount_per_week_symbol[$accom]) ? $discount_per_week_symbol[$accom] : null);
                 $new_course_accommodation->discount_start_date = $discount_start_date[$accom] ?? null;
                 $new_course_accommodation->discount_end_date = $discount_end_date[$accom] ?? null;
@@ -848,8 +848,8 @@ class CourseCreateService
                     $course_program->select_day_week = $request->select_day_week[$count] ?? null;
                     $course_program->available_days = $request->available_days[$count] ?? null;
 
-                    $course_program->deposit = $request->deposit[$count] . " " . (isset($request->deposit_symbol[$count]) ? $request->deposit_symbol[$count] : '');
-                    $course_program->discount_per_week = $request->discount_per_week[$count] . " " . (isset($request->discount_per_week_symbol[$count]) ? $request->discount_per_week_symbol[$count] : '');
+                    $course_program->deposit = (isset($request->deposit[$count]) ? $request->deposit[$count] : '') . " " . (isset($request->deposit_symbol[$count]) ? $request->deposit_symbol[$count] : '');
+                    $course_program->discount_per_week = (isset($request->discount_per_week[$count]) ? $request->discount_per_week[$count] : '') . " " . (isset($request->discount_per_week_symbol[$count]) ? $request->discount_per_week_symbol[$count] : '');
                     $course_program->discount_start_date = $request->discount_start_date[$count] ?? null;
                     $course_program->discount_end_date = $request->discount_end_date[$count] ?? null;
 
@@ -1044,7 +1044,7 @@ class CourseCreateService
             $course_accomodation->start_date = $start_date[$accom] ?? null;
             $course_accomodation->end_date = $end_date[$accom] ?? null;
             
-            $course_accomodation->discount_per_week = $discount_per_week[$accom] ?? "" . " " . (isset($discount_per_week_symbol[$accom]) ? $discount_per_week_symbol[$accom] : "") ?? null;
+            $course_accomodation->discount_per_week = (isset($discount_per_week[$accom]) ? $discount_per_week[$accom] : "") . " " . (isset($discount_per_week_symbol[$accom]) ? $discount_per_week_symbol[$accom] : "") ?? null;
             $course_accomodation->discount_per_week_symbol = (isset($discount_per_week_symbol[$accom]) ? $discount_per_week_symbol[$accom] : null);
             $course_accomodation->discount_start_date = $discount_start_date[$accom] ?? null;
             $course_accomodation->discount_end_date = $discount_end_date[$accom] ?? null;

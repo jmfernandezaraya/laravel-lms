@@ -97,13 +97,13 @@
         }
     </style>
 @endsection
-@include('superadmin.course.scripts')
+@include('admin.course.scripts')
 <div class="col-12 grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
             <div style="text-align: center;">
-                <h4 class="card-title">@lang('SuperAdmin/backend.add_under_age_fee_text_book_fee')</h4>
-                <change>{{__('SuperAdmin/backend.in_english')}}</change>
+                <h4 class="card-title">@lang('Admin/backend.add_under_age_fee_text_book_fee')</h4>
+                <change>{{__('Admin/backend.in_english')}}</change>
             </div>
 
             @include('superadmin.include.alert')
@@ -111,12 +111,12 @@
                 <ul class="lang text-right current_page_itemm">
                     <li class="current_page_item selected">
                         <a class="" href="#" onclick="changeLanguage('english', 'arabic')">
-                            <img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}
+                            <img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('Admin/backend.english')}}
                         </a>
                     </li>
                     <li>
                         <a href="#" onclick="changeLanguage('arabic', 'english')"; fillForm('form1', 'form2')">
-                            <img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}
+                            <img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('Admin/backend.arabic')}}
                         </a>
                     </li>
                 </ul>
@@ -124,10 +124,10 @@
 
             <div id="show_form"></div>
 
-            <form class="forms-sample" method="POST" action="{{route(" superadmin.course.store ")}}" id="courseform">
+            <form class="forms-sample" method="POST" action="{{route(" admin.course.store ")}}" id="courseform">
                 {{csrf_field()}}
                 <div class="first-form">
-                    <label>@lang('SuperAdmin/backend.select_program_id')</label>
+                    <label>@lang('Admin/backend.select_program_id')</label>
                     <br>
                     <select class="3col active" name="program_id[]" style="width:100%" multiple="multiple">
                         @if(\Session::has('program_id'))
@@ -143,7 +143,7 @@
                             <div class="row">
                                 <input name="clone_under_age_increment[]" id="clone_under_age_increment" value='1' hidden>
                                 <div class="col-md-4">
-                                    <label for="">{{__('SuperAdmin/backend.under_age_fee_per_week')}}:<i class="fa fa-plus pl-3" data-toggle="modal" data-target="#ProgramUnderAgeModal" aria-hidden="true"></i><i class="fa fa-trash pl-3" onclick="deleteProgramUnderAgeRange()" aria-hidden="true"></i></label>
+                                    <label for="">{{__('Admin/backend.under_age_fee_per_week')}}:<i class="fa fa-plus pl-3" data-toggle="modal" data-target="#ProgramUnderAgeModal" aria-hidden="true"></i><i class="fa fa-trash pl-3" onclick="deleteProgramUnderAgeRange()" aria-hidden="true"></i></label>
                                     <select name="program_under_age[age][0][]" id="program_under_age_range_choose0" multiple="multiple" class="3col active">
                                         @foreach(\App\Models\SuperAdmin\Choose_Program_Under_Age::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all() as $option)
                                             <option value="{{$option->age}}">{{$option->age}}</option>
@@ -153,7 +153,7 @@
                                 </div>
 
                                 <div class="col-md-4 pt-3">
-                                    <label>@lang('SuperAdmin/backend.fees_week'):</label>
+                                    <label>@lang('Admin/backend.fees_week'):</label>
                                     <div id="put_fees_here0">
                                         <input class="form-control" type="text" name="fees_under_age[]" placeholder="Fees/Week" id="fees_under_age0">
                                     </div>
@@ -168,17 +168,17 @@
 
                     <div class="row" id="clone_program_text_book_fee0">
                         <div class="col-md-4">
-                            <label>@lang('SuperAdmin/backend.text_book_fee'):</label>
+                            <label>@lang('Admin/backend.text_book_fee'):</label>
                             <input class="form-control" type="text" name="text_book_fee[]" placeholder="Text book fee">
                         </div>
                         <div class="col-md-3">
                             <input id="textbookfeeincrement" value=1 hidden name="textbookfeeincrement[]">
-                            <label>@lang('SuperAdmin/backend.text_book_start_date'):</label>
-                            <input class="form-control" type="text" name="text_book_fee_start_date[]" placeholder="{{__('SuperAdmin/backend.weeks')}}">
+                            <label>@lang('Admin/backend.text_book_start_date'):</label>
+                            <input class="form-control" type="text" name="text_book_fee_start_date[]" placeholder="{{__('Admin/backend.weeks')}}">
                         </div>
                         <div class="col-md-3">
-                            <label>@lang('SuperAdmin/backend.text_book_end_date'):</label>
-                            <input class="form-control" type="text" name="text_book_fee_end_date[]" placeholder="{{__('SuperAdmin/backend.weeks')}}">
+                            <label>@lang('Admin/backend.text_book_end_date'):</label>
+                            <input class="form-control" type="text" name="text_book_fee_end_date[]" placeholder="{{__('Admin/backend.weeks')}}">
                             <!--program summer fee end-->
                         </div>
                         <div class="col-md-2">
@@ -201,9 +201,9 @@
                 <br>
 
                 <script>
-                    course_url_store = "{{route('superadmin.course.store')}}";
+                    course_url_store = "{{route('admin.course.store')}}";
                 </script>
-                <a type="button" href="{{route('add_accommodation_page')}}" class="btn btn-primary pull-right">@lang('SuperAdmin/backend.next')
+                <a type="button" href="{{route('add_accommodation_page')}}" class="btn btn-primary pull-right">@lang('Admin/backend.next')
                 </a>
                 <button type="button" onclick="getContent('text_book_note', 'text_book_note_value'); submitCourseProgramForm($(this))" class="btn btn-primary pull-left">Submit</button>
             </form>
@@ -211,5 +211,5 @@
     </div>
 </div>
 
-@include('superadmin.course.modals')
+@include('admin.course.modals')
 @endsection

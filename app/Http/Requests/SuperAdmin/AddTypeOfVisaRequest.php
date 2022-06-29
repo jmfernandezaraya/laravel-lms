@@ -33,10 +33,10 @@ class AddTypeOfVisaRequest extends FormRequest
     {
         return [
 
-            'visa_en.required' => __('SuperAdmin/backend.visa_form.required_in_english'),
-            'visa_ar.required' => __('SuperAdmin/backend.visa_form.required_in_arabic'),
-            'visa_en.unique' => __('SuperAdmin/backend.visa_form.already_exists_in_english'),
-            'visa_ar.unique' => __('SuperAdmin/backend.visa_form.already_exists_in_arabic'),
+            'visa_en.required' => __('Admin/backend.visa_form.required_in_english'),
+            'visa_ar.required' => __('Admin/backend.visa_form.required_in_arabic'),
+            'visa_en.unique' => __('Admin/backend.visa_form.already_exists_in_english'),
+            'visa_ar.unique' => __('Admin/backend.visa_form.already_exists_in_arabic'),
 
         ];
     }

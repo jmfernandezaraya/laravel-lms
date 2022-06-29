@@ -10,20 +10,20 @@
             <div class="card">
                 <div class="card-body">
                     <center>
-                        <h4 class="card-title">@lang('SuperAdmin/backend.add_blog')</h4>
-                        <change>{{__('SuperAdmin/backend.in_english')}}</change>
+                        <h4 class="card-title">@lang('Admin/backend.add_blog')</h4>
+                        <change>{{__('Admin/backend.in_english')}}</change>
                     </center>
                     @include('branchadmin.include.alert')
                     <div id="menu">
                         <ul class="lang text-right current_page_itemm">
                             <li class="current_page_item selected">
                                 <a class="" href="#" onclick="changeLanguage('english', 'arabic')">
-                                    <img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}
+                                    <img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('Admin/backend.english')}}
                                 </a>
                             </li>
                             <li>
                                 <a href="#" onclick="changeLanguage('arabic', 'english')">
-                                    <img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}
+                                    <img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('Admin/backend.arabic')}}
                                 </a>
                             </li>
                         </ul>
@@ -33,38 +33,38 @@
                     @csrf
                     <div id="form1">
                         <div class="form-group">
-                            <label for="exampleInputName1">{{__('SuperAdmin/backend.blog_title')}}</label>
-                            <input value="{{old('title_en')}}" name="title_en" type="text" class="form-control" id="exampleInputName1" placeholder="{{__('SuperAdmin/backend.blog_title')}}" value="{{old('blog_title_en')}}">
+                            <label for="exampleInputName1">{{__('Admin/backend.blog_title')}}</label>
+                            <input value="{{old('title_en')}}" name="title_en" type="text" class="form-control" id="exampleInputName1" placeholder="{{__('Admin/backend.blog_title')}}" value="{{old('blog_title_en')}}">
                         </div>
 
                         <div class="form-group">
-                            <label for="exampleInputEmail3">{{__('SuperAdmin/backend.blog_description')}}</label>
-                            <textarea value="{{old('description_en')}}" name="description_en" class="form-control" id="textarea_en" placeholder="{{__('SuperAdmin/backend.blog_description')}}"></textarea>
+                            <label for="exampleInputEmail3">{{__('Admin/backend.blog_description')}}</label>
+                            <textarea value="{{old('description_en')}}" name="description_en" class="form-control" id="textarea_en" placeholder="{{__('Admin/backend.blog_description')}}"></textarea>
                         </div>
 
                         <img src="{{ asset('/assets/images/no-image.jpg') }}" id="previewImg" alt="Uploaded Image Preview Holder" width="550px" height="250px" style="border-radius:3px;border:5px;"/>
 
                         <div class="form-group">
-                            <label>{{__('SuperAdmin/backend.blog_image')}}</label>
+                            <label>{{__('Admin/backend.blog_image')}}</label>
                             <input onchange="previewFile(this)" type="file" class="form-control" name="image">
                         </div>
 
-                        <a class="btn btn-light" href="{{url()->previous()}}">{{__('SuperAdmin/backend.cancel')}}</a>
+                        <a class="btn btn-light" href="{{url()->previous()}}">{{__('Admin/backend.cancel')}}</a>
                     </div>
 
                     <div id="form2" class="forms-sample">
                         <div class="form-group">
-                            <label for="exampleInputName1">{{__('SuperAdmin/backend.blog_title')}}</label>
-                            <input value="{{old('title_ar')}}" name="title_ar" type="text" class="form-control" id="exampleInputName1" placeholder="{{__('SuperAdmin/backend.blog_title')}}" value="{{old('first_name')}}">
+                            <label for="exampleInputName1">{{__('Admin/backend.blog_title')}}</label>
+                            <input value="{{old('title_ar')}}" name="title_ar" type="text" class="form-control" id="exampleInputName1" placeholder="{{__('Admin/backend.blog_title')}}" value="{{old('first_name')}}">
                         </div>
 
                         <div class="form-group">
-                            <label for="exampleInputEmail3">{{__('SuperAdmin/backend.blog_description')}}</label>
+                            <label for="exampleInputEmail3">{{__('Admin/backend.blog_description')}}</label>
                             <textarea value="{{old('description_ar')}}" name="description_ar" class="form-control" id="textarea_ar" placeholder="Last Name"></textarea>
                         </div>
 
-                        <a class="btn btn-light" href="{{url()->previous()}}">{{__('SuperAdmin/backend.cancel')}}</a>
-                        <button type="button" onclick="submitCommonForBlogForm($(this).parents().find('#formaction').attr('action'))" class="btn btn-primary">@lang('SuperAdmin/backend.submit')
+                        <a class="btn btn-light" href="{{url()->previous()}}">{{__('Admin/backend.cancel')}}</a>
+                        <button type="button" onclick="submitCommonForBlogForm($(this).parents().find('#formaction').attr('action'))" class="btn btn-primary">@lang('Admin/backend.submit')
                         </button>
                     </div>
                 </div>
@@ -99,8 +99,8 @@
                 });
             });
             var addschooladminurl = "{{route('branch_admin.store')}}";
-            var in_arabic = "{{__('SuperAdmin/backend.in_arabic')}}";
-            var in_english = "{{__('SuperAdmin/backend.in_english')}}";
+            var in_arabic = "{{__('Admin/backend.in_arabic')}}";
+            var in_english = "{{__('Admin/backend.in_english')}}";
         </script>
     @endsection
 @endsection

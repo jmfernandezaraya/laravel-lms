@@ -56,14 +56,14 @@ class BranchAdminController extends Controller
         ];
 
         $validator = \Validator::make($request->all(), $rules, [
-            'first_name_en.required' => __('SuperAdmin/backend.errors.first_name_english'),
-            'first_name_ar.required' => __('SuperAdmin/backend.errors.first_name_arabic'),
-            'last_name_ar.required' => __('SuperAdmin/backend.errors.last_name_arabic'),
-            'last_name_en.required' => __('SuperAdmin/backend.errors.last_name_english'),
-            'image.required' => __('SuperAdmin/backend.errors.image_required'),
-            'contact.required' => __('SuperAdmin/backend.errors.contact_required'),
-            'email.required' => __('SuperAdmin/backend.errors.email_required'),
-            'image.mimes' => __('SuperAdmin/backend.errors.image_must_be_in'),
+            'first_name_en.required' => __('Admin/backend.errors.first_name_english'),
+            'first_name_ar.required' => __('Admin/backend.errors.first_name_arabic'),
+            'last_name_ar.required' => __('Admin/backend.errors.last_name_arabic'),
+            'last_name_en.required' => __('Admin/backend.errors.last_name_english'),
+            'image.required' => __('Admin/backend.errors.image_required'),
+            'contact.required' => __('Admin/backend.errors.contact_required'),
+            'email.required' => __('Admin/backend.errors.email_required'),
+            'image.mimes' => __('Admin/backend.errors.image_must_be_in'),
             'school_id.required' => 'School Name is Required']);
 
         if ($validator->fails()) {
@@ -93,7 +93,7 @@ class BranchAdminController extends Controller
             $user->editCoursePermission()->create(['delete' => $request->can_delete_course ?? 0, 'add' => $request->can_add_course ?? 0, 'edit' => $request->can_edit_course ?? 0]);
         });
 
-        $saved = __('SuperAdmin/backend.data_saved_successfully');
+        $saved = __('Admin/backend.data_saved_successfully');
         return response()->json(['success' => 'success', 'data' => $saved]);
     }
 

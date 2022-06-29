@@ -42,8 +42,8 @@ class ApplicationNotificationToAdmin extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->greeting(__('SuperAdmin/backend.customer_doesnt_leave_review_rating'))
-            ->action(__('SuperAdmin/backend.send_email'), route('superadmin.course_application.edit', $this->data->id));
+            ->greeting(__('Admin/backend.customer_doesnt_leave_review_rating'))
+            ->action(__('Admin/backend.send_email'), route('superadmin.course_application.edit', $this->data->id));
     }
     
     /**

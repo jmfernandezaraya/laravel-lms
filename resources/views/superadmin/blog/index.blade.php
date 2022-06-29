@@ -1,7 +1,7 @@
-@extends('superadmin.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title')
-    {{__('SuperAdmin/backend.blog_details')}}
+    {{__('Admin/backend.blog_details')}}
 @endsection
 
 @section('content')
@@ -9,11 +9,12 @@
         <div class="card">
             <div class="card-body">
                 <div style="text-align: center;">
-                    <h1 class="card-title">{{__('SuperAdmin/backend.blog_details')}}</h1>
+                    <h1 class="card-title">{{__('Admin/backend.blog_details')}}</h1>
                 </div>
-                @if (auth('superadmin')->user()->permission['blog_manager'] || auth('superadmin')->user()->permission['blog_add'])
+                
+                @if (can_manage_blog() || can_add_blog())
                     <a href="{{route('superadmin.blog.create')}}" type="button" class="btn btn-primary btn-sm pull-right">
-                        <i class="fa fa-plus"></i>&nbsp;{{__('SuperAdmin/backend.add')}}
+                        <i class="fa fa-plus"></i>&nbsp;{{__('Admin/backend.add')}}
                     </a>
                 @endif
             </div>
@@ -27,11 +28,11 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>{{__('SuperAdmin/backend.blog_title')}}</th>
-                            <th>{{__('SuperAdmin/backend.blog_description')}}</th>
-                            <th>{{__('SuperAdmin/backend.created_on')}}</th>
-                            @if (auth('superadmin')->user()->permission['blog_manager'] || auth('superadmin')->user()->permission['blog_edit'])
-                                <th>{{__('SuperAdmin/backend.action')}}</th>
+                            <th>{{__('Admin/backend.blog_title')}}</th>
+                            <th>{{__('Admin/backend.blog_description')}}</th>
+                            <th>{{__('Admin/backend.created_on')}}</th>
+                            @if (can_manage_blog() || can_edit_blog())
+                                <th>{{__('Admin/backend.action')}}</th>
                             @endif
                         </tr>
                     </thead>
@@ -44,7 +45,7 @@
                                     <p>{!! $blog->{'description_'. get_language()} !!}</p>
                                 </td>
                                 <td>{{ $blog->created_at }}</td>
-                                @if (auth('superadmin')->user()->permission['blog_manager'] || auth('superadmin')->user()->permission['blog_edit'])
+                                @if (can_manage_blog() || can_edit_blog())
                                     <td>
                                         <div class="btn-group">
                                             <a href="{{route('superadmin.blog.edit', $blog->id)}}" class="btn btn-info btn-sm fa fa-pencil"></a>
@@ -52,12 +53,12 @@
                                             @if ($blog->display)
                                                 <form method="post" action="{{route('superadmin.blog.pause', $blog->id)}}">
                                                     @csrf
-                                                    <button onclick="return confirm('{{__('SuperAdmin/backend.are_you_sure_you_wanna_pause')}}')" class="btn btn-secondary btn-sm fa fa-pause"></button>
+                                                    <button onclick="return confirm('{{__('Admin/backend.are_you_sure_you_wanna_pause')}}')" class="btn btn-secondary btn-sm fa fa-pause"></button>
                                                 </form>
                                             @else
                                                 <form method="post" action="{{route('superadmin.blog.play', $blog->id)}}">
                                                     @csrf
-                                                    <button onclick="return confirm('{{__('SuperAdmin/backend.are_you_sure_you_wanna_play')}}')" class="btn btn-success btn-sm fa fa-play"></button>
+                                                    <button onclick="return confirm('{{__('Admin/backend.are_you_sure_you_wanna_play')}}')" class="btn btn-success btn-sm fa fa-play"></button>
                                                 </form>
                                             @endif
 
@@ -86,7 +87,7 @@
                     var newStr = myStr.substring(0, maxLength);
                     var removedStr = myStr.substring(maxLength, $.trim(myStr).length);
                     $(this).empty().html(newStr);
-                    $(this).append(' <a href="javascript:void(0);" class="read-more">' + '{{__("SuperAdmin/backend.read_more")}}' + '...</a>');
+                    $(this).append(' <a href="javascript:void(0);" class="read-more">' + '{{__("Admin/backend.read_more")}}' + '...</a>');
                     $(this).append('<span class="more-text"> ' + removedStr + ' </span>');
                     }
                 });

@@ -1,4 +1,4 @@
-@extends('schooladmin.layouts.app')
+@extends('admin.layouts.app')
 @section('css')
     <style>
         .pl-3:hover {
@@ -98,21 +98,21 @@
                     @csrf
                     @method('PUT')
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">{{__('SuperAdmin/backend.save_form_name')}}</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">{{__('Admin/backend.save_form_name')}}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="">{{__('SuperAdmin/backend.save_form_name')}}</label>
+                            <label class="">{{__('Admin/backend.save_form_name')}}</label>
                             <input type="text" value="{{$formbuilder->form_name}}" class="form-control" name="form_name">
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" data-dismiss="modal" class="btn btn-info">Close</button>
                         <input type="hidden" id="getvalue" name="formvalue">
-                        <button type="submit" class="btn btn-success">{{__('SuperAdmin/backend.update')}}</button>
+                        <button type="submit" class="btn btn-success">{{__('Admin/backend.update')}}</button>
                     </div>
                 </form>
             </div>

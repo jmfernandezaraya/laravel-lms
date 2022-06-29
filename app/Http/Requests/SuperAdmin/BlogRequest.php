@@ -42,10 +42,10 @@ class BlogRequest extends FormRequest
     {
      return [
 
-            'title_ar.required' => __('SuperAdmin/backend.errors.blog_title_in_arabic'),
-         'title_en.required' => __('SuperAdmin/backend.errors.blog_title_in_english'),
-         'description_en.required' => __('SuperAdmin/backend.errors.description_en_required'),
-         'description_ar.required' => __('SuperAdmin/backend.errors.description_ar_required'),
+            'title_ar.required' => __('Admin/backend.errors.blog_title_in_arabic'),
+         'title_en.required' => __('Admin/backend.errors.blog_title_in_english'),
+         'description_en.required' => __('Admin/backend.errors.description_en_required'),
+         'description_ar.required' => __('Admin/backend.errors.description_ar_required'),
 
 
      ];

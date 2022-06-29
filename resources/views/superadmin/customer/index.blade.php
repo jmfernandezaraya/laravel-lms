@@ -1,7 +1,7 @@
-@extends('superadmin.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title')
-    {{__('SuperAdmin/backend.customers')}}
+    {{__('Admin/backend.customers')}}
 @endsection
 
 @section('content')
@@ -9,11 +9,12 @@
         <div class="card">
             <div class="card-body">
                 <div style="text-align: center;">
-                    <h1 class="card-title">{{__('SuperAdmin/backend.customers')}}</h1>
+                    <h1 class="card-title">{{__('Admin/backend.customers')}}</h1>
                 </div>
-                @if (auth('superadmin')->user()->permission['user_manager'] || auth('superadmin')->user()->permission['user_add'])
+                
+                @if (can_manage_user() || can_add_user())
                     <a href="{{ route('superadmin.user.customer.create') }}" type="button" class="btn btn-primary btn-sm pull-right">
-                        <i class="fa fa-plus"></i>&nbsp;{{__('SuperAdmin/backend.add')}}
+                        <i class="fa fa-plus"></i>&nbsp;{{__('Admin/backend.add')}}
                     </a>
                 @endif
             </div>
@@ -27,13 +28,13 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>{{__('SuperAdmin/backend.customer_number')}}</th>
-                            <th>{{__('SuperAdmin/backend.date_created')}}</th>
-                            <th>{{__('SuperAdmin/backend.name')}}</th>
-                            <th>{{__('SuperAdmin/backend.email')}}</th>
-                            <th>{{__('SuperAdmin/backend.mobile')}}</th>
-                            @if (auth('superadmin')->user()->permission['user_manager'] || auth('superadmin')->user()->permission['user_edit'] || auth('superadmin')->user()->permission['user_delete'])
-                                <th>{{__('SuperAdmin/backend.action')}}</th>
+                            <th>{{__('Admin/backend.customer_number')}}</th>
+                            <th>{{__('Admin/backend.date_created')}}</th>
+                            <th>{{__('Admin/backend.name')}}</th>
+                            <th>{{__('Admin/backend.email')}}</th>
+                            <th>{{__('Admin/backend.mobile')}}</th>
+                            @if (can_manage_user() || can_edit_user())
+                                <th>{{__('Admin/backend.action')}}</th>
                             @endif
                         </tr>
                     </thead>
@@ -46,14 +47,14 @@
                                 <td>{{ ucwords(get_language() == 'en' ? $customer->first_name_en : $customer->first_name_ar) }}&nbsp;{{ ucwords(get_language() == 'en' ? $customer->last_name_en : $customer->last_name_ar) }}</td>
                                 <td>{{ ucwords(get_language() == 'en' ? $customer->email : $customer->email_ar) }}</td>
                                 <td>{{ $customer->contact }}</td>
-                                @if (auth('superadmin')->user()->permission['user_manager'] || auth('superadmin')->user()->permission['user_edit'] || auth('superadmin')->user()->permission['user_delete'])
+                                @if (can_manage_user() || can_edit_user() || can_delete_user())
                                     <td>
                                         <div class="btn-group">
-                                            <a href="{{route('superadmin.course_application.list.customer', $customer->id)}}" class="btn btn-success btn-sm fa fa-eye"></a>
-                                            @if (auth('superadmin')->user()->permission['user_manager'] || auth('superadmin')->user()->permission['user_edit'])
+                                            <a href="{{ route('superadmin.course_application.list.customer', $customer->id) }}" class="btn btn-success btn-sm fa fa-eye"></a>
+                                            @if (can_manage_user() || can_edit_user())
                                                 <a href="{{route('superadmin.user.customer.edit', $customer->id)}}" class="btn btn-info btn-sm fa fa-pencil"></a>
                                             @endif
-                                            @if (auth('superadmin')->user()->permission['user_manager'] || auth('superadmin')->user()->permission['user_delete'])
+                                            @if (can_manage_user() || can_delete_user())
                                                 <form action="{{route('superadmin.user.customer.destroy', $customer->id)}}" method="POST">
                                                     @csrf @method('DELETE')
                                                     

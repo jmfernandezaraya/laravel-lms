@@ -1,7 +1,7 @@
-@extends('superadmin.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title')
-    {{__('SuperAdmin/backend.edit_home_page')}}
+    {{__('Admin/backend.edit_home_page')}}
 @endsection
 
 @section('content')
@@ -9,26 +9,26 @@
         <div class="card">
             <div class="card-body">
                 <div style="text-align: center;">
-                    <h1 class="card-title">{{__('SuperAdmin/backend.edit_home_page')}}</h1>
+                    <h1 class="card-title">{{__('Admin/backend.edit_home_page')}}</h1>
                     <change>
                         <div class="english">
-                            {{__('SuperAdmin/backend.in_english')}}
+                            {{__('Admin/backend.in_english')}}
                         </div>
                         <div class="arabic">
-                            {{__('SuperAdmin/backend.in_arabic')}}
+                            {{__('Admin/backend.in_arabic')}}
                         </div>
                     </change>
                 </div>
 
-                @include('superadmin.include.alert')
+                @include('admin.include.alert')
                 
                 <div id="menu">
                     <ul class="lang text-right">
                         <li class="{{app()->getLocale() == 'en' ? 'current_page_item selected' : ''}}">
-                            <a onclick="changeLanguage('english', 'arabic')"><img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}</a>
+                            <a onclick="changeLanguage('english', 'arabic')"><img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('Admin/backend.english')}}</a>
                         </li>
                         <li class="{{app()->getLocale() == 'ar' ? 'current_page_item selected' : ''}}">
-                            <a onclick="changeLanguage('arabic', 'english')"><img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}</a>
+                            <a onclick="changeLanguage('arabic', 'english')"><img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('Admin/backend.arabic')}}</a>
                         </li>
                     </ul>
                 </div>
@@ -38,7 +38,7 @@
 
                     <div class="row">
                         <div class="form-group col-md-12">
-                            <label><h3>{{__('SuperAdmin/backend.hero')}}</h3></label>
+                            <label><h3>{{__('Admin/backend.hero')}}</h3></label>
                         </div>
 
                         <input hidden id="heroincretment" name="heroincretment" value="{{$content && $content->heros && $content->heros->count() ? $content->heros->count() - 1 : 0}}">
@@ -47,7 +47,7 @@
                                 <div id="hero_clone{{$loop->iteration - 1}}" class="hero-clone clone">
                                     <div class="row">
                                         <div class="form-group col-md-12">
-                                            <label for="background">{{__('SuperAdmin/backend.background')}}</label>
+                                            <label for="background">{{__('Admin/backend.background')}}</label>
                                             <input name="background[]" type="file" onchange="$(this).hide()" class="form-control" accept="image/*">
                                             @if (!is_null($hero->background))
                                                 <img src="{{$hero->background}}" class="img-fluid img-thumbnail" alt="Background Image">
@@ -60,24 +60,24 @@
 
                                     <div class="row">
                                         <div class="form-group col-md-12">
-                                            <label>{{__('SuperAdmin/backend.title')}}:</label>
+                                            <label>{{__('Admin/backend.title')}}:</label>
                                             <div class="english">
-                                                <textarea class="form-control ckeditor-input" name="title[]" placeholder="{{__('SuperAdmin/backend.title')}}">{!! $hero->title !!}</textarea>
+                                                <textarea class="form-control ckeditor-input" name="title[]" placeholder="{{__('Admin/backend.title')}}">{!! $hero->title !!}</textarea>
                                             </div>
                                             <div class="arabic">
-                                                <textarea class="form-control ckeditor-input" name="title_ar[]" placeholder="{{__('SuperAdmin/backend.title')}}">{!! $hero->title_ar !!}</textarea>
+                                                <textarea class="form-control ckeditor-input" name="title_ar[]" placeholder="{{__('Admin/backend.title')}}">{!! $hero->title_ar !!}</textarea>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="row">
                                         <div class="form-group col-md-12">
-                                            <label>{{__('SuperAdmin/backend.text')}}:</label>
+                                            <label>{{__('Admin/backend.text')}}:</label>
                                             <div class="english">
-                                                <textarea class="form-control ckeditor-input" name="text[]" placeholder="{{__('SuperAdmin/backend.text')}}">{!! $hero->text !!}</textarea>
+                                                <textarea class="form-control ckeditor-input" name="text[]" placeholder="{{__('Admin/backend.text')}}">{!! $hero->text !!}</textarea>
                                             </div>
                                             <div class="arabic">
-                                                <textarea class="form-control ckeditor-input" name="text_ar[]" placeholder="{{__('SuperAdmin/backend.text')}}">{!! $hero->text_ar !!}</textarea>
+                                                <textarea class="form-control ckeditor-input" name="text_ar[]" placeholder="{{__('Admin/backend.text')}}">{!! $hero->text_ar !!}</textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -96,7 +96,7 @@
                             <div id="hero_clone0" class="hero-clone clone">
                                 <div class="row">
                                     <div class="form-group col-md-12">
-                                        <label for="background">{{__('SuperAdmin/backend.background')}}</label>
+                                        <label for="background">{{__('Admin/backend.background')}}</label>
                                         <input name="background[]" type="file" onchange="$(this).hide()" class="form-control" accept="image/*">
                                         @if ($errors->has('logo'))
                                             <div class="alert alert-danger">{{$errors->first('logo')}}</div>
@@ -106,24 +106,24 @@
 
                                 <div class="row">
                                     <div class="form-group col-md-12">
-                                        <label>{{__('SuperAdmin/backend.title')}}:</label>
+                                        <label>{{__('Admin/backend.title')}}:</label>
                                         <div class="english">
-                                            <textarea class="form-control ckeditor-input" name="title[]" placeholder="{{__('SuperAdmin/backend.title')}}"></textarea>
+                                            <textarea class="form-control ckeditor-input" name="title[]" placeholder="{{__('Admin/backend.title')}}"></textarea>
                                         </div>
                                         <div class="arabic">
-                                            <textarea class="form-control ckeditor-input" name="title_ar[]" placeholder="{{__('SuperAdmin/backend.title')}}"></textarea>
+                                            <textarea class="form-control ckeditor-input" name="title_ar[]" placeholder="{{__('Admin/backend.title')}}"></textarea>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="form-group col-md-12">
-                                        <label>{{__('SuperAdmin/backend.text')}}:</label>
+                                        <label>{{__('Admin/backend.text')}}:</label>
                                         <div class="english">
-                                            <textarea class="form-control ckeditor-input" name="text[]" placeholder="{{__('SuperAdmin/backend.text')}}"></textarea>
+                                            <textarea class="form-control ckeditor-input" name="text[]" placeholder="{{__('Admin/backend.text')}}"></textarea>
                                         </div>
                                         <div class="arabic">
-                                            <textarea class="form-control ckeditor-input" name="text_ar[]" placeholder="{{__('SuperAdmin/backend.text')}}"></textarea>
+                                            <textarea class="form-control ckeditor-input" name="text_ar[]" placeholder="{{__('Admin/backend.text')}}"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -142,7 +142,7 @@
                     
                     <div class="row">
                         <div class="form-group col-md-12">
-                            <label><h3>{{__('SuperAdmin/backend.school_promotion')}}</h3></label>
+                            <label><h3>{{__('Admin/backend.school_promotion')}}</h3></label>
                         </div>
 
                         @foreach ($schools as $school)
@@ -170,7 +170,7 @@
                     
                     <div class="row">
                         <div class="form-group col-md-12">
-                            <label><h3>{{__('SuperAdmin/backend.popular_country')}}</h3></label>
+                            <label><h3>{{__('Admin/backend.popular_country')}}</h3></label>
                         </div>
 
                         @php

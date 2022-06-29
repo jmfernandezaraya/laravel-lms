@@ -126,7 +126,7 @@ class ApplyVisaController extends Controller
             $getPeople[] = $people;
 
         }
-        $select = __("SuperAdmin/backend.select_option");
+        $select = __("Admin/backend.select_option");
         $getoption = "<option value=''>$select </option>";
         foreach ($getPeople as $peoples) {
 
@@ -220,7 +220,7 @@ class ApplyVisaController extends Controller
             ->get()->collect()->unique('getNationality.nationality_' . get_language())
             ->values()->all();
 
-        $option = __('SuperAdmin/backend.select_option');
+        $option = __('Admin/backend.select_option');
         $data['option'] = "<option value= ''>$option</option>";
 
         foreach ($getNationality as $nation) {
@@ -245,7 +245,7 @@ class ApplyVisaController extends Controller
             ->get()->collect()->unique('whereToTravel.travel_' . get_language())
             ->values()->all();
 
-        $option = __('SuperAdmin/backend.select_option');
+        $option = __('Admin/backend.select_option');
         $data['option'] = "<option value= ''>$option</option>";
 
         foreach ($getTravel as $travel) {
@@ -269,7 +269,7 @@ class ApplyVisaController extends Controller
             ->get()->collect()->unique('applicationCenter.application_center_' . get_language())
             ->values()->all();
 
-        $option = __('SuperAdmin/backend.select_option');
+        $option = __('Admin/backend.select_option');
         $data['option'] = "<option value= ''>$option</option>";
 
         foreach ($getOption as $option_get) {
@@ -293,7 +293,7 @@ class ApplyVisaController extends Controller
             ->get()->collect()->unique('TypeOfVisa.visa_' . get_language())
             ->values()->all();
 
-        $option = __('SuperAdmin/backend.select_option');
+        $option = __('Admin/backend.select_option');
         $data['option'] = "<option value= ''>$option</option>";
 
         foreach ($getOption as $option_get) {

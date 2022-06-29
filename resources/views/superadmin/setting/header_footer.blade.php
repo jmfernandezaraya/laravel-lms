@@ -1,7 +1,7 @@
-@extends('superadmin.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title')
-    {{__('SuperAdmin/backend.edit_header_footer')}}
+    {{__('Admin/backend.edit_header_footer')}}
 @endsection
 
 @section('content')
@@ -9,13 +9,13 @@
         <div class="card">
             <div class="card-body">
                 <div style="text-align: center;">
-                    <h1 class="card-title">{{__('SuperAdmin/backend.edit_header_footer')}}</h1>
+                    <h1 class="card-title">{{__('Admin/backend.edit_header_footer')}}</h1>
                     <change>
                         <div class="english">
-                            {{__('SuperAdmin/backend.in_english')}}
+                            {{__('Admin/backend.in_english')}}
                         </div>
                         <div class="arabic">
-                            {{__('SuperAdmin/backend.in_arabic')}}
+                            {{__('Admin/backend.in_arabic')}}
                         </div>
                     </change>
                 </div>
@@ -23,15 +23,15 @@
                 <div id="menu">
                     <ul class="lang text-right">
                         <li class="{{app()->getLocale() == 'en' ? 'current_page_item selected' : ''}}">
-                            <a onclick="changeLanguage('english', 'arabic')"><img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}</a>
+                            <a onclick="changeLanguage('english', 'arabic')"><img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('Admin/backend.english')}}</a>
                         </li>
                         <li class="{{app()->getLocale() == 'ar' ? 'current_page_item selected' : ''}}">
-                            <a onclick="changeLanguage('arabic', 'english')"><img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}</a>
+                            <a onclick="changeLanguage('arabic', 'english')"><img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('Admin/backend.arabic')}}</a>
                         </li>
                     </ul>
                 </div>
 
-                @include('superadmin.include.alert')
+                @include('admin.include.alert')
             </div>
         </div>
     </div>
@@ -46,13 +46,13 @@
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <label><h3>{{__('SuperAdmin/backend.header')}}</h3></label>
+                                    <label><h3>{{__('Admin/backend.header')}}</h3></label>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label><h4>{{__('SuperAdmin/backend.logo')}}</h4></label>
+                                    <label><h4>{{__('Admin/backend.logo')}}</h4></label>
                                 </div>
                             </div>
                             <div class="row">
@@ -66,7 +66,7 @@
                             
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label><h4>{{__('SuperAdmin/backend.menu')}}</h4></label>
+                                    <label><h4>{{__('Admin/backend.menu')}}</h4></label>
                                 </div>
                             </div>
 
@@ -82,20 +82,20 @@
                                     <div id="header_menu_clone{{$loop->iteration - 1}}" class="header-menu-clone clone">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <label>{{__('SuperAdmin/backend.item')}}:</label>
+                                                <label>{{__('Admin/backend.item')}}:</label>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-md-4">
                                                 <select class="form-control" name="header_menu_type[]" onchange="changeHeaderFooterMenuType($(this))">
-                                                    <option value="page" {{$header_menu['type'] == 'page' ? 'selected' : ''}}>{{__('SuperAdmin/backend.page')}}</option>
-                                                    <option value="label" {{$header_menu['type'] == 'label' ? 'selected' : ''}}>{{__('SuperAdmin/backend.label')}}</option>
+                                                    <option value="page" {{$header_menu['type'] == 'page' ? 'selected' : ''}}>{{__('Admin/backend.page')}}</option>
+                                                    <option value="label" {{$header_menu['type'] == 'label' ? 'selected' : ''}}>{{__('Admin/backend.label')}}</option>
                                                 </select>
                                             </div>
                                             <div class="form-group col-md-8 menu-page-label">
                                                 <div class="menu-page" style="display: {{$header_menu['type'] == 'page' ? 'block' : 'none'}}">
                                                     <select class="form-control" name="header_menu_page[]">
-                                                        <option value="">{{__('SuperAdmin/backend.select_option')}}</option>
+                                                        <option value="">{{__('Admin/backend.select_option')}}</option>
                                                         @foreach ($front_pages as $front_page)
                                                             <option value="{{ $front_page->id }}" {{$front_page->id == $header_menu['page'] ? 'selected' : ''}}>{{ app()->getLocale() == 'en' ? $front_page->title : $front_page->title_ar }}</option>
                                                         @endforeach
@@ -114,7 +114,7 @@
 
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <label>{{__('SuperAdmin/backend.sub_menu')}}:</label>
+                                                <label>{{__('Admin/backend.sub_menu')}}:</label>
                                             </div>
                                         </div>
 
@@ -124,14 +124,14 @@
                                                 <div class="row">
                                                     <div class="form-group col-md-4">
                                                         <select class="form-control" name="header_menu_sub_type[{{$loop->parent->iteration - 1}}][]" onchange="changeHeaderFooterMenuType($(this))">
-                                                            <option value="page" {{$header_menu_sub['type'] == 'page' ? 'selected' : ''}}>{{__('SuperAdmin/backend.page')}}</option>
-                                                            <option value="label" {{$header_menu_sub['type'] == 'label' ? 'selected' : ''}}>{{__('SuperAdmin/backend.label')}}</option>
+                                                            <option value="page" {{$header_menu_sub['type'] == 'page' ? 'selected' : ''}}>{{__('Admin/backend.page')}}</option>
+                                                            <option value="label" {{$header_menu_sub['type'] == 'label' ? 'selected' : ''}}>{{__('Admin/backend.label')}}</option>
                                                         </select>
                                                     </div>
                                                     <div class="form-group col-md-6 menu-sub-page-label">
                                                         <div class="menu-page" style="display: {{$header_menu_sub['type'] == 'page' ? 'block' : 'none'}}">
                                                             <select class="form-control" name="header_menu_sub_page[{{$loop->parent->iteration - 1}}][]">
-                                                                <option value="">{{__('SuperAdmin/backend.select_option')}}</option>
+                                                                <option value="">{{__('Admin/backend.select_option')}}</option>
                                                                 @foreach ($front_pages as $front_page)
                                                                     <option value="{{ $front_page->id }}" {{$front_page->id == $header_menu_sub['page'] ? 'selected' : ''}}>{{ app()->getLocale() == 'en' ? $front_page->title : $front_page->title_ar }}</option>
                                                                 @endforeach
@@ -157,14 +157,14 @@
                                                 <div class="row">
                                                     <div class="form-group col-md-4">
                                                         <select class="form-control" name="header_menu_sub_type[{{$loop->iteration - 1}}][]" onchange="changeHeaderFooterMenuType($(this))">
-                                                            <option value="page" selected>{{__('SuperAdmin/backend.page')}}</option>
-                                                            <option value="label">{{__('SuperAdmin/backend.label')}}</option>
+                                                            <option value="page" selected>{{__('Admin/backend.page')}}</option>
+                                                            <option value="label">{{__('Admin/backend.label')}}</option>
                                                         </select>
                                                     </div>
                                                     <div class="form-group col-md-6 menu-sub-page-label">
                                                         <div class="menu-page" style="display: block">
                                                             <select class="form-control" name="header_menu_sub_page[{{$loop->iteration - 1}}][]">
-                                                                <option value="">{{__('SuperAdmin/backend.select_option')}}</option>
+                                                                <option value="">{{__('Admin/backend.select_option')}}</option>
                                                                 @foreach ($front_pages as $front_page)
                                                                     <option value="{{ $front_page->id }}">{{ app()->getLocale() == 'en' ? $front_page->title : $front_page->title_ar }}</option>
                                                                 @endforeach
@@ -201,20 +201,20 @@
                                 <div id="header_menu_clone0" class="header-menu-clone clone">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <label>{{__('SuperAdmin/backend.item')}}:</label>
+                                            <label>{{__('Admin/backend.item')}}:</label>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-md-4">
                                             <select class="form-control" name="header_menu_type[]" onchange="changeHeaderFooterMenuType($(this))">
-                                                <option value="page" selected>{{__('SuperAdmin/backend.page')}}</option>
-                                                <option value="label">{{__('SuperAdmin/backend.label')}}</option>
+                                                <option value="page" selected>{{__('Admin/backend.page')}}</option>
+                                                <option value="label">{{__('Admin/backend.label')}}</option>
                                             </select>
                                         </div>
                                         <div class="form-group col-md-8 menu-page-label">
                                             <div class="menu-page" style="display: block">
                                                 <select class="form-control" name="header_menu_page[]">
-                                                    <option value="">{{__('SuperAdmin/backend.select_option')}}</option>
+                                                    <option value="">{{__('Admin/backend.select_option')}}</option>
                                                     @foreach ($front_pages as $front_page)
                                                         <option value="{{ $front_page->id }}">{{ app()->getLocale() == 'en' ? $front_page->title : $front_page->title_ar }}</option>
                                                     @endforeach
@@ -233,7 +233,7 @@
 
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <label>{{__('SuperAdmin/backend.sub_menu')}}:</label>
+                                            <label>{{__('Admin/backend.sub_menu')}}:</label>
                                         </div>
                                     </div>
 
@@ -242,14 +242,14 @@
                                         <div class="row">
                                             <div class="form-group col-md-4">
                                                 <select class="form-control" name="header_menu_sub_type[0][]" onchange="changeHeaderFooterMenuType($(this))">
-                                                    <option value="page" selected>{{__('SuperAdmin/backend.page')}}</option>
-                                                    <option value="label">{{__('SuperAdmin/backend.label')}}</option>
+                                                    <option value="page" selected>{{__('Admin/backend.page')}}</option>
+                                                    <option value="label">{{__('Admin/backend.label')}}</option>
                                                 </select>
                                             </div>
                                             <div class="form-group col-md-6 menu-sub-page-label">
                                                 <div class="menu-page" style="display: block">
                                                     <select class="form-control" name="header_menu_sub_page[0][]">
-                                                        <option value="">{{__('SuperAdmin/backend.select_option')}}</option>
+                                                        <option value="">{{__('Admin/backend.select_option')}}</option>
                                                         @foreach ($front_pages as $front_page)
                                                             <option value="{{ $front_page->id }}">{{ app()->getLocale() == 'en' ? $front_page->title : $front_page->title_ar }}</option>
                                                         @endforeach
@@ -286,13 +286,13 @@
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <label><h3>{{__('SuperAdmin/backend.footer')}}</h3></label>
+                                    <label><h3>{{__('Admin/backend.footer')}}</h3></label>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label><h4>{{__('SuperAdmin/backend.logo')}}</h4></label>
+                                    <label><h4>{{__('Admin/backend.logo')}}</h4></label>
                                 </div>
                             </div>
                             <div class="row">
@@ -306,55 +306,55 @@
 
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label><h4>{{__('SuperAdmin/backend.description')}}</h4></label>
+                                    <label><h4>{{__('Admin/backend.description')}}</h4></label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <div class="english">
-                                        <textarea class="form-control ckeditor-input" name="footer_description" id="footer_description" placeholder="{{__('SuperAdmin/backend.description')}}">{!! isset($setting_value['footer']['description']) ? $setting_value['footer']['description'] : '' !!}</textarea>
+                                        <textarea class="form-control ckeditor-input" name="footer_description" id="footer_description" placeholder="{{__('Admin/backend.description')}}">{!! isset($setting_value['footer']['description']) ? $setting_value['footer']['description'] : '' !!}</textarea>
                                     </div>
                                     <div class="arabic">
-                                        <textarea class="form-control ckeditor-input" name="footer_description_ar" id="hero_description_ar" placeholder="{{__('SuperAdmin/backend.description')}}">{!! isset($setting_value['footer']['description_ar']) ? $setting_value['footer']['description_ar'] : '' !!}</textarea>
+                                        <textarea class="form-control ckeditor-input" name="footer_description_ar" id="hero_description_ar" placeholder="{{__('Admin/backend.description')}}">{!! isset($setting_value['footer']['description_ar']) ? $setting_value['footer']['description_ar'] : '' !!}</textarea>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label><h4>{{__('SuperAdmin/backend.copyright')}}</h4></label>
+                                    <label><h4>{{__('Admin/backend.copyright')}}</h4></label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <div class="english">
-                                        <textarea class="form-control ckeditor-input" name="footer_copyright" id="footer_copyright" placeholder="{{__('SuperAdmin/backend.copyright')}}">{!! isset($setting_value['footer']['copyright']) ? $setting_value['footer']['copyright'] : '' !!}</textarea>
+                                        <textarea class="form-control ckeditor-input" name="footer_copyright" id="footer_copyright" placeholder="{{__('Admin/backend.copyright')}}">{!! isset($setting_value['footer']['copyright']) ? $setting_value['footer']['copyright'] : '' !!}</textarea>
                                     </div>
                                     <div class="arabic">
-                                        <textarea class="form-control ckeditor-input" name="footer_copyright_ar" id="footer_copyright_ar" placeholder="{{__('SuperAdmin/backend.copyright')}}">{!! isset($setting_value['footer']['copyright_ar']) ? $setting_value['footer']['copyright_ar'] : '' !!}</textarea>
+                                        <textarea class="form-control ckeditor-input" name="footer_copyright_ar" id="footer_copyright_ar" placeholder="{{__('Admin/backend.copyright')}}">{!! isset($setting_value['footer']['copyright_ar']) ? $setting_value['footer']['copyright_ar'] : '' !!}</textarea>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label><h4>{{__('SuperAdmin/backend.credits')}}</h4></label>
+                                    <label><h4>{{__('Admin/backend.credits')}}</h4></label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <div class="english">
-                                        <textarea class="form-control ckeditor-input" name="footer_credits" id="footer_credits" placeholder="{{__('SuperAdmin/backend.credits')}}">{!! isset($setting_value['footer']['credits']) ? $setting_value['footer']['credits'] : '' !!}</textarea>
+                                        <textarea class="form-control ckeditor-input" name="footer_credits" id="footer_credits" placeholder="{{__('Admin/backend.credits')}}">{!! isset($setting_value['footer']['credits']) ? $setting_value['footer']['credits'] : '' !!}</textarea>
                                     </div>
                                     <div class="arabic">
-                                        <textarea class="form-control ckeditor-input" name="footer_credits_ar" id="footer_credits_ar" placeholder="{{__('SuperAdmin/backend.credits')}}">{!! isset($setting_value['footer']['credits_ar']) ? $setting_value['footer']['credits_ar'] : '' !!}</textarea>
+                                        <textarea class="form-control ckeditor-input" name="footer_credits_ar" id="footer_credits_ar" placeholder="{{__('Admin/backend.credits')}}">{!! isset($setting_value['footer']['credits_ar']) ? $setting_value['footer']['credits_ar'] : '' !!}</textarea>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label><h4>{{__('SuperAdmin/backend.menus')}}</h4></label>
+                                    <label><h4>{{__('Admin/backend.menus')}}</h4></label>
                                 </div>
                             </div>
 
@@ -370,23 +370,23 @@
                                     <div id="footer_menu_section_clone{{$loop->iteration - 1}}" class="footer-menu-section-clone clone border border-dark p-2 mb-2">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <label><h5>{{__('SuperAdmin/backend.title')}}</h5></label>
+                                                <label><h5>{{__('Admin/backend.title')}}</h5></label>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-md-12">
                                                 <div class="english">
-                                                    <textarea class="form-control ckeditor-input" name="footer_menu_title[]" id="footer_menu_title{{$loop->iteration - 1}}" placeholder="{{__('SuperAdmin/backend.title')}}">{!! isset($footer_menu_section['title']) ? $footer_menu_section['title'] : '' !!}</textarea>
+                                                    <textarea class="form-control ckeditor-input" name="footer_menu_title[]" id="footer_menu_title{{$loop->iteration - 1}}" placeholder="{{__('Admin/backend.title')}}">{!! isset($footer_menu_section['title']) ? $footer_menu_section['title'] : '' !!}</textarea>
                                                 </div>
                                                 <div class="arabic">
-                                                    <textarea class="form-control ckeditor-input" name="footer_menu_title_ar[]" id="footer_menu_title_ar{{$loop->iteration - 1}}" placeholder="{{__('SuperAdmin/backend.title')}}">{!! isset($footer_menu_section['title_ar']) ? $footer_menu_section['title_ar'] : '' !!}</textarea>
+                                                    <textarea class="form-control ckeditor-input" name="footer_menu_title_ar[]" id="footer_menu_title_ar{{$loop->iteration - 1}}" placeholder="{{__('Admin/backend.title')}}">{!! isset($footer_menu_section['title_ar']) ? $footer_menu_section['title_ar'] : '' !!}</textarea>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <label><h5>{{__('SuperAdmin/backend.menu')}}</h5></label>
+                                                <label><h5>{{__('Admin/backend.menu')}}</h5></label>
                                             </div>
                                         </div>
                                         <input hidden id="footer_menu_increment{{$loop->iteration - 1}}" name="footermenuincrement[]" value="{{isset($footer_menu_section['menu']) && count($footer_menu_section['menu']) ? count($footer_menu_section['menu']) - 1 : 0}}">
@@ -395,20 +395,20 @@
                                                 <div id="footer_menu{{$loop->parent->iteration - 1}}_clone{{$loop->iteration - 1}}" class="footer-menu-clone clone border border-dark p-2 mb-2">
                                                     <div class="row">
                                                         <div class="col-md-12">
-                                                            <label>{{__('SuperAdmin/backend.item')}}:</label>
+                                                            <label>{{__('Admin/backend.item')}}:</label>
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="form-group col-md-4">
                                                             <select class="form-control" name="footer_menu_type[{{$loop->parent->iteration - 1}}][]" onchange="changeHeaderFooterMenuType($(this))">
-                                                                <option value="page" {{$footer_menu['type'] == 'page' ? 'selected' : ''}}>{{__('SuperAdmin/backend.page')}}</option>
-                                                                <option value="label" {{$footer_menu['type'] == 'label' ? 'selected' : ''}}>{{__('SuperAdmin/backend.label')}}</option>
+                                                                <option value="page" {{$footer_menu['type'] == 'page' ? 'selected' : ''}}>{{__('Admin/backend.page')}}</option>
+                                                                <option value="label" {{$footer_menu['type'] == 'label' ? 'selected' : ''}}>{{__('Admin/backend.label')}}</option>
                                                             </select>
                                                         </div>
                                                         <div class="form-group col-md-8 menu-page-label">
                                                             <div class="menu-page" style="display: {{$footer_menu['type'] == 'page' ? 'block' : 'none'}}">
                                                                 <select class="form-control" name="footer_menu_page[{{$loop->parent->iteration - 1}}][]">
-                                                                    <option value="">{{__('SuperAdmin/backend.select_option')}}</option>
+                                                                    <option value="">{{__('Admin/backend.select_option')}}</option>
                                                                     @foreach ($front_pages as $front_page)
                                                                         <option value="{{ $front_page->id }}" {{$front_page->id == $footer_menu['page'] ? 'selected' : ''}}>{{ app()->getLocale() == 'en' ? $front_page->title : $front_page->title_ar }}</option>
                                                                     @endforeach
@@ -427,7 +427,7 @@
 
                                                     <div class="row">
                                                         <div class="col-md-12">
-                                                            <label>{{__('SuperAdmin/backend.sub_menu')}}:</label>
+                                                            <label>{{__('Admin/backend.sub_menu')}}:</label>
                                                         </div>
                                                     </div>
 
@@ -437,14 +437,14 @@
                                                             <div class="row">
                                                                 <div class="form-group col-md-4">
                                                                     <select class="form-control" name="footer_menu_sub_type[{{$loop->parent->parent->iteration - 1}}][{{$loop->parent->iteration - 1}}][]" onchange="changeHeaderFooterMenuType($(this))">
-                                                                        <option value="page" {{$footer_menu_sub['type'] == 'page' ? 'selected' : ''}}>{{__('SuperAdmin/backend.page')}}</option>
-                                                                        <option value="label" {{$footer_menu_sub['type'] == 'label' ? 'selected' : ''}}>{{__('SuperAdmin/backend.label')}}</option>
+                                                                        <option value="page" {{$footer_menu_sub['type'] == 'page' ? 'selected' : ''}}>{{__('Admin/backend.page')}}</option>
+                                                                        <option value="label" {{$footer_menu_sub['type'] == 'label' ? 'selected' : ''}}>{{__('Admin/backend.label')}}</option>
                                                                     </select>
                                                                 </div>
                                                                 <div class="form-group col-md-6 menu-sub-page-label">
                                                                     <div class="menu-page" style="display: {{$footer_menu['type'] == 'page' ? 'block' : 'none'}}">
                                                                         <select class="form-control" name="footer_menu_sub_page[{{$loop->parent->parent->iteration - 1}}][{{$loop->parent->iteration - 1}}][]">
-                                                                            <option value="">{{__('SuperAdmin/backend.select_option')}}</option>
+                                                                            <option value="">{{__('Admin/backend.select_option')}}</option>
                                                                             @foreach ($front_pages as $front_page)
                                                                                 <option value="{{ $front_page->id }}" {{$front_page->id == $footer_menu_sub['page'] ? 'selected' : ''}}>{{ app()->getLocale() == 'en' ? $front_page->title : $front_page->title_ar }}</option>
                                                                             @endforeach
@@ -470,14 +470,14 @@
                                                             <div class="row">
                                                                 <div class="form-group col-md-4">
                                                                     <select class="form-control" name="footer_menu_sub_type[{{$loop->parent->iteration - 1}}][{{$loop->iteration - 1}}][]" onchange="changeHeaderFooterMenuType($(this))">
-                                                                        <option value="page" selected>{{__('SuperAdmin/backend.page')}}</option>
-                                                                        <option value="label">{{__('SuperAdmin/backend.label')}}</option>
+                                                                        <option value="page" selected>{{__('Admin/backend.page')}}</option>
+                                                                        <option value="label">{{__('Admin/backend.label')}}</option>
                                                                     </select>
                                                                 </div>
                                                                 <div class="form-group col-md-6 menu-sub-page-label">
                                                                     <div class="menu-page" style="display: block">
                                                                         <select class="form-control" name="footer_menu_sub_page[{{$loop->parent->iteration - 1}}][{{$loop->iteration - 1}}][]">
-                                                                            <option value="">{{__('SuperAdmin/backend.select_option')}}</option>
+                                                                            <option value="">{{__('Admin/backend.select_option')}}</option>
                                                                             @foreach ($front_pages as $front_page)
                                                                                 <option value="{{ $front_page->id }}">{{ app()->getLocale() == 'en' ? $front_page->title : $front_page->title_ar }}</option>
                                                                             @endforeach
@@ -514,20 +514,20 @@
                                             <div id="footer_menu{{$loop->iteration - 1}}_clone0" class="footer-menu-clone clone border border-dark p-2 mb-2">
                                                 <div class="row">
                                                     <div class="col-md-12">
-                                                        <label>{{__('SuperAdmin/backend.item')}}:</label>
+                                                        <label>{{__('Admin/backend.item')}}:</label>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="form-group col-md-4">
                                                         <select class="form-control" name="footer_menu_type[{{$loop->iteration - 1}}][]" onchange="changeHeaderFooterMenuType($(this))">
-                                                            <option value="page" selected>{{__('SuperAdmin/backend.page')}}</option>
-                                                            <option value="label">{{__('SuperAdmin/backend.label')}}</option>
+                                                            <option value="page" selected>{{__('Admin/backend.page')}}</option>
+                                                            <option value="label">{{__('Admin/backend.label')}}</option>
                                                         </select>
                                                     </div>
                                                     <div class="form-group col-md-8 menu-page-label">
                                                         <div class="menu-page" style="display: block">
                                                             <select class="form-control" name="footer_menu_page[{{$loop->iteration - 1}}][]">
-                                                                <option value="">{{__('SuperAdmin/backend.select_option')}}</option>
+                                                                <option value="">{{__('Admin/backend.select_option')}}</option>
                                                                 @foreach ($front_pages as $front_page)
                                                                     <option value="{{ $front_page->id }}">{{ app()->getLocale() == 'en' ? $front_page->title : $front_page->title_ar }}</option>
                                                                 @endforeach
@@ -546,7 +546,7 @@
 
                                                 <div class="row">
                                                     <div class="col-md-12">
-                                                        <label>{{__('SuperAdmin/backend.sub_menu')}}:</label>
+                                                        <label>{{__('Admin/backend.sub_menu')}}:</label>
                                                     </div>
                                                 </div>
 
@@ -555,14 +555,14 @@
                                                     <div class="row">
                                                         <div class="form-group col-md-4">
                                                             <select class="form-control" name="footer_menu_sub_type[{{$loop->iteration - 1}}][0][]" onchange="changeHeaderFooterMenuType($(this))">
-                                                                <option value="page" selected>{{__('SuperAdmin/backend.page')}}</option>
-                                                                <option value="label">{{__('SuperAdmin/backend.label')}}</option>
+                                                                <option value="page" selected>{{__('Admin/backend.page')}}</option>
+                                                                <option value="label">{{__('Admin/backend.label')}}</option>
                                                             </select>
                                                         </div>
                                                         <div class="form-group col-md-6 menu-sub-page-label">
                                                             <div class="menu-page" style="display: block">
                                                                 <select class="form-control" name="footer_menu_sub_page[{{$loop->iteration - 1}}][0][]">
-                                                                    <option value="">{{__('SuperAdmin/backend.select_option')}}</option>
+                                                                    <option value="">{{__('Admin/backend.select_option')}}</option>
                                                                     @foreach ($front_pages as $front_page)
                                                                         <option value="{{ $front_page->id }}">{{ app()->getLocale() == 'en' ? $front_page->title : $front_page->title_ar }}</option>
                                                                     @endforeach
@@ -609,23 +609,23 @@
                                 <div id="footer_menu_section_clone0" class="footer-menu-section-clone clone border border-dark p-2 mb-2">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <label><h5>{{__('SuperAdmin/backend.title')}}</h5></label>
+                                            <label><h5>{{__('Admin/backend.title')}}</h5></label>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-md-12">
                                             <div class="english">
-                                                <textarea class="form-control ckeditor-input" name="footer_menu_title[]" id="footer_menu_title0" placeholder="{{__('SuperAdmin/backend.title')}}"></textarea>
+                                                <textarea class="form-control ckeditor-input" name="footer_menu_title[]" id="footer_menu_title0" placeholder="{{__('Admin/backend.title')}}"></textarea>
                                             </div>
                                             <div class="arabic">
-                                                <textarea class="form-control ckeditor-input" name="footer_menu_title_ar[]" id="footer_menu_title_ar0" placeholder="{{__('SuperAdmin/backend.title')}}"></textarea>
+                                                <textarea class="form-control ckeditor-input" name="footer_menu_title_ar[]" id="footer_menu_title_ar0" placeholder="{{__('Admin/backend.title')}}"></textarea>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <label><h5>{{__('SuperAdmin/backend.menu')}}</h5></label>
+                                            <label><h5>{{__('Admin/backend.menu')}}</h5></label>
                                         </div>
                                     </div>
 
@@ -633,20 +633,20 @@
                                     <div id="footer_menu0_clone0" class="footer-menu-clone clone border border-dark p-2 mb-2">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <label>{{__('SuperAdmin/backend.item')}}:</label>
+                                                <label>{{__('Admin/backend.item')}}:</label>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-md-4">
                                                 <select class="form-control" name="footer_menu_type[0][]" onchange="changeHeaderFooterMenuType($(this))">
-                                                    <option value="page" selected>{{__('SuperAdmin/backend.page')}}</option>
-                                                    <option value="label">{{__('SuperAdmin/backend.label')}}</option>
+                                                    <option value="page" selected>{{__('Admin/backend.page')}}</option>
+                                                    <option value="label">{{__('Admin/backend.label')}}</option>
                                                 </select>
                                             </div>
                                             <div class="form-group col-md-8 menu-page-label">
                                                 <div class="menu-page" style="display: block">
                                                     <select class="form-control" name="footer_menu_page[0][]">
-                                                        <option value="">{{__('SuperAdmin/backend.select_option')}}</option>
+                                                        <option value="">{{__('Admin/backend.select_option')}}</option>
                                                         @foreach ($front_pages as $front_page)
                                                             <option value="{{ $front_page->id }}">{{ app()->getLocale() == 'en' ? $front_page->title : $front_page->title_ar }}</option>
                                                         @endforeach
@@ -665,7 +665,7 @@
 
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <label>{{__('SuperAdmin/backend.sub_menu')}}:</label>
+                                                <label>{{__('Admin/backend.sub_menu')}}:</label>
                                             </div>
                                         </div>
 
@@ -674,14 +674,14 @@
                                             <div class="row">
                                                 <div class="form-group col-md-4">
                                                     <select class="form-control" name="footer_menu_sub_type[0][0][]" onchange="changeHeaderFooterMenuType($(this))">
-                                                        <option value="page" selected>{{__('SuperAdmin/backend.page')}}</option>
-                                                        <option value="label">{{__('SuperAdmin/backend.label')}}</option>
+                                                        <option value="page" selected>{{__('Admin/backend.page')}}</option>
+                                                        <option value="label">{{__('Admin/backend.label')}}</option>
                                                     </select>
                                                 </div>
                                                 <div class="form-group col-md-6 menu-sub-page-label">
                                                     <div class="menu-page" style="display: block">
                                                         <select class="form-control" name="footer_menu_sub_page[0][0][]">
-                                                            <option value="">{{__('SuperAdmin/backend.select_option')}}</option>
+                                                            <option value="">{{__('Admin/backend.select_option')}}</option>
                                                             @foreach ($front_pages as $front_page)
                                                                 <option value="{{ $front_page->id }}">{{ app()->getLocale() == 'en' ? $front_page->title : $front_page->title_ar }}</option>
                                                             @endforeach
@@ -726,8 +726,8 @@
                         </div>
                     </div>
 
-                    <button type="button" onclick="submitFormAction('headerFooterForm')" class="btn btn-gradient-primary mr-2">{{__('SuperAdmin/backend.submit')}}</button>
-                    <a class="btn btn-light" href="{{url()->previous()}}">{{__('SuperAdmin/backend.cancel')}}</a>
+                    <button type="button" onclick="submitFormAction('headerFooterForm')" class="btn btn-gradient-primary mr-2">{{__('Admin/backend.submit')}}</button>
+                    <a class="btn btn-light" href="{{url()->previous()}}">{{__('Admin/backend.cancel')}}</a>
                 </form>
             </div>
         </div>

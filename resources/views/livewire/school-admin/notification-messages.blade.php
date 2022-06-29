@@ -9,7 +9,7 @@
         <h6 class="p-3 mb-0">Messages</h6>
         @foreach($messages as $message)
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item preview-item" href="{{route('schooladmin.manage_application.view_message', $message->id)}}">
+            <a class="dropdown-item preview-item" href="{{ route('schooladmin.course_application.view_message', $message->id) }}">
                 <div class="preview-thumbnail">
                     <img src="//img.favpng.com/9/3/19/conversation-message-online-chat-computer-icons-image-png-favpng-SqARma0cN1a08EsEKipnk57Zn.jpg" alt="image" class="profile-pic">
                 </div>

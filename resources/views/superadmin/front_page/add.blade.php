@@ -1,7 +1,7 @@
-@extends('superadmin.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title')
-    {{__('SuperAdmin/backend.add_front_page')}}
+    {{__('Admin/backend.add_front_page')}}
 @endsection
 
 @section('content')
@@ -9,13 +9,13 @@
         <div class="card">
             <div class="card-body">
                 <div style="text-align: center;">
-                    <h1 class="card-title">{{__('SuperAdmin/backend.add_front_page')}}</h1>
+                    <h1 class="card-title">{{__('Admin/backend.add_front_page')}}</h1>
                     <change>
                         <div class="english">
-                            {{__('SuperAdmin/backend.in_english')}}
+                            {{__('Admin/backend.in_english')}}
                         </div>
                         <div class="arabic">
-                            {{__('SuperAdmin/backend.in_arabic')}}
+                            {{__('Admin/backend.in_arabic')}}
                         </div>
                     </change>
                 </div>
@@ -23,15 +23,15 @@
                 <div id="menu">
                     <ul class="lang text-right current_page_itemm">
                         <li class="{{app()->getLocale() == 'en' ? 'current_page_item selected' : ''}}">
-                            <a onclick="changeLanguage('english', 'arabic')"><img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}</a>
+                            <a onclick="changeLanguage('english', 'arabic')"><img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('Admin/backend.english')}}</a>
                         </li>
                         <li class="{{app()->getLocale() == 'ar' ? 'current_page_item selected' : ''}}">
-                            <a onclick="changeLanguage('arabic', 'english')"><img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}</a>
+                            <a onclick="changeLanguage('arabic', 'english')"><img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('Admin/backend.arabic')}}</a>
                         </li>
                     </ul>
                 </div>
 
-                @include('superadmin.include.alert')
+                @include('admin.include.alert')
             </div>
         </div>
     </div>
@@ -44,47 +44,47 @@
 
                     <div class="row">
                         <div class="form-group col-md-12">
-                            <label for="title">{{__('SuperAdmin/backend.title')}}</label>
+                            <label for="title">{{__('Admin/backend.title')}}</label>
                             <div class="english">
-                                <input onchange="changeFrontPageTitle()" name="title" type="text" class="form-control" placeholder="{{__('SuperAdmin/backend.title')}}">
+                                <input onchange="changeFrontPageTitle()" name="title" type="text" class="form-control" placeholder="{{__('Admin/backend.title')}}">
                             </div>
                             <div class="arabic">
-                                <input name="title_ar" type="text" class="form-control" placeholder="{{__('SuperAdmin/backend.title')}}">
+                                <input name="title_ar" type="text" class="form-control" placeholder="{{__('Admin/backend.title')}}">
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-12">
-                            <label for="title">{{__('SuperAdmin/backend.slug')}}</label>
-                            <input name="slug" type="text" class="form-control" placeholder="{{__('SuperAdmin/backend.slug')}}">
+                            <label for="title">{{__('Admin/backend.slug')}}</label>
+                            <input name="slug" type="text" class="form-control" placeholder="{{__('Admin/backend.slug')}}">
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-12">
-                            <label for="content">{{__('SuperAdmin/backend.content')}}</label>
+                            <label for="content">{{__('Admin/backend.content')}}</label>
                             <div class="english">
-                                <textarea id="content" name="content" class="form-control ckeditor-input" placeholder="{{__('SuperAdmin/backend.content')}}">{!! old('content') !!}</textarea>
+                                <textarea id="content" name="content" class="form-control ckeditor-input" placeholder="{{__('Admin/backend.content')}}">{!! old('content') !!}</textarea>
                             </div>
                             <div class="arabic">
-                                <textarea id="content_ar" name="content_ar" class="form-control ckeditor-input" placeholder="{{__('SuperAdmin/backend.content')}}">{!! old('content_ar') !!}</textarea>
+                                <textarea id="content_ar" name="content_ar" class="form-control ckeditor-input" placeholder="{{__('Admin/backend.content')}}">{!! old('content_ar') !!}</textarea>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-12">
-                            <label for="route">{{__('SuperAdmin/backend.route')}}</label>
+                            <label for="route">{{__('Admin/backend.route')}}</label>
                             <input name="route" type="checkbox" onchange="changeFrontpageRoute()" />
                         </div>
                     </div>
                     <div class="row display">
                         <div class="form-group col-md-12">
-                            <label for="display">{{__('SuperAdmin/backend.display')}}</label>
+                            <label for="display">{{__('Admin/backend.display')}}</label>
                             <input name="display" type="checkbox" checked />
                         </div>
                     </div>
 
-                    <a class="btn btn-light" href="{{url()->previous()}}">{{__('SuperAdmin/backend.cancel')}}</a>
-                    <button type="button" onclick="submitForm($(this).parents().find('#frontPageForm'))" class="btn btn-primary">{{__('SuperAdmin/backend.submit')}}</button>
+                    <a class="btn btn-light" href="{{url()->previous()}}">{{__('Admin/backend.cancel')}}</a>
+                    <button type="button" onclick="submitForm($(this).parents().find('#frontPageForm'))" class="btn btn-primary">{{__('Admin/backend.submit')}}</button>
                 </form>
             </div>
         </div>

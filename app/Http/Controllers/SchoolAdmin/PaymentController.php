@@ -18,8 +18,8 @@ class PaymentController extends Controller
     public function index()
     {
         $payments = Transaction::all();
-        $success = __('SuperAdmin/backend.errors.success');
-        $failed = __('SuperAdmin/backend.errors.failed');
+        $success = __('Admin/backend.errors.success');
+        $failed = __('Admin/backend.errors.failed');
 
 		return view('schooladmin.payment.index', ['success' => $success, 'failed' => $failed], compact('payments'));
     }

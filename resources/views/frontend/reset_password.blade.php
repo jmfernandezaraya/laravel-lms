@@ -36,7 +36,7 @@
                 <label>{{__('Frontend.confirm_password')}}</label>
                 <input name="password_confirmation" type="password" class="form-control" placeholder="{{__('Frontend.confirm_password')}}">
             </div>
-            <button type="submit" class="btn btn-primary">{{__('SuperAdmin/backend.submit')}}</button>
+            <button type="submit" class="btn btn-primary">{{__('Admin/backend.submit')}}</button>
         </div>
     </form>
 </div>

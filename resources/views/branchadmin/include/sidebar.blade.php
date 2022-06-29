@@ -16,55 +16,55 @@
         </li>
         <li class="nav-item">
             <a class="nav-link" href="{{url('branch_admin/dashboard')}}">
-                <span class="menu-title">{{ __('SuperAdmin/dashboard.dashboard')}}</span>
+                <span class="menu-title">{{ __('Admin/dashboard.dashboard')}}</span>
                 <i class="mdi mdi-home menu-icon"></i>
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#manage_app" aria-expanded="false" aria-controls="manage_app">
-                <span class="menu-title">{{ __('SuperAdmin/backend.course_application') }}</span>
+                <span class="menu-title">{{ __('Admin/backend.course_application') }}</span>
                 <i class="menu-arrow"></i>
                 <i class="mdi mdi-crosshairs-gps menu-icon"></i>
             </a>
             <div class="collapse" id="manage_app">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="{{route('branch_admin.manage_application.index')}}">{{ __('SuperAdmin/dashboard.view')}} </a></li>
+                    <li class="nav-item"> <a class="nav-link" href="{{route('branch_admin.manage_application.index')}}">{{ __('Admin/dashboard.view')}} </a></li>
                 </ul>
             </div>
         </li>
         <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#payment_received" aria-expanded="false" aria-controls="payment_received">
-                <span class="menu-title">{{ __('SuperAdmin/backend.payment_received')}}</span>
+                <span class="menu-title">{{ __('Admin/backend.payment_received')}}</span>
                 <i class="menu-arrow"></i>
                 <i class="mdi mdi-crosshairs-gps menu-icon"></i>
             </a>
             <div class="collapse" id="payment_received">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="{{route('branch_admin.payment_received.index')}}">{{ __('SuperAdmin/dashboard.view')}} </a></li>
+                    <li class="nav-item"> <a class="nav-link" href="{{route('branch_admin.payment_received.index')}}">{{ __('Admin/dashboard.view')}} </a></li>
                 </ul>
             </div>
         </li>
         <li class="nav-item {{(request()->is('branch_admin/rating/*')) ?  'active' :'' }}">
             <a class="nav-link" data-toggle="collapse" href="#rating" aria-expanded="false" aria-controls="school_admin">
-                <span class="menu-title">{{ __('SuperAdmin/backend.rating')}}</span>
+                <span class="menu-title">{{ __('Admin/backend.rating')}}</span>
                 <i class="menu-arrow"></i>
                 <i class="mdi mdi-crosshairs-gps menu-icon"></i>
             </a>
             <div class="collapse {{(request()->is('branch_admin/rating/*')) ?  'show' :'' }}" id="rating">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link {{(request()->is('branch_admin/rating/*')) ?  'active' :'' }}" href="{{route('branch_admin.rating.index')}}">{{ __('SuperAdmin/dashboard.view')}} </a></li>
+                    <li class="nav-item"> <a class="nav-link {{(request()->is('branch_admin/rating/*')) ?  'active' :'' }}" href="{{route('branch_admin.rating.index')}}">{{ __('Admin/dashboard.view')}} </a></li>
                 </ul>
             </div>
         </li>
         <li class="nav-item {{(request()->is('branch_admin/enquiry/*')) ?  'active' :'' }}">
             <a class="nav-link" data-toggle="collapse" href="#enquiry" aria-expanded="false" aria-controls="school_admin">
-                <span class="menu-title">@lang('SuperAdmin/backend.manage_enquiries')</span>
+                <span class="menu-title">@lang('Admin/backend.manage_enquiries')</span>
                 <i class="menu-arrow"></i>
                 <i class="mdi mdi-crosshairs-gps menu-icon"></i>
             </a>
             <div class="collapse {{(request()->is('branch_admin/enquiry/*')) ?  'show' :'' }}" id="enquiry">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link {{(request()->is('branch_admin/enquiry/*')) ?  'active' :'' }}" href="{{url('branch_admin/enquiry')}}">{{ __('SuperAdmin/dashboard.view')}} </a></li>
+                    <li class="nav-item"> <a class="nav-link {{(request()->is('branch_admin/enquiry/*')) ?  'active' :'' }}" href="{{url('branch_admin/enquiry')}}">{{ __('Admin/dashboard.view')}} </a></li>
                 </ul>
             </div>
         </li>
@@ -76,32 +76,32 @@
             </a>
             <div class="collapse {{(request()->is('branch_admin/send_message_to_student*')) ?  'show' :'' }}" id="send_message">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link {{(request()->is('branch_admin/send_message_to_student*')) ?  'active' :'' }}" href="{{url('branch_admin/send_message_to_student')}}">{{ __('SuperAdmin/dashboard.view')}} </a></li>
+                    <li class="nav-item"> <a class="nav-link {{(request()->is('branch_admin/send_message_to_student*')) ?  'active' :'' }}" href="{{url('branch_admin/send_message_to_student')}}">{{ __('Admin/dashboard.view')}} </a></li>
                 </ul>
             </div>
         </li>
         <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#course" aria-expanded="false" aria-controls="course">
-                <span class="menu-title">{{ __('SuperAdmin/dashboard.courses')}}</span>
+                <span class="menu-title">{{ __('Admin/dashboard.courses')}}</span>
                 <i class="menu-arrow"></i>
                 <i class="mdi mdi-crosshairs-gps menu-icon"></i>
             </a>
             <div class="collapse" id="course">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="{{route('branch_admin.course.index')}}">{{ __('SuperAdmin/dashboard.view')}} </a></li>
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('branch_admin.course.index') }}">{{ __('Admin/dashboard.view')}} </a></li>
                 </ul>
             </div>
         </li>
         {{-- 
         <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#courses" aria-expanded="false" aria-controls="courses">
-                <span class="menu-title">{{ __('SuperAdmin/dashboard.courses')}}</span>
+                <span class="menu-title">{{ __('Admin/dashboard.courses')}}</span>
                 <i class="menu-arrow"></i>
                 <i class="mdi mdi-crosshairs-gps menu-icon"></i>
             </a>
             <div class="collapse" id="courses">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="{{route('branch_admin.course.index')}}">{{ __('SuperAdmin/dashboard.view')}} </a></li>
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('branch_admin.course.index') }}">{{ __('Admin/dashboard.view')}} </a></li>
                 </ul>
             </div>
         </li>

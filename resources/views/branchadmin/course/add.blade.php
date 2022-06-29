@@ -71,13 +71,13 @@
     </style>
 @endsection
 
-@include('superadmin.course.scripts')
+@include('admin.course.scripts')
 <div class="col-12 grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
             <div style="text-align: center;">
-                <h4 class="card-title">@lang('SuperAdmin/backend.add_course') </h4>
-                <change>{{__('SuperAdmin/backend.in_english')}}</change>
+                <h4 class="card-title">@lang('Admin/backend.add_course') </h4>
+                <change>{{__('Admin/backend.in_english')}}</change>
             </div>
 
             @include('superadmin.include.alert')
@@ -85,12 +85,12 @@
                 <ul class="lang text-right current_page_itemm">
                     <li class="current_page_item selected">
                         <a class="" href="#" onclick="changeLanguage('english', 'arabic')">
-                            <img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('SuperAdmin/backend.english')}}
+                            <img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('Admin/backend.english')}}
                         </a>
                     </li>
                     <li>
                         <a href="#" onclick="changeLanguage('arabic', 'english')"; fillForm('form1', 'form2')">
-                            <img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('SuperAdmin/backend.arabic')}}
+                            <img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('Admin/backend.arabic')}}
                         </a>
                     </li>
                 </ul>
@@ -98,7 +98,7 @@
 
             <div id="show_form"></div>
 
-            <form class="forms-sample" method="POST" action="{{route("superadmin.course.store")}}" id="forms">
+            <form class="forms-sample" method="POST" action="{{route("admin.course.store")}}" id="forms">
                 {{csrf_field()}}
                 <input hidden name="about_program" id="about_program_value">
                 <input hidden name="about_courier" id="about_courier_value">
@@ -109,7 +109,7 @@
                     <div class="row">
                         <!--popup_end-->
                         <div class="col-md-4">
-                            <label for="program_language">{{__('SuperAdmin/backend.choose_lang')}}:
+                            <label for="program_language">{{__('Admin/backend.choose_lang')}}:
                                 <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#LanguageModal" aria-hidden="true"></i>
                                 <i class="fa fa-trash pl-3" onclick="delete_language()" aria-hidden="true"></i>
                             </label>
@@ -121,7 +121,7 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label for="program_language">@lang('SuperAdmin/backend.choose_study_mode'):<i
+                            <label for="program_language">@lang('Admin/backend.choose_study_mode'):<i
                                   class="fa fa-plus pl-3"
                                     data-toggle="modal"
                                     data-target="#StudymodeModal"
@@ -136,7 +136,7 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label for="program_language">{{__('SuperAdmin/backend.choose_program_type')}}:<i
+                            <label for="program_language">{{__('Admin/backend.choose_program_type')}}:<i
                                   class="fa fa-plus pl-3"
                                     data-toggle="modal"
                                     data-target="#ProgramTypeModal"
@@ -151,9 +151,9 @@
                         </div>
 
                         <div class="col-md-4 mt-3">
-                            <label for="name">{{__('SuperAdmin/backend.choose_school')}}:</label>
+                            <label for="name">{{__('Admin/backend.choose_school')}}:</label>
                             <select onchange="changeSchool(url_school_country_list, $(this).val())" class="form-control" id="name" name="school_id">
-                                <option value="">{{__('SuperAdmin/backend.select_school')}}</option>
+                                <option value="">{{__('Admin/backend.select_school')}}</option>
                                 @foreach($schools as $school)
                                     <option value="{{$school->unique_id}}">{{$school->name}}</option>
                                 @endforeach
@@ -164,15 +164,15 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <label for="country_name">{{__('SuperAdmin/backend.choose_country')}}:</label>
+                            <label for="country_name">{{__('Admin/backend.choose_country')}}:</label>
                             <select class="form-control" id="country_name" name="">
-                                <option>{{__('SuperAdmin/backend.select')}}</option>
+                                <option>{{__('Admin/backend.select')}}</option>
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label for="city_name">{{__('SuperAdmin/backend.choose_city')}}:</label>
+                            <label for="city_name">{{__('Admin/backend.choose_city')}}:</label>
                             <select class="form-control" id="city_name" name="">
-                                <option>{{__('SuperAdmin/backend.select')}}</option>
+                                <option>{{__('Admin/backend.select')}}</option>
 
                             </select>
                         </div>
@@ -181,24 +181,24 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <label for="branch">{{__('SuperAdmin/backend.add_branch_if_applicable')}}
+                            <label for="branch">{{__('Admin/backend.add_branch_if_applicable')}}
                                 <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#BranchModal" aria-hidden="true"></i>
                                 <i class="fa fa-trash pl-3" aria-hidden="true" onclick="deleteBranch()"></i>
                             </label>
                             <select name="branch[]" id="branch_choose" multiple="multiple" class="3col active2">
-                                <option value="Branch1">{{__('SuperAdmin/backend.select')}}</option>
+                                <option value="Branch1">{{__('Admin/backend.select')}}</option>
                             </select>
                         </div>
 
                         <div class="col-md-6 mt-3">
-                            <label for="choose_currency">{{__('SuperAdmin/backend.choose_currency')}}:</label>
+                            <label for="choose_currency">{{__('Admin/backend.choose_currency')}}:</label>
                             <select class="form-control" id="choose_currency" name="currency">
-                                <option>{{__('SuperAdmin/backend.USD')}}</option>
-                                <option>{{__('SuperAdmin/backend.GBP')}}</option>
-                                <option>{{__('SuperAdmin/backend.CAD')}}</option>
-                                <option>{{__('SuperAdmin/backend.AUS')}}</option>
-                                <option>{{__('SuperAdmin/backend.NZD')}}</option>
-                                <option>{{__('SuperAdmin/backend.EUR')}}</option>
+                                <option>{{__('Admin/backend.USD')}}</option>
+                                <option>{{__('Admin/backend.GBP')}}</option>
+                                <option>{{__('Admin/backend.CAD')}}</option>
+                                <option>{{__('Admin/backend.AUS')}}</option>
+                                <option>{{__('Admin/backend.NZD')}}</option>
+                                <option>{{__('Admin/backend.EUR')}}</option>
                             </select>
                             <br>
                             <br>
@@ -207,19 +207,19 @@
                         </div>
                     </div>
 
-                    <h2>{{__('SuperAdmin/backend.program_features')}}</h2>
+                    <h2>{{__('Admin/backend.program_features')}}</h2>
                     <br>
                     <div class="row">
                         <div class="col-md-4">
-                            <label for="program_name">@lang('SuperAdmin/backend.program_name') </label>
-                            <input class="form-control" type="text" name="program_name" placeholder="@lang('SuperAdmin/backend.program_name')">
+                            <label for="program_name">@lang('Admin/backend.program_name') </label>
+                            <input class="form-control" type="text" name="program_name" placeholder="@lang('Admin/backend.program_name')">
                         </div>
                         <div class="col-md-4">
-                            <label for="program_level_required">{{__('SuperAdmin/backend.level_required')}}:</label>
+                            <label for="program_level_required">{{__('Admin/backend.level_required')}}:</label>
                             <input class="form-control" type="text" name="program_level" placeholder="program level required">
                         </div>
                         <div class="col-md-4">
-                            <label for="lessons_per_week">{{__('SuperAdmin/backend.lessons_per_week')}}:</label>
+                            <label for="lessons_per_week">{{__('Admin/backend.lessons_per_week')}}:</label>
                             <input class="form-control" type="text" name="lessons_per_week" placeholder="lessons per week">
                             <br><br>
                         </div>
@@ -227,12 +227,12 @@
 
                     <div class="row">
                         <div class="col-md-4 mt-3">
-                            <label for="hours_per_week">{{__('SuperAdmin/backend.hours_per_week')}}:</label>
+                            <label for="hours_per_week">{{__('Admin/backend.hours_per_week')}}:</label>
                             <input class="form-control" type="text" name="hours_per_week" placeholder="hours per week">
                         </div>
 
                         <div class="col-md-4">
-                            <label for="program_language">{{__('SuperAdmin/backend.study_time')}}:
+                            <label for="program_language">{{__('Admin/backend.study_time')}}:
                                 <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#StudyTimeModal" aria-hidden="true"></i>
                                 <i onclick="deleteStudyTime()" class="fa fa-trash pl-3" aria-hidden="true"></i>
                             </label>
@@ -244,7 +244,7 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label for="course_start_day">{{__('SuperAdmin/backend.start_day_every')}}
+                            <label for="course_start_day">{{__('Admin/backend.start_day_every')}}
                                 <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#StarDayModal" aria-hidden="true"></i>
                                 <i onclick="deleteStartDay()" class="fa fa-trash pl-3" aria-hidden="true"></i>
                             </label>
@@ -268,30 +268,30 @@
 
                     <div id="clone_program_form0">
                         <div class="clone_program_with_clone_data">
-                            <h2>{{__('SuperAdmin/backend.program_cost')}}</h2>
+                            <h2>{{__('Admin/backend.program_cost')}}</h2>
                             <br>
 
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    <label for="program_name">{{__('SuperAdmin/backend.program_id')}}:</label>
+                                    <label for="program_name">{{__('Admin/backend.program_id')}}:</label>
                                     <input readonly class="form-control" value="{{time().rand(00,99)}}" type="text" id="program_id" name="program_id[]">
                                 </div>
                                 <br>
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <label>{{__('SuperAdmin/backend.program_registration_free')}}:</label>
-                                        <input class="form-control" type="text" name="program_registration_fee[]" placeholder="{{__('SuperAdmin/backend.program_registration_free')}}">
+                                        <label>{{__('Admin/backend.program_registration_free')}}:</label>
+                                        <input class="form-control" type="text" name="program_registration_fee[]" placeholder="{{__('Admin/backend.program_registration_free')}}">
                                     </div>
                                     <div class="col-md-4">
                                         <label>Program-duration: </label>
-                                        <input class="form-control" type="text" name="program_duration[]" id="gotilla" placeholder="{{__('SuperAdmin/backend.if_program_duration_=X_weeks+_get_free _Program_Registration_fee')}}">
+                                        <input class="form-control" type="text" name="program_duration[]" id="gotilla" placeholder="{{__('Admin/backend.if_program_duration_=X_weeks+_get_free _Program_Registration_fee')}}">
                                     </div>
                                     <div class="col-md-4"></div>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label for="Program_age_range">{{__('SuperAdmin/backend.age_range')}}:<i
+                                <label for="Program_age_range">{{__('Admin/backend.age_range')}}:<i
                                       class="fa fa-plus pl-3" data-toggle="modal"
                                         data-target="#ProgramAgeRangeModal"
                                         aria-hidden="true"></i><i
@@ -309,7 +309,7 @@
                                     </div>
 
                                     <div class="col-md-4">
-                                    <!--<input class="form-control" type="text" name="max_program_age_range" placeholder="{{__('SuperAdmin/backend.max_age')}}">-->
+                                    <!--<input class="form-control" type="text" name="max_program_age_range" placeholder="{{__('Admin/backend.max_age')}}">-->
                                     </div>
                                     <div class="col-md-4"></div>
                                 </div>
@@ -318,8 +318,8 @@
 
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label>{{__('SuperAdmin/backend.courier_fee')}}:</label>
-                                    <input type="text" class="form-control" name="courier_fee[]" placeholder="{{__('SuperAdmin/backend.courier_fee')}}"><br><br>
+                                    <label>{{__('Admin/backend.courier_fee')}}:</label>
+                                    <input type="text" class="form-control" name="courier_fee[]" placeholder="{{__('Admin/backend.courier_fee')}}"><br><br>
                                 </div>
                             </div>
 
@@ -334,27 +334,27 @@
 
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label>@lang('SuperAdmin/backend.program_cost'):</label>
-                                    <input class="form-control" type="text" name="program_cost[]" placeholder="{{__('SuperAdmin/backend.program_cost')}}">
+                                    <label>@lang('Admin/backend.program_cost'):</label>
+                                    <input class="form-control" type="text" name="program_cost[]" placeholder="{{__('Admin/backend.program_cost')}}">
                                 </div>
                                 <div class="col-md-4">
-                                    <label>@lang('SuperAdmin/backend.program_duration_start'):</label>
-                                    <input class="form-control" type="text" name="program_duration_start[]" placeholder="{{__('SuperAdmin/backend.program_duration_start')}}">
+                                    <label>@lang('Admin/backend.program_duration_start'):</label>
+                                    <input class="form-control" type="text" name="program_duration_start[]" placeholder="{{__('Admin/backend.program_duration_start')}}">
                                 </div>
                                 <div class="col-md-4">
-                                    <label>@lang('SuperAdmin/backend.program_duration_end'):</label>
-                                    <input class="form-control" type="text" name="program_duration_end[]" placeholder="{{__('SuperAdmin/backend.program_duration_end')}}">
+                                    <label>@lang('Admin/backend.program_duration_end'):</label>
+                                    <input class="form-control" type="text" name="program_duration_end[]" placeholder="{{__('Admin/backend.program_duration_end')}}">
                                 </div>
                             </div>
                             <br><br>
 
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label>@lang('SuperAdmin/backend.program_start_date'):</label>
+                                    <label>@lang('Admin/backend.program_start_date'):</label>
                                     <input class="form-control" type="date" name="program_start_date[]">
                                 </div>
                                 <div class="col-md-4">
-                                    <label>@lang('SuperAdmin/backend.program_end_date'):</label>
+                                    <label>@lang('Admin/backend.program_end_date'):</label>
                                     <input class="form-control" type="date" name="program_end_date[]">
                                 </div>
                                 <div class="col-md-4">
@@ -364,18 +364,18 @@
                             <br><br>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label>@lang('SuperAdmin/backend.discount_per_week'):</label>
-                                    <input class="form-control" type="text" name="discount_per_week[]" placeholder="{{__('SuperAdmin/backend.discount_per_week')}}">
+                                    <label>@lang('Admin/backend.discount_per_week'):</label>
+                                    <input class="form-control" type="text" name="discount_per_week[]" placeholder="{{__('Admin/backend.discount_per_week')}}">
                                 </div>
                                 <div class="col-md-4">
-                                    <label>@lang('SuperAdmin/backend.discount_symbol'):</label>
+                                    <label>@lang('Admin/backend.discount_symbol'):</label>
                                     <select class="form-control" name="discount_symbol[]">
                                         <option>%</option>
                                         <option>-</option>
                                     </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <label>@lang('SuperAdmin/backend.discount_start_date'):</label>
+                                    <label>@lang('Admin/backend.discount_start_date'):</label>
                                     <input class="form-control" type="date" name="discount_start_date[]">
                                 </div>
                             </div>
@@ -383,7 +383,7 @@
 
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label>@lang('SuperAdmin/backend.discount_end_date'):</label>
+                                    <label>@lang('Admin/backend.discount_end_date'):</label>
                                     <input class="form-control" type="date" name="discount_end_date[]">
                                     <br><br>
                                 </div>
@@ -391,20 +391,20 @@
 
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label>@lang('SuperAdmin/backend.x_week_selected'):</label>
-                                    <input class="form-control" type="text" name="x_week_selected[]" placeholder="{{__('SuperAdmin/backend.every_week')}}">
+                                    <label>@lang('Admin/backend.x_week_selected'):</label>
+                                    <input class="form-control" type="text" name="x_week_selected[]" placeholder="{{__('Admin/backend.every_week')}}">
                                 </div>
                                 <div class="col-md-4">
-                                    <label>@lang('SuperAdmin/backend.free_week'):</label>
+                                    <label>@lang('Admin/backend.free_week'):</label>
                                     <select class="form-control" name="how_many_week_free[]">
-                                        <option value='1'>{{__('SuperAdmin/backend.1_week_free')}} </option>
-                                        <option value='2'>{{__('SuperAdmin/backend.2_week_free')}}</option>
-                                        <option value='3'>{{__('SuperAdmin/backend.3_week_free')}}</option>
-                                        <option value='4'>{{__('SuperAdmin/backend.4_week_free')}}</option>
+                                        <option value='1'>{{__('Admin/backend.1_week_free')}} </option>
+                                        <option value='2'>{{__('Admin/backend.2_week_free')}}</option>
+                                        <option value='3'>{{__('Admin/backend.3_week_free')}}</option>
+                                        <option value='4'>{{__('Admin/backend.4_week_free')}}</option>
                                     </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <label>@lang('SuperAdmin/backend.x_week_start_date'):</label>
+                                    <label>@lang('Admin/backend.x_week_start_date'):</label>
                                     <input class="form-control" type="date" name="x_week_start_date[]">
                                 </div>
                             </div>
@@ -412,7 +412,7 @@
 
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label>@lang('SuperAdmin/backend.x_week_end_date'):</label>
+                                    <label>@lang('Admin/backend.x_week_end_date'):</label>
                                     <input class="form-control" type="date" name="x_week_end_date[]">
                                 </div>
                             </div>
@@ -420,15 +420,15 @@
                             
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label>@lang('SuperAdmin/backend.summer_fee'):</label>
-                                    <input class="form-control" type="text" name="program_summer_fee_per_week[]" placeholder="{{__('SuperAdmin/backend.summer_fee_per_week')}}">
+                                    <label>@lang('Admin/backend.summer_fee'):</label>
+                                    <input class="form-control" type="text" name="program_summer_fee_per_week[]" placeholder="{{__('Admin/backend.summer_fee_per_week')}}">
                                 </div>
                                 <div class="col-md-4">
-                                    <label>@lang('SuperAdmin/backend.summer_fee_start_date'):</label>
+                                    <label>@lang('Admin/backend.summer_fee_start_date'):</label>
                                     <input class="form-control" type="date" name="program_summer_fee_start_date[]">
                                 </div>
                                 <div class="col-md-4">
-                                    <label>@lang('SuperAdmin/backend.summer_fee_end_date'):</label>
+                                    <label>@lang('Admin/backend.summer_fee_end_date'):</label>
                                     <input class="form-control" type="date" name="program_summer_fee_end_date[]">
                                 </div>
                             </div>
@@ -436,15 +436,15 @@
 
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label>@lang('SuperAdmin/backend.peak_time_fee_per_week'):</label>
-                                    <input class="form-control" type="text" name="program_peak_time_fee_per_week[]" placeholder="{{__('SuperAdmin/backend.peak_time_fee_per_week')}}">
+                                    <label>@lang('Admin/backend.peak_time_fee_per_week'):</label>
+                                    <input class="form-control" type="text" name="program_peak_time_fee_per_week[]" placeholder="{{__('Admin/backend.peak_time_fee_per_week')}}">
                                 </div>
                                 <div class="col-md-4">
-                                    <label>@lang('SuperAdmin/backend.peak_time_start_date') :</label>
+                                    <label>@lang('Admin/backend.peak_time_start_date') :</label>
                                     <input class="form-control" type="date" name="program_peak_time_start_date[]">
                                 </div>
                                 <div class="col-md-4">
-                                    <label>@lang('SuperAdmin/backend.peak_time_end_date') :</label>
+                                    <label>@lang('Admin/backend.peak_time_end_date') :</label>
                                     <input class="form-control" type="date" name="program_peak_time_end_date[]">
                                 </div>
                             </div>
@@ -466,7 +466,7 @@
                 <br>
                 <br>
                 <script>
-                    course_url_store = "{{route('superadmin.course.store')}}";
+                    course_url_store = "{{route('admin.course.store')}}";
                 </script>
 
                 <a onclick="getContent('about_program', 'about_program_value'); getContent('about_courier', 'about_courier_value'); submitCourseForm($(this));"
@@ -477,7 +477,7 @@
     </div>
 </div>
 
-@include('superadmin.course.modals')
+@include('admin.course.modals')
 @endsection
 
 

@@ -82,7 +82,7 @@
                     <input hidden="" name="to_email" value="{{\App\Models\User::where('user_type', 'super_admin')->first()['email']}}">
                     <input hidden="" name="user_id" value="{{\App\Models\User::where('user_type', 'super_admin')->first()['id']}}">
                 </div>
-                <button type="button" onclick="getContent('textareaid2', 'messageid2'); submitFormAction('ToSchoolAdminMessage')" class="btn btn-primary mt-1 choose">{{__('SuperAdmin/backend.submit')}}</button>
+                <button type="button" onclick="getContent('textareaid2', 'messageid2'); submitFormAction('ToSchoolAdminMessage')" class="btn btn-primary mt-1 choose">{{__('Admin/backend.submit')}}</button>
             </form>
         </div>
     </div>

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\SuperAdmin\SchoolAdminCourseEditPermissions;
+
 use Illuminate\Http\Request;
 
 class AssignCoursePermissionToUserService
@@ -42,11 +43,6 @@ class AssignCoursePermissionToUserService
 
                 $permissions->save();
             } else {
-                /*SchoolAdminCourseEditPermissions::updateOrCreate(['user_id', $request->users[$i]], [
-                    'course_id' => $request->id,
-                    'user_id' => $request->users[$i],
-                    'is_true' => 1
-                ]);*/
                 SchoolAdminCourseEditPermissions::updateOrCreate(['course_id' => $request->id, 'user_id' => $request->users[$i]], [
                     'course_id' => $request->id,
                     'user_id' => $request->users[$i],
@@ -55,7 +51,7 @@ class AssignCoursePermissionToUserService
             }
         }
 
-        toastr()->success(__('SuperAdmin/backend.data_saved_successfully'));
+        toastr()->success(__('Admin/backend.data_saved_successfully'));
 
         return back();
     }

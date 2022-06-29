@@ -1,7 +1,7 @@
-@extends('superadmin.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title')
-    {{__('SuperAdmin/backend.front_pages')}}
+    {{__('Admin/backend.front_pages')}}
 @endsection
 
 @section('content')
@@ -9,10 +9,10 @@
         <div class="card">
             <div class="card-body">
                 <div style="text-align: center;">
-                    <h1 class="card-title">{{__('SuperAdmin/backend.front_pages')}}</h1>
+                    <h1 class="card-title">{{__('Admin/backend.front_pages')}}</h1>
                 </div>
                 <a href="{{route('superadmin.setting.front_page.create')}}" type="button" class="btn btn-primary btn-sm pull-right">
-                    <i class="fa fa-plus"></i>&nbsp;{{__('SuperAdmin/backend.add')}}
+                    <i class="fa fa-plus"></i>&nbsp;{{__('Admin/backend.add')}}
                 </a>
             </div>
         </div>
@@ -25,12 +25,12 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>{{__('SuperAdmin/backend.title')}}</th>
-                            <th>{{__('SuperAdmin/backend.slug')}}</th>
-                            <th>{{__('SuperAdmin/backend.route')}}</th>
-                            <th>{{__('SuperAdmin/backend.display')}}</th>
-                            <th>{{__('SuperAdmin/backend.created_on')}}</th>
-                            <th>{{__('SuperAdmin/backend.action')}}</th>
+                            <th>{{__('Admin/backend.title')}}</th>
+                            <th>{{__('Admin/backend.slug')}}</th>
+                            <th>{{__('Admin/backend.route')}}</th>
+                            <th>{{__('Admin/backend.display')}}</th>
+                            <th>{{__('Admin/backend.created_on')}}</th>
+                            <th>{{__('Admin/backend.action')}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -61,12 +61,12 @@
                                         @if ($front_page->display)
                                             <form method="post" action="{{route('superadmin.setting.front_page.pause', $front_page->id)}}">
                                                 @csrf
-                                                <button onclick="return confirm('{{__('SuperAdmin/backend.are_you_sure_you_wanna_pause')}}')" class="btn btn-secondary btn-sm fa fa-pause"></button>
+                                                <button onclick="return confirm('{{__('Admin/backend.are_you_sure_you_wanna_pause')}}')" class="btn btn-secondary btn-sm fa fa-pause"></button>
                                             </form>
                                         @else
                                             <form method="post" action="{{route('superadmin.setting.front_page.play', $front_page->id)}}">
                                                 @csrf
-                                                <button onclick="return confirm('{{__('SuperAdmin/backend.are_you_sure_you_wanna_play')}}')" class="btn btn-success btn-sm fa fa-play"></button>
+                                                <button onclick="return confirm('{{__('Admin/backend.are_you_sure_you_wanna_play')}}')" class="btn btn-success btn-sm fa fa-play"></button>
                                             </form>
                                         @endif
 

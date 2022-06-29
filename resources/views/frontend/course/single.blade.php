@@ -148,7 +148,7 @@
                 <div class="row">
                     <div class="form-group col-md-6">
                         <input type="hidden" name="school_id" value="{{ $school->id }}">
-                        <label for="study_mode">{{__('SuperAdmin/backend.study_mode')}}:</label>
+                        <label for="study_mode">{{__('Admin/backend.study_mode')}}:</label>
                         <select class="form-control" id="study_mode" name="study_mode" required>
                             <option value="" selected>{{__('Frontend.select_mode')}}</option>
                             @foreach ($study_modes as $study_mode)

@@ -4,18 +4,18 @@
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body table table-responsive">
-                <div style="text-align: center;"><h1 class="card-title">@lang('SuperAdmin/backend.rating_details')</h1></div>
+                <div style="text-align: center;"><h1 class="card-title">@lang('Admin/backend.rating_details')</h1></div>
 
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th> @lang('SuperAdmin/backend.name')</th>
-                            <th> @lang('SuperAdmin/backend.comments')</th>
-                            <th> @lang('SuperAdmin/backend.user_name')</th>
-                            <th>{{__('SuperAdmin/backend.rated')}}</th>
-                            <th>{{__('SuperAdmin/backend.created_on')}}</th>
-                            <th>{{__('SuperAdmin/backend.action')}}</th>
+                            <th> @lang('Admin/backend.name')</th>
+                            <th> @lang('Admin/backend.comments')</th>
+                            <th> @lang('Admin/backend.user_name')</th>
+                            <th>{{__('Admin/backend.rated')}}</th>
+                            <th>{{__('Admin/backend.created_on')}}</th>
+                            <th>{{__('Admin/backend.action')}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -32,7 +32,7 @@
                                         @if(!$rating->approved)
                                             <a href="{{route('branch_admin.rating.approve', $rating->id)}}" class="btn btn-info btn-sm fa fa-check"></a>
                                         @else
-                                            <button type="button" class="btn btn-success btn-sm">{{__('SuperAdmin/backend.approved')}}</button>
+                                            <button type="button" class="btn btn-success btn-sm">{{__('Admin/backend.approved')}}</button>
                                         @endif
                                     </div>
                                 </td>
