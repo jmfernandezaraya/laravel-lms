@@ -27,7 +27,7 @@
                     </ul>
                 </div>
 
-                @include('admin.include.alert')
+                @include('common.include.alert')
             </div>
         </div>
     </div>
@@ -35,7 +35,7 @@
     <div class="page-content">
         <div class="card">
             <div class="card-body">
-                <form id ="formaction" class="forms-sample" method="post" action="{{route('admin.blog.update', $blog->id)}}">
+                <form id ="formaction" class="forms-sample" method="post" action="{{ auth('superadmin')->check() ? route('superadmin.blog.update', $blog->id) : route('schooladmin.blog.update', $blog->id) }}">
                     {{csrf_field()}}
 
                     <div id="form1">

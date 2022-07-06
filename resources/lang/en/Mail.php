@@ -19,6 +19,9 @@ Link for Study Abroad',
     'customer_name' => 'Customer Name',
     'name' => 'Name',
     'email' => 'Email',
+    'password' => 'Password',
+    'dashboard_link' => 'Dashboard Link',
+    'go_dashboard' => 'Go Dashboard',
     'customer' => 'Customer',
     'customer_no' => 'Customer #',
     'qutation' => 'Qutation',
@@ -64,7 +67,8 @@ Link for Study Abroad',
     'total_amount_paid' => 'Total Amount Paid',
     'total_balance_due' => 'Total Balance Due',
 
-    'course_booked' => [
-        'subject' => 'Registration Confirmation "Link for Study Abroad"',
+    'subject' => [
+        'course_booked' => 'Registration Confirmation "Link for Study Abroad"',
+        'admin_created' => 'Verify Admin Account',
     ],
 ];

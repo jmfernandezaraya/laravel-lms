@@ -12,7 +12,7 @@
                     <h1 class="card-title">{{__('Admin/backend.edit_rating_review')}}</h1>
                 </div>
 
-                @include('admin.include.alert')
+                @include('common.include.alert')
             </div>
         </div>
     </div>
@@ -20,7 +20,7 @@
     <div class="page-content">
         <div class="card">
             <div class="card-body">
-                <form id="reviewForm" class="forms-sample" method="post" action="{{route('admin.review.update', $review->id)}}">
+                <form id="reviewForm" class="forms-sample" method="post" action="{{ auth('superadmin')->check() ? route('superadmin.review.update', $review->id) : route('schooladmin.review.update', $review->id) }}">
                     {{csrf_field()}}
                     @method('PUT')
                     
@@ -55,34 +55,38 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
-                            <h3>{{__('Admin/backend.accommodation')}}</h3>
+                        @if ($course_application && $course_application->accommodation_id)
+                            <div class="col-md-4">
+                                <h3>{{__('Admin/backend.accommodation')}}</h3>
 
-                            <div class="form-group">
-                                <label for="level_of_cleanliness" class="col-form-label">{{__('Admin/backend.level_of_cleanliness')}}</label>
-                                <input type="hidden" name="level_cleanliness" value="{{ $review ? $review->level_cleanliness : 0 }}" />
-                                <div class="rating-input level-of-cleanliness" data-name="level_cleanliness" data-value="{{ $review ? floatval($review->level_cleanliness) : 0 }}"></div>
+                                <div class="form-group">
+                                    <label for="level_of_cleanliness" class="col-form-label">{{__('Admin/backend.level_of_cleanliness')}}</label>
+                                    <input type="hidden" name="level_cleanliness" value="{{ $review ? $review->level_cleanliness : 0 }}" />
+                                    <div class="rating-input level-of-cleanliness" data-name="level_cleanliness" data-value="{{ $review ? floatval($review->level_cleanliness) : 0 }}"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="distance_accommodation_school" class="col-form-label">{{__('Admin/backend.distance_accommodation_school')}}</label>
+                                    <input type="hidden" name="distance_accommodation_school" value="{{ $review ? $review->distance_accommodation_school : 0 }}" />
+                                    <div class="rating-input distance-accommodation-school" data-name="distance_accommodation_school" data-value="{{ $review ? floatval($review->distance_accommodation_school) : 0 }}"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="satisfied_accommodation" class="col-form-label">{{__('Admin/backend.satisfied_accommodation')}}</label>
+                                    <input type="hidden" name="satisfied_accommodation" value="{{ $review ? $review->satisfied_accommodation : 0 }}" />
+                                    <div class="rating-input satisfied-accommodation" data-name="satisfied_accommodation" data-value="{{ $review ? floatval($review->satisfied_accommodation) : 0 }}"></div>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="distance_accommodation_school" class="col-form-label">{{__('Admin/backend.distance_accommodation_school')}}</label>
-                                <input type="hidden" name="distance_accommodation_school" value="{{ $review ? $review->distance_accommodation_school : 0 }}" />
-                                <div class="rating-input distance-accommodation-school" data-name="distance_accommodation_school" data-value="{{ $review ? floatval($review->distance_accommodation_school) : 0 }}"></div>
-                            </div>
-                            <div class="form-group">
-                                <label for="satisfied_accommodation" class="col-form-label">{{__('Admin/backend.satisfied_accommodation')}}</label>
-                                <input type="hidden" name="satisfied_accommodation" value="{{ $review ? $review->satisfied_accommodation : 0 }}" />
-                                <div class="rating-input satisfied-accommodation" data-name="satisfied_accommodation" data-value="{{ $review ? floatval($review->satisfied_accommodation) : 0 }}"></div>
-                            </div>
-                        </div>
+                        @endif
 
                         <div class="col-md-4">
                             <h3>{{__('Admin/backend.others')}}</h3>
                             
-                            <div class="form-group">
-                                <label for="airport_transfer" class="col-form-label">{{__('Admin/backend.airport_transfer')}}</label>
-                                <input type="hidden" name="airport_transfer" value="{{ $review ? $review->airport_transfer : 0 }}" />
-                                <div class="rating-input airport-transfer" data-name="airport_transfer" data-value="{{ $review ? floatval($review->airport_transfer) : 0 }}"></div>
-                            </div>
+                            @if ($course_application && $course_application->airport_id)
+                                <div class="form-group">
+                                    <label for="airport_transfer" class="col-form-label">{{__('Admin/backend.airport_transfer')}}</label>
+                                    <input type="hidden" name="airport_transfer" value="{{ $review ? $review->airport_transfer : 0 }}" />
+                                    <div class="rating-input airport-transfer" data-name="airport_transfer" data-value="{{ $review ? floatval($review->airport_transfer) : 0 }}"></div>
+                                </div>
+                            @endif
                             <div class="form-group">
                                 <label for="city_activities" class="col-form-label">{{__('Admin/backend.city_activities')}}</label>
                                 <input type="hidden" name="city_activities" value="{{ $review ? $review->city_activities : 0 }}" />

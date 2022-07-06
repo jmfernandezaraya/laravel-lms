@@ -26,7 +26,7 @@
                     <center><h4 class="card-title">{{__('Admin/backend.add_branch_admin')}}</h4>
                         <change>{{__('Admin/backend.in_english')}}</change>
                     </center>
-                    @include('superadmin.include.alert')
+                    @include('common.include.alert')
                     <div id="menu">
                         <ul class="lang text-right current_page_itemm">
                             <li class="current_page_item selected">
@@ -124,7 +124,7 @@
                     <center><h4 class="card-title">{{__('Admin/backend.add_branch_admin')}}</h4>
                         <change>{{__('Admin/backend.in_arabic')}}</change>
                     </center>
-                    @include('superadmin.include.alert')
+                    @include('common.include.alert')
                     <div id="menu">
                         <ul class="lang text-right current_page_itemm">
                             <li class="current_page_item selected">

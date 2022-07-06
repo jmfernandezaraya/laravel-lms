@@ -47,7 +47,7 @@ class CourseBooked extends Mailable
             'customer_name' => $this->request->locale == 'en' ? ($this->request->user->first_name_en . ' ' . $this->request->user->last_name_en) : ($this->request->user->first_name_ar . ' ' . $this->request->user->last_name_ar),
             'customer_no' => $this->request->user->id,
             'website_link' => url('/')
-        ]])->subject(__('Mail.course_booked.subject'));
+        ]])->subject(__('Mail.subject.course_booked'));
         $mail = $this->file != null ? $mail->attach($this->file) : $mail;
         $mail->attachData($pdf->output(), 'Course Booked #' . $this->request->id . '.pdf');
 

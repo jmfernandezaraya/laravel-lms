@@ -117,7 +117,7 @@
         @csrf
         <div class="heading">visa form</div>
         <br>
-        <br> @include('admin.include.alert')
+        <br> @include('common.include.alert')
         <div class="left">
             <div class="form-row">
                 <div class="form-group col-md-6">

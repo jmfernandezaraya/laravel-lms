@@ -21,7 +21,7 @@
         <div class="inter-full mt-3">
             <div class="course-details border-bottom">
 
-                @include('schooladmin.include.alert')
+                @include('common.include.alert')
 
                 <form id="course_reversation_confirm" enctype="multipart/form-data" action="{{route('frontend.course.reservation_confirm')}}" method="POST">
                     {{csrf_field()}}

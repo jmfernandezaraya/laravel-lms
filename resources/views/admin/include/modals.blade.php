@@ -307,7 +307,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="form_apply" method="post" action="{{route('admin.add_applying_from')}}">
+            <form id="form_apply" method="post" action="{{ auth('superadmin')->check() ? route('superadmin.add_applying_from') : route('schooladmin.add_applying_from') }}">
                 {{csrf_field()}}
                 <div class="modal-body">
                     <div class="form-group">
@@ -365,7 +365,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" id="application_form" action="{{route('admin.add_application_center')}}">
+            <form method="post" id="application_form" action="{{ auth('superadmin')->check() ? route('superadmin.add_application_center') : route('schooladmin.add_application_center') }}">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
@@ -390,7 +390,7 @@
 <div class="modal fade" id="nationality_modal" tabindex="-1" role="dialog" aria-labelledby="NationalityFromModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form id='add_nationailty_form' method="post" action="{{route('admin.add_nationality')}}">
+            <form id='add_nationailty_form' method="post" action="{{ auth('superadmin')->check() ? route('superadmin.add_nationality') : route('schooladmin.add_nationality') }}">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="NationalityFromModalLabel">{{__('Admin/backend.nationality')}}</h5>
@@ -427,7 +427,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="form_travel" action="{{route('admin.add_travel')}}" method="POST">
+            <form id="form_travel" action="{{ auth('superadmin')->check() ? route('superadmin.add_travel') : route('schooladmin.add_travel') }}" method="POST">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
@@ -458,7 +458,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" id="type_of_visa_form" action="{{route('admin.add_type_of_visa')}}">
+            <form method="post" id="type_of_visa_form" action="{{ auth('superadmin')->check() ? route('superadmin.add_type_of_visa') : route('schooladmin.add_type_of_visa') }}">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
@@ -483,7 +483,7 @@
 <div class="modal fade" id="formsaveModal" tabindex="-1" role="dialog" aria-labelledby="VisaModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form method="POST" action="{{route('admin.visa.store')}}">
+            <form method="POST" action="{{ auth('superadmin')->check() ? route('superadmin.visa.store') : route('schooladmin.visa.store') }}">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="VisaModalLabel">{{__('Admin/backend.save_form_name')}}</h5>
@@ -520,7 +520,7 @@
 <div class="modal fade" id="SchoolNationalityModal" tabindex="-1" role="dialog" aria-labelledby="SchoolNationalityModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form id="add_school_nationailty_form" method="post" action="{{route('admin.school.nationality.add')}}">
+            <form id="add_school_nationailty_form" method="post" action="{{ auth('superadmin')->check() ? route('superadmin.school.nationality.add') : route('schooladmin.school.nationality.add') }}">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="SchoolNationalityModalLabel">{{__('Admin/backend.add')}}</h5>

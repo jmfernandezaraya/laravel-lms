@@ -74,6 +74,6 @@ class Kernel extends HttpKernel
         'branch_admin' => BranchAdmin::class,
         'paymentauth' => PaymentAuth::class,
         'course.register' => SaveCourseDetailsMiddleware::class,
-        'emailverification' => \App\Http\Middleware\EmailVerification::class,
+        'email.verification' => \App\Http\Middleware\EmailVerification::class,
     ];
 }

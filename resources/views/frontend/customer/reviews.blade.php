@@ -47,30 +47,24 @@
                                         <p>
                                             <label>
                                                 {{__('Frontend.name')}}:
-                                                @if (app()->getLocale() == 'en')
-                                                    {{ $course_application->school->name }}
-                                                @else
-                                                    {{ $course_application->school->name_ar }}
+                                                @if ($course_application->school->name)
+                                                    {{ app()->getLocale() == 'en' ? $course_application->school->name->name : $course_application->school->name->name_ar }}
                                                 @endif
                                             </label>
                                         </p>
                                         <p>
                                             <label>
                                                 {{__('Frontend.city')}}:
-                                                @if (app()->getLocale() == 'en')
-                                                    {{ $course_application->school->city }}
-                                                @else
-                                                    {{ $course_application->school->city_ar }}
+                                                @if ($course_application->school->city)
+                                                    {{ app()->getLocale() == 'en' ? $course_application->school->city->name : $course_application->school->city->name_ar }}
                                                 @endif
                                             </label>
                                         </p>
                                         <p>
                                             <label>
                                                 {{__('Frontend.country')}}:
-                                                @if (app()->getLocale() == 'en')
-                                                    {{ $course_application->school->country }}
-                                                @else
-                                                    {{ $course_application->school->country_ar }}
+                                                @if ($course_application->school->country)
+                                                    {{ app()->getLocale() == 'en' ? $course_application->school->country->name : $course_application->school->country->name_ar }}
                                                 @endif
                                             </label>
                                         </p>

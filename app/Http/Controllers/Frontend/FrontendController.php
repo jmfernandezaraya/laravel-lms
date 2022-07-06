@@ -84,7 +84,9 @@ class FrontendController extends Controller
         $course_school_ids = [];
 
         $now = Carbon::now()->format('Y-m-d');
-        $courses = Course::with('coursePrograms')->where('display', true)->where('deleted', false)->get();
+        $courses = Course::with('school', 'coursePrograms')->whereHas('school', function($query) {
+                $query->where('is_active', true);
+            })->where('display', true)->where('deleted', false)->get();
         foreach ($courses as $course) {
             $course_programs = $course->coursePrograms;
             $course_has_discount_program = false;
@@ -107,6 +109,26 @@ class FrontendController extends Controller
 
         $languages = Choose_Language::whereIn('unique_id', $course_language_ids)->orderBy('name', 'asc')->get();
         $schools = School::with('courses.coursePrograms')->whereIn('id', $course_school_ids)->where('is_active', true)->get();
+        foreach ($schools as $school) {
+            $school->course = null;
+            $school->course_program = null;
+            $school->age_range = [ 'min_age' => 0, 'max_age' => 0 ];
+            $school->age_ranges = [];
+            foreach ($school->courses as $school_course) {
+                foreach ($school_course->coursePrograms as $school_course_program) {
+                    if ($school_course_program->discount_per_week != ' -' && $school_course_program->discount_per_week != ' %' && 
+                        (($school_course_program->discount_start_date <= $now && $school_course_program->discount_end_date >= $now)
+                        || ($school_course_program->x_week_selected && $school_course_program->x_week_start_date <= $now && $school_course_program->x_week_end_date >= $now))) {
+                        if ($school->course) {
+                            $school->course = $school_course;
+                            $school->course_program = $school_course_program;
+                            $school->age_range = getCourseProgramAgeRange($school->course_program->program_age_range);
+                        }
+                    }
+                    $school->age_ranges = array_unique(array_merge($school->age_ranges, Choose_Program_Age_Range::whereIn('unique_id', $school_course_program->program_age_range)->orderBy('age', 'asc')->pluck('age')->toArray()));
+                }
+            }
+        }
 
         $setting_value = [];
         $home_page = Setting::where('setting_key', 'home_page')->first();
@@ -115,6 +137,89 @@ class FrontendController extends Controller
         }
 
         return view('frontend.index', compact('setting_value', 'schools', 'languages'));
+    }
+
+    public function getCountryAges(Request $request)
+    {
+        $country_id = $request->id;
+        $course_programs = CourseProgram::with('course.school')
+            ->whereHas('course', function($query) use ($country_id) {
+                $query->where('country_id', $country_id)->where('display', true)->where('deleted', false)
+                    ->whereHas('school', function($sub_query) use ($country_id) {
+                        $sub_query->where('country_id', $country_id)->where('is_active', true);
+                    });
+                })
+            ->get();
+        $ages = [];
+        foreach ($course_programs as $course_program) {
+            $ages = array_unique(array_merge($ages, Choose_Program_Age_Range::whereIn('unique_id', $course_program->program_age_range)->orderBy('age', 'asc')->pluck('age')->toArray()));
+        }
+        
+        $data['ages_html'] = '';
+        foreach ($ages as $age) {
+            $data['ages_html'] .= "<option value='$age'>$age</option>";
+        }
+        
+        return response($data);
+    }
+
+    public function viewCountryPage(Request $request, $id)
+    {
+        $age = $request->query('age');
+        $age_unique_id = '';
+        if ($age) {
+            $choose_program_age_range = Choose_Program_Age_Range::where('age', $age)->first();
+            if ($choose_program_age_range) {
+                $age_unique_id = $choose_program_age_range->unique_id;
+            }
+        }
+
+        $ages = [];
+
+        $schools = [];
+        $country_schools = School::with('courses.coursePrograms')->where('country_id', $id)->where('is_active', true)->get();
+        foreach ($country_schools as $school) {
+            $school_flag = true;
+            if ($age_unique_id) {
+                $school_flag = false;
+                if ($school->courses) {
+                    foreach ($school->courses as $school_course) {
+                        foreach ($school_course->coursePrograms as $course_program) {
+                            if (in_array($age_unique_id, $course_program->program_age_range)) {
+                                $school_flag = true;
+                                $ages = array_unique(array_merge($ages, Choose_Program_Age_Range::whereIn('unique_id', $course_program->program_age_range)->orderBy('age', 'asc')->pluck('age')->toArray()));
+                            }
+                        }
+                    }
+                }
+            }
+            if ($school_flag) {
+                $schools[] = $school;
+            }
+        }
+        
+        $courses = [];
+        $country_courses = Course::with('school', 'coursePrograms', 'courseApplicationDetails.review')
+            ->whereHas('school', function($query) {
+                $query->where('is_active', true);
+            })->where('country_id', $id)->where('display', true)->where('deleted', false)->get();
+        foreach ($country_courses as $course) {
+            $course_flag = true;
+            if ($age_unique_id) {
+                $course_flag = false;
+                foreach ($course->coursePrograms as $course_program) {
+                    if (in_array($age_unique_id, $course_program->program_age_range)) {
+                        $course_flag = true;
+                        break;
+                    }
+                }
+            }
+            if ($course_flag) {
+                $courses[] = $course;
+            }
+        }
+        
+        return view('frontend.country', compact('id', 'schools', 'courses', 'ages'));
     }
 
     /**
@@ -126,8 +231,9 @@ class FrontendController extends Controller
         \Mail::to(env('MAIL_TO_ADDRESS'))->send(new EnquiryMail($request));
 
         Enquiry::create($request->validated());
-        $thankyou = __('Frontend.message_sent_thank_you');
-        toastr()->success($thankyou);
+        
+        toastr()->success(__('Frontend.message_sent_thank_you'));
+
         return back();
     }
 
@@ -229,7 +335,9 @@ class FrontendController extends Controller
 
         $course_details = (object)\Session::get('course_details') ?? $request;
 
-        $course = isset($course_details->program_id) ? Course::where('unique_id', '' . $course_details->program_id)->first() : '';
+        if (!isset($course_details->program_id)) return redirect()->route('frontend.course');
+
+        $course = Course::where('unique_id', '' . $course_details->program_id)->first();
         $course_country = $course ? $course->country_id : '';
 
         $course_program = CourseProgram::where('unique_id', '' . $course_details->program_unique_id)->first();
@@ -246,7 +354,7 @@ class FrontendController extends Controller
         $course_custodian = CourseCustodian::where('course_unique_id', '' . $course_details->program_unique_id)->where('age_range', 'LIKE', '%' . $custodian_under_age . '%')->first();
         $age_ranges = $course_custodian ? $course_custodian->age_range : [];
         $course_custodian_age_range = getCourseAccommodationAgeRange($age_ranges);
-        $custodian_min_age = $course_custodian_age_range['min_age']; $custodian_max_age = $course_custodian_age_range['max_age'];        
+        $custodian_min_age = $course_custodian_age_range['min_age']; $custodian_max_age = $course_custodian_age_range['max_age'];
 
         return view('frontend.course.register', compact('course_details', 'course_country', 'min_age', 'max_age', 'accommodation_min_age', 'accommodation_max_age', 'custodian_min_age', 'custodian_max_age'));
     }
@@ -806,13 +914,13 @@ class FrontendController extends Controller
             $to_be_saved['registration_cancelation_conditions_ar'] = $registration_cancel_page ? $registration_cancel_page->content_ar : '';
             $mail_pdf_data['registration_cancelation_conditions'] = app()->getLocale() == 'en' ? $to_be_saved['registration_cancelation_conditions'] : $to_be_saved['registration_cancelation_conditions_ar'];
             
-            // Session::forget('accom_unique_id');
-            // Session::forget('airport_id');
-            // Session::forget('medical_id');
+            Session::forget('accom_unique_id');
+            Session::forget('airport_id');
+            Session::forget('medical_id');
 
-            // Session::forget('course_details');
-            // Session::forget('course_register_details');
-            // Session::forget('course_reservation_details');
+            Session::forget('course_details');
+            Session::forget('course_register_details');
+            Session::forget('course_reservation_details');
 
             $mail_pdf_data['program_start_date'] = Carbon::create($course_details->date_selected)->format('d-m-Y');
             $mail_pdf_data['accommodation_start_date'] = $mail_pdf_data['medical_start_date'] = Carbon::create($course_details->date_selected)->subDay()->format('d-m-Y');
@@ -1161,7 +1269,9 @@ class FrontendController extends Controller
         $result = '<option value="">' . __('Frontend.please_choose') . '</option>';
         if ($request->language) {
             $age_range_ids = [];
-            $courses = Course::with('coursePrograms')->where('display', true)->where('deleted', false)->get();
+            $courses = Course::with('school', 'coursePrograms')->whereHas('school', function($query) {
+                    $query->where('is_active', true);
+                })->where('display', true)->where('deleted', false)->get();
             foreach ($courses as $course) {
                 $course_programs = $course->coursePrograms;
                 if (in_array($request->language, $course->language)) {
@@ -1185,7 +1295,9 @@ class FrontendController extends Controller
         $result = '<option value="">' . __('Frontend.please_choose') . '</option>';
         if ($request->language && $request->age) {
             $country_ids = [];
-            $courses = Course::with('coursePrograms')->where('display', true)->where('deleted', false)->get();
+            $courses = Course::with('school', 'coursePrograms')->whereHas('school', function($query) {
+                    $query->where('is_active', true);
+                })->where('display', true)->where('deleted', false)->get();
             foreach ($courses as $course) {
                 $course_has_age_range = false;
                 $course_programs = $course->coursePrograms;
@@ -1215,7 +1327,9 @@ class FrontendController extends Controller
         $result = '<option value="">' . __('Frontend.please_choose') . '</option>';
         if ($request->language && $request->age && $request->country) {
             $program_type_ids = [];
-            $courses = Course::with('coursePrograms')->where('display', true)->where('deleted', false)->get();
+            $courses = Course::with('school', 'coursePrograms')->whereHas('school', function($query) {
+                    $query->where('is_active', true);
+                })->where('display', true)->where('deleted', false)->get();
             foreach ($courses as $course) {
                 $course_has_age_range = false;
                 $course_programs = $course->coursePrograms;
@@ -1245,7 +1359,9 @@ class FrontendController extends Controller
         $result = '<option value="">' . __('Frontend.please_choose') . '</option>';
         if ($request->language && $request->age && $request->country && $request->program_type) {
             $study_mode_ids = [];
-            $courses = Course::with('coursePrograms')->where('display', true)->where('deleted', false)->get();
+            $courses = Course::with('school', 'coursePrograms')->whereHas('school', function($query) {
+                    $query->where('is_active', true);
+                })->where('display', true)->where('deleted', false)->get();
             foreach ($courses as $course) {
                 $course_has_age_range = false;
                 $course_programs = $course->coursePrograms;
@@ -1275,7 +1391,9 @@ class FrontendController extends Controller
         $result = '<option value="">' . __('Frontend.please_choose') . '</option>';
         if ($request->language && $request->age && $request->country && $request->program_type && $request->study_mode) {
             $city_ids = [];
-            $courses = Course::with('coursePrograms')->where('display', true)->where('deleted', false)->get();
+            $courses = Course::with('school', 'coursePrograms')->whereHas('school', function($query) {
+                    $query->where('is_active', true);
+                })->where('display', true)->where('deleted', false)->get();
             foreach ($courses as $course) {
                 $course_has_age_range = false;
                 $course_programs = $course->coursePrograms;
@@ -1306,7 +1424,9 @@ class FrontendController extends Controller
         $result = '<option value="">' . __('Frontend.please_choose') . '</option>';
         if ($request->language && $request->age && $request->country && $request->program_type && $request->study_mode && $request->city) {
             $program_names = [];
-            $courses = Course::with('coursePrograms')->where('display', true)->where('deleted', false)->get();
+            $courses = Course::with('school', 'coursePrograms')->whereHas('school', function($query) {
+                    $query->where('is_active', true);
+                })->where('display', true)->where('deleted', false)->get();
             foreach ($courses as $course) {
                 $course_has_age_range = false;
                 $course_programs = $course->coursePrograms;
@@ -1336,7 +1456,9 @@ class FrontendController extends Controller
         $result = '<option value="">' . __('Frontend.please_choose') . '</option>';
         if ($request->language && $request->age && $request->country && $request->program_type && $request->study_mode && $request->city && $request->program_name) {
             $program_duration_start = 0; $program_duration_end = 0;
-            $courses = Course::with('coursePrograms')->where('display', true)->where('deleted', false)->get();
+            $courses = Course::with('school', 'coursePrograms')->whereHas('school', function($query) {
+                    $query->where('is_active', true);
+                })->where('display', true)->where('deleted', false)->get();
             foreach ($courses as $course) {
                 $course_programs = $course->coursePrograms;
                 if (in_array($request->language, $course->language) && $request->country == $course->country_id && in_array($request->program_type, $course->program_type)
@@ -1364,7 +1486,9 @@ class FrontendController extends Controller
     private function searchCourseList($condition) {
         $result_courses = [];
 
-        $courses = Course::with('coursePrograms')->where('display', true)->where('deleted', false)->get();
+        $courses = Course::with('school', 'coursePrograms')->whereHas('school', function($query) {
+                $query->where('is_active', true);
+            })->where('display', true)->where('deleted', false)->get();
         foreach ($courses as $course) {
             $course_satisfied = true;
             $course_programs = $course->coursePrograms;
@@ -1508,7 +1632,10 @@ class FrontendController extends Controller
         $now = Carbon::now()->format('Y-m-d');
 
         $course_language_ids = [];
-        $courses = Course::with('coursePrograms', 'courseApplicationDetails.review')->where('display', true)->where('deleted', false)->get();
+        $courses = Course::with('school', 'coursePrograms', 'courseApplicationDetails.review')
+            ->whereHas('school', function($query) {
+                $query->where('is_active', true);
+            })->where('display', true)->where('deleted', false)->get();
         foreach ($courses as $course) {
             $course_language_ids = array_merge($course_language_ids, $course->language ?? []);
         }

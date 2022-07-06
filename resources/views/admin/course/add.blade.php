@@ -31,7 +31,7 @@
                     </ul>
                 </div>
 
-                @include('admin.include.alert')
+                @include('common.include.alert')
             </div>
         </div>
     </div>
@@ -282,7 +282,7 @@
                                 <div class="form-group col-md-4 age_range">
                                     <label for="program_age_range">{{__('Admin/backend.age_range')}}:
                                         <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#ProgramAgeRangeModal" aria-hidden="true"></i>
-                                        <i onclick="deleteProgramAgeRange()" class="fa fa-trash pl-3" aria-hidden="true"></i>
+                                        <i onclick="deleteProgramAgeRange($(this))" class="fa fa-trash pl-3" aria-hidden="true"></i>
                                     </label>
                                     <select id="program_age_range_choose0" name="age_range[0][]" multiple="multiple" class="3col active">
                                         @foreach ($choose_program_age_ranges as $program_age_range)
@@ -493,7 +493,7 @@
 
     @section('js')
         <script>
-            var uploadFileOption = "{{route('admin.course.upload', ['_token' => csrf_token() ])}}";
+            var uploadFileOption = "{{ auth('superadmin')->check() ? route('superadmin.course.upload', ['_token' => csrf_token() ]) : route('schooladmin.course.upload', ['_token' => csrf_token() ]) }}";
         </script>
     @endsection
 @endsection

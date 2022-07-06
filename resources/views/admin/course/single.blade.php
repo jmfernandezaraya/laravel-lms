@@ -12,7 +12,7 @@
                     <h1 class="card-title">{{__('Admin/backend.edit_course')}}</h1>
                 </div>
 
-                @include('admin.include.alert')
+                @include('common.include.alert')
             </div>
         </div>
     </div>
@@ -594,6 +594,9 @@
                 @endif
                 @if ((float)$course_application->accommodation_special_diet_fee)
                     $('#special_diet_check').prop("checked", true);
+                @endif
+                @if ((float)$course_application->custodian_fee)
+                    $('#custodianship_check').prop("checked", true);
                 @endif
                 @if (isset($course_application->study_mode) && $course_application->study_mode)
                     $('#study_mode').val('{{$course_application->study_mode}}');

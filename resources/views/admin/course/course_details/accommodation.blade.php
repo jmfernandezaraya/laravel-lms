@@ -87,14 +87,14 @@
                                 <td>{{$accomodation->created_at->diffForHumans()}}</td>
                                 <td>
                                     @if(!($accomodation->AccommodationUnderAges()->get()->isEmpty()))
-                                        <a type="button" href="{{route('admin.accomodation_underage_details', $accomodation->unique_id)}}" class="btn btn-sm btn-primary">{{__('Admin/backend.click_here')}}</a>
+                                        <a type="button" href="{{ auth('superadmin')->check() ? route('superadmin.accomodation_underage_details', $accomodation->unique_id) : route('schooladmin.accomodation_underage_details', $accomodation->unique_id) }}" class="btn btn-sm btn-primary">{{__('Admin/backend.click_here')}}</a>
                                     @else
                                         {{__('Admin/backend.no_details_available')}}
                                     @endif
                                 </td>
                                 <td>
                                     <div class ="btn-group">
-                                        <form method="post" action="{{route('admin.course.airport.delete', $airport->unique_id)}}">
+                                        <form method="post" action="{{ auth('superadmin')->check() ? route('superadmin.course.airport.delete', $airport->unique_id) : route('schooladmin.course.airport.delete', $airport->unique_id) }}">
                                             @csrf
                                             @method('DELETE')
                                             <button onclick="return confirm('{{__('Admin/backend.are_you_sure_delete')}}')" class="btn btn-danger btn-sm fa fa-trash"></button>
@@ -102,7 +102,7 @@
                                         @php
                                             $confirm = __('Admin/backend.are_you_sure_delete');
                                         @endphp
-                                        <a type="button" onclick="return confirm('<?= $confirm ?>')" href="{{route('admin.airport.delete', $accomodation->unique_id)}}" class="btn btn-sm btn-danger fa fa-trash"> </a>
+                                        <a type="button" onclick="return confirm('<?= $confirm ?>')" href="{{ auth('superadmin')->check() ? route('superadmin.airport.delete', $accomodation->unique_id) : route('schooladmin.airport.delete', $accomodation->unique_id) }}" class="btn btn-sm btn-danger fa fa-trash"> </a>
                                     </div>
                                 </td>
                             </tr>
@@ -110,7 +110,7 @@
                             <div class="modal fade" id="edit_modal{{$accomodation->unique_id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
-                                        <form method="POST" action="{{route('admin.accommodation_update')}}">
+                                        <form method="POST" action="{{ auth('superadmin')->check() ? route('superadmin.accommodation_update') : route('schooladmin.accommodation_update') }}">
                                             @csrf
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="exampleModalLabel">{{__('Admin/backend.update_accommodation_price')}}</h5>

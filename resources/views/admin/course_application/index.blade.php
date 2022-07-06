@@ -64,9 +64,9 @@
                                         <a href="{{ auth('superadmin')->check() ? route('superadmin.course_application.edit', $details->id) : route('schooladmin.course_application.edit', $details->id) }}" class="btn btn-info btn-sm fa fa-eye"></a>
                                         @if (isset($details->courseApplicationApprove->approved))
                                             @if ($details->courseApplicationApprove->approved == 1)
-                                                <a href="{{ route('admin.course_application.approve', ['id' => $details->id, 'value' => 0]) }}" class="btn btn-success btn-sm fa fa-check"></a>
+                                                <a href="{{ auth('superadmin')->check() ? route('superadmin.course_application.approve', ['id' => $details->id, 'value' => 0]) : route('schooladmin.course_application.approve', ['id' => $details->id, 'value' => 0]) }}" class="btn btn-success btn-sm fa fa-check"></a>
                                             @else
-                                                <a href="{{ route('admin.course_application.approve', ['id' => $details->id, 'value' => 1]) }}" class="btn btn-danger btn-sm fa fa-window-close"></a>
+                                                <a href="{{ auth('superadmin')->check() ? route('superadmin.course_application.approve', ['id' => $details->id, 'value' => 1]) : route('schooladmin.course_application.approve', ['id' => $details->id, 'value' => 1]) }}" class="btn btn-danger btn-sm fa fa-window-close"></a>
                                             @endif
                                         @endif
                                     </div>

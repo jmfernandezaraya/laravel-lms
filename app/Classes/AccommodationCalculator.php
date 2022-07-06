@@ -324,7 +324,7 @@ class AccommodationCalculator extends FrontendCalculator
 
     public function TotalCalculation()
     {
-        $total = readCalculationFromDB('total') + readCalculationFromDB('accommodation_total') + readCalculationFromDB('airport_pickup_fee') + readCalculationFromDB('medical_insurance_fee');
+        $total = readCalculationFromDB('total') + readCalculationFromDB('accommodation_total') + readCalculationFromDB('airport_pickup_fee') + readCalculationFromDB('medical_insurance_fee') + readCalculationFromDB('custodian_fee');
         return $total - readCalculationFromDB('discount_fee') - readCalculationFromDB('accommodation_discount');
     }
 

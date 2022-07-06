@@ -65,7 +65,7 @@ class CourseController extends Controller
 
             $input['airport_pickup_fee'] = 0;
             $input['medical_insurance_fee'] = 0;
-            $input['airport_total'] = 0;
+            $input['custodian_fee'] = 0;
 
             $input['total'] = 0;
 
@@ -454,7 +454,7 @@ class CourseController extends Controller
     {
         json_file('airport_pickup_fee', 0);
         json_file('medical_insurance_fee', 0);
-        json_file('airport_total', 0);
+        json_file('custodian_fee', 0);
 
         return true;
     }

@@ -31,7 +31,7 @@
                     </ul>
                 </div>
 
-                @include('admin.include.alert')
+                @include('common.include.alert')
             </div>
         </div>
     </div>
@@ -211,7 +211,7 @@
                                     <option value="subscriber">{{__('Admin/backend.subscriber')}}</option>
                                     <option value="manager">{{__('Admin/backend.manager')}}</option>
                                 </select>
-                                <div class="user-permissions" style="display: none }}">
+                                <div class="user-permissions" style="display: none">
                                     <div class="form-check">
                                         <input name="user_add" type="checkbox" class="form-check-inline" value='1'>
                                         <label for="user_add">{{__('Admin/backend.add')}}</label>
@@ -227,6 +227,30 @@
                                     <div class="form-check">
                                         <input name="user_permissions" type="checkbox" class="form-check-inline" value='1'>
                                         <label for="user_permissions">{{__('Admin/backend.permission')}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="review_permission">{{__('Admin/backend.review')}}</label>
+                                <select name="review_permission" id="review_permission" class="form-control">
+                                    <option value="">{{__('Admin/backend.select_role')}}</option>
+                                    <option value="subscriber">{{__('Admin/backend.subscriber')}}</option>
+                                    <option value="manager">{{__('Admin/backend.manager')}}</option>
+                                </select>
+                                <div class="review-permissions" style="display: none">
+                                    <div class="form-check">
+                                        <input name="review_edit" type="checkbox" class="form-check-inline" value='1'>
+                                        <label for="review_edit">{{__('Admin/backend.edit')}}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="review_approve" type="checkbox" class="form-check-inline" value='1'>
+                                        <label for="review_approve">{{__('Admin/backend.approve')}}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="review_delete" type="checkbox" class="form-check-inline" value='1'>
+                                        <label for="review_delete">{{__('Admin/backend.delete')}}</label>
                                     </div>
                                 </div>
                             </div>

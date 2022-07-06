@@ -446,6 +446,18 @@ i.fa.fa-trash {
     margin-top: .3rem;
     margin-left: -1.25rem;
 }
+.form-check-inline .form-check-input {
+    display: inline-block;
+}
+.form-check-inline .form-check-label {
+    display: inline-block;
+    margin-left: 0.25rem;
+}
+.form-check-inline .form-control {
+    display: inline-block;
+    margin-left: 0.25rem;
+    width: auto;
+}
 
 .best {
     font-size: 16px;

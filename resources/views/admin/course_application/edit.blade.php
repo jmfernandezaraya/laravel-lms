@@ -551,6 +551,9 @@
                             <p>{{ $course_application->comments }}</p>
                         </div>
                         
+                        @if (can_edit_course_application())
+                            <a href="{{ auth('superadmin')->check() ? route('superadmin.course_application.register.edit', ['id' => $course_application->id]) : route('schooladmin.course_application.register.edit', ['id' => $course_application->id]) }}" class="btn btn-primary px-5">{{__('Admin/backend.edit')}}</a>
+                        @endif
                         <button type="button" class="btn btn-primary float-right mt-3 px-5" onclick="printCourseApplication('registration')">{{__('Admin/backend.print')}}</button>
                     </div>
                 </div>
@@ -1021,7 +1024,7 @@
         <script>
             function printCourseApplication(section) {
                 $.ajax({
-                    url: "{{ route('admin.course_application.print') }}",
+                    url: "{{ auth('superadmin')->check() ? route('superadmin.course_application.print') : route('schooladmin.course_application.print') }}",
                     method: 'POST',
                     data: { _token: $("meta[name='csrf-token']").attr('content'), id: "{{ $course_application->id }}", section: section },
                     xhrFields: {

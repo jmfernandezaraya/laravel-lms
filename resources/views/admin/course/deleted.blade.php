@@ -12,7 +12,7 @@
                     <h1 class="card-title">{{__('Admin/backend.deleted_course_details')}}</h1>
                 </div>
 
-                <form method="post" action="{{ route('admin.course.bulk') }}">
+                <form method="post" action="{{ auth('superadmin')->check() ? route('superadmin.course.bulk') : route('schooladmin.course.bulk') }}">
                     @csrf
                     <div class="row mb-3">
                         <div class="form-group col-md-3">
@@ -86,14 +86,14 @@
 
                                 <td>
                                     <div class="btn-group">
-                                        <a class="btn btn-primary btn-sm fa fa-pencil" href="{{route('admin.course.edit', $course->unique_id)}}"></a>
+                                        <a class="btn btn-primary btn-sm fa fa-pencil" href="{{ auth('superadmin')->check() ? route('superadmin.course.edit', $course->unique_id) : route('schooladmin.course.edit', $course->unique_id)}}"></a>
                                         
-                                        <form method="post" action="{{ route('admin.course.restore', $course->unique_id) }}">
+                                        <form method="post" action="{{ auth('superadmin')->check() ? route('superadmin.course.restore', $course->unique_id) : route('schooladmin.course.restore', $course->unique_id) }}">
                                             @csrf
                                             <button onclick="return confirm('{{__('Admin/backend.language')}}')" class="btn btn-success btn-sm fa fa-undo"></button>
                                         </form>
 
-                                        <form method="post" action="{{ route('admin.course.destroy', $course->unique_id) }}">
+                                        <form method="post" action="{{ auth('superadmin')->check() ? route('superadmin.course.destroy', $course->unique_id) : route('schooladmin.course.destroy', $course->unique_id) }}">
                                             @csrf
                                             @method('DELETE')
                                             <button onclick="return confirm('{{__('Admin/backend.are_you_sure_you_wanna_delete')}}')" class="btn btn-danger btn-sm fa fa-trash"></button>

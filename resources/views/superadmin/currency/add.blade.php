@@ -10,7 +10,7 @@
             <div class="card-body">
                 <div style="text-align: center;">
                     <h1 class="card-title">{{__('Admin/backend.add_exchange_rate')}}</h1>
-                    @include('admin.include.alert')
+                    @include('common.include.alert')
                 </div>
             </div>
         </div>

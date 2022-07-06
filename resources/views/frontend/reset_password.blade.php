@@ -1,14 +1,10 @@
 @extends('frontend.layouts.app')
 
+@section('title')
+    {{__('Frontend.forgot_password')}}
+@endsection
+
 @section('content')
-<!-- ======= Breadcrumbs ======= -->
-<div class="breadcrumbs" data-aos="fade-in">
-    <div class="container">
-        <h2>{{__('Frontend.forgot_password')}}</h2>
-        <p>>{{__('Frontend.forgot_password_description')}}</p>
-    </div>
-</div>
-<!-- End Breadcrumbs -->
 
 <!-- ======= login Section ======= -->
 <div class="container mt-5 mb-5">

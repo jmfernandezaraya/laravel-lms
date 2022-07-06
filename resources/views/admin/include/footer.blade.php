@@ -45,56 +45,92 @@
     var delete_on_confirm = "{{__('Admin/backend.confirm_delete')}}";
     var clone_on_confirm = "{{__('Admin/backend.confirm_clone')}}";
     
-    var url_school_city_by_country_list = "{{route('admin.school.city_by_country.list')}}";
-    var url_school_country_list = "{{route('admin.school.country.list')}}";
-    var url_school_city_list = "{{route('admin.school.city.list')}}";
-    var url_school_branch_list = "{{route('admin.school.branch.list')}}";
-    
     @auth ('superadmin')
+        var url_school_city_by_country_list = "{{route('superadmin.school.city_by_country.list')}}";
+        var url_school_country_list = "{{route('superadmin.school.country.list')}}";
+        var url_school_city_list = "{{route('superadmin.school.city.list')}}";
+        var url_school_branch_list = "{{route('superadmin.school.branch.list')}}";    
         var course_list_page = "{{route('superadmin.course.index')}}";
-        var course_url_store = "{{route('superadmin.course.store')}}";        
+        var course_url_store = "{{route('superadmin.course.store')}}";
+        var program_under_age_url = "{{route('superadmin.course.program_under_age')}}";
+        var edit_program_under_age_url = "{{route('superadmin.course.program_under_age.edit')}}";  
+        var accommodation_url = "{{route('superadmin.course.accommodation')}}";
+        var edit_accommodation_url = "{{route('superadmin.course.accommodation.edit')}}";
+        var accomm_under_age_url = "{{route('superadmin.course.accomm_under_age')}}";
+        var edit_accomm_under_age_url = "{{route('superadmin.course.accomm_under_age.edit')}}";
+        var other_service_url = "{{route('superadmin.course.other_service')}}";
+        var edit_other_service_url = "{{route('superadmin.course.other_service.edit')}}";
+        var add_language_url = "{{route('superadmin.language.add')}}";
+        var delete_language_url = "{{route('superadmin.language.delete')}}";
+        var add_study_mode_url = "{{route('superadmin.study_mode.add')}}";
+        var delete_study_mode_url = "{{route('superadmin.study_mode.delete')}}";
+        var add_program_type_url = "{{route('superadmin.program_type.add')}}";
+        var delete_program_type_url = "{{route('superadmin.program_type.delete')}}";
+        var add_branch_url = "{{route('superadmin.branch.add')}}";
+        var delete_branch_url = "{{route('superadmin.branch.delete')}}";
+        var add_study_time_url = "{{route('superadmin.study_time.add')}}";
+        var delete_study_time_url = "{{route('superadmin.study_time.delete')}}";
+        var add_classes_day_url = "{{route('superadmin.classes_day.add')}}";
+        var delete_classes_day_url = "{{route('superadmin.classes_day.delete')}}";
+        var add_start_day_url = "{{route('superadmin.start_day.add')}}";
+        var delete_start_day_url = "{{route('superadmin.start_day.delete')}}";
+        var add_program_age_range_url = "{{route('superadmin.program_age_range.add')}}";
+        var delete_program_age_range_url = "{{route('superadmin.program_age_range.delete')}}";
+        var add_program_under_age_range_url = "{{route('superadmin.program_under_age_range.add')}}";
+        var delete_program_under_age_range_url = "{{route('superadmin.program_under_age_range.delete')}}";
+        var add_accomm_age_range_url = "{{route('superadmin.accomm_age_range.add')}}";
+        var delete_accomm_age_range_url = "{{route('superadmin.accomm_age_range.delete')}}";
+        var add_accomm_custodian_range_url = "{{route('superadmin.accomm_custodian_age.add')}}";
+        var delete_accomm_custodian_range_url = "{{route('superadmin.accomm_custodian_age.delete')}}";
+        var add_accomm_under_range_url = "{{route('superadmin.accomm_under_age.add')}}";
+        var delete_accomm_under_range_url = "{{route('superadmin.accomm_under_age.delete')}}";
+        var add_school_nationality_url = "{{route('superadmin.school.nationality.add')}}";
+        var delete_school_nationality_url = "{{route('superadmin.school.nationality.delete')}}";
     @else
         @auth ('schooladmin')
+            var url_school_city_by_country_list = "{{route('schooladmin.school.city_by_country.list')}}";
+            var url_school_country_list = "{{route('schooladmin.school.country.list')}}";
+            var url_school_city_list = "{{route('schooladmin.school.city.list')}}";
+            var url_school_branch_list = "{{route('schooladmin.school.branch.list')}}";    
             var course_list_page = "{{route('schooladmin.course.index')}}";
             var course_url_store = "{{route('schooladmin.course.store')}}";
+            var program_under_age_url = "{{route('schooladmin.course.program_under_age')}}";
+            var edit_program_under_age_url = "{{route('schooladmin.course.program_under_age.edit')}}";  
+            var accommodation_url = "{{route('schooladmin.course.accommodation')}}";
+            var edit_accommodation_url = "{{route('schooladmin.course.accommodation.edit')}}";
+            var accomm_under_age_url = "{{route('schooladmin.course.accomm_under_age')}}";
+            var edit_accomm_under_age_url = "{{route('schooladmin.course.accomm_under_age.edit')}}";
+            var other_service_url = "{{route('schooladmin.course.other_service')}}";
+            var edit_other_service_url = "{{route('schooladmin.course.other_service.edit')}}";
+            var add_language_url = "{{route('schooladmin.language.add')}}";
+            var delete_language_url = "{{route('schooladmin.language.delete')}}";
+            var add_study_mode_url = "{{route('schooladmin.study_mode.add')}}";
+            var delete_study_mode_url = "{{route('schooladmin.study_mode.delete')}}";
+            var add_program_type_url = "{{route('schooladmin.program_type.add')}}";
+            var delete_program_type_url = "{{route('schooladmin.program_type.delete')}}";
+            var add_branch_url = "{{route('schooladmin.branch.add')}}";
+            var delete_branch_url = "{{route('schooladmin.branch.delete')}}";
+            var add_study_time_url = "{{route('schooladmin.study_time.add')}}";
+            var delete_study_time_url = "{{route('schooladmin.study_time.delete')}}";
+            var add_classes_day_url = "{{route('schooladmin.classes_day.add')}}";
+            var delete_classes_day_url = "{{route('schooladmin.classes_day.delete')}}";
+            var add_start_day_url = "{{route('schooladmin.start_day.add')}}";
+            var delete_start_day_url = "{{route('schooladmin.start_day.delete')}}";
+            var add_program_age_range_url = "{{route('schooladmin.program_age_range.add')}}";
+            var delete_program_age_range_url = "{{route('schooladmin.program_age_range.delete')}}";
+            var add_program_under_age_range_url = "{{route('schooladmin.program_under_age_range.add')}}";
+            var delete_program_under_age_range_url = "{{route('schooladmin.program_under_age_range.delete')}}";
+            var add_accomm_age_range_url = "{{route('schooladmin.accomm_age_range.add')}}";
+            var delete_accomm_age_range_url = "{{route('schooladmin.accomm_age_range.delete')}}";
+            var add_accomm_custodian_range_url = "{{route('schooladmin.accomm_custodian_age.add')}}";
+            var delete_accomm_custodian_range_url = "{{route('schooladmin.accomm_custodian_age.delete')}}";
+            var add_accomm_under_range_url = "{{route('schooladmin.accomm_under_age.add')}}";
+            var delete_accomm_under_range_url = "{{route('schooladmin.accomm_under_age.delete')}}";
+            var add_school_nationality_url = "{{route('schooladmin.school.nationality.add')}}";
+            var delete_school_nationality_url = "{{route('schooladmin.school.nationality.delete')}}";
         @endauth
     @endauth
 
-    var program_under_age_url = "{{route('admin.course.program_under_age')}}";
-    var edit_program_under_age_url = "{{route('admin.course.program_under_age.edit')}}";  
-    var accommodation_url = "{{route('admin.course.accommodation')}}";
-    var edit_accommodation_url = "{{route('admin.course.accommodation.edit')}}";
-    var accomm_under_age_url = "{{route('admin.course.accomm_under_age')}}";
-    var edit_accomm_under_age_url = "{{route('admin.course.accomm_under_age.edit')}}";
-    var other_service_url = "{{route('admin.course.other_service')}}";
-    var edit_other_service_url = "{{route('admin.course.other_service.edit')}}";
-
-    var add_language_url = "{{route('admin.language.add')}}";
-    var delete_language_url = "{{route('admin.language.delete')}}";
-    var add_study_mode_url = "{{route('admin.study_mode.add')}}";
-    var delete_study_mode_url = "{{route('admin.study_mode.delete')}}";
-    var add_program_type_url = "{{route('admin.program_type.add')}}";
-    var delete_program_type_url = "{{route('admin.program_type.delete')}}";
-    var add_branch_url = "{{route('admin.branch.add')}}";
-    var delete_branch_url = "{{route('admin.branch.delete')}}";
-    var add_study_time_url = "{{route('admin.study_time.add')}}";
-    var delete_study_time_url = "{{route('admin.study_time.delete')}}";
-    var add_classes_day_url = "{{route('admin.classes_day.add')}}";
-    var delete_classes_day_url = "{{route('admin.classes_day.delete')}}";
-    var add_start_day_url = "{{route('admin.start_day.add')}}";
-    var delete_start_day_url = "{{route('admin.start_day.delete')}}";
-    var add_program_age_range_url = "{{route('admin.program_age_range.add')}}";
-    var delete_program_age_range_url = "{{route('admin.program_age_range.delete')}}";
-    var add_program_under_age_range_url = "{{route('admin.program_under_age_range.add')}}";
-    var delete_program_under_age_range_url = "{{route('admin.program_under_age_range.delete')}}";
-    var add_accomm_age_range_url = "{{route('admin.accomm_age_range.add')}}";
-    var delete_accomm_age_range_url = "{{route('admin.accomm_age_range.delete')}}";
-    var add_accomm_custodian_range_url = "{{route('admin.accomm_custodian_age.add')}}";
-    var delete_accomm_custodian_range_url = "{{route('admin.accomm_custodian_age.delete')}}";
-    var add_accomm_under_range_url = "{{route('admin.accomm_under_age.add')}}";
-    var delete_accomm_under_range_url = "{{route('admin.accomm_under_age.delete')}}";
-    var add_school_nationality_url = "{{route('admin.school.nationality.add')}}";
-    var delete_school_nationality_url = "{{route('admin.school.nationality.delete')}}";
     
     var select_option = "{{__('Admin/backend.select_option')}}";
     var search = "{{__('Admin/backend.search')}}";
@@ -1564,6 +1600,14 @@
             $('.user-permissions').show();
         } else {
             $('.user-permissions').hide();
+        }
+    });
+
+    $('#review_permission').change(function() {
+        if ($('#review_permission').val() == 'subscriber') {
+            $('.review-permissions').show();
+        } else {
+            $('.review-permissions').hide();
         }
     });
 

@@ -31,7 +31,7 @@
                     </ul>
                 </div>
 
-                @include('admin.include.alert')
+                @include('common.include.alert')
             </div>
         </div>
     </div>
@@ -260,7 +260,7 @@
 
     @section('js')
         <script>
-            var uploadFileOption = "{{route('admin.course.upload', ['_token' => csrf_token() ])}}";
+            var uploadFileOption = "{{ auth('superadmin')->check() ? route('superadmin.course.upload', ['_token' => csrf_token() ]) : route('schooladmin.course.upload', ['_token' => csrf_token() ]) }}";
         </script>
     @endsection
 @endsection

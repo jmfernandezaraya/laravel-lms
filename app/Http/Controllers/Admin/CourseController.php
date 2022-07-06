@@ -262,18 +262,18 @@ class CourseController extends Controller
     {
         $coursecreate = new CourseCreateService();
         if ($request->has('language')) {
-            $coursecreate->createCourseAndProgram($r);
+            $coursecreate->createCourseAndProgram($request);
             if ($request->has('accommodation')) {
                 Session::put('has_accommodation', $request->accommodation);
             }
         } else if ($request->has('underagefeeincrement')) {
-            $coursecreate->createProgramUnderAgeAndTextBook($r);
+            $coursecreate->createProgramUnderAgeAndTextBook($request);
         } elseif ($request->has('type')) {
-            $coursecreate->createAccommodation($r);
+            $coursecreate->createAccommodation($request);
         } elseif ($request->has('accomunderageincrement')) {
-            $coursecreate->createAccommodationUnderAge($r);
+            $coursecreate->createAccommodationUnderAge($request);
         } elseif ($request->has('airportincrement')) {
-            $coursecreate->createOtherServiceFee($r);
+            $coursecreate->createOtherServiceFee($request);
         }
 
         $data['data'] = 'Data Not Saved';
@@ -409,6 +409,7 @@ class CourseController extends Controller
     {
         \Session::push('program_cost_save', $request->all());
         $session = \Session::get('program_cost_save');
+        
         return response($session);
     }
 
@@ -604,10 +605,18 @@ class CourseController extends Controller
         
                 return view('admin.course.edit.program_under_age', compact('course_id', 'course_program_id', 'course_programs', 'program_under_age_fees', 'program_text_book_fees', 'choose_program_under_ages'));
             } else {
-                return redirect()->route('admin.course.program_under_age');
+                if (auth('superadmin')->check()) {
+                    return redirect()->route('superadmin.course.program_under_age');
+                } else if (auth('schooladmin')->check()) {
+                    return redirect()->route('schooladmin.course.program_under_age');
+                }
             }
         } else {
-            return redirect()->route('admin.course.create');
+            if (auth('superadmin')->check()) {
+                return redirect()->route('superadmin.course.create');
+            } else if (auth('schooladmin')->check()) {
+                return redirect()->route('schooladmin.course.create');
+            }
         }
     }
 
@@ -640,10 +649,18 @@ class CourseController extends Controller
 
                 return view('admin.course.edit.accommodation', compact('course_id', 'accomodations', 'accommodation_age_ranges'));
             } else {
-                return redirect()->route('admin.course.accommodation');
+                if (auth('superadmin')->check()) {
+                    return redirect()->route('superadmin.course.accommodation');
+                } else if (auth('schooladmin')->check()) {
+                    return redirect()->route('schooladmin.course.accommodation');
+                }
             }
         } else {
-            return redirect()->route('admin.course.create');
+            if (auth('superadmin')->check()) {
+                return redirect()->route('superadmin.course.create');
+            } else if (auth('schooladmin')->check()) {
+                return redirect()->route('schooladmin.course.create');
+            }
         }
     }
 
@@ -688,10 +705,18 @@ class CourseController extends Controller
         
                 return view('admin.course.edit.accommodation_under_age', compact('course_id', 'accom_id', 'accomodations', 'accomodation_under_ages', 'choose_accomodation_under_ages'));
             } else {
-                return redirect()->route('admin.course.accommodation_under_age');
+                if (auth('superadmin')->check()) {
+                    return redirect()->route('superadmin.course.accommodation_under_age');
+                } else if (auth('schooladmin')->check()) {
+                    return redirect()->route('schooladmin.course.accommodation_under_age');
+                }
             }
         } else {
-            return redirect()->route('admin.course.create');
+            if (auth('superadmin')->check()) {
+                return redirect()->route('superadmin.course.create');
+            } else if (auth('schooladmin')->check()) {
+                return redirect()->route('schooladmin.course.create');
+            }
         }
     }
 
@@ -719,10 +744,18 @@ class CourseController extends Controller
             if ((!empty($airports) && count($airports)) || (!empty($medicals) && count($medicals)) || (!empty($custodians) && count($custodians))) {
                 return view('admin.course.edit.other_service', compact('course_id', 'custodian_under_ages', 'airports', 'medicals', 'custodians'));
             } else {
-                return redirect()->route('admin.course.other_service');
+                if (auth('superadmin')->check()) {
+                    return redirect()->route('superadmin.course.other_service');
+                } else if (auth('schooladmin')->check()) {
+                    return redirect()->route('schooladmin.course.other_service');
+                }
             }
         } else {
-            return redirect()->route('admin.course.index');
+            if (auth('superadmin')->check()) {
+                return redirect()->route('superadmin.course.index');
+            } else if (auth('schooladmin')->check()) {
+                return redirect()->route('schooladmin.course.index');
+            }
         }
     }
 
@@ -734,7 +767,11 @@ class CourseController extends Controller
     {
         \Session::put('program_id', '' . $request->value);
 
-        $data['url'] = route('admin.course.program_under_age.edit');
+        if (auth('superadmin')->check()) {
+            $data['url'] = route('superadmin.course.program_under_age.edit');
+        } else if (auth('schooladmin')->check()) {
+            $data['url'] = route('schooladmin.course.program_under_age.edit');
+        }
 
         return response($data);
     }
@@ -747,7 +784,11 @@ class CourseController extends Controller
     {
         \Session::put('accom_id', '' . $request->value);
 
-        $data['url'] = route('admin.course.accomm_under_age.edit');
+        if (auth('superadmin')->check()) {
+            $data['url'] = route('superadmin.course.accomm_under_age.edit');
+        } else if (auth('schooladmin')->check()) {
+            $data['url'] = route('schooladmin.course.accomm_under_age.edit');
+        }
 
         return response($data);
     }

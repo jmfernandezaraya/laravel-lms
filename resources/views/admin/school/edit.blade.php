@@ -31,7 +31,7 @@
                     </ul>
                 </div>
 
-                @include('admin.include.alert')
+                @include('common.include.alert')
             </div>
         </div>
     </div>
@@ -362,7 +362,7 @@
 
     @section('js')
         <script>
-            var uploadFileOption = "{{route('admin.school.upload', ['_token' => csrf_token() ])}}";
+            var uploadFileOption = "{{ auth('superadmin')->check() ? route('superadmin.school.upload', ['_token' => csrf_token() ]) : route('schooladmin.school.upload', ['_token' => csrf_token() ]) }}";
             $(document).ready(function () {
                 $("#videoUrl").tagit({
                     fieldName: "video_url[]"

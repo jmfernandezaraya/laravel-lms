@@ -1,5 +1,4 @@
 @component('mail::message')
-
     @lang('Frontend.email_verify_body_message')
 
     @component('mail::button', ['url' => $url])

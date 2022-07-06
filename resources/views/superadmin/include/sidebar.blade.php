@@ -97,20 +97,22 @@
                 </div>
             </li>
         @endif
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#review" aria-expanded="false" aria-controls="school_admin">
-                <span class="menu-title">{{__('Admin/backend.rating_review')}}</span>
-                <i class="menu-arrow"></i>
-                <i class="mdi mdi-crosshairs-gps menu-icon"></i>
-            </a>
-            <div class="collapse" id="review">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{route('superadmin.review.index')}}">{{__('Admin/dashboard.view')}}</a>
-                    </li>
-                </ul>
-            </div>
-        </li>
+        @if (can_manage_review() || can_edit_review() || can_approve_review() || can_delete_review())
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#review" aria-expanded="false" aria-controls="school_admin">
+                    <span class="menu-title">{{__('Admin/backend.rating_review')}}</span>
+                    <i class="menu-arrow"></i>
+                    <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                </a>
+                <div class="collapse" id="review">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('superadmin.review.index')}}">{{__('Admin/dashboard.view')}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        @endif
         <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#payment_received" aria-expanded="false" aria-controls="payment_received">
                 <span class="menu-title">{{__('Admin/backend.payment_received')}}</span>

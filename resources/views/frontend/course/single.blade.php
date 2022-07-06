@@ -512,7 +512,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-12">
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="custodianship_check" onchange="calculateOtherService()">
+                                <input name="custodianship" type="checkbox" class="form-check-input" id="custodianship_check" onchange="calculateOtherService()">
                                 <label class="form-check-label mb-2" for="custodianshipCheck">
                                     {{__('Frontend.custodianship_need')}}<i class="fa fa-question-circle pl-2" data-toggle="modal" data-target="#custodianshipModal" aria-hidden="true"></i>
                                 </label>
@@ -669,8 +669,11 @@
                 @if (isset($course_details->courier_fee) && (float)$course_details->courier_fee)
                     $('#checked_courier_fee').prop("checked", true);
                 @endif
-                @if (isset($course_details->accommodation_special_diet_fee) && (float)$course_details->accommodation_special_diet_fee)
+                @if (isset($course_details->special_diet) && (float)$course_details->special_diet)
                     $('#special_diet_check').prop("checked", true);
+                @endif
+                @if (isset($course_details->custodianship) && (float)$course_details->custodianship)
+                    $('#custodianship_check').prop("checked", true);
                 @endif
                 @if (isset($course_details->study_mode) && $course_details->study_mode)
                     $('#study_mode').val('{{$course_details->study_mode}}');

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>{{__('Mail.course_booked.subject')}}</title>
+    <title>{{__('Mail.subject.course_booked')}}</title>
     @if ($locale != 'en')
         <style> 
             * { font-family: 'DejaVu Sans', sans-serif; }

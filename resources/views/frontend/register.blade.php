@@ -1,5 +1,9 @@
 @extends('frontend.layouts.app')
 
+@section('title')
+    {{__('Frontend.register')}}
+@endsection
+
 @section('content')
     <main id="main">
         <!-- ======= Breadcrumbs ======= -->
@@ -51,6 +55,11 @@
                                         <div class="col-lg-12 col-md-12">
                                             <div class="form-group">
                                                 <input type="email" name="email" value="{{old('email')}}" class="form-control" placeholder="{{__('Frontend.email_address')}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 col-md-12">
+                                            <div class="form-group">
+                                                <input type="tel" name="contact" value="{{old('contact')}}" class="form-control" placeholder="{{__('Frontend.phone')}}">
                                             </div>
                                         </div>
                                         <div class="col-lg-12 col-md-12">

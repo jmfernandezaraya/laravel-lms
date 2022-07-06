@@ -44,7 +44,7 @@
                                 <td>
                                     <div class="btn-group">
                                         @if(!$rating->approved)
-                                            <a href="{{route('admin.rating.approve', $rating->id)}}" class="btn btn-info btn-sm fa fa-check"></a>
+                                            <a href="{{ auth('superadmin')->check() ? route('superadmin.rating.approve', $rating->id) : route('schooladmin.rating.approve', $rating->id) }}" class="btn btn-info btn-sm fa fa-check"></a>
                                         @else
                                             <button type="button" class="btn btn-success btn-sm">{{__('Admin/backend.approved')}}</button>
                                         @endif

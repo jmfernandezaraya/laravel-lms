@@ -17,7 +17,8 @@
     <!-- Reservation -->
     <div class="container">
         <div class="course-details mt-5">
-            @include('schooladmin.include.alert')
+            
+            @include('common.include.alert')
             
             <form id="course_reversation" enctype="multipart/form-data" action="{{route('frontend.course.reservation')}}" method="POST">
                 {{csrf_field()}}

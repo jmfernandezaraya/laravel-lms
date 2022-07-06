@@ -111,7 +111,7 @@
                 <h2>@lang('Admin/backend.accommodation_cost') </h2>
                 <change>{{__('Admin/backend.in_english')}}</change>
             </div>
-            @include('superadmin.include.alert')
+            @include('common.include.alert')
             <div id="menu">
                 <ul class="lang text-right current_page_itemm">
                     <li class="current_page_item selected">

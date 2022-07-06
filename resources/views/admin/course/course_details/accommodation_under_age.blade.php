@@ -28,7 +28,7 @@
                                         &nbsp;
                                         <a href ="javascript:void(0)" data-toggle="modal" data-target="#edit_modal{{$underage->id}}"  type="button" class ="btn btn-primary btn-sm fa fa-pencil"></a>
                                         @php $confirm = __('Admin/backend.are_you_sure_delete'); @endphp
-                                        <a type="button" onclick="return confirm('<?= $confirm ?>')" href="{{route('admin.course_accommodation_under_age_delete', $underage->id)}}" class="btn btn-sm btn-danger fa fa-trash"> </a>
+                                        <a type="button" onclick="return confirm('<?= $confirm ?>')" href="{{ auth('superadmin')->check() ? route('superadmin.course_accommodation_under_age_delete', $underage->id) : route('schooladmin.course_accommodation_under_age_delete', $underage->id) }}" class="btn btn-sm btn-danger fa fa-trash"> </a>
                                     </div>
                                 </td>
                             </tr>
@@ -36,7 +36,7 @@
                             <div class="modal fade" id="edit_modal{{$underage->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
-                                        <form method="POST" action="{{route('admin.course_accommodation_underage_edit')}}">
+                                        <form method="POST" action="{{ auth('superadmin')->check() ? route('superadmin.course_accommodation_underage_edit') : route('schooladmin.course_accommodation_underage_edit') }}">
                                             @csrf
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="exampleModalLabel">{{__('Admin/backend.edit_course_program_price')}}</h5>

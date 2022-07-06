@@ -739,6 +739,9 @@ section {
   font-size: 14px;
   width: 100%;
 }
+.country-item {
+  cursor: pointer;
+}
 .school-item > img,
 .country-item > img {
   min-height: 314px;

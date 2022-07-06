@@ -77,7 +77,6 @@ class SuperAdminEditUserCourse
             $inpu['airport_pickup_fee'] = 0;
             $inpu['medical_insurance_fee'] = 0;
             $inpu['custodian_fee'] = 0;
-            $inpu['airport_total'] = 0;
             $inpu['total'] = 0;
 
             return $calculator->fill($inpu)->save();

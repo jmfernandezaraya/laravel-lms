@@ -31,7 +31,7 @@
                     </ul>
                 </div>
 
-                @include('admin.include.alert')
+                @include('common.include.alert')
             </div>
         </div>
     </div>
@@ -142,9 +142,9 @@
 
                     @if($has_accommodation)
                         @if($course_id)
-                            <a type="button" href="{{route('admin.course.accommodation.edit')}}" class="btn btn-primary pull-right">{{__('Admin/backend.next')}}</a>
+                            <a type="button" href="{{ auth('superadmin')->check() ? route('superadmin.course.accommodation.edit') : route('schooladmin.course.accommodation.edit') }}" class="btn btn-primary pull-right">{{__('Admin/backend.next')}}</a>
                         @else
-                            <a type="button" href="{{route('admin.course.accommodation')}}" class="btn btn-primary pull-right">{{__('Admin/backend.next')}}</a>
+                            <a type="button" href="{{ auth('superadmin')->check() ? route('superadmin.course.accommodation') : route('schooladmin.course.accommodation') }}" class="btn btn-primary pull-right">{{__('Admin/backend.next')}}</a>
                         @endif
                     @endif
                     <button type="button" onclick="submitCourseProgramForm($(this))" class="btn btn-primary pull-left">{{__('Admin/backend.submit')}}</button>
@@ -157,7 +157,7 @@
 
     @section('js')
         <script>
-            var uploadFileOption = "{{route('admin.course.upload', ['_token' => csrf_token() ])}}";
+            var uploadFileOption = "{{ auth('superadmin')->check() ? route('superadmin.course.upload', ['_token' => csrf_token() ]) : route('schooladmin.course.upload', ['_token' => csrf_token() ]) }}";
         </script>
     @endsection
 @endsection

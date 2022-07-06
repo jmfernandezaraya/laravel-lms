@@ -83,7 +83,7 @@
                                 </td>
                                 <td>
                                     <div class="btn-group">
-                                        <a href="{{route('admin.course_program_delete', $course_program->unique_id)}}" type="button" class="btn btn-danger btn-sm fa fa-trash">
+                                        <a href="{{ auth('superadmin')->check() ? route('superadmin.course_program_delete', $course_program->unique_id) : route('schooladmin.course_program_delete', $course_program->unique_id) }}" type="button" class="btn btn-danger btn-sm fa fa-trash">
                                         </a>
                                     </div>
                                 </td>
@@ -100,7 +100,7 @@
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-                                        <form method="post" action="{{route('admin.course_program_update')}}" id="submit_form">
+                                        <form method="post" action="{{ auth('superadmin')->check() ? route('superadmin.course_program_update') : route('schooladmin.course_program_update') }}" id="submit_form">
                                             @csrf
                                             <div class="modal-body">
                                                 <div class="form-group">

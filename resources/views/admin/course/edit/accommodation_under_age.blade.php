@@ -20,7 +20,7 @@
                     </change>
                 </div>
 
-                @include('admin.include.alert')
+                @include('common.include.alert')
             </div>
         </div>
     </div>
@@ -109,14 +109,14 @@
                                 <button class="btn btn-primary" type="button" onclick="submitAccommodationUnderAgeForm($(this))">{{__('Admin/backend.submit')}}</button>
                             </div>
                             <div class="form-group col-md-6">
-                                <a href="{{route('admin.course.other_service.edit')}}" class="btn btn-primary pull-right" type="button">{{__('Admin/backend.next')}}</a>
+                                <a href="{{ auth('superadmin')->check() ? route('superadmin.course.other_service.edit') : route('schooladmin.course.other_service.edit') }}" class="btn btn-primary pull-right" type="button">{{__('Admin/backend.next')}}</a>
                             </div>
                         </div>
                     </div>
 
                     <script>
                         function fetchAccommodationUnderAge(value) {
-                            $.post("{{route('admin.course.accomm_under_age.fetch')}}", {
+                            $.post("{{ auth('superadmin')->check() ? route('superadmin.course.accomm_under_age.fetch') : route('schooladmin.course.accomm_under_age.fetch') }}", {
                                 _token: "{{csrf_token()}}",
                                 value: value
                             }, function(data) {

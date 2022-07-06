@@ -12,7 +12,7 @@
                     <h1 class="card-title">{{__('Admin/backend.school_names')}}</h1>
                 </div>
 
-                @include('admin.include.alert')
+                @include('common.include.alert')
             </div>
         </div>
     </div>

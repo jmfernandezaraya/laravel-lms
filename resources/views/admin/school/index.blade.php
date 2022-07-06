@@ -12,7 +12,7 @@
                     <h1 class="card-title">{{__('Admin/backend.school_details')}}</h1>
                 </div>
 
-                <form method="post" action="{{ route('admin.school.bulk') }}">
+                <form method="post" action="{{ auth('superadmin')->check() ? route('superadmin.school.bulk') : route('schooladmin.school.bulk') }}">
                     @csrf
                     <div class="row mb-3">
                         <div class="form-group col-md-3">
@@ -95,17 +95,17 @@
                                 <td>
                                     <div class="btn-group">
                                         <a href="{{ auth('superadmin')->check() ? route('superadmin.school.edit', $school->id) : route('schooladmin.school.edit', $school->id) }}" class="btn btn-info btn-sm fa fa-pencil"></a>
-                                        <form action="{{ route('admin.school.clone', $school->id) }}" method="post">
+                                        <form action="{{ auth('superadmin')->check() ? route('superadmin.school.clone', $school->id) : route('schooladmin.school.clone', $school->id) }}" method="post">
                                             @csrf
                                             <button type="submit" onclick="return confirmClone()" class="btn btn-primary btn-sm fa fa-clone"></button>
                                         </form>
                                         @if ($school->is_active)
-                                            <form method="post" action="{{ route('admin.school.pause', $school->id) }}">
+                                            <form method="post" action="{{ auth('superadmin')->check() ? route('superadmin.school.pause', $school->id) : route('schooladmin.school.pause', $school->id) }}">
                                                 @csrf
                                                 <button onclick="return confirm('{{__('Admin/backend.are_you_sure_you_wanna_pause')}}')" class="btn btn-secondary btn-sm fa fa-pause"></button>
                                             </form>
                                         @else
-                                            <form method="post" action="{{ route('admin.school.play', $school->id) }}">
+                                            <form method="post" action="{{ auth('superadmin')->check() ? route('superadmin.school.play', $school->id) : route('schooladmin.school.play', $school->id) }}">
                                                 @csrf
                                                 <button onclick="return confirm('{{__('Admin/backend.are_you_sure_you_wanna_play')}}')" class="btn btn-success btn-sm fa fa-play"></button>
                                             </form>

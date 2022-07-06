@@ -43,7 +43,7 @@
                             <div class="modal fade" id="program_under_age_edit{{$program->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
-                                        <form method="POST" action="{{route('admin.course_program_edit')}}">
+                                        <form method="POST" action="{{route('superadmin.course_program_edit')}}">
                                             @csrf
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="exampleModalLabel">@lang('Admin/backend.edit_course_program_price')</h5>

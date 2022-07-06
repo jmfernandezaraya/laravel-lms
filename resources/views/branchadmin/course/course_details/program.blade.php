@@ -94,7 +94,7 @@
                                         class="btn btn-primary btn-sm fa fa-pencil">
                                         </a>
                                         &nbsp;
-                                        <a href="{{route('admin.course_program_delete', $course_program->unique_id)}}"
+                                        <a href="{{route('superadmin.course_program_delete', $course_program->unique_id)}}"
                                         type="button" class="btn btn-danger btn-sm fa fa-trash">
                                         </a>
                                     </div>
@@ -112,7 +112,7 @@
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-                                        <form method="post" action="{{route('admin.course_program_update')}}" id ="submit_form">
+                                        <form method="post" action="{{route('superadmin.course_program_update')}}" id ="submit_form">
                                             @csrf
                                             <div class="modal-body">
                                                 <div class="form-group">

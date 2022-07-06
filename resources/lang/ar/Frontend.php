@@ -56,6 +56,11 @@ return [
 
     'popular_country' => 'Popular Country',
     'popular_school' => 'المدارس المفضلة',
+    'our_partners' => 'Our Partners',
+    'our_partner_logos' => 'Our Partner Logos',
+    'country_age_select' => 'Country Age Select',
+    'age' => 'Age',
+    'go' => 'Go',
     
     'program_type' => 'Program Type',
 

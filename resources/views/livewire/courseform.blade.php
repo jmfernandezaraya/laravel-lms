@@ -181,7 +181,7 @@
                     <div class="form-group">
                         <label for="Program_age_range">{{__('Admin/backend.age_range')}}:
                             <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#ProgramAgeRangeModal" aria-hidden="true"></i>
-                            <i onclick="deleteProgramAgeRange()" class="fa fa-trash pl-3" aria-hidden="true"></i>
+                            <i onclick="deleteProgramAgeRange($(this))" class="fa fa-trash pl-3" aria-hidden="true"></i>
                         </label>
                         <div class="row">
                             <div class="col-md-4">

@@ -99,13 +99,50 @@ class LoginController extends Controller
             return back()->withInput()->withErrors();
         }
 
-        $store = new User;
+        $user = new User;
         $token = hash('sha256', \Str::random(16) . time() . rand(0000, 9999));
+        $to_save = $request->validated();
 
-        $store->fill($request->validated() + ['user_type' => 'user', 'remember_token' => $token])->save();
-        \Mail::to($store->email)->send(new RegisterOTPMail($token));
+        unset($to_save['password']);
+        unset($to_save['password_confirmation']);
 
-        return back()->with('message', __('Frontend.check_your_email'));
+        $user->fill($to_save + ['user_type' => 'user', 'password' => \Hash::make($request->password), 'remember_token' => $token])->save();
+        $user->permission()->create([
+            'blog_manager' => 0,
+            'blog_add' => 0,
+            'blog_edit' => 0,
+            'school_manager' => 0,
+            'school_add' => 0,
+            'school_edit' => 0,
+            'course_manager' => 0,
+            'course_add' => 0,
+            'course_edit' => 0,
+            'course_display' => 0,
+            'course_delete' => 0,
+            'currency_manager' => 0,
+            'currency_add' => 0,
+            'currency_edit' => 0,
+            'course_application_manager' => 0,
+            'course_application_edit' => 0,
+            'course_application_chanage_status' => 0,
+            'course_application_payment_refund' => 0,
+            'course_application_contact_student' => 0,
+            'course_application_contact_school' => 0,
+            'review_manager' => 0,
+            'review_edit' => 0,
+            'review_delete' => 0,
+            'review_approve' => 0,
+            'user_manager' => 0,
+            'user_add' => 0,
+            'user_edit' => 0,
+            'user_delete' => 0,
+            'user_permission' => 0,
+        ]);
+        \Mail::to($user->email)->send(new RegisterOTPMail($token));
+
+        toastr()->success(__('Frontend.check_your_email'));
+        
+        return view('frontend.login');
     }
 
     /**
@@ -138,7 +175,7 @@ class LoginController extends Controller
             function ($user, $password) use ($request) {
                 $user->forceFill([
                     'password' => \Hash::make($password)
-                ])->setRememberToken(\Illuminate\Support\Str::random(60));
+                ])->setRememberToken(hash('sha256', \Str::random(16) . time() . rand(0000, 9999)));
                 $user->save();
                 event(new PasswordReset($user));
             }

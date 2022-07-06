@@ -4,6 +4,8 @@
 <head>
     <meta charset="utf-8">
     <title>{{__('Frontend.regsitration_form')}}</title>
+    
+    @php $show_images = false; @endphp
 
     @if (app()->getLocale() != 'en')
         <style> 
@@ -113,6 +115,10 @@
         .mt-2 {
             margin-top: 0.6rem!important;
         }
+        .img-fulid {
+            max-width: 100%;
+            height: auto;
+        }
     </style>
 </head>
 
@@ -180,12 +186,14 @@
                         <label for="edate" class="col-form-label">{{__('Frontend.passport_date_of_expiry')}}</label>
                         <p>{{ $course_application->passport_date_of_expiry }}</p>
                     </td>
-                    <td>
-                        <label for="fname" class="col-form-label">{{__('Frontend.upload_passport_copy')}}</label>
-                        @if ($course_application->passport_copy)
-                            <img src="public/images/user_booked_details/{{ $course_application->passport_copy }}" />
-                        @endif
-                    </td>
+                    @if ($show_images)
+                        <td>
+                            @if ($course_application->passport_copy)
+                                <label for="fname" class="col-form-label">{{__('Frontend.upload_passport_copy')}}</label>
+                                <img src="{{ url('storage/app/public') . $course_application->passport_copy }}" class="img-fulid" />
+                            @endif
+                        </td>
+                    @endif
                 </tr>
                 <tr>
                     <td>
@@ -216,21 +224,25 @@
                             @endif
                         </p>
                     </td>
-                    <td>
-                        <label for="nat" class="col-form-label">{{__('Frontend.upload_financial_gurantee')}}</label>
-                        @if ($course_application->financial_guarantee)
-                            <img src="public/images/user_booked_details/{{ $course_application->financial_guarantee }}" />
-                        @endif
-                    </td>
+                    @if ($show_images)
+                        <td>
+                            @if ($course_application->financial_guarantee)
+                                <label for="nat" class="col-form-label">{{__('Frontend.upload_financial_gurantee')}}</label>
+                                <img src="{{ url('storage/app/public') . $course_application->financial_guarantee }}" class="img-fulid" />
+                            @endif
+                        </td>
+                    @endif
                 </tr>
-                <tr>
-                    <td>
-                        <label for="nat" class="col-form-label">{{__('Frontend.upload_bank_statement')}}</label>
-                        @if ($course_application->bank_statement)
-                            <img src="public/images/user_booked_details/{{ $course_application->bank_statement }}" />
-                        @endif
-                    </td>
-                </tr>
+                @if ($show_images)
+                    <tr>
+                        <td>
+                            @if ($course_application->bank_statement)
+                                <label for="nat" class="col-form-label">{{__('Frontend.upload_bank_statement')}}</label>
+                                <img src="{{ url('storage/app/public') . $course_application->bank_statement }}" class="img-fulid" />
+                            @endif
+                        </td>
+                    </tr>
+                @endif
             </tbody>
         </table>
 

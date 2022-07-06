@@ -12,7 +12,7 @@
                             <change>{{__('Admin/backend.in_english')}}</change>
                         </center>
 
-                        @include('branchadmin.include.alert')
+                        @include('branchcommon.include.alert')
 
                         <div id="menu">
                             <ul class="lang text-right current_page_itemm">
@@ -78,7 +78,7 @@
                             <change>{{__('Admin/backend.in_arabic')}}</change>
                         </center>
 
-                        @include('branchadmin.include.alert')
+                        @include('branchcommon.include.alert')
 
                         <div id="menu">
                             <ul class="lang text-right current_page_itemm">

@@ -32,7 +32,7 @@
                                 <td>
                                     <div class="btn-group">
                                         @php $confirm = __('Admin/backend.are_you_sure_delete'); @endphp
-                                        <a type="button" onclick="return confirm('<?= $confirm ?>')" href="{{route('admin.airport_delete', $medical->id)}}" class="btn btn-sm btn-danger fa fa-trash"> </a>
+                                        <a type="button" onclick="return confirm('<?= $confirm ?>')" href="{{ auth('superadmin')->check() ? route('superadmin.airport_delete', $medical->id) : route('schooladmin.airport_delete', $medical->id) }}" class="btn btn-sm btn-danger fa fa-trash"> </a>
                                     </div>
                                 </td>
                             </tr>
@@ -47,7 +47,7 @@
                                             </button>
                                         </div>
 
-                                        <form method="post"  action="{{route('admin.medical_update')}}">
+                                        <form method="post" action="{{ auth('superadmin')->check() ? route('admisuperadminn.medical_update') : route('schooladmin.medical_update') }}">
                                             @csrf
                                             <div class="modal-body">
                                                 <div class="form-group">

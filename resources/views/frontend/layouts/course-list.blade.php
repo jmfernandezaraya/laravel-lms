@@ -76,10 +76,10 @@
                     </div>
                     <div class="school-content">
                         <div class="school-information">
-                            {{ $course->school->name ? (app()->getLocale() == 'en' ? ($course->school->name->name ?? '-') : ($course->school->name->name_ar ?? '-')) : '-' }}
-                            / {{ app()->getLocale() == 'en' ? ($course->school->branch_name ?? '-') : ($course->school->branch_name_ar ?? '-') }}
-                            / {{ $course->school->city ? (app()->getLocale() == 'en' ? ($course->school->city->name ?? '-') : ($course->school->city->name_ar ?? '-')) : '-' }}
-                            / {{ $course->school->country ? (app()->getLocale() == 'en' ? ($course->school->country->name ?? '-') : ($course->school->country->name_ar ?? '-')) : '-' }}
+                            {{ $course->school->name ? (app()->getLocale() == 'en' ? ($course->school->name->name ?? '') : ($course->school->name->name_ar ?? '')) : '' }}
+                            {{ app()->getLocale() == 'en' ? ($course->school->branch_name ? ' / ' . $course->school->branch_name : '') : ($course->school->branch_name_ar ? ' / ' . $course->school->branch_name : '') }}
+                            {{ $course->school->city ? (app()->getLocale() == 'en' ? ($course->school->city->name ? ' / ' . $course->school->city->name : '') : ($course->school->city->name_ar ? ' / ' . $course->school->city->name_ar : '')) : '' }}
+                            {{ $course->school->country ? (app()->getLocale() == 'en' ? ($course->school->country->name ? ' / ' . $course->school->country->name : '') : ($course->school->country->name_ar ? ' / ' . $course->school->country->name_ar : '')) : '' }}
                         </div>
                         <div class="school-users-loves-likes">
                             <div class="school-users-loves">

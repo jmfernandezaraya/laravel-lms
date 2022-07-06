@@ -57,50 +57,31 @@
                     @php $now = Carbon\Carbon::now()->format('Y-m-d') @endphp
                     @foreach ($schools as $school)
                         @if ($setting_value && $setting_value['school_promotions'] && in_array($school->id, $setting_value['school_promotions']))
-                            @php
-                                $course = null;
-                                $course_program = null;
-                                foreach ($school->courses as $school_course) {
-                                    foreach ($school_course->coursePrograms as $school_course_program) {
-                                        if ($school_course_program->discount_per_week != ' -' && $school_course_program->discount_per_week != ' %' && 
-                                            (($school_course_program->discount_start_date <= $now && $school_course_program->discount_end_date >= $now)
-                                            || ($school_course_program->x_week_selected && $school_course_program->x_week_start_date <= $now && $school_course_program->x_week_end_date >= $now))) {
-                                            $course = $school_course;
-                                            $course_program = $school_course_program;
-                                            $course_prgram_age_range = getCourseProgramAgeRange($course_program->program_age_range);
-                                            break;
-                                        }
-                                    }
-                                    if ($course_program) {
-                                        break;
-                                    }
-                                }
-                            @endphp
                             <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
                                 <!-- School Item-->
                                 <div class="school-item">
-                                    <a href="{{route('frontend.course.single', ['school_id' => $school->id, 'program_id' => $course ? $course->unique_id : 0])}}">
+                                    <a href="{{route('frontend.course.single', ['school_id' => $school->id, 'program_id' => $school->course ? $school->course->unique_id : 0])}}">
                                         <div class="school-logo" style="background-image: url('{{ $school->logo }}')"></div>
-                                        @if ($course_program)
+                                        @if ($school->course_program)
                                             <div class="program-content">
                                                 <div class="price-discount">
                                                     @php
                                                         $course_program_discount = false;
                                                         $course_program_x_week_discount = false;
-                                                        if (checkBetweenDate($course_program->discount_start_date, $course_program->discount_end_date, $now)) {
+                                                        if (checkBetweenDate($school->course_program->discount_start_date, $school->course_program->discount_end_date, $now)) {
                                                             $course_program_discount = true;
                                                         }
-                                                        if ($course_program->x_week_selected && checkBetweenDate($course_program->x_week_start_date, $course_program->x_week_end_date, $now)) {
+                                                        if ($school->course_program->x_week_selected && checkBetweenDate($school->course_program->x_week_start_date, $school->course_program->x_week_end_date, $now)) {
                                                             $course_program_x_week_discount = true;
                                                         }
                                                     @endphp
                                                     <div class="price">
                                                         <span class="sale-price {{ ($course_program_discount || $course_program_x_week_discount) ? 'discounted-value' : '' }}">
-                                                            {{ getCurrencyConvertedValue($course_program->course_unique_id, $course_program->program_cost) }}
+                                                            {{ getCurrencyConvertedValue($school->course_program->course_unique_id, $school->course_program->program_cost) }}
                                                         </span>
                                                         <span>
                                                             @if ($course_program_discount || $course_program_x_week_discount)
-                                                                - {{ getCurrencyConvertedValue($course_program->course_unique_id, getDiscountedValue($course_program->program_cost, $course_program->discount_per_week)) }}
+                                                                - {{ getCurrencyConvertedValue($school->course_program->course_unique_id, getDiscountedValue($school->course_program->program_cost, $school->course_program->discount_per_week)) }}
                                                             @endif
                                                         </span>
                                                         <span>{{ getGetDefaultCurrencyName() }} {{__('Frontend.per_week')}}</span>
@@ -108,29 +89,29 @@
                                                     @if ($course_program_discount || $course_program_x_week_discount)
                                                         <div class="discount">
                                                             {{__('Frontend.discount')}}:&nbsp;
-                                                            @if ($course_program->discount_per_week)
+                                                            @if ($school->course_program->discount_per_week)
                                                                 @if ($course_program_discount)
                                                                     @php
-                                                                        $course_program_discount_per_weeks = explode(" ", $course_program->discount_per_week);
+                                                                        $course_program_discount_per_weeks = explode(" ", $school->course_program->discount_per_week);
                                                                         $course_program_discount_per_week_value = $course_program_discount_per_weeks[0];
                                                                         $course_program_discount_per_week_symbol = count($course_program_discount_per_weeks) >= 2 ? $course_program_discount_per_weeks[1] : '';
                                                                     @endphp
                                                                     @if ($course_program_discount_per_week_symbol == '-')
-                                                                        {{ $course_program_discount_per_week_symbol }}{{ getCurrencyConvertedValue($course_program->course_unique_id, $course_program_discount_per_week_value) }} {{ getGetDefaultCurrencyName() }}
+                                                                        {{ $course_program_discount_per_week_symbol }}{{ getCurrencyConvertedValue($school->course_program->course_unique_id, $course_program_discount_per_week_value) }} {{ getGetDefaultCurrencyName() }}
                                                                     @else
                                                                         {{ $course_program_discount_per_week_value }}{{ $course_program_discount_per_week_symbol }}
                                                                     @endif
                                                                 @elseif ($course_program_x_week_discount)
-                                                                    @if ($course_program->how_many_week_free == 1)
+                                                                    @if ($school->course_program->how_many_week_free == 1)
                                                                         {{__('Frontend.1_week_free')}}
-                                                                    @elseif ($course_program->how_many_week_free == 2)
+                                                                    @elseif ($school->course_program->how_many_week_free == 2)
                                                                         {{__('Frontend.2_week_free')}}
-                                                                    @elseif ($course_program->how_many_week_free == 3)
+                                                                    @elseif ($school->course_program->how_many_week_free == 3)
                                                                         {{__('Frontend.3_week_free')}}
-                                                                    @elseif ($course_program->how_many_week_free == 4)
+                                                                    @elseif ($school->course_program->how_many_week_free == 4)
                                                                         {{__('Frontend.4_week_free')}}
                                                                     @endif
-                                                                    {{__('Frontend.every')}} {{ $course_program->x_week_selected }} {{__('Frontend.per_week')}}
+                                                                    {{__('Frontend.every')}} {{ $school->course_program->x_week_selected }} {{__('Frontend.per_week')}}
                                                                 @endif
                                                             @endif
                                                         </div>
@@ -141,12 +122,12 @@
                                                     <div class="program-lessons">{{__('Frontend.lessons_w')}}: {{ $course->lessons_per_week }} {{__('Frontend.lessons')}}</div>
                                                     <div class="program-hours">{{__('Frontend.hours_w')}}: {{ $course->hours_per_week }} {{__('Frontend.hours')}}</div>
                                                     <div class="program-level">{{__('Frontend.level_required')}}: {{ app()->getLocale() == 'en' ? $course->program_level : $course->program_level_ar }}</div>
-                                                    <div class="program-age_range">{{__('Frontend.age_range')}}: {{ $course_prgram_age_range['min_age'] }} - {{ $course_prgram_age_range['max_age'] }}  {{__('Frontend.years')}}</div>
+                                                    <div class="program-age_range">{{__('Frontend.age_range')}}: {{ $$school->age_range['min_age'] }} - {{ $$school->age_range['max_age'] }}  {{__('Frontend.years')}}</div>
                                                 </div>
                                             </div>
                                             <div class="school-content">
                                                 <div class="school-information">
-                                                    {{ $school->name ? (app()->getLocale() == 'en' ? ($school->name->name ?? '') : ($school->name->name_ar ?? '-')) : '' }}
+                                                    {{ $school->name ? (app()->getLocale() == 'en' ? ($school->name->name ?? '') : ($school->name->name_ar ?? '')) : '' }}
                                                     {{ app()->getLocale() == 'en' ? ($school->branch_name ? ' / ' . $school->branch_name : '') : ($school->branch_name_ar ? ' / ' . $school->branch_name : '') }}
                                                     {{ $school->city ? (app()->getLocale() == 'en' ? ($school->city->name ? ' / ' . $school->city->name : '') : ($school->city->name_ar ? ' / ' . $school->city->name_ar : '')) : '' }}
                                                     {{ $school->country ? (app()->getLocale() == 'en' ? ($school->country->name ? ' / ' . $school->country->name : '') : ($school->country->name_ar ? ' / ' . $school->country->name_ar : '')) : '' }}
@@ -185,34 +166,6 @@
         </div>
     </section>
     <!-- End School Promotion Section -->
-
-    <!-- ======= Popular Country Section ======= -->
-    <section id="popular_country" class="popular-country">
-        <div class="container" data-aos="fade-up">
-            <div class="section-title">
-                <h2>{{__('Frontend.popular_country')}}</h2>
-                <p>{{__('Frontend.popular_country')}}</p>
-            </div>
-
-            <div class="row" data-aos="zoom-in" data-aos-delay="100">
-                @if ($setting_value && $setting_value['popular_countries'])
-                    @foreach ($setting_value['popular_countries'] as $country)
-                        <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
-                            <!-- Country Item-->
-                            <div class="country-item">
-                                <img src="{{ $country['logo'] ? asset('storage/app/public/front_page/') . '/'. $country['logo'] : '' }}" class="img-fluid" alt="Country Logo">
-                                <div class="country-content">
-                                    <div class="country-name">{{ getSchoolCountryName($country['id']) }}</div>
-                                </div>
-                            </div>
-                            <!-- End Country Item-->
-                        </div>
-                    @endforeach
-                @endif
-            </div>
-        </div>
-    </section>
-    <!-- End Popular Country Section -->
 
     <!-- ======= Popular School Section ======= -->
     <section id="popular-school" class="popular-school">
@@ -269,6 +222,34 @@
     </section>
     <!-- End Popular School Section -->
 
+    <!-- ======= Popular Country Section ======= -->
+    <section id="popular_country" class="popular-country">
+        <div class="container" data-aos="fade-up">
+            <div class="section-title">
+                <h2>{{__('Frontend.popular_country')}}</h2>
+                <p>{{__('Frontend.popular_country')}}</p>
+            </div>
+
+            <div class="row" data-aos="zoom-in" data-aos-delay="100">
+                @if ($setting_value && $setting_value['popular_countries'])
+                    @foreach ($setting_value['popular_countries'] as $country)
+                        <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+                            <!-- Country Item-->
+                            <div class="country-item" data-id="{{ $country['id'] }}">
+                                <img src="{{ $country['logo'] ? asset('storage/app/public/front_page/') . '/'. $country['logo'] : '' }}" class="img-fluid" alt="Country Logo">
+                                <div class="country-content">
+                                    <div class="country-name">{{ getSchoolCountryName($country['id']) }}</div>
+                                </div>
+                            </div>
+                            <!-- End Country Item-->
+                        </div>
+                    @endforeach
+                @endif
+            </div>
+        </div>
+    </section>
+    <!-- End Popular Country Section -->
+
     <!-- ======= Testimonial Section ======= -->
     @if(\Ghanem\Rating\Models\Rating::where('approved', true)->where('comments', '!=', null)->count() > 0)
         <div class="test-1">
@@ -314,8 +295,8 @@
     <div class="logo-2nd-last">
         <div class="container">
             <div class="section-title">
-                <h2>Our partners</h2>
-                <p>Our partners logos</p>
+                <h2>{{__('Frontend.our_partners')}}</h2>
+                <p>{{__('Frontend.our_partner_logos')}}</p>
             </div>
             <div class="customer-logos slider">
                 <div class="slide">
@@ -345,6 +326,34 @@
                 <div class="slide">
                     <img src="//image.freepik.com/free-vector/retro-label-on-rustic-background_82147503374.jpg">
                 </div>
+            </div>
+        </div>
+    </div>
+
+    {{--Country Age Selection Modal--}}
+    <div class="modal fade" id="CountryAgeSelectModal" tabindex="-1" role="dialog" aria-labelledby="CountryAgeSelectModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form id="country_age_select_form" method="post" action="">
+                    <input type="hidden" id="country_id" />
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="CountryAgeSelectModalLabel">{{__('Frontend.country_age_select')}}</h5>
+                        <button type="button" id="close_country_age_select" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="nationality_in_english">{{__('Frontend.age')}}</label>
+                            <select class="form-control" id="country_ages">
+                                <option value="">{{__('Frontend.select')}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer pt-0">
+                        <button onclick="goCountryPage($(this))" type="button" class="btn btn-primary">{{__('Frontend.go')}}</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -392,6 +401,7 @@
                 console.log(error);
             }
 
+            var go_country_page_url = "{{ route('frontend.country.page', ['id' => '#ID#']) }}";
             $(document).ready(function () {
                 $("#testimonial-slider").owlCarousel({
                     items: 2,
@@ -420,7 +430,26 @@
                         settings: { slidesToShow: 3 }
                     }]
                 });
+
+                $('.popular-country .country-item').click(function() {
+                    var country_id = $(this).data('id');
+                    $('#country_id').val(country_id);
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ route("frontend.country.ages") }}',
+                        data: { _token: $("meta[name='csrf-token']").attr('content'), id: country_id },
+                        success: function (data) {
+                            $('#CountryAgeSelectModal #country_ages').html(data.ages_html);
+                            $('#CountryAgeSelectModal').modal('show');
+                        }
+                    });
+                });
             });
+
+
+            function goCountryPage() {
+                window.location.href = go_country_page_url.replace('#ID#', $('#country_id').val()) + '/?age=' + $('#CountryAgeSelectModal #country_ages').val();
+            }
         </script>
     @endsection
 @endsection

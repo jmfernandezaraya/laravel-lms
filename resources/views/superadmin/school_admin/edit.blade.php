@@ -31,7 +31,7 @@
                     </ul>
                 </div>
 
-                @include('admin.include.alert')
+                @include('common.include.alert')
             </div>
         </div>
     </div>
@@ -206,6 +206,28 @@
                                     <div class="form-check">
                                         <input name="course_application_contact_school" type="checkbox" class="form-check-inline" value='1' {{ ($school_admin->permission && $school_admin->permission->course_application_contact_school) ? 'checked' : '' }}>
                                         <label for="course_application_contact_school">{{__('Admin/backend.contact_center_school')}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="review_permission">{{__('Admin/backend.review')}}</label>
+                                <select name="review_permission" id="review_permission" class="form-control">
+                                    <option value="">{{__('Admin/backend.select_role')}}</option>
+                                    <option value="subscriber" {{ ($school_admin->permission && !$school_admin->permission->review_manager && ($school_admin->permission->review_add || $school_admin->permission->review_edit || $school_admin->permission->review_delete || $school_admin->permission->review_permission)) ? 'selected' : '' }}>{{__('Admin/backend.subscriber')}}</option>
+                                    <option value="manager" {{ ($school_admin->permission && $school_admin->permission->review_manager) ? 'selected' : '' }}>{{__('Admin/backend.manager')}}</option>
+                                </select>
+                                <div class="review-permissions" style="display: {{ ($school_admin->permission && !$school_admin->permission->review_manager && ($school_admin->permission->review_add || $school_admin->permission->review_edit || $school_admin->permission->review_delete || $school_admin->permission->review_permission)) ? 'display' : 'none' }}">
+                                    <div class="form-check">
+                                        <input name="review_edit" type="checkbox" class="form-check-inline" value='1' {{ ($school_admin->permission && $school_admin->permission->review_edit) ? 'checked' : '' }}>
+                                        <label for="review_edit">{{__('Admin/backend.edit')}}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="review_approve" type="checkbox" class="form-check-inline" value='1' {{ ($school_admin->permission && $school_admin->permission->review_approve) ? 'checked' : '' }}>
+                                        <label for="review_approve">{{__('Admin/backend.approve')}}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="review_delete" type="checkbox" class="form-check-inline" value='1' {{ ($school_admin->permission && $school_admin->permission->review_delete) ? 'checked' : '' }}>
+                                        <label for="review_delete">{{__('Admin/backend.delete')}}</label>
                                     </div>
                                 </div>
                             </div>

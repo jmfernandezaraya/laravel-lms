@@ -31,7 +31,7 @@
                     </ul>
                 </div>
 
-                @include('admin.include.alert')
+                @include('common.include.alert')
             </div>
         </div>
     </div>
@@ -290,7 +290,7 @@
                             <a class="btn btn-primary" type="button" onclick="submitAccommodationForm($(this))">{{__('Admin/backend.submit')}}</a>
                         </div>
                         <div class="form-group col-md-6">
-                            <a href="{{route('admin.course.accomm_under_age')}}" class="btn btn-primary pull-right" type="button">{{__('Admin/backend.next')}}</a>
+                            <a href="{{ auth('superadmin')->check() ? route('superadmin.course.accomm_under_age') : route('schooladmin.course.accomm_under_age') }}" class="btn btn-primary pull-right" type="button">{{__('Admin/backend.next')}}</a>
                         </div>
                     </div>
                 </form>
@@ -302,7 +302,7 @@
 
     @section('js')
         <script>
-            var uploadFileOption = "{{route('admin.course.upload', ['_token' => csrf_token() ])}}";
+            var uploadFileOption = "{{ auth('superadmin')->check() ? route('superadmin.course.upload', ['_token' => csrf_token() ]) : route('schooladmin.course.upload', ['_token' => csrf_token() ]) }}";
         </script>
     @endsection
 @endsection

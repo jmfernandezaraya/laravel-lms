@@ -38,7 +38,7 @@ class CourseControllerSchoolAdmin extends Controller
 
         $data['branch'] = $value;
         $data['country'] = "<option value='$school->country'>$school->country</option>";
-        $data['city'] = "<option value ='$school->city'>$school->city</option>";
+        $data['city'] = "<option value='$school->city'>$school->city</option>";
 
         return response($data);
     }

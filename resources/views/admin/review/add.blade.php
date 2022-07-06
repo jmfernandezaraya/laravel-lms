@@ -12,7 +12,7 @@
                     <h1 class="card-title">{{__('Admin/backend.add_rating_review')}}</h1>
                 </div>
 
-                @include('admin.include.alert')
+                @include('common.include.alert')
             </div>
         </div>
     </div>
@@ -20,7 +20,7 @@
     <div class="page-content">
         <div class="card">
             <div class="card-body">
-                <form id="reviewForm" class="forms-sample" method="post" action="{{route('admin.review.store')}}">
+                <form id="reviewForm" class="forms-sample" method="post" action="{{ auth('superadmin')->check() ? route('superadmin.review.store') : route('schooladmin.review.store') }}">
                     {{csrf_field()}}
                     
                     <div class="row">

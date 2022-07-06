@@ -556,6 +556,10 @@ function submitCommonForBlogForm(urlname, typeMethod = "POST") {
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
             }
+
+            if (typeof handleResizePageContent === "function") {
+                handleResizePageContent();
+            }
         }
     });
 }
@@ -605,6 +609,10 @@ function submitForm(object, method = 'POST') {
                 $('.alert-success p').html(data.data);
                 document.documentElement.scrollTop = 0;
             }
+
+            if (typeof handleResizePageContent === "function") {
+                handleResizePageContent();
+            }
         },
         error: function (data) {
             $("#loader").hide();
@@ -616,6 +624,10 @@ function submitForm(object, method = 'POST') {
             $('.alert-danger ul').html('');
             for (var error in rees.errors) {
                 $('.alert-danger ul').append('<li>' + rees.errors[error] + '</li>');
+            }
+
+            if (typeof handleResizePageContent === "function") {
+                handleResizePageContent();
             }
         }
     });
@@ -1328,6 +1340,10 @@ function updateCourseForm(object) {
                 $('.alert-success p').html(data.data);
                 document.documentElement.scrollTop = 0;
             }
+
+            if (typeof handleResizePageContent === "function") {
+                handleResizePageContent();
+            }
         }
     });
 }
@@ -1369,6 +1385,10 @@ function submitCourseProgramForm(this_object) {
 
                 $('.alert-danger').show();
                 $('.alert-danger ul').html(data.catch_error);
+            }
+
+            if (typeof handleResizePageContent === "function") {
+                handleResizePageContent();
             }
         }
     });
@@ -1413,6 +1433,10 @@ function submitAccommodationForm(object) {
                 $("#loader").hide();
                 $('.alert-danger').show();
                 $('.alert-danger ul').html(data.catch_error);
+            }
+
+            if (typeof handleResizePageContent === "function") {
+                handleResizePageContent();
             }
         }
     });
@@ -1460,6 +1484,10 @@ function submitAccommodationUnderAgeForm(object, reload = false) {
                 $('.alert-danger').show();
                 $('.alert-danger ul').html(data.catch_error);
             }
+
+            if (typeof handleResizePageContent === "function") {
+                handleResizePageContent();
+            }
         }
     });
 }
@@ -1503,6 +1531,10 @@ function submitOtherServiceForm(object, reload = false) {
                 $('.alert-danger').show();
                 $('.alert-danger ul').html(data.catch_error);
             }
+
+            if (typeof handleResizePageContent === "function") {
+                handleResizePageContent();
+            }
         },
     });
 }
@@ -1537,6 +1569,10 @@ function submitVisaApplication(object) {
                 }
             }
             document.documentElement.scrollTop = 0;
+
+            if (typeof handleResizePageContent === "function") {
+                handleResizePageContent();
+            }
         },
         error: function (data) {
             $("#loader").hide();
@@ -1550,6 +1586,10 @@ function submitVisaApplication(object) {
                 $('.alert-danger ul').append('<li>' + rees.errors[error] + '</li>');
             }
             document.documentElement.scrollTop = 0;
+
+            if (typeof handleResizePageContent === "function") {
+                handleResizePageContent();
+            }
         }
     });
 }
@@ -1933,24 +1973,32 @@ function addProgramAgeRange(english_val, arabic_val) {
 }
 
 //
-function deleteProgramAgeRange() {
+function deleteProgramAgeRange(object) {
     var ids = [];
-
     var token = $("meta[name='csrf-token']").attr('content');
-    $.each($("#program_age_range_choose" + program_age_range + " option:selected"), function () {
+    $.each($(object).closest('.row').find("option:selected"), function () {
         ids.push($(this).val());
     });
     if (ids != '') {
         if (confirm(delete_on_confirm)) {
             $("#loader").show();
             $.post(delete_program_age_range_url, {_method: 'DELETE', _token: token, ids: ids}, function (data) {
-                $("#program_age_range_choose" + program_age_range).html(data.result);
-                document.documentElement.scrollTop = 0;
-                $("#program_age_range_choose" + program_age_range).multiselect('rebuild');
+                var program_age_range_index = 0;
+                while(true) {
+                    var models_dropdown = $("#program_age_range_choose" + program_age_range_index);
+                    if (models_dropdown.length) {
+                        models_dropdown.html(data.result);
+                        models_dropdown.multiselect('rebuild');
+                    } else {
+                        break;
+                    }
+                    program_age_range_index++;
+                }
             }).done(function (data) {
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
                 document.documentElement.scrollTop = 0;
+
                 $("#loader").hide();
             });
         }
@@ -1958,7 +2006,6 @@ function deleteProgramAgeRange() {
         alert('Please select any option to delete');
     }
 }
-
 
 //////
 function addProgramUnderAgeRange(english_val, arabic_val) {
@@ -2044,7 +2091,7 @@ function addAccommAgeRange(english_val, arabic_val) {
 function deleteAccommAgeRange(object) {
     var ids = [];
     var token = $("meta[name='csrf-token']").attr('content');
-    $.each($(object).find("option:selected"), function () {
+    $.each($(object).closest('.row').find("option:selected"), function () {
         ids.push($(this).val());
     });
     if (ids != '') {

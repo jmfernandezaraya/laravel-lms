@@ -21,7 +21,7 @@
                     </change>
                 </div>
 
-                @include('admin.include.alert')
+                @include('common.include.alert')
             </div>
         </div>
     </div>
@@ -77,9 +77,9 @@
                             </div>
                             <div class="form-group col-md-6">
                                 @if ($course_id)
-                                    <a href="{{route('admin.course.other_service.edit')}}"  class="btn btn-primary pull-right" type="button">{{__('Admin/backend.next')}}</a>
+                                    <a href="{{ auth('superadmin')->check() ? route('superadmin.course.other_service.edit') : route('schooladmin.course.other_service.edit') }}"  class="btn btn-primary pull-right" type="button">{{__('Admin/backend.next')}}</a>
                                 @else
-                                    <a href="{{route('admin.course.other_service')}}"  class="btn btn-primary pull-right" type="button">{{__('Admin/backend.next')}}</a>
+                                    <a href="{{ auth('superadmin')->check() ? route('superadmin.course.other_service') : route('schooladmin.course.other_service') }}"  class="btn btn-primary pull-right" type="button">{{__('Admin/backend.next')}}</a>
                                 @endif
                             </div>
                         </div>

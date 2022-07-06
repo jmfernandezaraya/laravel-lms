@@ -32,7 +32,7 @@
 					<h4 class="card-title">{{__('Admin/backend.add_school')}}</h4>
 					<change>{{__('Admin/backend.in_english')}}</change>
 				</center>
-				@include('branchadmin.include.alert')
+				@include('branchcommon.include.alert')
 				<div id="menu">
 					<ul class="lang text-right current_page_itemm">
 						<li class="current_page_item selected">

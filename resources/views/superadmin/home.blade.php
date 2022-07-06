@@ -20,7 +20,7 @@
                     </change>
                 </div>
 
-                @include('admin.include.alert')
+                @include('common.include.alert')
                 
                 <div id="menu">
                     <ul class="lang text-right">

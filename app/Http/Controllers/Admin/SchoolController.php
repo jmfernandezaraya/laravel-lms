@@ -134,8 +134,8 @@ class SchoolController extends Controller
             $save_to = $request->validated();
 
             unset($save_to['multiple_photos']);
-            unset($save_to['logos']);
             unset($save_to['logo']);
+            unset($save_to['logos']);
             unset($save_to['nationality_increment']);
             unset($save_to['nationality']);
             unset($save_to['nationality_mix']);
@@ -144,28 +144,24 @@ class SchoolController extends Controller
             ini_set('post_max_size', 5000000);
             $input = $request->except('_token', 'en', 'nationality_increment', 'nationality_id', 'nationality', 'nationality_mix');
             if ($request->has('multiple_photos')) {
-                foreach ($request->multiple_photos as $multiple_photoss) {
+                $input['multiple_photos'] = [];
+                foreach ($request->multiple_photos as $multiple_photo) {
                     $this->storeImage->setPath('school_images');
-                    $this->storeImage->setImage($multiple_photoss);
-
-                    $multiple_photos[] = $this->storeImage->saveImage();
+                    $this->storeImage->setImage($multiple_photo);
+                    $input['multiple_photos'][] = $this->storeImage->saveImage();
                 }
-                $input['multiple_photos'] = $multiple_photos;
             }
             if ($request->has('logos')) {
-                $logos = [];
-                foreach ($request->logos as $logoss) {
+                $input['logos'] = [];
+                foreach ($request->logos as $logo) {
                     $this->storeImage->setPath('school_images');
-                    $this->storeImage->setImage($logoss);
-
-                    $logos[] = $this->storeImage->saveImage();
+                    $this->storeImage->setImage($logo);
+                    $input['logos'][] = $this->storeImage->saveImage();
                 }
-                $input['logos'] = $logos;
             }
             if ($request->has('logo')) {
                 $this->storeImage->setPath('school_images');
                 $this->storeImage->setImage($request->logo);
-
                 $input['logo'] = $this->storeImage->saveImage();
             }
             if ($request->has("video_url")) {
@@ -234,33 +230,29 @@ class SchoolController extends Controller
         $input = $request->except('_token', 'en', 'nationality_increment', 'nationality_id', 'nationality', 'nationality_mix');
 
         if ($request->has('multiple_photos')) {
-            foreach ($request->multiple_photos as $multiple_photoss) {
-                $this->storeImage->setImage($multiple_photoss);
+            $input['multiple_photos'] = [];
+            foreach ($request->multiple_photos as $multiple_photo) {
+                $this->storeImage->setImage($multiple_photo);
                 $this->storeImage->setPath('school_images');
-                $multiple_photos[] = $this->storeImage->saveImage();
+                $input['multiple_photos'][] = $this->storeImage->saveImage();
             }
-            $input['multiple_photos'] = $multiple_photos;
         }
-
         if ($request->has('logos')) {
-            foreach ($request->file('logos') as $logoss) {
-                $this->storeImage->setImage($logoss);
+            $input['logos'] = [];
+            foreach ($request->file('logos') as $logo) {
+                $this->storeImage->setImage($logo);
                 $this->storeImage->setPath('school_images');
-
-                $logos[] = $this->storeImage->saveImage();
+                $input['logos'][] = $this->storeImage->saveImage();
             }
-            $input['logos'] = $logos;
         }
-
         if ($request->has('logo')) {
-            $logose = $request->file('logo');
+            $logo = $request->file('logo');
             $this->storeImage->setPath('school_images');
-            $this->storeImage->setImage($logose);
-
-            $logose = $this->storeImage->saveImage();
-            $input['logo'] = $logose;
+            $this->storeImage->setImage($logo);
+            $input['logo'] = $this->storeImage->saveImage();
         }
         $save = $request->validated();
+
         unset($save['logo']);
         unset($save['logos']);
         unset($save['multiple_photos']);

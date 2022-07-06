@@ -31,7 +31,7 @@
                                 <td>{{$airport->created_at->diffForHumans()}}</td>
                                 <td>
                                     <div class ="btn-group">
-                                        <form method="post" action="{{route('admin.course.airport.delete', $airport->unique_id)}}">
+                                        <form method="post" action="{{ auth('superadmin')->check() ? route('superadmin.course.airport.delete', $airport->unique_id) : route('schooladmin.course.airport.delete', $airport->unique_id) }}">
                                             @csrf
                                             @method('DELETE')
                                             <button onclick="return confirm('{{__('Admin/backend.are_you_sure_delete')}}')" class="btn btn-danger btn-sm fa fa-trash"></button>
@@ -49,7 +49,7 @@
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-                                        <form method="post"  action="{{route('admin.airport_update')}}">
+                                        <form method="post"  action="{{ auth('superadmin')->check() ? route('superadmin.airport_update') : route('schooladmin.airport_update') }}">
                                             @csrf
                                             <div class="modal-body">
                                                 <div class="form-group">

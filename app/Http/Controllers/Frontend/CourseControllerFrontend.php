@@ -881,7 +881,7 @@ class CourseControllerFrontend extends Controller
     {
         insertCalculationIntoDB('airport_pickup_fee', 0);
         insertCalculationIntoDB('medical_insurance_fee', 0);
-        insertCalculationIntoDB('airport_total', 0);
+        insertCalculationIntoDB('custodian_fee', 0);
         return true;
     }
 
@@ -1361,6 +1361,7 @@ class CourseControllerFrontend extends Controller
         $this->calculator->setMedicalInsuranceFee($medical_insurance_fee);
         insertCalculationIntoDB('medical_insurance_fee', $medical_insurance_fee);
         
+        $custodian_fee = 0;
         $program_age_range = Choose_Program_Age_Range::where('unique_id', $request->under_age)->first();
         $custodian_under_age = Choose_Custodian_Under_Age::where('age', $program_age_range ? $program_age_range->age : '')->value('unique_id');
         $custodian = CourseCustodian::where('course_unique_id', \Session::get('course_unique_id'))->where('age_range', 'LIKE', '%' . $custodian_under_age . '%')->first();
@@ -1374,7 +1375,11 @@ class CourseControllerFrontend extends Controller
                 }
             }
         }
-        $custodian_fee_flag ? $this->calculator->setCustodianFee($custodian->fee) : $this->calculator->setCustodianFee(0);
+        if ($custodian_fee_flag) {
+            $custodian_fee = $custodian->fee;
+        }
+        $this->calculator->setCustodianFee($custodian_fee);
+        insertCalculationIntoDB('custodian_fee', $custodian_fee);
        
         $default_currency = getDefaultCurrency();
         

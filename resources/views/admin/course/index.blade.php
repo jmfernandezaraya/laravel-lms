@@ -13,7 +13,7 @@
                 </div>
 
                 @if (can_manage_course() || can_add_course() || can_display_course() || can_delete_course())
-                    <form method="post" action="{{ route('admin.course.bulk') }}">
+                    <form method="post" action="{{ auth('superadmin')->check() ? route('superadmin.course.bulk') : route('schooladmin.course.bulk') }}">
                         @csrf
                         <div class="row mb-3">
                             <div class="form-group col-md-3">
@@ -85,7 +85,7 @@
                                 <td>
                                     @if (can_manage_course())
                                         @if (checkCoursePromotion($course->unique_id))
-                                            <form method="post" action="{{ route('admin.course.promotion', $course->unique_id) }}">
+                                            <form method="post" action="{{ auth('superadmin')->check() ? route('superadmin.course.promotion', $course->unique_id) : route('schooladmin.course.promotion', $course->unique_id) }}">
                                                 @csrf
 
                                                 <input type="hidden" name="promotion" value="{{ $course->promotion ? 1 : 0 }}" />
@@ -118,7 +118,7 @@
                                         @endif
                                         
                                         @if (can_manage_course() || can_add_course())
-                                            <form method="post" action="{{ route('admin.course.clone', $course->unique_id) }}">
+                                            <form method="post" action="{{ auth('superadmin')->check() ? route('superadmin.course.clone', $course->unique_id) : route('schooladmin.course.clone', $course->unique_id) }}">
                                                 @csrf
                                                 <button onclick="return confirm('{{__('Admin/backend.are_you_sure_you_wanna_clone')}}')" class="btn btn-info btn-sm fa fa-clone"></button>
                                             </form>
@@ -126,12 +126,12 @@
 
                                         @if (can_manage_course() || can_display_course())
                                             @if ($course->display)
-                                                <form method="post" action="{{ route('admin.course.pause', $course->unique_id) }}">
+                                                <form method="post" action="{{ auth('superadmin')->check() ? route('superadmin.course.pause', $course->unique_id) : route('schooladmin.course.pause', $course->unique_id) }}">
                                                     @csrf
                                                     <button onclick="return confirm('{{__('Admin/backend.are_you_sure_you_wanna_pause')}}')" class="btn btn-secondary btn-sm fa fa-pause"></button>
                                                 </form>
                                             @else
-                                                <form method="post" action="{{ route('admin.course.play', $course->unique_id) }}">
+                                                <form method="post" action="{{ auth('superadmin')->check() ? route('superadmin.course.play', $course->unique_id) : route('schooladmin.course.play', $course->unique_id) }}">
                                                     @csrf
                                                     <button onclick="return confirm('{{__('Admin/backend.are_you_sure_you_wanna_play')}}')" class="btn btn-success btn-sm fa fa-play"></button>
                                                 </form>
@@ -139,7 +139,7 @@
                                         @endif
                                         
                                         @if (can_manage_course() || can_delete_course())
-                                            <form method="post" action="{{ route('admin.course.delete', $course->unique_id) }}">
+                                            <form method="post" action="{{ auth('superadmin')->check() ? route('superadmin.course.delete', $course->unique_id) : route('schooladmin.course.delete', $course->unique_id) }}">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button onclick="return confirm('{{__('Admin/backend.are_you_sure_you_wanna_delete')}}')" class="btn btn-danger btn-sm fa fa-trash"></button>

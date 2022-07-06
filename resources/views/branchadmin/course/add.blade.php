@@ -80,7 +80,7 @@
                 <change>{{__('Admin/backend.in_english')}}</change>
             </div>
 
-            @include('superadmin.include.alert')
+            @include('common.include.alert')
             <div id="menu">
                 <ul class="lang text-right current_page_itemm">
                     <li class="current_page_item selected">
@@ -295,7 +295,7 @@
                                       class="fa fa-plus pl-3" data-toggle="modal"
                                         data-target="#ProgramAgeRangeModal"
                                         aria-hidden="true"></i><i
-                                        onclick="deleteProgramAgeRange()" class="fa fa-trash pl-3"
+                                        onclick="deleteProgramAgeRange($(this))" class="fa fa-trash pl-3"
                                         aria-hidden="true"></i></label>
 
                                 <div class="row">
@@ -466,7 +466,7 @@
                 <br>
                 <br>
                 <script>
-                    course_url_store = "{{route('admin.course.store')}}";
+                    course_url_store = "{{ auth('superadmin')->check() ? route('superadmin.course.store') : route('schooladmin.course.store') }}";
                 </script>
 
                 <a onclick="getContent('about_program', 'about_program_value'); getContent('about_courier', 'about_courier_value'); submitCourseForm($(this));"

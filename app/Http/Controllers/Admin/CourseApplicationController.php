@@ -298,7 +298,11 @@ class CourseApplicationController extends Controller
             'comments' => $request->comments,
         ]);
 
-        return redirect()->route('admin.course_application.index')->with(['success' => "Updated Successfully"]);
+        if (auth('superadmin')->check()) {
+            return redirect()->route('superadmin.course_application.index')->with(['success' => __('Admin/backend.data_updated_successfully')]);
+        } else if (auth('schooladmin')->check()) {
+            return redirect()->route('schooladmin.course_application.index')->with(['success' => __('Admin/backend.data_updated_successfully')]);
+        }
     }
 
     /**
@@ -733,7 +737,87 @@ class CourseApplicationController extends Controller
 
         \Mail::send(new UpdatedCourseApplication($course_application->email));
 
-        return redirect()->route('admin.course_application.index');
+
+        if (auth('superadmin')->check()) {
+            return redirect()->route('superadmin.course_application.index');
+        } else if (auth('schooladmin')->check()) {
+            return redirect()->route('schooladmin.course_application.index');
+        }
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function editRegister($id)
+    {
+        $course_application = CourseApplication::find($id);
+
+        return view('admin.course.register', compact('course_application'));
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function updateRegister(Request $request)
+    {
+        $course_application = CourseApplication::find($request->id);
+        
+        $course_application->fname = $request->fname;
+        $course_application->mname = $request->mname;
+        $course_application->lname = $request->lname;
+        $course_application->place_of_birth = $request->place_of_birth;
+        $course_application->gender = $request->gender;
+        $course_application->dob = $request->dob;
+        $course_application->nationality = $request->nationality;
+        $course_application->id_number = $request->id_number;
+        $course_application->passport_number = $request->passport_number;
+        $course_application->passport_date_of_issue = $request->passport_date_of_issue;
+        $course_application->passport_date_of_expiry = $request->passport_date_of_expiry;
+        if ($request->has('passport_copy')) {
+            $passport_image_name = time() . rand(00, 99) . "." . $request->file('passport_copy')->getClientOriginalExtension();
+            $course_application->passport_copy = '/user_booked_details/' . $passport_image_name;
+            $request->passport_copy->move(storage_path('app/public/user_booked_details'), $passport_image_name);
+        }
+        if ($request->has('financial_guarantee')) {
+            $finance_image = time() . rand(00, 99) . "." . $request->file('financial_guarantee')->getClientOriginalExtension();
+            $course_application->financial_guarantee = '/user_booked_details/' . $finance_image;
+            $request->financial_guarantee->move(storage_path('app/public/user_booked_details'), $finance_image);
+        }
+        if ($request->has('bank_statement')) {
+            $bank_statement_image = time() . rand(00, 99) . "." . $request->file('bank_statement')->getClientOriginalExtension();
+            $course_application->bank_statement = '/user_booked_details/' . $bank_statement_image;
+            $request->bank_statement->move(storage_path('app/public/user_booked_details'), $bank_statement_image);
+        }
+        $course_application->level_of_language = $request->level_of_language;
+        $course_application->study_finance = $request->study_finance;
+        $course_application->mobile = $request->mobile;
+        $course_application->telephone = $request->telephone;
+        $course_application->email = $request->email;
+        $course_application->address = $request->address;
+        $course_application->post_code = $request->post_code;
+        $course_application->city_contact = $request->city_contact;
+        $course_application->province_region = $request->province_region;
+        $course_application->country_contact = $request->country_contact;
+        $course_application->full_name_emergency = $request->full_name_emergency;
+        $course_application->relative_emergency = $request->relative_emergency;
+        $course_application->mobile_emergency = $request->mobile_emergency;
+        $course_application->telephone_emergency = $request->telephone_emergency;
+        $course_application->heard_where = $request->heard_where;
+        $course_application->other = $request->other;
+        $course_application->comments = $request->comments;
+
+        $course_application->save();
+
+        toastSuccess(__('Admin/backend.data_updated_successfully'));
+
+
+        if (auth('superadmin')->check()) {
+            return redirect()->route('superadmin.course_application.index');
+        } else if (auth('schooladmin')->check()) {
+            return redirect()->route('schooladmin.course_application.index');
+        }
     }
 
     public function print(Request $request)
@@ -750,7 +834,11 @@ class CourseApplicationController extends Controller
             $data['errors'] = $validate->errors();
             return response($data);
         } else {
-            $pdf_data = getCourseApplicationPrintData($request->id, auth('superadmin')->user()->id, true);
+            if (auth('superadmin')->check()) {
+                $pdf_data = getCourseApplicationPrintData($request->id, auth('superadmin')->user()->id, true);
+            } else if (auth('schooladmin')->check()) {
+                $pdf_data = getCourseApplicationPrintData($request->id, auth('schooladmin')->user()->id, true);
+            }
             $pdf_data['logo'] = asset('public/frontend/assets/img/logo.png');
             
             if ($request->section == 'reservation') {
@@ -771,7 +859,7 @@ class CourseApplicationController extends Controller
                 $pdf_file = storage_path('app/public/pdf/course_application/payments_refunds_' . $request->id  . '.pdf');
             }
         }
-
+        
         return response()->download($pdf_file);
     }
 

@@ -34,18 +34,18 @@
                         @foreach ($reviews as $review)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ isset($review->course_applications->school) ? (app()->getLocale() == 'en' ? $review->course_applications->school->name : $review->course_applications->school->name_ar) : '-' }}</td>
+                                <td>{{ isset($review->course_applications->school->name) ? (app()->getLocale() == 'en' ? $review->course_applications->school->name->name : $review->course_applications->school->name->name_ar) : '-' }}</td>
                                 <td>{{ $review->review }}</td>
                                 <td>{{ app()->getLocale() == 'en' ? $review->user->first_name_en . ' ' . $review->user->last_name_en : $review->user->first_name_ar . ' ' . $review->user->last_name_ar }}</td>
-                                <td>{{ toFixedNumber($review->rated()) }}</td>
+                                <td>{{ toFixedNumber($review->average_point) }}</td>
                                 <td>{{ $review->created_at }}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <a href="{{route('admin.review.edit', $review->id)}}" class="btn btn-info btn-sm fa fa-eye"></a>
+                                        <a href="{{ auth('superadmin')->check() ? route('superadmin.review.edit', $review->id) : route('schooladmin.review.edit', $review->id) }}" class="btn btn-info btn-sm fa fa-pencil"></a>
                                         @if ($review->approved == 1)
-                                            <a href="{{route('admin.review.approve', ['id' => $review->id])}}" class="btn btn-success btn-sm fa fa-check"></a>
+                                            <a href="{{ auth('superadmin')->check() ? route('superadmin.review.approve', ['id' => $review->id]) : route('schooladmin.review.approve', ['id' => $review->id]) }}" class="btn btn-success btn-sm fa fa-check"></a>
                                         @else
-                                            <a href="{{route('admin.review.disapprove', ['id' => $review->id])}}" class="btn btn-danger btn-sm fa fa-window-close"></a>
+                                            <a href="{{ auth('superadmin')->check() ? route('superadmin.review.disapprove', ['id' => $review->id]) : route('schooladmin.review.disapprove', ['id' => $review->id]) }}" class="btn btn-danger btn-sm fa fa-window-close"></a>
                                         @endif
                                     </div>
                                 </td>

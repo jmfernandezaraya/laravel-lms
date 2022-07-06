@@ -31,7 +31,7 @@
                     </ul>
                 </div>
 
-                @include('admin.include.alert')
+                @include('common.include.alert')
             </div>
         </div>
     </div>
@@ -236,7 +236,7 @@
                         </div>
                     @endforelse
 
-                    <a type="button" href="{{route('admin.course.accommodation.edit')}}" class="btn btn-primary pull-right">@lang('Admin/backend.next')</a>
+                    <a type="button" href="{{ auth('superadmin')->check() ? route('superadmin.course.accommodation.edit') : route('schooladmin.course.accommodation.edit') }}" class="btn btn-primary pull-right">@lang('Admin/backend.next')</a>
                     <button type="button" onclick="submitCourseProgramForm($(this))" class="btn btn-primary pull-left">{{__('Admin/backend.submit')}}</button>
                 </form>
             </div>
@@ -247,9 +247,9 @@
 
     @section('js')
         <script>
-            var uploadFileOption = "{{route('admin.course.upload', ['_token' => csrf_token() ])}}";
+            var uploadFileOption = "{{ auth('superadmin')->check() ? route('superadmin.course.upload', ['_token' => csrf_token() ]) : route('schooladmin.course.upload', ['_token' => csrf_token() ]) }}";
             function fetchProgramUnderAge(value) {
-                $.post("{{route('admin.course.program_under_age.fetch')}}", {_token:"{{csrf_token()}}", value:value}, function (data) {
+                $.post("{{ auth('superadmin')->check() ? route('superadmin.course.program_under_age.fetch') : route('schooladmin.course.program_under_age.fetch') }}", {_token:"{{csrf_token()}}", value:value}, function (data) {
                     window.location.replace(data.url);
                 });
             }

@@ -394,6 +394,8 @@ return [
     'contact_center_school' => 'Contact Center - School',
     'contact_center_customer' => 'Contact Center - Customer',
     'contact_center_student' => 'Contact Center - Student',
+    'review' => 'Review',
+    'approve' => 'Approve',
     'user' => 'User',
     'permission' => 'Permission',
 
@@ -505,6 +507,7 @@ return [
 
     'add_course' => 'اضافة دورة',
     'edit_course' => 'تعديل الدورة',
+    'edit_registration' => 'Edit Registraion',
 
     'name_in_english' => 'الاسم بالانجليزي',
     'name_in_arabic' => 'الاسم بالعربي',

@@ -59,20 +59,38 @@
                 </div>
             </li>
         @endif
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#course_application" aria-expanded="false" aria-controls="course_application">
-                <span class="menu-title">{{__('Admin/backend.course_application')}}</span>
-                <i class="menu-arrow"></i>
-                <i class="mdi mdi-crosshairs-gps menu-icon"></i>
-            </a>
-            <div class="collapse" id="course_application">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{route('schooladmin.course_application.index')}}">{{__('Admin/dashboard.view')}}</a>
-                    </li>
-                </ul>
-            </div>
-        </li>
+        @if (can_manage_course_application() || can_edit_course_application() || can_chanage_status_course_application() || can_payment_refund_course_application() || can_contact_student_course_application() || can_contact_school_course_application())
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#course_application" aria-expanded="false" aria-controls="course_application">
+                    <span class="menu-title">{{__('Admin/backend.course_application')}}</span>
+                    <i class="menu-arrow"></i>
+                    <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                </a>
+                <div class="collapse" id="course_application">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('schooladmin.course_application.index')}}">{{__('Admin/dashboard.view')}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        @endif
+        @if (can_manage_review() || can_edit_review() || can_approve_review() || can_delete_review())
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#review" aria-expanded="false" aria-controls="school_admin">
+                    <span class="menu-title">{{__('Admin/backend.rating_review')}}</span>
+                    <i class="menu-arrow"></i>
+                    <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                </a>
+                <div class="collapse" id="review">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('schooladmin.review.index')}}">{{__('Admin/dashboard.view')}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        @endif
         <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#enquiry" aria-expanded="false" aria-controls="school_admin">
                 <span class="menu-title">{{__('Admin/backend.manage_enquiries')}}</span>

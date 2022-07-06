@@ -106,7 +106,7 @@
                 <change>{{__('Admin/backend.in_english')}}</change>
             </div>
 
-            @include('superadmin.include.alert')
+            @include('common.include.alert')
             <div id="menu">
                 <ul class="lang text-right current_page_itemm">
                     <li class="current_page_item selected">
@@ -201,10 +201,9 @@
                 <br>
 
                 <script>
-                    course_url_store = "{{route('admin.course.store')}}";
+                    course_url_store = "{{ auth('superadmin')->check() ? route('superadmin.course.store') : route('schooladmin.course.store') }}";
                 </script>
-                <a type="button" href="{{route('add_accommodation_page')}}" class="btn btn-primary pull-right">@lang('Admin/backend.next')
-                </a>
+                <a type="button" href="{{ auth('superadmin')->check() ? route('superadmin.course.add_accommodation_page') : route('schooladmin.course.add_accommodation_page') }}" class="btn btn-primary pull-right">@lang('Admin/backend.next')</a>
                 <button type="button" onclick="getContent('text_book_note', 'text_book_note_value'); submitCourseProgramForm($(this))" class="btn btn-primary pull-left">Submit</button>
             </form>
         </div>

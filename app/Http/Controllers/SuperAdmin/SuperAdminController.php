@@ -6,6 +6,8 @@ use App\Classes\StoreClass;
 
 use App\Http\Controllers\Controller;
 
+use App\Mail\AdminCreated;
+
 use App\Models\User;
 
 use Illuminate\Http\Request;
@@ -56,6 +58,7 @@ class SuperAdminController extends Controller
         }
 
         $requested_save = $validator->validated();
+        unset($requested_save['password']);
         unset($requested_save['image']);
         unset($requested_save['blog_permission']);
         unset($requested_save['blog_add']);
@@ -89,12 +92,13 @@ class SuperAdminController extends Controller
             $image_name = 'public/images/user_images/' . $filename;
         }
         \DB::transaction(function () use ($request, $requested_save, $image_name) {
+            $token = hash('sha256', \Str::random(16) . time() . rand(0000, 9999));
             if ($image_name) {
-                $user = User::create($requested_save + ['user_type' => 'super_admin', 'image' => $image_name, 'password' => \Hash::make($request->password)]);
+                $user = User::create($requested_save + ['user_type' => 'super_admin', 'image' => $image_name, 'password' => \Hash::make($request->password), 'remember_token' => $token]);
             } else {
-                $user = User::create($requested_save + ['user_type' => 'super_admin', 'password' => \Hash::make($request->password)]);
+                $user = User::create($requested_save + ['user_type' => 'super_admin', 'password' => \Hash::make($request->password), 'remember_token' => $token]);
             }
-            if (can('can_manage_user' || 'can_permission_user')) {
+            if (can_manage_user() || can_permission_user()) {
                 $user->permission()->create([
                     'blog_manager' => $request->blog_permission == 'manager',
                     'blog_add' => ($request->blog_permission == 'subscriber' && $request->blog_add) ?? 0,
@@ -115,7 +119,11 @@ class SuperAdminController extends Controller
                     'course_application_chanage_status' => ($request->course_application_permission == 'subscriber' && $request->course_application_chanage_status) ?? 0,
                     'course_application_payment_refund' => ($request->course_application_permission == 'subscriber' && $request->course_application_payment_refund) ?? 0,
                     'course_application_contact_student' => ($request->course_application_permission == 'subscriber' && $request->course_application_contact_student) ?? 0,
-                    'course_application_contact_school' => ($request->course_application_permission == 'subscriber' && $request->course_application_contact_school) ?? 0,            
+                    'course_application_contact_school' => ($request->course_application_permission == 'subscriber' && $request->course_application_contact_school) ?? 0,
+                    'review_manager' => $request->review_permission == 'manager',
+                    'review_edit' => ($request->review_permission == 'subscriber' && $request->review_edit) ?? 0,
+                    'review_delete' => ($request->review_permission == 'subscriber' && $request->review_delete) ?? 0,
+                    'review_approve' => ($request->review_permission == 'subscriber' && $request->review_approve) ?? 0,
                     'user_manager' => $request->user_permission == 'manager',
                     'user_add' => ($request->user_permission == 'subscriber' && $request->user_add) ?? 0,
                     'user_edit' => ($request->user_permission == 'subscriber' && $request->user_edit) ?? 0,
@@ -123,6 +131,13 @@ class SuperAdminController extends Controller
                     'user_permission' => ($request->user_permission == 'subscriber' && $request->user_permissions) ?? 0,
                 ]);
             }
+
+            $mail_data['name'] = app()->getLocale() == 'en' ? $user->first_name_en . ' ' . $user->last_name_en : $user->first_name_ar . ' ' . $user->last_name_ar;
+            $mail_data['email'] = $user->email;
+            $mail_data['password'] = $request->password;
+            $mail_data['dashbaord_link'] = route('supseradmin.dashboard');
+            $mail_data['go_page'] = route('password.reset', ['token' => $token]) . '/?email=' . $user->email;;
+            \Mail::to($user->email)->send(new AdminCreated($mail_data));
         });
 
         $saved = __('Admin/backend.data_saved_successfully');
@@ -186,6 +201,7 @@ class SuperAdminController extends Controller
         }
         
         $requested_save = $validator->validated();
+        unset($requested_save['password']);
         unset($requested_save['image']);
         unset($requested_save['blog_permission']);
         unset($requested_save['blog_add']);
@@ -232,7 +248,7 @@ class SuperAdminController extends Controller
                 $user->fill($requested_save + ['user_type' => 'super_admin'])->save();
             }
         }
-        if (can('can_manage_user' || 'can_permission_user')) {
+        if (can_manage_user() || can_permission_user()) {
             $user->permission()->updateOrCreate(['user_id' => $user->id], [
                 'blog_manager' => $request->blog_permission == 'manager',
                 'blog_add' => ($request->blog_permission == 'subscriber' && $request->blog_add) ?? 0,
@@ -253,7 +269,11 @@ class SuperAdminController extends Controller
                 'course_application_chanage_status' => ($request->course_application_permission == 'subscriber' && $request->course_application_chanage_status) ?? 0,
                 'course_application_payment_refund' => ($request->course_application_permission == 'subscriber' && $request->course_application_payment_refund) ?? 0,
                 'course_application_contact_student' => ($request->course_application_permission == 'subscriber' && $request->course_application_contact_student) ?? 0,
-                'course_application_contact_school' => ($request->course_application_permission == 'subscriber' && $request->course_application_contact_school) ?? 0,            
+                'course_application_contact_school' => ($request->course_application_permission == 'subscriber' && $request->course_application_contact_school) ?? 0,
+                'review_manager' => $request->review_permission == 'manager',
+                'review_edit' => ($request->review_permission == 'subscriber' && $request->review_edit) ?? 0,
+                'review_delete' => ($request->review_permission == 'subscriber' && $request->review_delete) ?? 0,
+                'review_approve' => ($request->review_permission == 'subscriber' && $request->review_approve) ?? 0,
                 'user_manager' => $request->user_permission == 'manager',
                 'user_add' => ($request->user_permission == 'subscriber' && $request->user_add) ?? 0,
                 'user_edit' => ($request->user_permission == 'subscriber' && $request->user_edit) ?? 0,

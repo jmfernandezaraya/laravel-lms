@@ -237,9 +237,9 @@ class CustomerController extends Controller
 
     public function review($id)
     {
-        $review = Review::where('course_application_id', $id)->first();
+        $course_application = CourseApplication::with('school', 'review')->where('id', $id)->first();
 
-        return view('frontend.customer.review', compact('id', 'review'));
+        return view('frontend.customer.review', compact('id', 'course_application'));
     }
 
     public function reviewBooking(Request $request, $id)
@@ -260,6 +260,19 @@ class CustomerController extends Controller
             $course_book_review->city_activities = $request->city_activities;
             $course_book_review->recommend_this_school = $request->recommend_this_school;
             $course_book_review->use_full_name = $request->use_full_name;
+
+            $course_application = CourseApplication::find($course_book_review->course_application_id);
+            $review_point_count = 6;
+            if ($course_application && $course_application->accommodation_id) {
+                $review_point_count = $review_point_count + 3;
+            }
+            if ($course_application && $course_application->airport_id) {
+                $review_point_count = $review_point_count + 1;
+            }
+            $course_book_review->average_point = ($course_book_review->quality_teaching + $course_book_review->school_facilities + $course_book_review->social_activities
+                + $course_book_review->school_location + $course_book_review->satisfied_teaching + $course_book_review->level_cleanliness
+                + $course_book_review->distance_accommodation_school + $course_book_review->satisfied_accommodation + $course_book_review->airport_transfer
+                + $course_book_review->city_activities) / $review_point_count;
             $course_book_review->save();
         } else {
             $new_course_book_review = new Review;
@@ -278,6 +291,19 @@ class CustomerController extends Controller
             $new_course_book_review->city_activities = $request->city_activities;
             $new_course_book_review->recommend_this_school = $request->recommend_this_school;
             $new_course_book_review->use_full_name = $request->use_full_name;
+
+            $course_application = CourseApplication::find($new_course_book_review->course_application_id);
+            $review_point_count = 6;
+            if ($course_application && $course_application->accommodation_id) {
+                $review_point_count = $review_point_count + 3;
+            }
+            if ($course_application && $course_application->airport_id) {
+                $review_point_count = $review_point_count + 1;
+            }
+            $new_course_book_review->average_point = ($new_course_book_review->quality_teaching + $new_course_book_review->school_facilities + $new_course_book_review->social_activities
+                + $new_course_book_review->school_location + $new_course_book_review->satisfied_teaching + $new_course_book_review->level_cleanliness
+                + $new_course_book_review->distance_accommodation_school + $new_course_book_review->satisfied_accommodation + $new_course_book_review->airport_transfer
+                + $new_course_book_review->city_activities) / $review_point_count;
             $new_course_book_review->save();
         }
 

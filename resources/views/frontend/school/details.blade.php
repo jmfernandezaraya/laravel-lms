@@ -281,15 +281,17 @@
                         $school_top_review_satisfied_teachings = $school_top_review_satisfied_teachings / $school_top_review_rating_count;
                     @endphp
                 @endif
-                <div class="score-wrap">
-                    <span class="stars" style="width: {{$school_top_review_ratings * 20}}%">
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                    </span>
-                    <span>{{__('Frontend.based_on_five_reviews')}}</span>
+                <div class="d-flex">
+                    <div class="score-wrap">
+                        <span class="stars" style="width: {{$school_top_review_ratings * 20}}%">
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <div>{{__('Frontend.based_on_five_reviews')}}</div>
                 </div>
                 <div class="row">
                     <div class="col-md-3">
