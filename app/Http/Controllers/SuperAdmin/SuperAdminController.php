@@ -11,6 +11,7 @@ use App\Mail\AdminCreated;
 use App\Models\User;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 use DB;
 use Image;
@@ -92,11 +93,10 @@ class SuperAdminController extends Controller
             $image_name = 'public/images/user_images/' . $filename;
         }
         \DB::transaction(function () use ($request, $requested_save, $image_name) {
-            $token = hash('sha256', \Str::random(16) . time() . rand(0000, 9999));
             if ($image_name) {
-                $user = User::create($requested_save + ['user_type' => 'super_admin', 'image' => $image_name, 'password' => \Hash::make($request->password), 'remember_token' => $token]);
+                $user = User::create($requested_save + ['user_type' => 'super_admin', 'image' => $image_name, 'password' => \Hash::make($request->password), 'email_verified_at' => Carbon::now()->toDate()]);
             } else {
-                $user = User::create($requested_save + ['user_type' => 'super_admin', 'password' => \Hash::make($request->password), 'remember_token' => $token]);
+                $user = User::create($requested_save + ['user_type' => 'super_admin', 'password' => \Hash::make($request->password), 'email_verified_at' => Carbon::now()->toDate()]);
             }
             if (can_manage_user() || can_permission_user()) {
                 $user->permission()->create([
@@ -129,14 +129,30 @@ class SuperAdminController extends Controller
                     'user_edit' => ($request->user_permission == 'subscriber' && $request->user_edit) ?? 0,
                     'user_delete' => ($request->user_permission == 'subscriber' && $request->user_delete) ?? 0,
                     'user_permission' => ($request->user_permission == 'subscriber' && $request->user_permissions) ?? 0,
+                    'enquiry_manager' => $request->enquiry_permission == 'manager',
+                    'enquiry_add' => ($request->enquiry_permission == 'subscriber' && $request->enquiry_add) ?? 0,
+                    'enquiry_edit' => ($request->enquiry_permission == 'subscriber' && $request->enquiry_edit) ?? 0,
+                    'enquiry_delete' => ($request->enquiry_permission == 'subscriber' && $request->enquiry_delete) ?? 0,
+                    'form_builder_manager' => $request->form_builder_permission == 'manager',
+                    'form_builder_add' => ($request->form_builder_permission == 'subscriber' && $request->form_builder_add) ?? 0,
+                    'form_builder_edit' => ($request->form_builder_permission == 'subscriber' && $request->form_builder_edit) ?? 0,
+                    'form_builder_delete' => ($request->form_builder_permission == 'subscriber' && $request->form_builder_delete) ?? 0,
+                    'visa_application_manager' => $request->visa_application_permission == 'manager',
+                    'visa_application_add' => ($request->visa_application_permission == 'subscriber' && $request->visa_application_add) ?? 0,
+                    'visa_application_edit' => ($request->visa_application_permission == 'subscriber' && $request->visa_application_edit) ?? 0,
+                    'visa_application_delete' => ($request->visa_application_permission == 'subscriber' && $request->visa_application_delete) ?? 0,
+                    'payment_manager' => $request->payment_permission == 'manager',
+                    'payment_add' => ($request->payment_permission == 'subscriber' && $request->payment_add) ?? 0,
+                    'payment_edit' => ($request->payment_permission == 'subscriber' && $request->payment_edit) ?? 0,
+                    'payment_delete' => ($request->payment_permission == 'subscriber' && $request->payment_delete) ?? 0,
                 ]);
             }
 
             $mail_data['name'] = app()->getLocale() == 'en' ? $user->first_name_en . ' ' . $user->last_name_en : $user->first_name_ar . ' ' . $user->last_name_ar;
-            $mail_data['email'] = $user->email;
+            $mail_data['email'] = $request->email;
             $mail_data['password'] = $request->password;
-            $mail_data['dashbaord_link'] = route('supseradmin.dashboard');
-            $mail_data['go_page'] = route('password.reset', ['token' => $token]) . '/?email=' . $user->email;;
+            $mail_data['dashbaord_link'] = route('superadmin.dashboard');
+            $mail_data['go_page'] = route('password.reset', ['token' => \Password::createToken($user)]) . '/?email=' . $user->email;
             \Mail::to($user->email)->send(new AdminCreated($mail_data));
         });
 
@@ -279,6 +295,22 @@ class SuperAdminController extends Controller
                 'user_edit' => ($request->user_permission == 'subscriber' && $request->user_edit) ?? 0,
                 'user_delete' => ($request->user_permission == 'subscriber' && $request->user_delete) ?? 0,
                 'user_permission' => ($request->user_permission == 'subscriber' && $request->user_permissions) ?? 0,
+                'enquiry_manager' => $request->enquiry_permission == 'manager',
+                'enquiry_add' => ($request->enquiry_permission == 'subscriber' && $request->enquiry_add) ?? 0,
+                'enquiry_edit' => ($request->enquiry_permission == 'subscriber' && $request->enquiry_edit) ?? 0,
+                'enquiry_delete' => ($request->enquiry_permission == 'subscriber' && $request->enquiry_delete) ?? 0,
+                'form_builder_manager' => $request->form_builder_permission == 'manager',
+                'form_builder_add' => ($request->form_builder_permission == 'subscriber' && $request->form_builder_add) ?? 0,
+                'form_builder_edit' => ($request->form_builder_permission == 'subscriber' && $request->form_builder_edit) ?? 0,
+                'form_builder_delete' => ($request->form_builder_permission == 'subscriber' && $request->form_builder_delete) ?? 0,
+                'visa_application_manager' => $request->visa_application_permission == 'manager',
+                'visa_application_add' => ($request->visa_application_permission == 'subscriber' && $request->visa_application_add) ?? 0,
+                'visa_application_edit' => ($request->visa_application_permission == 'subscriber' && $request->visa_application_edit) ?? 0,
+                'visa_application_delete' => ($request->visa_application_permission == 'subscriber' && $request->visa_application_delete) ?? 0,
+                'payment_manager' => $request->payment_permission == 'manager',
+                'payment_add' => ($request->payment_permission == 'subscriber' && $request->payment_add) ?? 0,
+                'payment_edit' => ($request->payment_permission == 'subscriber' && $request->payment_edit) ?? 0,
+                'payment_delete' => ($request->payment_permission == 'subscriber' && $request->payment_delete) ?? 0,
             ]);
         }
         

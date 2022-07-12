@@ -756,7 +756,7 @@
             }
         }
 
-        function callbackChangeMedical() {
+        function callbackChangeMedical(type) {
             if (!fill_course_form) {
                 if (type == 'company_name') {
                     @if (isset($course_application->deductible_up_to))

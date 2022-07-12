@@ -36,7 +36,6 @@ use App\Models\SuperAdmin\CourseProgramTextBookFee;
 use App\Models\SuperAdmin\CourseProgramUnderAgeFee;
 use App\Models\SuperAdmin\CurrencyExchangeRate;
 use App\Models\SuperAdmin\School;
-use App\Models\SuperAdmin\UserSchool;
 
 use App\Services\CourseCreateService;
 
@@ -186,8 +185,7 @@ class CourseController extends Controller
         if (auth('superadmin')->check()) {
             $courses = Course::with('school')->where('deleted', false)->get();
         } else if (auth('schooladmin')->check()) {
-            $school_ids = UserSchool::where('user_id', auth('schooladmin')->user()->id)->pluck('school_id')->toArray();
-            $courses = Course::whereIn('school_id', $school_ids)->with('school')->where('deleted', false)->get();
+            $courses = Course::whereIn('school_id', auth('schooladmin')->user()->school)->with('school')->where('deleted', false)->get();
         }
         $choose_fields = self::_getChooseFields($courses);
 
@@ -202,8 +200,7 @@ class CourseController extends Controller
         if (auth('superadmin')->check()) {
             $courses = Course::with('school')->where('deleted', true)->get();
         } else if (auth('schooladmin')->check()) {
-            $school_ids = UserSchool::where('user_id', auth('schooladmin')->user()->id)->pluck('school_id')->toArray();
-            $courses = Course::whereIn('school_id', $school_ids)->with('school')->where('deleted', true)->get();
+            $courses = Course::whereIn('school_id', auth('schooladmin')->user()->school)->with('school')->where('deleted', true)->get();
         }
         $choose_fields = self::_getChooseFields($courses);
 

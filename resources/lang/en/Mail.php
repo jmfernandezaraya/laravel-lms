@@ -22,6 +22,7 @@ Link for Study Abroad',
     'password' => 'Password',
     'dashboard_link' => 'Dashboard Link',
     'go_dashboard' => 'Go Dashboard',
+    'change_password' => 'Change Password',
     'customer' => 'Customer',
     'customer_no' => 'Customer #',
     'qutation' => 'Qutation',
@@ -67,7 +68,7 @@ Link for Study Abroad',
     'total_amount_paid' => 'Total Amount Paid',
     'total_balance_due' => 'Total Balance Due',
 
-    'subject' => [
+    'subjects' => [
         'course_booked' => 'Registration Confirmation "Link for Study Abroad"',
         'admin_created' => 'Verify Admin Account',
     ],

@@ -19,13 +19,12 @@ class FrontendServices {
             ->where('study_mode', 'LIKE', '%"' . $request->study_mode . '"%')
             ->whereHas('coursePrograms', function ($query) use ($request) {
                 $query->where('program_age_range', 'LIKE', '%"' . $request->age . '"%');
-            })
-            ->get();
+            })->get();
 
         $output_html = '';
         foreach($courses as $course) {
             if ($course->coursePrograms && count($course->coursePrograms)) {
-                $program_name = ucwords($course->program_name);
+                $program_name = app()->getLocale() == 'en' ? ucwords($course->program_name) : ucwords($course->program_name_ar);
                 $agevalues = getCourseMinMaxAgeRange('' . $course->unique_id);
                 $minagevalue = $agevalues['min'];
                 $maxagevalue = $agevalues['max'];
@@ -39,7 +38,7 @@ class FrontendServices {
                 }
     
                 $url = route('frontend.course.single', ['school_id' => $course->school_id, 'program_id' => $course->unique_id]);
-                $output_html .= "<div class='sub-cources mt-3'>
+                $output_html .= "<div class='sub-course mt-3'>
                     <div class='row'>
                         <div class='col-md-2'>
                             <h5>$program_name</h5>

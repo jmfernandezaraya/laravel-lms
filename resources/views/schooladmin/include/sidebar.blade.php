@@ -91,19 +91,21 @@
                 </div>
             </li>
         @endif
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#enquiry" aria-expanded="false" aria-controls="school_admin">
-                <span class="menu-title">{{__('Admin/backend.manage_enquiries')}}</span>
-                <i class="menu-arrow"></i>
-                <i class="mdi mdi-crosshairs-gps menu-icon"></i>
-            </a>
-            <div class="collapse" id="enquiry">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{url('schooladmin/enquiry')}}">{{ __('Admin/dashboard.view')}}</a>
-                    </li>
-                </ul>
-            </div>
-        </li>
+        @if (can_manage_enquiry() || can_add_enquiry() || can_edit_enquiry() || can_delete_enquiry())
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#enquiry" aria-expanded="false" aria-controls="school_admin">
+                    <span class="menu-title">{{__('Admin/backend.manage_enquiries')}}</span>
+                    <i class="menu-arrow"></i>
+                    <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                </a>
+                <div class="collapse" id="enquiry">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url('schooladmin/enquiry')}}">{{ __('Admin/dashboard.view')}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        @endif
     </ul>
 </nav>

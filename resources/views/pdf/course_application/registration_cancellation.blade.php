@@ -4,13 +4,12 @@
 <head>
     <meta charset="utf-8">
     <title>{{__('Frontend.regsitration_form')}}</title>
-
-    @if (app()->getLocale() != 'en')
-        <style> 
-            * { font-family: 'DejaVu Sans', sans-serif; }
-        </style>
-    @endif
     <style>
+        @if (app()->getLocale() != 'en')
+            * { font-family: 'DejaVu Sans', sans-serif; }
+            body { direction: rtl; text-align: right; }
+        @endif
+
         .study {
             box-shadow: 0px 0px 2px 1px #ccc;
             padding: 15px 15px;

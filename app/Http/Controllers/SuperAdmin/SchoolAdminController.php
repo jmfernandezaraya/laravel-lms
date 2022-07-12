@@ -14,7 +14,10 @@ use App\Models\User;
 use App\Models\SuperAdmin\School;
 use App\Models\SuperAdmin\UserSchool;
 
+use Carbon\Carbon;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 use DB;
 use Image;
@@ -109,7 +112,7 @@ class SchoolAdminController extends Controller
 
         $user_type = 'school_admin';
         if (!is_null($request->city) && !is_null($request->country) && !is_null($request->branch)) {
-            $user_type = "branch_admin";
+            // $user_type = "branch_admin";
         }
         $image_name = null;
         if ($request->has('image')) {
@@ -134,25 +137,13 @@ class SchoolAdminController extends Controller
             $requested_save['branch'] = School::whereIn('branch_name_ar', $request->branch ?? [])->pluck('branch_name')->toArray();
         }
         \DB::transaction(function () use ($request, $requested_save, $image_name, $user_type) {
-            $token = hash('sha256', \Str::random(16) . time() . rand(0000, 9999));
             if ($image_name) {
-                $user = User::create($requested_save + ['user_type' => $user_type, 'image' => $image_name, 'password' => \Hash::make($request->password), 'remember_token' => $token]);
+                $user = User::create($requested_save + ['user_type' => $user_type, 'image' => $image_name, 'password' => \Hash::make($request->password), 'email_verified_at' => Carbon::now()->toDate()]);
             } else {
-                $user = User::create($requested_save + ['user_type' => $user_type, 'password' => \Hash::make($request->password), 'remember_token' => $token]);
+                $user = User::create($requested_save + ['user_type' => $user_type, 'password' => \Hash::make($request->password), 'email_verified_at' => Carbon::now()->toDate()]);
             }
             if (can_manage_user() || can_permission_user()) {
                 $user->permission()->create([
-                    'blog_manager' => 0,
-                    'blog_add' => 0,
-                    'blog_edit' => 0,
-                    'currency_manager' => 0,
-                    'currency_add' => 0,
-                    'currency_edit' => 0,
-                    'user_manager' => 0,
-                    'user_add' => 0,
-                    'user_edit' => 0,
-                    'user_delete' => 0,
-                    'user_permission' => 0,
                     'school_manager' => $request->school_permission == 'manager',
                     'school_add' => ($request->school_permission == 'subscriber' && $request->school_add) ?? 0,
                     'school_edit' => ($request->school_permission == 'subscriber' && $request->school_edit) ?? 0,
@@ -171,6 +162,10 @@ class SchoolAdminController extends Controller
                     'review_edit' => ($request->review_permission == 'subscriber' && $request->review_edit) ?? 0,
                     'review_delete' => ($request->review_permission == 'subscriber' && $request->review_delete) ?? 0,
                     'review_approve' => ($request->review_permission == 'subscriber' && $request->review_approve) ?? 0,
+                    'enquiry_manager' => $request->enquiry_permission == 'manager',
+                    'enquiry_add' => ($request->enquiry_permission == 'subscriber' && $request->enquiry_add) ?? 0,
+                    'enquiry_edit' => ($request->enquiry_permission == 'subscriber' && $request->enquiry_edit) ?? 0,
+                    'enquiry_delete' => ($request->enquiry_permission == 'subscriber' && $request->enquiry_delete) ?? 0,
                 ]);
             }
             if ($user->school && is_array($user->school)) {
@@ -189,13 +184,13 @@ class SchoolAdminController extends Controller
                 if (!in_array($user_school->id, is_array($user->school) ? $user->school : [])) {
                     $user_school->delete();
                 }
-            }            
-            
+            }
+
             $mail_data['name'] = app()->getLocale() == 'en' ? $user->first_name_en . ' ' . $user->last_name_en : $user->first_name_ar . ' ' . $user->last_name_ar;
-            $mail_data['email'] = $user->email;
+            $mail_data['email'] = $request->email;
             $mail_data['password'] = $request->password;
             $mail_data['dashbaord_link'] = route('schooladmin.dashboard');
-            $mail_data['go_page'] = route('password.reset', ['token' => $token]) . '/?email=' . $user->email;
+            $mail_data['go_page'] = route('password.reset', ['token' => \Password::createToken($user)]) . '/?email=' . $user->email;
             \Mail::to($user->email)->send(new AdminCreated($mail_data));
         });
 
@@ -364,17 +359,6 @@ class SchoolAdminController extends Controller
         }
         if (can_manage_user() || can_permission_user()) {
             $user->permission()->updateOrCreate(['user_id' => $user->id], [
-                'blog_manager' => 0,
-                'blog_add' => 0,
-                'blog_edit' => 0,
-                'currency_manager' => 0,
-                'currency_add' => 0,
-                'currency_edit' => 0,
-                'user_manager' => 0,
-                'user_add' => 0,
-                'user_edit' => 0,
-                'user_delete' => 0,
-                'user_permission' => 0,
                 'school_manager' => $request->school_permission == 'manager',
                 'school_add' => ($request->school_permission == 'subscriber' && $request->school_add) ?? 0,
                 'school_edit' => ($request->school_permission == 'subscriber' && $request->school_edit) ?? 0,
@@ -393,6 +377,10 @@ class SchoolAdminController extends Controller
                 'review_edit' => ($request->review_permission == 'subscriber' && $request->review_edit) ?? 0,
                 'review_delete' => ($request->review_permission == 'subscriber' && $request->review_delete) ?? 0,
                 'review_approve' => ($request->review_permission == 'subscriber' && $request->review_approve) ?? 0,
+                'enquiry_manager' => $request->enquiry_permission == 'manager',
+                'enquiry_add' => ($request->enquiry_permission == 'subscriber' && $request->enquiry_add) ?? 0,
+                'enquiry_edit' => ($request->enquiry_permission == 'subscriber' && $request->enquiry_edit) ?? 0,
+                'enquiry_delete' => ($request->enquiry_permission == 'subscriber' && $request->enquiry_delete) ?? 0,
             ]);
         }
         if ($user->school && is_array($user->school)) {

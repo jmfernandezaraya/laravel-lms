@@ -32,7 +32,6 @@ use App\Models\SuperAdmin\CourseCustodian;
 use App\Models\SuperAdmin\CourseApplicationApprove;
 use App\Models\SuperAdmin\School;
 use App\Models\SuperAdmin\TransactionRefund;
-use App\Models\SuperAdmin\UserSchool;
 
 use PDF;
 use Storage;
@@ -61,8 +60,7 @@ class CourseApplicationController extends Controller
                 { $query->whereNotNull('response')->where('response', '<>', ''); })
                 ->with('User', 'course', 'courseApplicationApprove')->get();
         } else if (auth('schooladmin')->check()) {
-            $school_ids = UserSchool::where('user_id', auth('schooladmin')->user()->id)->pluck('school_id')->toArray();
-            $data['booked_details'] = CourseApplication::whereIn('school_id', $school_ids)->whereHas('transaction', function($query)
+            $data['booked_details'] = CourseApplication::whereIn('school_id', auth('schooladmin')->user()->school)->whereHas('transaction', function($query)
                 { $query->whereNotNull('response')->where('response', '<>', ''); })
                 ->with('User', 'course', 'courseApplicationApprove')->get();
         }
@@ -84,7 +82,7 @@ class CourseApplicationController extends Controller
             'message' => ''
         ];
 
-        try {
+        //try {
             $send_files = [];
             if ($request->type_of_submit == 'send_message_to_school') {
                 $rules = [
@@ -120,19 +118,20 @@ class CourseApplicationController extends Controller
 
                     $course_application = CourseApplication::with('course.school.userSchools')->whereId($request->type_id)->first();
                     if ($course_application->course->school->userSchools) {
-                        foreach ($course_application->course->school->userSchools as $user_school) {
-                            $request_save['from_user'] = auth('superadmin')->user()->id;
-                            $request_save['to_user'] = $user_school->user_id;
-                            Message::create($request_save);
-            
+                        $request_save['from_user'] = auth('superadmin')->user()->id;
+                        $request_save['to_user'] = [];
+                        foreach ($course_application->course->school->userSchools as $user_school) {   
+                            $request_save['to_user'][] = $user_school->user_id;
+
                             $mail_pdf_data = array();
                             $mail_pdf_data['subject'] = $request_save['subject'];
                             $mail_pdf_data['message'] = $request_save['message'];
-                            $mail_pdf_data['user'] = \App\Models\User::find($request_save['to_user']);
+                            $mail_pdf_data['user'] = \App\Models\User::find($user_school->user_id);
                             $mail_pdf_data['locale'] = app()->getLocale();
     
                             \Mail::to($request->to_email)->send(new SendMessageToSchoolAdmin((object)$mail_pdf_data, $send_files));
                         }
+                        Message::create($request_save);
                     }
 
                     $data['message'] = __('Admin/backend.message_sent_thank_you');
@@ -179,13 +178,13 @@ class CourseApplicationController extends Controller
 
                     $course_application = CourseApplication::whereId($request->type_id)->first();
                     $request_save['from_user'] = auth('superadmin')->user()->id;
-                    $request_save['to_user'] = $course_application->user_id;
+                    $request_save['to_user'] = [$course_application->user_id];
                     Message::create($request_save);
     
                     $mail_pdf_data = array();
                     $mail_pdf_data['subject'] = $request_save['subject'];
                     $mail_pdf_data['message'] = $request_save['message'];
-                    $mail_pdf_data['user'] = \App\Models\User::find($request_save['to_user']);
+                    $mail_pdf_data['user'] = \App\Models\User::find($course_application->user_id);
                     $mail_pdf_data['locale'] = app()->getLocale();
 
                     \Mail::to($request->to_email)->send(new SendMessageToStudent((object)$mail_pdf_data, $send_files));
@@ -242,10 +241,10 @@ class CourseApplicationController extends Controller
 
                 $data['message'] = __('Admin/backend.data_updated_successfully');
             }
-        } catch (\Exception $e) {
-            $success = false;
-            $data['message'] = $e->getMessage();
-        }
+        //} catch (\Exception $e) {
+        //    $data['success'] = false;
+        //    $data['message'] = $e->getMessage();
+        //}
         
         return response($data);
     }
@@ -394,6 +393,7 @@ class CourseApplicationController extends Controller
      */
     public function updateCourse(Request $request)
     {
+        $lang = app()->getLocale();
         $course_application = CourseApplication::find($request->id);
         $paid_amount = $amount_added = $amount_refunded = 0;
         if ($course_application->transaction) {
@@ -422,17 +422,17 @@ class CourseApplicationController extends Controller
         $course_application->age_selected = $request->age_selected;
         $course_application->program_duration = $request->program_duration ?? null;        
         $accommodation_query = CourseAccommodation::where('course_unique_id', $request->program_id);
-        if (app()->getLocale() == 'en') {
+        if ($lang == 'en') {
             $accommodation_query->whereType($request->accom_type);
         } else {
             $accommodation_query->whereTypeAr($request->accom_type);
         }
-        if (app()->getLocale() == 'en') {
+        if ($lang == 'en') {
             $accommodation_query->whereRoomType($request->room_type);
         } else {
             $accommodation_query->whereRoomTypeAr($request->room_type);
         }
-        if (app()->getLocale() == 'en') {
+        if ($lang == 'en') {
             $accommodation_query->whereMeal($request->meal_type);
         } else {
             $accommodation_query->whereMealAr($request->meal_type);
@@ -444,31 +444,51 @@ class CourseApplicationController extends Controller
         $course_application->accommodation_start_date = $course_application->medical_start_date = $accommodation ? Carbon::create($request->date_selected)->subDay()->format('Y-m-d') : null;
         $course_application->accommodation_end_date = $accommodation ? Carbon::create($course_application->accommodation_start_date)->addWeeks($request->accommodation_duration)->subDay()->format('Y-m-d') : null;
         $course_application->accommodation_duration = $request->accommodation_duration;
-        $airport = CourseAirport::whereHas('fees', function($query) use($request) {
-                $query->where(function($sub_query) use ($request) {
-                    $sub_query->where('name', $request->airport_name)->orWhere('name_ar', $request->airport_name);
-                })->where(function($sub_query) use ($request) {
-                   $sub_query->where('service_name', $request->airport_service)->orWhere('service_name_ar', $request->airport_service);
+        $airport = CourseAirport::whereHas('fees', function($query) use($request, $lang) {
+                $query->where(function($sub_query) use ($request, $lang) {
+                    if ($lang == 'en') {
+                        $sub_query->where('name', $request->airport_name);
+                    } else {
+                        $sub_query->where('name_ar', $request->airport_name);
+                    }
+                })->where(function($sub_query) use ($request, $lang) {
+                    if ($lang == 'en') {
+                        $sub_query->where('service_name', $request->airport_service);
+                    } else {
+                        $sub_query->where('service_name_ar', $request->airport_service);
+                    }
                 });
             })->whereCourseUniqueId($request->program_id)->first();
         $course_application->airport_id = $airport ? $airport->unique_id : null;
-        // $course_application->airport_provider = $airport ? (app()->getLocale() == 'en' ? $airport->service_provider : $airport->service_provider_ar) : null;
-        $airport_fee = $airport ? CourseAirportFee::where(function($query) use ($request) {
-            $query->where('name', $request->airport_name)->orWhere('name_ar', $request->airport_name);
-        })->where(function($query) use ($request) {
-            $query->where('service_name', $request->airport_service)->orWhere('service_name_ar', $request->airport_service);
+        // $course_application->airport_provider = $airport ? ($lang == 'en' ? $airport->service_provider : $airport->service_provider_ar) : null;
+        $airport_fee = $airport ? CourseAirportFee::where(function($query) use ($request, $lang) {
+            if ($lang == 'en') {
+                $query->where('name', $request->airport_name);
+            } else {
+                $query->where('name_ar', $request->airport_name);
+            }
+        })->where(function($query) use ($request, $lang) {
+            if ($lang == 'en') {
+                $query->where('service_name', $request->airport_service);
+            } else {
+                $query->where('service_name_ar', $request->airport_service);
+            }
         })->where('course_airport_unique_id', $airport->unique_id)->first() : null;
         $course_application->airport_fee_id = $airport_fee ? $airport_fee->unique_id : null;
-        // $course_application->airport_name = $airport_fee ? (app()->getLocale() == 'en' ? $airport_fee->name : $airport_fee->name_ar) : null;
-        // $course_application->airport_service = $airport_fee ? (app()->getLocale() == 'en' ? $airport_fee->service_name : $airport_fee->service_name_ar) : null;
+        // $course_application->airport_name = $airport_fee ? ($lang == 'en' ? $airport_fee->name : $airport_fee->name_ar) : null;
+        // $course_application->airport_service = $airport_fee ? ($lang == 'en' ? $airport_fee->service_name : $airport_fee->service_name_ar) : null;
         $medical = CourseMedical::whereHas('fees', function($query) use($request) {
                 if ($request->duration) $query->where('start_date', '<=', $request->duration)->where('end_date', '>=', $request->duration);
-            })->where(function($query) use ($request) {
-                $query->where('company_name', $request->company_name)->orWhere('company_name_ar', $request->company_name);
-            })->whereCourseUniqueId($request->program_id)
+            })->where(function($query) use ($request, $lang) {
+                if ($lang == 'en') {
+                    $query->where('company_name', $request->company_name);
+                } else {
+                    $query->where('company_name_ar', $request->company_name);
+                }
+            })->where('course_unique_id', $request->program_id)
             ->where('deductible', $request->deductible_up_to)->first();
         $course_application->medical_id = $medical ? $medical->unique_id : null;
-        // $course_application->medical_company = $medical ? (app()->getLocale() == 'en' ? $medical->company_name : $medical->company_name_ar) : null;
+        // $course_application->medical_company = $medical ? ($lang == 'en' ? $medical->company_name : $medical->company_name_ar) : null;
         // $course_application->medical_deductible = $medical ? $medical->deductible : null;
         $course_application->medical_end_date = Carbon::create($course_application->medical_start_date)->addWeeks($request->duration ?? 0)->subDay()->format('Y-m-d');
         $course_application->medical_duration = $request->duration ?? null;
@@ -736,7 +756,6 @@ class CourseApplicationController extends Controller
         toastSuccess(__('Admin/backend.data_updated_successfully'));
 
         \Mail::send(new UpdatedCourseApplication($course_application->email));
-
 
         if (auth('superadmin')->check()) {
             return redirect()->route('superadmin.course_application.index');

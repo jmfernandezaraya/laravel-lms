@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Models\CourseApplication;
 use App\Models\Review;
 use App\Models\User;
-use App\Models\SuperAdmin\UserSchool;
 
 use Ghanem\Rating\Models\Rating;
 use Illuminate\Http\Request;
@@ -24,7 +23,7 @@ class ReviewController extends Controller
         if (auth('superadmin')->check()) {
             $reviews = Review::with('user', 'course_applications.school')->get();
         } else if (auth('schooladmin')->check()) {
-            $school_ids = UserSchool::where('user_id', auth('schooladmin')->user()->id)->pluck('school_id')->toArray();
+            $school_ids = auth('schooladmin')->user()->school;
             $reviews = Review::with('user', 'course_applications.school')
                 ->whereHas('course_applications.school', function ($query) use ($school_ids)
                     { $query->whereIn('id', $school_ids); }

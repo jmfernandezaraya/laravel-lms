@@ -4,13 +4,12 @@
 <head>
     <meta charset="utf-8">
     <title>{{__('Frontend.payments_refunds_statement')}}</title>
-
-    @if (app()->getLocale() != 'en')
-        <style> 
-            * { font-family: 'DejaVu Sans', sans-serif; }
-        </style>
-    @endif
     <style>
+        @if (app()->getLocale() != 'en')
+            * { font-family: 'DejaVu Sans', sans-serif; }
+            body { direction: rtl; text-align: right; }
+        @endif
+
         .mt-3, .my-3 {
             margin-top: 1rem!important;
         }

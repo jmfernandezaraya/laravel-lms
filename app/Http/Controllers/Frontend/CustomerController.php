@@ -202,7 +202,7 @@ class CustomerController extends Controller
             $attachments = [];
             $send_files = [];
             if ($request->has("attachment")) {
-                foreach ($request->file('attachment') as $request_attachment) {
+                foreach ($request->file('attachment') as $attachment) {
                     $attachment_file = $attachment->getClientOriginalName();
                     $attachment_file_name = pathinfo($attachment_file, PATHINFO_FILENAME);
                     $attachment_file_ext = pathinfo($attachment_file, PATHINFO_EXTENSION);
@@ -214,13 +214,13 @@ class CustomerController extends Controller
             
             $course_application = CourseApplication::whereId($request->type_id)->first();
             $request_save['from_user'] = auth()->user()->id;
+            $request_save['to_user'] = [];
             $super_admins = User::where('user_type', 'super_admin')->get();
             foreach ($super_admins as $super_admin) {
-                $request_save['to_user'] = $super_admin->id;
-                Message::create($request_save);
-
+                $request_save['to_user'][] = $super_admin->id;
                 \Mail::send(new ContactCenterAdmin($super_admin, $request_save, $send_files));
             }
+            Message::create($request_save);
 
             $data['message'] = __('Frontend.message_sent_thank_you');
         }

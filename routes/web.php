@@ -116,6 +116,7 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
         Route::post('other_service/fee', [CourseControllerFrontend::class, 'setOtherServiceFee'])->name('other_service.fee');
         
         Route::group(['middleware' => 'course.register'], function () {
+            Route::get('details', [FrontendController::class, 'viewRegister'])->name('details.save');
             Route::post('details', [FrontendController::class, 'viewRegister'])->name('details.save');
         });
     });
@@ -123,7 +124,6 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
     ///// Frontend Middleware Starts //////
     Route::group(['middleware' => ['auth', 'email.verification']], function () {
         Route::group(['prefix' => 'course', 'as' => 'course.'], function () {
-            // Route::post('details', [FrontendController::class, 'viewRegister'])->name('details.save');
             Route::post('details/back', [FrontendController::class, 'backDetails'])->name('details.back');
             Route::get('register', [FrontendController::class, 'viewRegister'])->name('register.detail');
             Route::post('register', [FrontendController::class, 'register'])->name('register');

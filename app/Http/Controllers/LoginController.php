@@ -13,6 +13,7 @@ use Carbon\Carbon;
 
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
@@ -100,7 +101,7 @@ class LoginController extends Controller
         }
 
         $user = new User;
-        $token = hash('sha256', \Str::random(16) . time() . rand(0000, 9999));
+        $token = hash_hmac('sha256', Str::random(40), env('APP_KEY'));
         $to_save = $request->validated();
 
         unset($to_save['password']);

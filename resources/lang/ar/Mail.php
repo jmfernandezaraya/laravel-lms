@@ -21,6 +21,7 @@ return [
     'password' => 'Password',
     'dashboard_link' => 'Dashboard Link',
     'go_dashboard' => 'Go Dashboard',
+    'change_password' => 'Change Password',
     'customer' => 'العميل',
     'customer_no' => 'رقم القعميل #',
     'qutation' => 'عرض السعر',
@@ -66,8 +67,8 @@ return [
     'total_amount_paid' => 'Total Amount Paid',
     'total_balance_due' => 'المبلغ الاجمالي المستحق',
     
-    'subject' => [
-        'subject' => 'تأكيد الحجز "لينك للدراسة بالخارج"',
+    'subjects' => [
+        'course_booked' => 'تأكيد الحجز "لينك للدراسة بالخارج"',
         'admin_created' => 'Verify Admin Account',
     ],
 ];

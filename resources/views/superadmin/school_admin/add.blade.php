@@ -126,7 +126,7 @@
                                     <option value="subscriber" selected>{{__('Admin/backend.subscriber')}}</option>
                                     <option value="manager">{{__('Admin/backend.manager')}}</option>
                                 </select>
-                                <div class="school-permissions" style="display: none">
+                                <div class="school-permissions">
                                     <div class="form-check">
                                         <input name="school_add" type="checkbox" class="form-check-inline" value='1'>
                                         <label for="school_add">{{__('Admin/backend.add')}}</label>
@@ -144,7 +144,7 @@
                                     <option value="subscriber" selected>{{__('Admin/backend.subscriber')}}</option>
                                     <option value="manager">{{__('Admin/backend.manager')}}</option>
                                 </select>
-                                <div class="course-permissions" style="display: none">
+                                <div class="course-permissions">
                                     <div class="form-check">
                                         <input name="course_add" type="checkbox" class="form-check-inline" value='1'>
                                         <label for="course_add">{{__('Admin/backend.add')}}</label>
@@ -172,7 +172,7 @@
                                     <option value="subscriber" selected>{{__('Admin/backend.subscriber')}}</option>
                                     <option value="manager">{{__('Admin/backend.manager')}}</option>
                                 </select>
-                                <div class="course-application-permissions" style="display: none">
+                                <div class="course-application-permissions">
                                     <div class="form-check">
                                         <input name="course_application_edit" type="checkbox" class="form-check-inline" value='1'>
                                         <label for="course_application_edit">{{__('Admin/backend.edit')}}</label>
@@ -199,10 +199,10 @@
                                 <label for="review_permission">{{__('Admin/backend.review')}}</label>
                                 <select name="review_permission" id="review_permission" class="form-control">
                                     <option value="">{{__('Admin/backend.select_role')}}</option>
-                                    <option value="subscriber">{{__('Admin/backend.subscriber')}}</option>
+                                    <option value="subscriber" selected>{{__('Admin/backend.subscriber')}}</option>
                                     <option value="manager">{{__('Admin/backend.manager')}}</option>
                                 </select>
-                                <div class="review-permissions" style="display: none">
+                                <div class="review-permissions">
                                     <div class="form-check">
                                         <input name="review_edit" type="checkbox" class="form-check-inline" value='1'>
                                         <label for="review_edit">{{__('Admin/backend.edit')}}</label>
@@ -214,6 +214,30 @@
                                     <div class="form-check">
                                         <input name="review_delete" type="checkbox" class="form-check-inline" value='1'>
                                         <label for="review_delete">{{__('Admin/backend.delete')}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="enquiry_permission">{{__('Admin/backend.enquiry')}}</label>
+                                <select name="enquiry_permission" id="enquiry_permission" class="form-control">
+                                    <option value="">{{__('Admin/backend.select_role')}}</option>
+                                    <option value="subscriber" selected>{{__('Admin/backend.subscriber')}}</option>
+                                    <option value="manager">{{__('Admin/backend.manager')}}</option>
+                                </select>
+                                <div class="enquiry-permissions" style="display: none">
+                                    <div class="form-check">
+                                        <input name="enquiry_add" type="checkbox" class="form-check-inline" value='1'>
+                                        <label for="enquiry_add">{{__('Admin/backend.add')}}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="enquiry_edit" type="checkbox" class="form-check-inline" value='1'>
+                                        <label for="enquiry_edit">{{__('Admin/backend.edit')}}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="enquiry_delete" type="checkbox" class="form-check-inline" value='1'>
+                                        <label for="enquiry_delete">{{__('Admin/backend.delete')}}</label>
                                     </div>
                                 </div>
                             </div>

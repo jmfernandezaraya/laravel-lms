@@ -1939,12 +1939,12 @@ button#myBtn {
   padding: 5px 0px;
 }
 
-.sub-cources {
+.sub-course {
   padding: 10px 6px;
   box-shadow: 0px 0px 2px 1px #ccc;
 }
 
-.sub-cources:hover {
+.sub-course:hover {
   box-shadow: 0px 0px 4px 2px #97d0db;
 }
 
@@ -2203,7 +2203,7 @@ ul.degree-work span {
   padding: 20px 0px 0px 0px !important;
 }
 
-.sub-cources h5 {
+.sub-course h5 {
   font-size: 14px;
   font-weight: 600;
   margin-top: 16px;

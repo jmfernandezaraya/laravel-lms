@@ -113,20 +113,22 @@
                 </div>
             </li>
         @endif
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#payment_received" aria-expanded="false" aria-controls="payment_received">
-                <span class="menu-title">{{__('Admin/backend.payment_received')}}</span>
-                <i class="menu-arrow"></i>
-                <i class="mdi mdi-crosshairs-gps menu-icon"></i>
-            </a>
-            <div class="collapse" id="payment_received">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{route('superadmin.payment_received.index')}}">{{ __('Admin/dashboard.view')}}</a>
-                    </li>
-                </ul>
-            </div>
-        </li>
+        @if (can_manage_payment() || can_add_payment() || can_edit_payment() || can_delete_payment())
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#payment_received" aria-expanded="false" aria-controls="payment_received">
+                    <span class="menu-title">{{__('Admin/backend.payment_received')}}</span>
+                    <i class="menu-arrow"></i>
+                    <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                </a>
+                <div class="collapse" id="payment_received">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('superadmin.payment_received.index')}}">{{ __('Admin/dashboard.view')}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        @endif
         @if (can_manage_user() || can_add_user() || can_edit_user() || can_delete_user() || can_permission_user())
            <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#users" aria-expanded="false" aria-controls="users">
@@ -149,81 +151,97 @@
                 </div>
             </li>
         @endif
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#enquiry" aria-expanded="false" aria-controls="school_admin">
-                <span class="menu-title">{{__('Admin/backend.manage_enquiries')}}</span>
-                <i class="menu-arrow"></i>
-                <i class="mdi mdi-crosshairs-gps menu-icon"></i>
-            </a>
-            <div class="collapse" id="enquiry">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{url('superadmin/enquiry')}}">{{ __('Admin/dashboard.view')}}</a>
-                    </li>
-                </ul>
-            </div>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#visas" aria-expanded="false" aria-controls="visas">
-                <span class="menu-title">{{__('Admin/backend.manage_formbuilder')}}</span>
-                <i class="menu-arrow"></i>
-                <i class="mdi mdi-form-select menu-icon"></i>
-            </a>
-            <div class="collapse" id="visas">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{url('superadmin/visa')}}">{{ __('Admin/dashboard.view')}}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{url('superadmin/visa/create')}}">{{ __('Admin/dashboard.formbuilder')}}</a>
-                    </li>
-                </ul>
-            </div>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#visa_application" aria-expanded="false" aria-controls="visa_application">
-                <span class="menu-title">{{__('Admin/backend.manage_visa')}}</span>
-                <i class="menu-arrow"></i>
-                <i class="mdi mdi-card-bulleted menu-icon"></i>
-            </a>
-            <div class="collapse" id="visa_application">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{url('superadmin/visa_application/')}}">{{__('Admin/dashboard.view')}}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{route('superadmin.view_visa_forms')}}">{{__('Admin/backend.view_visa_forms')}}</a>
-                    </li>
-                </ul>
-            </div>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#settings" aria-expanded="false" aria-controls="settings">
-                <span class="menu-title">{{__('Admin/dashboard.settings')}}</span>
-                <i class="menu-arrow"></i>
-                <i class="mdi mdi-settings menu-icon"></i>
-            </a>
-            <div class="collapse" id="settings">
-                <ul class="nav flex-column sub-menu">
-                    @if (can_manage_currency() || can_add_currency() || can_edit_currency())
+        @if (can_manage_enquiry() || can_add_enquiry() || can_edit_enquiry() || can_delete_enquiry())
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#enquiry" aria-expanded="false" aria-controls="school_admin">
+                    <span class="menu-title">{{__('Admin/backend.manage_enquiries')}}</span>
+                    <i class="menu-arrow"></i>
+                    <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                </a>
+                <div class="collapse" id="enquiry">
+                    <ul class="nav flex-column sub-menu">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{route('superadmin.setting.currency.index')}}">{{__('Admin/dashboard.currency')}}</a>
+                            <a class="nav-link" href="{{url('superadmin/enquiry')}}">{{ __('Admin/dashboard.view')}}</a>
                         </li>
-                    @endif
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{route('superadmin.setting.site')}}">{{__('Admin/dashboard.site')}}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{route('superadmin.setting.home_page')}}">{{__('Admin/dashboard.home_page')}}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{route('superadmin.setting.header_footer')}}">{{__('Admin/dashboard.header_footer')}}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{route('superadmin.setting.front_page.index')}}">{{__('Admin/dashboard.front_pages')}}</a>
-                    </li>
-                </ul>
-            </div>
-        </li>
+                    </ul>
+                </div>
+            </li>
+        @endif
+        @if (can_manage_form_builder() || can_add_form_builder() || can_edit_form_builder() || can_delete_form_builder())
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#visas" aria-expanded="false" aria-controls="visas">
+                    <span class="menu-title">{{__('Admin/backend.manage_formbuilder')}}</span>
+                    <i class="menu-arrow"></i>
+                    <i class="mdi mdi-form-select menu-icon"></i>
+                </a>
+                <div class="collapse" id="visas">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url('superadmin/visa')}}">{{ __('Admin/dashboard.view')}}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url('superadmin/visa/create')}}">{{ __('Admin/dashboard.formbuilder')}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        @endif
+        @if (can_manage_visa_application() || can_add_visa_application() || can_edit_visa_application() || can_delete_visa_application())
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#visa_application" aria-expanded="false" aria-controls="visa_application">
+                    <span class="menu-title">{{__('Admin/backend.manage_visa')}}</span>
+                    <i class="menu-arrow"></i>
+                    <i class="mdi mdi-card-bulleted menu-icon"></i>
+                </a>
+                <div class="collapse" id="visa_application">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url('superadmin/visa_application/')}}">{{__('Admin/dashboard.view')}}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('superadmin.view_visa_forms')}}">{{__('Admin/backend.view_visa_forms')}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        @endif
+        @if (can_manage_currency() || can_add_currency() || can_edit_currency() || can_set_site() || can_set_home_page() || can_set_header_footer() || can_set_front_page())
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#settings" aria-expanded="false" aria-controls="settings">
+                    <span class="menu-title">{{__('Admin/dashboard.settings')}}</span>
+                    <i class="menu-arrow"></i>
+                    <i class="mdi mdi-settings menu-icon"></i>
+                </a>
+                <div class="collapse" id="settings">
+                    <ul class="nav flex-column sub-menu">
+                        @if (can_manage_currency() || can_add_currency() || can_edit_currency())
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{route('superadmin.setting.currency.index')}}">{{__('Admin/dashboard.currency')}}</a>
+                            </li>
+                        @endif
+                        @if (can_set_site())
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{route('superadmin.setting.site')}}">{{__('Admin/dashboard.site')}}</a>
+                            </li>
+                        @endif
+                        @if (can_set_home_page())
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{route('superadmin.setting.home_page')}}">{{__('Admin/dashboard.home_page')}}</a>
+                            </li>
+                        @endif
+                        @if (can_set_header_footer())
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{route('superadmin.setting.header_footer')}}">{{__('Admin/dashboard.header_footer')}}</a>
+                            </li>
+                        @endif
+                        @if (can_set_front_page())
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{route('superadmin.setting.front_page.index')}}">{{__('Admin/dashboard.front_pages')}}</a>
+                            </li>
+                        @endif
+                    </ul>
+                </div>
+            </li>
+        @endif
     </ul>
 </nav>

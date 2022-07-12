@@ -140,7 +140,7 @@
                                     <option value="subscriber" {{ ($school_admin->permission && !$school_admin->permission->school_manager && ($school_admin->permission->school_add || $school_admin->permission->school_edit)) ? 'selected' : '' }}>{{__('Admin/backend.subscriber')}}</option>
                                     <option value="manager" {{ ($school_admin->permission && $school_admin->permission->school_manager) ? 'selected' : '' }}>{{__('Admin/backend.manager')}}</option>
                                 </select>
-                                <div class="school-permissions" style="display: {{ ($school_admin->permission && !$school_admin->permission->school_manager && ($school_admin->permission->school_add || $school_admin->permission->school_edit)) ? 'display' : 'none' }}">
+                                <div class="school-permissions" style="display: {{ ($school_admin->permission && !$school_admin->permission->school_manager && ($school_admin->permission->school_add || $school_admin->permission->school_edit)) ? 'block' : 'none' }}">
                                     <div class="form-check">
                                         <input name="school_add" type="checkbox" class="form-check-inline" value='1' {{ ($school_admin->permission && $school_admin->permission->school_add) ? 'checked' : '' }}>
                                         <label for="school_add">{{__('Admin/backend.add')}}</label>
@@ -158,7 +158,7 @@
                                     <option value="subscriber" {{ ($school_admin->permission && !$school_admin->permission->course_manager && ($school_admin->permission->course_add || $school_admin->permission->course_edit || $school_admin->permission->course_display || $school_admin->permission->course_delete)) ? 'selected' : '' }}>{{__('Admin/backend.subscriber')}}</option>
                                     <option value="manager" {{ ($school_admin->permission && $school_admin->permission->course_manager) ? 'selected' : '' }}>{{__('Admin/backend.manager')}}</option>
                                 </select>
-                                <div class="course-permissions" style="display: {{ ($school_admin->permission && !$school_admin->permission->course_manager && ($school_admin->permission->course_add || $school_admin->permission->course_edit || $school_admin->permission->course_display || $school_admin->permission->course_delete)) ? 'display' : 'none' }}">
+                                <div class="course-permissions" style="display: {{ ($school_admin->permission && !$school_admin->permission->course_manager && ($school_admin->permission->course_add || $school_admin->permission->course_edit || $school_admin->permission->course_display || $school_admin->permission->course_delete)) ? 'block' : 'none' }}">
                                     <div class="form-check">
                                         <input name="course_add" type="checkbox" class="form-check-inline" value='1' {{ ($school_admin->permission && $school_admin->permission->course_add) ? 'checked' : '' }}>
                                         <label for="course_add">{{__('Admin/backend.add')}}</label>
@@ -186,7 +186,7 @@
                                     <option value="subscriber" {{ ($school_admin->permission && !$school_admin->permission->course_application_manager && ($school_admin->permission->course_application_edit || $school_admin->permission->course_application_chanage_status || $school_admin->permission->course_application_payment_refund || $school_admin->permission->course_application_contact_student || $school_admin->permission->course_application_contact_school)) ? 'selected' : '' }}>{{__('Admin/backend.subscriber')}}</option>
                                     <option value="manager" {{ ($school_admin->permission && $school_admin->permission->course_application_manager) ? 'selected' : '' }}>{{__('Admin/backend.manager')}}</option>
                                 </select>
-                                <div class="course-application-permissions" style="display: {{ ($school_admin->permission && !$school_admin->permission->course_application_manager && ($school_admin->permission->course_application_edit || $school_admin->permission->course_application_chanage_status || $school_admin->permission->course_application_payment_refund || $school_admin->permission->course_application_contact_student || $school_admin->permission->course_application_contact_school)) ? 'display' : 'none' }}">
+                                <div class="course-application-permissions" style="display: {{ ($school_admin->permission && !$school_admin->permission->course_application_manager && ($school_admin->permission->course_application_edit || $school_admin->permission->course_application_chanage_status || $school_admin->permission->course_application_payment_refund || $school_admin->permission->course_application_contact_student || $school_admin->permission->course_application_contact_school)) ? 'block' : 'none' }}">
                                     <div class="form-check">
                                         <input name="course_application_edit" type="checkbox" class="form-check-inline" value='1' {{ ($school_admin->permission && $school_admin->permission->course_application_edit) ? 'checked' : '' }}>
                                         <label for="course_application_edit">{{__('Admin/backend.edit')}}</label>
@@ -216,7 +216,7 @@
                                     <option value="subscriber" {{ ($school_admin->permission && !$school_admin->permission->review_manager && ($school_admin->permission->review_add || $school_admin->permission->review_edit || $school_admin->permission->review_delete || $school_admin->permission->review_permission)) ? 'selected' : '' }}>{{__('Admin/backend.subscriber')}}</option>
                                     <option value="manager" {{ ($school_admin->permission && $school_admin->permission->review_manager) ? 'selected' : '' }}>{{__('Admin/backend.manager')}}</option>
                                 </select>
-                                <div class="review-permissions" style="display: {{ ($school_admin->permission && !$school_admin->permission->review_manager && ($school_admin->permission->review_add || $school_admin->permission->review_edit || $school_admin->permission->review_delete || $school_admin->permission->review_permission)) ? 'display' : 'none' }}">
+                                <div class="review-permissions" style="display: {{ ($school_admin->permission && !$school_admin->permission->review_manager && ($school_admin->permission->review_add || $school_admin->permission->review_edit || $school_admin->permission->review_delete || $school_admin->permission->review_permission)) ? 'block' : 'none' }}">
                                     <div class="form-check">
                                         <input name="review_edit" type="checkbox" class="form-check-inline" value='1' {{ ($school_admin->permission && $school_admin->permission->review_edit) ? 'checked' : '' }}>
                                         <label for="review_edit">{{__('Admin/backend.edit')}}</label>
@@ -228,6 +228,30 @@
                                     <div class="form-check">
                                         <input name="review_delete" type="checkbox" class="form-check-inline" value='1' {{ ($school_admin->permission && $school_admin->permission->review_delete) ? 'checked' : '' }}>
                                         <label for="review_delete">{{__('Admin/backend.delete')}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="enquiry_permission">{{__('Admin/backend.enquiry')}}</label>
+                                <select name="enquiry_permission" id="enquiry_permission" class="form-control">
+                                    <option value="">{{__('Admin/backend.select_role')}}</option>
+                                    <option value="subscriber" {{ ($school_admin->permission && !$school_admin->permission->enquiry_manager && ($school_admin->permission->enquiry_add || $school_admin->permission->enquiry_edit || $school_admin->permission->enquiry_delete)) ? 'selected' : '' }}>{{__('Admin/backend.subscriber')}}</option>
+                                    <option value="manager" {{ ($school_admin->permission && $school_admin->permission->enquiry_manager) ? 'selected' : '' }}>{{__('Admin/backend.manager')}}</option>
+                                </select>
+                                <div class="enquiry-permissions" style="display: {{ ($school_admin->permission && !$school_admin->permission->enquiry_manager && ($school_admin->permission->enquiry_add || $school_admin->permission->enquiry_edit || $school_admin->permission->enquiry_delete)) ? 'block' : 'none' }}">
+                                    <div class="form-check">
+                                        <input name="enquiry_add" type="checkbox" class="form-check-inline" value='1' {{ ($school_admin->permission && $school_admin->permission->enquiry_add) ? 'checked' : '' }}>
+                                        <label for="enquiry_add">{{__('Admin/backend.add')}}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="enquiry_edit" type="checkbox" class="form-check-inline" value='1' {{ ($school_admin->permission && $school_admin->permission->enquiry_edit) ? 'checked' : '' }}>
+                                        <label for="enquiry_edit">{{__('Admin/backend.edit')}}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="enquiry_delete" type="checkbox" class="form-check-inline" value='1' {{ ($school_admin->permission && $school_admin->permission->enquiry_delete) ? 'checked' : '' }}>
+                                        <label for="enquiry_delete">{{__('Admin/backend.delete')}}</label>
                                     </div>
                                 </div>
                             </div>

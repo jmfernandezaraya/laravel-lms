@@ -16,10 +16,12 @@ class SaveCourseDetailsMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (\Session::has('course_details')) {
-            \Session::put('course_details_old', \Session::get('course_details'));
+        if ($request->isMethod('post')) {
+            if (\Session::has('course_details')) {
+                \Session::put('course_details_old', \Session::get('course_details'));
+            }
+            \Session::put('course_details', $request->all());
         }
-        \Session::put('course_details', $request->all());
         if (!auth()->check()) {
             return redirect()->route('login');
         }

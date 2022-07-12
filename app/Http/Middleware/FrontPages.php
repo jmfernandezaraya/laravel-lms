@@ -31,8 +31,8 @@ class FrontPages
             $front_pages = FrontPage::where('slug', '<>', '/')->where('route', false)->where('display', true)->get();
             foreach ($front_pages as $front_page) {
                 if ($front_page->slug == $request_uri) {
-                    $title = app()->getLocale() == 'en' ? $front_page->title : $front_page->title_ar;
-                    $content = app()->getLocale() == 'en' ? $front_page->content : $front_page->content_ar;
+                    $title = \Session::get('locale') == 'en' ? $front_page->title : $front_page->title_ar;
+                    $content = \Session::get('locale') == 'en' ? $front_page->content : $front_page->content_ar;
                     return response()->view('frontend.page', compact('title', 'content'));
                 }
             }

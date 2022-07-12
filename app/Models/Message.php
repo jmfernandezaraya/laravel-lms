@@ -13,16 +13,12 @@ class Message extends Model
 
     protected $guarded = [];
     protected $casts = [
+        'to_user' => 'array',
         'attachments' => 'array',
     ];
 
     public function fromUser()
     {
         return $this->belongsTo('App\Models\User', 'from_user', 'id');
-    }
-
-    public function toUser()
-    {
-        return $this->belongsTo('App\Models\User', 'to_user', 'id');
     }
 }

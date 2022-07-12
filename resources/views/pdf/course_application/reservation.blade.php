@@ -4,13 +4,12 @@
 <head>
     <meta charset="utf-8">
     <title>{{__('Frontend.reservation_details')}}</title>
-
-    @if (app()->getLocale() != 'en')
-        <style> 
-            * { font-family: 'DejaVu Sans', sans-serif; }
-        </style>
-    @endif
     <style>
+        @if (app()->getLocale() != 'en')
+            * { font-family: 'DejaVu Sans', sans-serif; }
+            body { direction: rtl; text-align: right; }
+        @endif
+
         .title {
             text-align: center;
             text-decoration: underline;
@@ -107,7 +106,7 @@
         <tbody>
             <tr>
                 <td>
-                    {{ $course->program_name }}, {{ $course->lessons_per_week }} {{__('Frontend.lessons')}} / {{ $course->hours_per_week }} {{__('Frontend.hours_per_week')}}<br />
+                    {{ app()->getLocale() == 'en' ? $course->program_name : $course->program_name_ar }}, {{ $course->lessons_per_week }} {{__('Frontend.lessons')}} / {{ $course->hours_per_week }} {{__('Frontend.hours_per_week')}}<br />
                     {{ $program_start_date }} {{__('Frontend.to')}} {{ $program_end_date }} ( {{ $course_application->program_duration }} {{__('Frontend.weeks')}} )
                 </td>
                 <td>{{ toFixedNumber($program_cost['value']) }}</td>
@@ -179,7 +178,7 @@
             <tbody>
                 <tr>
                     <td>
-                        {{$accommodation->type}} - {{$accommodation->room_type}} - {{$accommodation->meal}}<br />
+                        {{app()->getLocale() == 'en' ? $accommodation->type : $accommodation->type_ar}} - {{app()->getLocale() == 'en' ? $accommodation->room_type : $accommodation->room_type_ar}} - {{app()->getLocale() == 'en' ? $accommodation->meal : $accommodation->meal_ar}}<br />
                         {{$accommodation_start_date}} to {{$accommodation_end_date}} ( {{$course_application->accommodation_duration}} {{__('Frontend.weeks')}} )
                     </td>
                     <td>{{ toFixedNumber($accommodation_fee['value']) }}</td>

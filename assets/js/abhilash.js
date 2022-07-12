@@ -1084,7 +1084,7 @@ function resetOtherService(init = false) {
         $('#medical_duration')[0].selectedIndex = '';
         $('#medical_id').val('');
 
-        $('#custodianship_check').prop('checked', false);
+        // $('#custodianship_check').prop('checked', false);
     }
     $.get(reset_other_service_url, function () {
         $("#other_services #airport_pickup .cost_value").html(0);

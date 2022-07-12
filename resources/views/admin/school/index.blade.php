@@ -62,7 +62,7 @@
                                 <td><input type="checkbox" data-id="{{$school->id}}" /></td>
                                 <td>
                                     @if ($school->name)
-                                        {{ ucwords(app()->getLocale() == 'en' ? $school->name->name : $school->name->name_ar) }}
+                                        {{ app()->getLocale() == 'en' ? $school->name->name : $school->name->name_ar }}
                                     @else
                                         -
                                     @endif
@@ -71,19 +71,21 @@
                                 <td>{{ $school->contact }}</td>
                                 <td>
                                     @if ($school->country)
-                                        {{ ucwords(app()->getLocale() == 'en' ? $school->country->name : $school->country->name_ar) }}
+                                        {{ app()->getLocale() == 'en' ? $school->country->name : $school->country->name_ar }}
                                     @else
                                         -
                                     @endif
                                 </td>
                                 <td>
                                     @if ($school->city)
-                                        {{ ucwords(app()->getLocale() == 'en' ? $school->city->name : $school->city->name_ar) }}
+                                        {{ app()->getLocale() == 'en' ? $school->city->name : $school->city->name_ar }}
                                     @else
                                         -
                                     @endif
                                 </td>
-                                <td>{{ is_array($school->branch_name) ? implode(", ", $school->branch_name) : $school->branch_name }}</td>
+                                <td>
+                                    {{ app()->getLocale() == 'en' ? $school->branch_name : $school->branch_name_ar }}
+                                </td>
                                 <td>{{ $school->created_at->diffForHumans() }}</td>
                                 <td>
                                     @if ($school->updated_at)

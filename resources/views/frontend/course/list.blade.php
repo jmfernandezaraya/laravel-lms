@@ -46,61 +46,19 @@
                                         {{ __('Frontend.school_ranking') }}
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="filter-ranking-select">
-                                        <li value="5" onclick="changeRankingValue(5)">
-                                            <div class="score-wrap">
-                                                <span class="stars" style="width: 100%">
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                </span>
-                                            </div>
-                                        </li>
-                                        <li value="4" onclick="changeRankingValue(4)">
-                                            <div class="score-wrap">
-                                                <span class="stars" style="width: 80%">
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                </span>
-                                            </div>
-                                        </li>
-                                        <li value="3" onclick="changeRankingValue(3)">
-                                            <div class="score-wrap">
-                                                <span class="stars" style="width: 60%">
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                </span>
-                                            </div>
-                                        </li>
-                                        <li value="2" onclick="changeRankingValue(2)">
-                                            <div class="score-wrap">
-                                                <span class="stars" style="width: 40%">
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                </span>
-                                            </div>
-                                        </li>
-                                        <li value="1" onclick="changeRankingValue(1)">
-                                            <div class="score-wrap">
-                                                <span class="stars" style="width: 20%">
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                </span>
-                                            </div>
-                                        </li>
+                                        @foreach ($school_ratings as $school_rating)
+                                            <li value="{{ $school_rating }}" onclick="changeRankingValue({{ $school_rating }})">
+                                                <div class="score-wrap">
+                                                    <span class="stars" style="width: {{ $school_rating * 20 }}%">
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                    </span>
+                                                </div>
+                                            </li>
+                                        @endforeach
                                     </ul>
                                 </div>
                             </div>
@@ -186,11 +144,15 @@
                 var filter_ranking = $('#filter-ranking').val();
                 var filtered_courses = 0;
                 $('.school-list .school-item').each(function() {
-                    if ($(this).data('city') == filter_city && $(this).data('school') == filter_school && $(this).data('ranking') == filter_ranking) {
-                        $(this).show();
+                    var item_display = true;
+                    if (filter_city && $(this).data('city') != filter_city) item_display = false;
+                    if (filter_school && $(this).data('school') != filter_school) item_display = false;
+                    if (filter_ranking && $(this).data('ranking') != filter_ranking) item_display = false;
+                    if (item_display) {
+                        $(this).parent().closest('div').removeClass('hide');
                         filtered_courses = filtered_courses + 1;
                     } else {
-                        $(this).hide();
+                        $(this).parent().closest('div').addClass('hide');
                     }
                 });
                 $('.courses-count').html(filtered_courses);

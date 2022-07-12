@@ -1610,6 +1610,30 @@
             $('.review-permissions').hide();
         }
     });
+    
+    $('#enquiry_permission').change(function() {
+        if ($('#enquiry_permission').val() == 'subscriber') {
+            $('.enquiry-permissions').show();
+        } else {
+            $('.enquiry-permissions').hide();
+        }
+    });
+    
+    $('#form_builder_permission').change(function() {
+        if ($('#form_builder_permission').val() == 'subscriber') {
+            $('.form-builde-permissions').show();
+        } else {
+            $('.form-builde-permissions').hide();
+        }
+    });
+    
+    $('#visa_application_permission').change(function() {
+        if ($('#visa_application_permission').val() == 'subscriber') {
+            $('.visa-application-permissions').show();
+        } else {
+            $('.visa-application-permissions').hide();
+        }
+    });
 
     $(document).ready(function () {
         airport_clone = $('#airportincrement').val();

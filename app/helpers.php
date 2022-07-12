@@ -21,27 +21,6 @@ function can_edit_blog() {
         return auth('schooladmin')->user()->permission['blog_edit'] == 1 ? true : false;
     }
 }
-function can_manage_school() {
-    if (auth('superadmin')->check()) {
-        return auth('superadmin')->user()->permission['school_manager'] == 1 ? true : false;
-    } else if (auth('schooladmin')->check()) {
-        return auth('schooladmin')->user()->permission['school_manager'] == 1 ? true : false;
-    }
-}
-function can_add_school() {
-    if (auth('superadmin')->check()) {
-        return auth('superadmin')->user()->permission['school_add'] == 1 ? true : false;
-    } else if (auth('schooladmin')->check()) {
-        return auth('schooladmin')->user()->permission['school_add'] == 1 ? true : false;
-    }
-}
-function can_edit_school() {
-    if (auth('superadmin')->check()) {
-        return auth('superadmin')->user()->permission['school_edit'] == 1 ? true : false;
-    } else if (auth('schooladmin')->check()) {
-        return auth('schooladmin')->user()->permission['school_edit'] == 1 ? true : false;
-    }
-}
 function can_manage_course() {
     if (auth('superadmin')->check()) {
         return auth('superadmin')->user()->permission['course_manager'] == 1 ? true : false;
@@ -140,6 +119,90 @@ function can_contact_school_course_application() {
         return auth('schooladmin')->user()->permission['course_application_contact_school'] == 1 ? true : false;
     }
 }
+function can_manage_enquiry() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['enquiry_manager'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['enquiry_manager'] == 1 ? true : false;
+    }
+}
+function can_add_enquiry() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['enquiry_add'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['enquiry_add'] == 1 ? true : false;
+    }
+}
+function can_edit_enquiry() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['enquiry_edit'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['enquiry_edit'] == 1 ? true : false;
+    }
+}
+function can_delete_enquiry() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['enquiry_delete'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['enquiry_delete'] == 1 ? true : false;
+    }
+}
+function can_manage_form_builder() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['form_builder_manager'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['form_builder_manager'] == 1 ? true : false;
+    }
+}
+function can_add_form_builder() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['form_builder_add'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['form_builder_add'] == 1 ? true : false;
+    }
+}
+function can_edit_form_builder() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['form_builder_edit'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['form_builder_edit'] == 1 ? true : false;
+    }
+}
+function can_delete_form_builder() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['form_builder_delete'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['form_builder_delete'] == 1 ? true : false;
+    }
+}
+function can_manage_payment() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['payment_manager'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['payment_manager'] == 1 ? true : false;
+    }
+}
+function can_add_payment() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['payment_add'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['payment_add'] == 1 ? true : false;
+    }
+}
+function can_edit_payment() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['payment_edit'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['payment_edit'] == 1 ? true : false;
+    }
+}
+function can_delete_payment() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['payment_delete'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['payment_delete'] == 1 ? true : false;
+    }
+}
 function can_manage_review() {
     if (auth('superadmin')->check()) {
         return auth('superadmin')->user()->permission['review_manager'] == 1 ? true : false;
@@ -166,6 +229,34 @@ function can_delete_review() {
         return auth('superadmin')->user()->permission['review_delete'] == 1 ? true : false;
     } else if (auth('schooladmin')->check()) {
         return false;
+    }
+}
+function can_manage_school() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['school_manager'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['school_manager'] == 1 ? true : false;
+    }
+}
+function can_add_school() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['school_add'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['school_add'] == 1 ? true : false;
+    }
+}
+function can_edit_school() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['school_edit'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['school_edit'] == 1 ? true : false;
+    }
+}
+function can_delete_school() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['school_delete'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['school_delete'] == 1 ? true : false;
     }
 }
 function can_manage_user() {
@@ -199,6 +290,62 @@ function can_delete_user() {
 function can_permission_user() {
     if (auth('superadmin')->check()) {
         return auth('superadmin')->user()->permission['user_permission'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return false;
+    }
+}
+function can_manage_visa_application() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['visa_application_manager'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['visa_application_manager'] == 1 ? true : false;
+    }
+}
+function can_add_visa_application() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['visa_application_add'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['visa_application_add'] == 1 ? true : false;
+    }
+}
+function can_edit_visa_application() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['visa_application_edit'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['visa_application_edit'] == 1 ? true : false;
+    }
+}
+function can_delete_visa_application() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['visa_application_delete'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return auth('schooladmin')->user()->permission['visa_application_delete'] == 1 ? true : false;
+    }
+}
+function can_set_site() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['set_site'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return false;
+    }
+}
+function can_set_home_page() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['set_home_page'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return false;
+    }
+}
+function can_set_header_footer() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['set_header_footer'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return false;
+    }
+}
+function can_set_front_page() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['set_front_page'] == 1 ? true : false;
     } else if (auth('schooladmin')->check()) {
         return false;
     }
@@ -869,10 +1016,14 @@ function getSchoolRating($school_id) {
     if ($school_course_applications) {
         foreach ($school_course_applications as $course_application) {
             if ($course_application->review) {
-                $school_ratings = ($course_application->review->quality_teaching + $course_application->review->school_facilities + $course_application->review->social_activities + 
-                    $course_application->review->school_location + $course_application->review->satisfied_teaching + $course_application->review->level_cleanliness + 
-                    $course_application->review->distance_accommodation_school + $course_application->review->satisfied_accommodation + $course_application->review->airport_transfer + 
-                    $course_application->review->city_activities) / 10;
+                $review_point_count = 6;
+                $school_ratings = $course_application->review->quality_teaching + $course_application->review->school_facilities + $course_application->review->social_activities + 
+                    $course_application->review->school_location + $course_application->review->satisfied_teaching + $course_application->review->city_activities;
+                if ($course_application->accommodation_id) {
+                    $review_point_count = $review_point_count + 3;
+                    $school_ratings += $course_application->review->level_cleanliness + $course_application->review->distance_accommodation_school + $course_application->review->satisfied_accommodation;
+                }
+                $school_ratings = $school_ratings / $review_point_count;
                 $school_rating_count += 1;
             }
         }
@@ -882,22 +1033,26 @@ function getSchoolRating($school_id) {
 }
 
 function getCourseRating($course_id) {
-    $course_ratings = 0;
-    $course_rating_count = 0;
-    $course_course_applications = \App\Models\CourseApplication::with('review')->where('course_id', $course_id)->get();
-    if ($course_course_applications) {
-        foreach ($course_course_applications as $course_application) {
-            if ($course_application->review) {
-                $course_ratings = ($course_application->review->quality_teaching + $course_application->review->school_facilities + $course_application->review->social_activities + 
-                    $course_application->review->school_location + $course_application->review->satisfied_teaching + $course_application->review->level_cleanliness + 
-                    $course_application->review->distance_accommodation_school + $course_application->review->satisfied_accommodation + $course_application->review->airport_transfer + 
-                    $course_application->review->city_activities) / 10;
-                $course_rating_count += 1;
+    $course_rating = 0;
+    $course_application = \App\Models\CourseApplication::with('review')->where('course_id', $course_id)->first();
+    if ($course_application) {
+        if ($course_application->review) {
+            $review_point_count = 6;
+            $course_rating = $course_application->review->quality_teaching + $course_application->review->school_facilities + $course_application->review->social_activities + 
+                $course_application->review->school_location + $course_application->review->satisfied_teaching + $course_application->review->city_activities;
+            if ($course_application->accommodation_id) {
+                $review_point_count = $review_point_count + 3;
+                $course_rating += $course_application->review->level_cleanliness + $course_application->review->distance_accommodation_school + $course_application->review->satisfied_accommodation;
             }
+            if ($course_application->airport_id) {
+                $review_point_count = $review_point_count + 1;
+                $course_rating += $course_application->review->airport_transfer;
+            }
+            $course_rating = $course_rating / $review_point_count;
         }
     }
 
-    return $course_ratings;
+    return $course_rating;
 }
 
 /**
@@ -1179,6 +1334,9 @@ function getCourseReservationLinks()
         }
     }
 
+    foreach ($site_course_reservation_links as $reservation_link_key => $reservation_link_value) {
+        $site_course_reservation_links[$reservation_link_key] = getPageUrl($reservation_link_value);
+    }
     return $site_course_reservation_links;
 }
 
@@ -1229,6 +1387,9 @@ function getPageUrl($id)
         $front_page_url = $front_page->slug;
         if ($front_page_url && $front_page_url[0] != '/') {
             $front_page_url = '/' . $front_page_url;
+        }
+        if (!$front_page_url) {
+            $front_page_url = '/';
         }
     }
 
@@ -1376,7 +1537,7 @@ function checkCourseProgramPromotion($course_program_id)
 }
 
 function generateRandomString($length)
-{    
+{
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $character_length = strlen($characters);
     $random_string = '';
@@ -1525,22 +1686,27 @@ function getCourseApplicationPrintData($id, $user_id, $is_admin = false)
     $data['currency'] = [ 'cost' => $calculator_values['currency'], 'converted' => $default_currency['currency'] ];
     $data['today'] = Carbon\Carbon::now()->format('d-m-Y');
 
-    $data['student_messages'] = \App\Models\Message::with('fromUser', 'toUser')->where('type_id', $course_application->id)        
-        ->where(function($query) use ($user_id, $is_admin) {
+    $data['student_messages'] = \App\Models\Message::with('fromUser')->where('type_id', $course_application->id)
+        ->orderBy("id", "asc")->get()->collect()->values()->filter(function($value) use ($user_id, $is_admin) {
+            $message_flag = false;
             if ($is_admin) {
-                $query->where(function($sub_query) use ($user_id) {
-                    $sub_query->where('type', 'to_student')->where('from_user', $user_id);
-                })->orWhere(function($sub_query) use ($user_id) {
-                    $sub_query->where('type', 'to_admin')->where('to_user', $user_id);
-                });
+                if ($value['type'] == 'to_student' && $value['from_user'] == $user_id) {
+                    $message_flag = true;
+                }
+                if ($value['type'] == 'to_admin' && in_array($user_id, $value['to_user'])) {
+                    $message_flag = true;
+                }
             } else {
-                $query->where(function($sub_query) use ($user_id) {
-                    $sub_query->where('type', 'to_student')->where('to_user', $user_id);
-                })->orWhere(function($sub_query) use ($user_id) {
-                    $sub_query->where('type', 'to_admin')->where('from_user', $user_id);
-                });
+                if ($value['type'] == 'to_student' && in_array($user_id, $value['to_user'])) {
+                    $message_flag = true;
+                }
+                if ($value['type'] == 'to_admin' && $value['from_user'] == $user_id) {
+                    $message_flag = true;
+                }
             }
-        })->orderBy('id', 'asc')->get();
+
+            return $message_flag;
+        })->all();
     $data['user_school'] = null;
     $data['school_messages'] = [];
     if ($course_application->course->school->userSchool != null) {
@@ -1551,16 +1717,70 @@ function getCourseApplicationPrintData($id, $user_id, $is_admin = false)
             $school_user_ids[] = $user_school->user_id;
         }
         $school_user_ids = array_unique($school_user_ids);
-        $data['school_messages'] = \App\Models\Message::with('fromUser', 'toUser')->where('type_id', $course_application->id)        
-            ->where(function($query) use ($user_id, $school_user_ids) {
-                $query->where(function($sub_query) use ($user_id) {
-                    $sub_query->where('type', 'to_school_admin')->where('from_user', $user_id);
-                })->orWhere(function($sub_query) use ($user_id, $school_user_ids) {
-                    $sub_query->where('type', 'to_admin')->whereIn('from_user', $school_user_ids)->where('to_user', $user_id);
-                });
-            })->orderBy('id', 'asc')->get();
+        $data['school_messages'] = \App\Models\Message::with('fromUser')->where('type_id', $course_application->id)    
+            ->orderBy("id", "asc")->get()->collect()->values()->filter(function($value) use ($user_id, $school_user_ids) {
+                $message_flag = false;
+                if ($value['type'] == 'to_school_admin' && $value['from_user'] == $user_id) {
+                    $message_flag = true;
+                }
+                if ($value['type'] == 'to_admin' && in_array($value['from_user'], $school_user_ids) && in_array($user_id, $value['to_user'])) {
+                    $message_flag = true;
+                }
+
+                return $message_flag;
+            })->all();
     }
 
     return $data;
+}
+
+function getCourseApplicationMailData($id, $user_id)
+{
+    $course_application = \App\Models\CourseApplication::whereId($id)->firstOrFail();
+    $mail_data['user'] = \App\Models\User::find($user_id);
+    $mail_data['locale'] = app()->getLocale();
+    $mail_data['id'] = $course_application->id;
+    
+    $mail_data['program_duration'] = $course_application->program_duration ?? null;    
+    $mail_data['accommodation_duration'] = $course_application->accommodation_duration ?? null;
+
+    $mail_data['registration_date'] = \Carbon\Carbon::now()->format('Y-m-d');
+    $mail_data['fname'] = $course_application->fname ?? '';
+    $mail_data['mname'] = $course_application->mname ?? '';
+    $mail_data['lname'] = $course_application->lname ?? '';
+    $mail_data['place_of_birth'] = $course_application->place_of_birth ?? '';
+    $mail_data['gender'] = $course_application->gender ?? '';
+    $mail_data['dob'] = $course_application->dob ?? '';
+    $mail_data['nationality'] = $course_application->nationality ?? '';
+    $mail_data['id_number'] = $course_application->id_number ?? '';
+    $mail_data['passport_number'] = $course_application->passport_number ?? '';
+    $mail_data['passport_date_of_issue'] = $course_application->passport_date_of_issue ?? '';
+    $mail_data['passport_date_of_expiry'] = $course_application->passport_date_of_expiry ?? '';
+    $mail_data['passport_copy'] = $course_application->passport_copy ?? '';
+    $mail_data['financial_guarantee'] = $course_application->financial_guarantee ?? '';
+    $mail_data['bank_statement'] = $course_application->bank_statement ?? '';
+    $mail_data['level_of_language'] = $course_application->level_of_language ?? '';
+    $mail_data['study_finance'] = $course_application->study_finance ?? '';
+    $mail_data['mobile'] = $course_application->mobile ?? '';
+    $mail_data['telephone'] = $course_application->telephone ?? '';
+    $mail_data['email'] = $course_application->email ? strtolower($course_application->email) : '';
+    $mail_data['address'] = $course_application->address ?? '';
+    $mail_data['post_code'] = $course_application->post_code ?? '';
+    $mail_data['city_contact'] = $course_application->city_contact ?? '';
+    $mail_data['province_region'] = $course_application->province_region ?? '';
+    $mail_data['country_contact'] = $course_application->country_contact ?? '';
+    $mail_data['full_name_emergency'] = $course_application->full_name_emergency ?? '';
+    $mail_data['relative_emergency'] = $course_application->relative_emergency ?? '';
+    $mail_data['mobile_emergency'] = $course_application->mobile_emergency ?? '';
+    $mail_data['telephone_emergency'] = $course_application->telephone_emergency ?? '';
+    $mail_data['email_emergency'] = $course_application->email_emergency ? strtolower($course_application->email_emergency) : '';
+    $mail_data['heard_where'] = $course_application->heard_where ?? [];
+    $mail_data['other'] = $course_application->other ?? '';
+    $mail_data['comments'] = $course_application->comments ?? '';
+    $mail_data['guardian_full_name'] = $course_application->guardian_full_name;
+    $mail_data['signature'] = $course_application->signature;
+    $mail_data['registration_cancelation_conditions'] = app()->getLocale() == 'en' ? $course_application->registration_cancelation_conditions : $course_application->registration_cancelation_conditions_ar;
+    
+    return $mail_data;
 }
 ?>

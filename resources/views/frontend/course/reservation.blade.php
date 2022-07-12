@@ -52,7 +52,7 @@
                     <tbody>
                         <tr>
                             <td>
-                                <p>{{ $course->program_name }}, {{ $course->lessons_per_week }} {{__('Frontend.lessons')}} / {{ $course->hours_per_week }} {{__('Frontend.hours_per_week')}}</p>
+                                <p>{{ app()->getLocale() == 'en' ? $course->program_name : $course->program_name_ar }}, {{ $course->lessons_per_week }} {{__('Frontend.lessons')}} / {{ $course->hours_per_week }} {{__('Frontend.hours_per_week')}}</p>
                                 <p>{{ $program_start_date }} {{__('Frontend.to')}} {{ $program_end_date }} ( {{ $course_details->program_duration }} {{__('Frontend.weeks')}} )</p>
                             </td>
                             <td>{{ toFixedNumber($program_cost['value']) }}</td>
@@ -132,7 +132,7 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <p>{{$accommodation->type}} - {{$accommodation->room_type}} - {{$accommodation->meal}}</p>
+                                    <p>{{app()->getLocale() == 'en' ? $accommodation->type : $accommodation->type_ar}} - {{app()->getLocale() == 'en' ? $accommodation->room_type : $accommodation->room_type_ar}} - {{app()->getLocale() == 'en' ? $accommodation->meal : $accommodation->meal_ar}}</p>
                                     <p>{{$accommodation_start_date}} to {{$accommodation_end_date}} ( {{$course_details->accommodation_duration}} {{__('Frontend.weeks')}} )</p>
                                 </td>
                                 <input type="hidden" value="{{$accommodation_start_date}}" name="accommodation_start_date" />

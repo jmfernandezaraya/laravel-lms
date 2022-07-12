@@ -33,7 +33,7 @@ class AdminCreated extends Mailable
      */
     public function build()
     {
-        $mail = $this->markdown('mail/admin_created', $this->request)->subject(__('Mail.subject.admin_created'));
+        $mail = $this->markdown('mail/admin_created', $this->request)->subject(__('Mail.subjects.admin_created'));
 
         return $mail;
     }

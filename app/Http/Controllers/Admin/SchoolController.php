@@ -18,7 +18,6 @@ use App\Models\CourseApplication;
 use App\Models\SuperAdmin\Choose_Nationality;
 use App\Models\SuperAdmin\School;
 use App\Models\SuperAdmin\SchoolNationality;
-use App\Models\SuperAdmin\UserSchool;
 
 use App\Http\Requests\SuperAdmin\AddSchoolRequest;
 
@@ -58,8 +57,7 @@ class SchoolController extends Controller
         if (auth('superadmin')->check()) {
             $schools = School::with('name', 'country', 'city')->get();
         } else if (auth('schooladmin')->check()) {
-            $school_ids = UserSchool::where('user_id', auth('schooladmin')->user()->id)->pluck('school_id')->toArray();
-            $schools = School::whereIn('id', $school_ids)->with('name', 'country', 'city')->get();
+            $schools = School::whereIn('id', auth('schooladmin')->user()->school)->with('name', 'country', 'city')->get();
         }
         foreach($schools as $school) {
             if (is_null($school->name)) {
@@ -450,7 +448,7 @@ class SchoolController extends Controller
     {
         $language = app()->getLocale();
         $schools = School::where('is_active', true)->whereHas('name', function($query) use ($request, $language)
-            { $language ? $query->where('name', $request->school) : $query->where('name_ar', $request->school); })->get();
+            { $language =='en' ? $query->where('name', $request->school) : $query->where('name_ar', $request->school); })->get();
         $country_ids = [];
         foreach ($schools as $school) {
             if (!in_array($school->country_id, $country_ids)) {
@@ -461,7 +459,7 @@ class SchoolController extends Controller
         $country_list = "";
         if ($request->empty_value == 'true') $country_list .= "<option value=''>" . __('Admin/backend.select_option') . "</option>";
         foreach ($countries as $country) {
-            if ($country) $country_list .= "<option value='$country->id'>".(app()->getLocale() == 'en' ? $country->name : $country->name_ar)."</option>";
+            if ($country) $country_list .= "<option value='$country->id'>" . (app()->getLocale() == 'en' ? $country->name : $country->name_ar)."</option>";
         }
 
         return response($country_list);
@@ -475,7 +473,7 @@ class SchoolController extends Controller
     {
         $language = app()->getLocale();
         $schools = School::where('is_active', true)->whereHas('name', function($query) use ($request, $language)
-            { $language ? $query->where('name', $request->school) : $query->where('name_ar', $request->school); })->get();
+            { $language =='en' ? $query->where('name', $request->school) : $query->where('name_ar', $request->school); })->get();
         $city_ids = [];
         foreach ($schools as $school) {
             if (is_array($request->country)) {
@@ -522,7 +520,7 @@ class SchoolController extends Controller
     {
         $language = app()->getLocale();
         $schools = School::where('is_active', true)->whereHas('name', function($query) use ($request, $language)
-            { $language ? $query->where('name', $request->school) : $query->where('name_ar', $request->school); })->get();
+            { $language =='en' ? $query->where('name', $request->school) : $query->where('name_ar', $request->school); })->get();
         $branch_names = [];
         foreach ($schools as $school) {
             $country_city_flag = true;

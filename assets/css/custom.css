@@ -2,7 +2,9 @@ html[lang="ar"] body {
     direction: rtl;
     text-align: right;
 }
-
+.hide {
+    display: none!important;
+}
 .page-body-wrapper .sidebar {
     margin-top: 80px;
 }

@@ -398,6 +398,7 @@ return [
     'contact_center_student' => 'Contact Center - Student',
     'review' => 'Review',
     'approve' => 'Approve',
+    'enquiry' => 'Enquiry',
     'user' => 'User',
     'permission' => 'Permission',
 
@@ -560,9 +561,15 @@ return [
         'select_nationality' => 'Select Nationality',
         'destination_to_travel' => 'Select Destination',
     ],
+    'form_builder' => 'Form Builder',
     'visa_application' => [
+        'title' => 'Visa Application',
         'application_details' => 'Application Details',
     ],
+    'setting' => 'Setting',
+    'site' => 'Site',
+    'home_page' => 'Home Page',
+    'front_page' => 'Front Page',
     'add_under_age_fee_text_book_fee' => 'Add Under Age Fee and Text Book Fee',
     'under_age_fee' => 'Under Age Fee',
     'under_age_fee_per_week' => 'Under Age Fee Per Week',

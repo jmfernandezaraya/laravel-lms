@@ -85,7 +85,10 @@
             <div class="row">
                 <div class="col-md-8">
                     <h3>
-                        <p class="m-0 inter-school">{{ucwords($school->name ? (app()->getLocale() == 'en' ? $school->name->name : $school->name->name_ar) : '-')}} - {{is_array($school->branch_name) && !empty($school->branch_name) ? ucwords($school->branch_name[0]) : $school->branch_name}}</p>
+                        <p class="m-0 inter-school">
+                            {{$school->name ? (app()->getLocale() == 'en' ? $school->name->name : $school->name->name_ar) : '-'}} - 
+                            {{ app()->getLocale() == 'en' ? $school->branch_name : $school->branch_name_ar }}
+                        </p>
                         <span class="city">{{$school->city ? (app()->getLocale() == 'en' ? $school->city->name : $school->city->name_ar) : '-'}}, {{$school->country ? (app()->getLocale() == 'en' ? $school->country->name : $school->country->name_ar) : '-'}}</span>
                     </h3>
                     <ul>
@@ -672,7 +675,7 @@
                 @if (isset($course_details->special_diet) && (float)$course_details->special_diet)
                     $('#special_diet_check').prop("checked", true);
                 @endif
-                @if (isset($course_details->custodianship) && (float)$course_details->custodianship)
+                @if (isset($course_details->custodianship) && $course_details->custodianship == 'on')
                     $('#custodianship_check').prop("checked", true);
                 @endif
                 @if (isset($course_details->study_mode) && $course_details->study_mode)
@@ -833,7 +836,7 @@
             }
         }
 
-        function callbackChangeMedical() {
+        function callbackChangeMedical(type) {
             if (!fill_course_form) {
                 if (type == 'company_name') {
                     @if (isset($course_details->deductible_up_to))

@@ -692,22 +692,15 @@ class CourseControllerFrontend extends Controller
      */
     public function calculateAccommodation(Request $request)
     {
-        $accommodation_query = CourseAccommodation::where('course_unique_id', \Session::get('course_unique_id'));
-        if (app()->getLocale() == 'en') {
-            $accommodation_query->whereType($request->accom_type);
-        } else {
-            $accommodation_query->whereTypeAr($request->accom_type);
-        }
-        if (app()->getLocale() == 'en') {
-            $accommodation_query->whereRoomType($request->room_type);
-        } else {
-            $accommodation_query->whereRoomTypeAr($request->room_type);
-        }
-        if (app()->getLocale() == 'en') {
-            $accommodation_query->whereMeal($request->meal_type);
-        } else {
-            $accommodation_query->whereMealAr($request->meal_type);
-        }
+        $lang = app()->getLocale();
+        $accommodation_query = CourseAccommodation::where('course_unique_id', \Session::get('course_unique_id'))
+            ->where(function($query) use ($request, $lang) {
+                if (app()->getLocale() == 'en') {
+                    $query->where('type', $request->accom_type)->where('room_type', $request->room_type)->where('meal', $request->meal_type);
+                } else {
+                    $query->where('type_ar', $request->accom_type)->where('room_type_ar', $request->room_type)->where('meal_ar', $request->meal_type);
+                }
+            });
         $accommodation = $accommodation_query->where('start_week', '<=', (int)$request->duration)
             ->where('end_week', '>=', (int)$request->duration)
             ->first();
@@ -1022,6 +1015,7 @@ class CourseControllerFrontend extends Controller
      */
     public function getAccommodationDuration(Request $request)
     {
+        $lang = app()->getLocale();
         $christmas_weeks = 0;
         $course_programs = CourseProgram::where('course_unique_id', \Session::get('course_unique_id'))->get();
         if ($course_programs->isEmpty()) {
@@ -1050,23 +1044,14 @@ class CourseControllerFrontend extends Controller
             }
         }
 
-        $accommodation_query = CourseAccommodation::where('course_unique_id', \Session::get('course_unique_id'));
-        if (app()->getLocale() == 'en') {
-            $accommodation_query->whereType($request->accom_type);
-        } else {
-            $accommodation_query->whereTypeAr($request->accom_type);
-        }
-        if (app()->getLocale() == 'en') {
-            $accommodation_query->whereRoomType($request->room_type);
-        } else {
-            $accommodation_query->whereRoomTypeAr($request->room_type);
-        }
-        if (app()->getLocale() == 'en') {
-            $accommodation_query->whereMeal($request->meal_type);
-        } else {
-            $accommodation_query->whereMealAr($request->meal_type);
-        }
-        $accommodations = $accommodation_query->get();
+        $accommodations = CourseAccommodation::where('course_unique_id', \Session::get('course_unique_id'))
+            ->where(function($query) use ($request, $lang) {
+                if ($lang == 'en') {
+                    $query->where('type', $request->accom_type)->where('room_type', $request->room_type)->where('meal', $request->meal_type);
+                } else {
+                    $query->where('type_ar', $request->accom_type)->where('room_type_ar', $request->room_type)->where('meal_ar', $request->meal_type);
+                }
+            })->get();
 
         $accommodation_durations = [];
         $accommodation_id = 0;
@@ -1113,15 +1098,29 @@ class CourseControllerFrontend extends Controller
      */
     public function getAirportNames(Request $request)
     {
+        $lang = app()->getLocale();
         $airport_unique_ids = CourseAirport::whereCourseUniqueId(\Session::get('course_unique_id'))
-            ->where('service_provider', $request->service_provider)->pluck('unique_id');
+            ->where(function($query) use ($request, $lang) {
+                if ($lang == 'en') {
+                    $query->where('service_provider', $request->service_provider);
+                } else {
+                    $query->where('service_provider_ar', $request->service_provider);
+                }
+            })->pluck('unique_id');
 
         $select = __('Frontend.select_option');
         $data = "<option value='' selected>$select</option>";
 
-        $airport_fee_names = CourseAirportFee::whereIn('course_airport_unique_id', $airport_unique_ids)->get()->unique('name')->values()->all();
-        foreach ($airport_fee_names as $airport_fee_name) {
-            $data .= "<option value='" . $airport_fee_name->name . "'>" . $airport_fee_name->name . "</option>";
+        if ($lang == 'en') {
+            $airport_fee_names = CourseAirportFee::whereIn('course_airport_unique_id', $airport_unique_ids)->get()->unique('name')->values()->all();
+            foreach ($airport_fee_names as $airport_fee_name) {
+                $data .= "<option value='" . $airport_fee_name->name . "'>" . $airport_fee_name->name . "</option>";
+            }
+        } else {
+            $airport_fee_names = CourseAirportFee::whereIn('course_airport_unique_id', $airport_unique_ids)->get()->unique('name_ar')->values()->all();
+            foreach ($airport_fee_names as $airport_fee_name) {
+                $data .= "<option value='" . $airport_fee_name->name_ar . "'>" . $airport_fee_name->name_ar . "</option>";
+            }
         }
 
         return response($data);
@@ -1133,16 +1132,31 @@ class CourseControllerFrontend extends Controller
      */
     public function getAirportServiceNames(Request $request)
     {
+        $lang = app()->getLocale();
         $airport_unique_ids = CourseAirport::whereCourseUniqueId(\Session::get('course_unique_id'))
-            ->where('service_provider', $request->service_provider)->pluck('unique_id');
+            ->where(function($query) use ($request, $lang) {
+                if ($lang == 'en') {
+                    $query->where('service_provider', $request->service_provider);
+                } else {
+                    $query->where('service_provider_ar', $request->service_provider);
+                }
+            })->pluck('unique_id');
 
         $select = __('Frontend.select_option');
         $data = "<option value='' selected>$select</option>";
 
-        $airport_fee_service_names = CourseAirportFee::whereIn('course_airport_unique_id', $airport_unique_ids)
-            ->where('name', $request->name)->pluck('service_name');
-        foreach ($airport_fee_service_names as $airport_fee_service_name) {
-            $data .= "<option value='".$airport_fee_service_name."'>".$airport_fee_service_name."</option>";
+        if ($lang == 'en') {
+            $airport_fee_service_names = CourseAirportFee::whereIn('course_airport_unique_id', $airport_unique_ids)
+                ->where('name', $request->name)->pluck('service_name');
+            foreach ($airport_fee_service_names as $airport_fee_service_name) {
+                $data .= "<option value='".$airport_fee_service_name."'>".$airport_fee_service_name."</option>";
+            }
+        } else {
+            $airport_fee_service_names = CourseAirportFee::whereIn('course_airport_unique_id', $airport_unique_ids)
+                ->where('name_ar', $request->name)->pluck('service_name_ar');
+            foreach ($airport_fee_service_names as $airport_fee_service_name) {
+                $data .= "<option value='".$airport_fee_service_name."'>".$airport_fee_service_name."</option>";
+            }
         }
 
         return response($data);
@@ -1154,8 +1168,15 @@ class CourseControllerFrontend extends Controller
      */
     public function getMedicalDeductibles(Request $request)
     {
+        $lang = app()->getLocale();
         $medical_deductibles = CourseMedical::whereCourseUniqueId(\Session::get('course_unique_id'))
-            ->where('company_name', $request->company_name)->pluck('deductible');
+            ->where(function($query) use ($request, $lang) {
+                if ($lang == 'en') {
+                    $query->where('company_name', $request->company_name);
+                } else {
+                    $query->where('company_name_ar', $request->company_name);
+                }
+            })->pluck('deductible');
 
         $select = __('Frontend.select_option');
         $data = "<option value='' selected>$select</option>";
@@ -1173,9 +1194,15 @@ class CourseControllerFrontend extends Controller
      */
     public function getMedicalDurations(Request $request)
     {
+        $lang = app()->getLocale();
         $medical_unique_ids = CourseMedical::whereCourseUniqueId(\Session::get('course_unique_id'))
-            ->where('company_name', $request->company_name)
-            ->where('deductible', $request->deductible)->pluck('unique_id');
+            ->where(function($query) use ($request, $lang) {
+                if ($lang == 'en') {
+                    $query->where('company_name', $request->company_name);
+                } else {
+                    $query->where('company_name_ar', $request->company_name);
+                }
+            })->where('deductible', $request->deductible)->pluck('unique_id');
 
         $medical_fees = CourseMedicalFee::whereIn('course_medical_unique_id', $medical_unique_ids)->get();
 
@@ -1205,9 +1232,20 @@ class CourseControllerFrontend extends Controller
      */
     public function setAirportFee(Request $request)
     {
+        $lang = app()->getLocale();
         $airport = CourseAirport::whereCourseUniqueId(\Session::get('course_unique_id'))
-            ->where('service_provider', $request->service_provider)->with('fees', function ($query) use($request) {
-                return $query->where('name', $request->name)->where('service_name', $request->service_name);
+            ->where(function($query) use ($request, $lang) {
+                if ($lang == 'en') {
+                    $query->where('service_provider', $request->service_provider);
+                } else {
+                    $query->where('service_provider_ar', $request->service_provider);
+                }
+            })->whereHas('fees', function ($query) use($request, $lang) {
+                if ($lang == 'en') {
+                    $query->where('name', $request->name)->where('service_name', $request->service_name);
+                } else {
+                    $query->where('name_ar', $request->name)->where('service_name_ar', $request->service_name);
+                }
             })->first();
 
         $airport_pickup_fee = 0;
@@ -1261,9 +1299,15 @@ class CourseControllerFrontend extends Controller
      */
     public function setMedicalInsuranceFee(Request $request)
     {
+        $lang = app()->getLocale();
         $medical = CourseMedical::whereCourseUniqueId(\Session::get('course_unique_id'))
-            ->where('company_name', $request->company_name)
-            ->where('deductible', $request->deductible)->with('fees', function ($query) use($request) {
+            ->where(function($query) use ($request, $lang) {
+                if ($lang == 'en') {
+                    $query->where('company_name', $request->service_provider);
+                } else {
+                    $query->where('company_name_ar', $request->company_name);
+                }
+            })->where('deductible', $request->deductible)->with('fees', function ($query) use($request) {
                 return $query->where('start_date', '<=', $request->duration)->where('end_date', '>=', $request->duration);
             })->first();
 
@@ -1310,12 +1354,21 @@ class CourseControllerFrontend extends Controller
 
     public function setOtherServiceFee(Request $request)
     {
+        $lang = app()->getLocale();
         if ($request->airport_service_provider && $request->airport_name && $request->airport_service) {
-            $airport = CourseAirport::whereHas('fees', function($query) use($request) {
-                $query->where(function($sub_query) use ($request) {
-                    $sub_query->where('name', $request->airport_name)->orWhere('name_ar', $request->airport_name);
-                })->where(function($sub_query) use ($request) {
-                    $sub_query->where('service_name', $request->airport_service)->orWhere('service_name_ar', $request->airport_service);
+            $airport = CourseAirport::whereHas('fees', function($query) use($request, $lang) {
+                $query->where(function($sub_query) use ($request, $lang) {
+                    if ($lang == 'en') {
+                        $sub_query->where('name', $request->airport_name);
+                    } else {
+                        $sub_query->where('name_ar', $request->airport_name);
+                    }
+                })->where(function($sub_query) use ($request, $lang) {
+                    if ($lang == 'en') {
+                        $sub_query->where('service_name', $request->airport_service);
+                    } else {
+                        $sub_query->where('service_name_ar', $request->airport_service);
+                    }
                 });
             })->whereCourseUniqueId(\Session::get('course_unique_id'))->first();
         }
@@ -1336,12 +1389,16 @@ class CourseControllerFrontend extends Controller
         insertCalculationIntoDB('airport_pickup_fee', $airport_pickup_fee);
 
         if ($request->medical_company_name && $request->medical_deductible && $request->medical_duration) {
-            $medical = CourseMedical::whereHas('fees', function($query) use($request) {
+            $medical = CourseMedical::whereHas('fees', function($query) use($request, $lang) {
                     if ($request->duration) {
                         $query->where('start_date', '<=', $request->duration)->where('end_date', '>=', $request->duration);
                     }
-                })->where(function($query) use ($request) {
-                    $query->where('company_name', $request->medical_company_name)->orWhere('company_name_ar', $request->medical_company_name);
+                })->where(function($query) use ($request, $lang) {
+                    if ($lang == 'en') {
+                        $query->where('company_name', $request->medical_company_name);
+                    } else {
+                        $query->where('company_name_ar', $request->medical_company_name);
+                    }
                 })->whereCourseUniqueId(\Session::get('course_unique_id'))
                 ->where('deductible', $request->medical_deductible)->first();
         }

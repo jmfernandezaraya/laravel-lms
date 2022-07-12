@@ -1094,7 +1094,7 @@ class FrontendController extends Controller
             $mail_pdf_data['locale'] = app()->getLocale();
 
             if (isset($course_reservation_details->deposit_price)) {
-                $course_application = CourseApplication::updateOrCreate($to_be_saved, $to_be_saved + ['user_id' => auth()->id(), 'status' => 'received']);
+                $course_application = CourseApplication::updateOrCreate($to_be_saved, $to_be_saved + ['user_id' => auth()->id(), 'paid' => 0, 'status' => 'received']);
                 $calc = Calculator::where('calc_id', request()->ip())->latest()->first();
                 $course_application_fee = $calc->replicate()->setTable('course_application_fees');
                 $course_application_fee->course_application_id = $course_application->id;
@@ -1105,7 +1105,7 @@ class FrontendController extends Controller
                 $course_application_data = (object) $mail_pdf_data;
                 $course_application_data->id = $course_application->id;
                 $course_application_data->registration_date = \Carbon\Carbon::now()->format('Y-m-d');
-                \Mail::to(auth()->user()->email)->send(new CourseBooked($course_application_data));
+                // \Mail::to(auth()->user()->email)->send(new CourseBooked($course_application_data));
             } else {
                 $course_application = CourseApplication::updateOrCreate($to_be_saved, $to_be_saved + ['user_id' => auth()->id(), 'paid' => 1, 'status' => 'received']);
                 $calc = Calculator::where('calc_id', request()->ip())->latest()->first();
@@ -1213,16 +1213,26 @@ class FrontendController extends Controller
 
         $telr->status == 1 ? toastr()->success(__('Frontend.user_course_booked')) : toastr()->error(__('Frontend.payment.failed'));
 
-        $course_applications = CourseApplication::where('user_id', auth()->user()->id)->where('paid',  1)->get();
+        $course_applications = CourseApplication::where('user_id', auth()->user()->id)->where('order_id',  $cart_id)
+            ->where('paid',  1)->get();
         foreach ($course_applications as $course_application) {
-            $course_application->delete();
+            // $course_application->delete();
         }
-        $course_application = CourseApplication::where('user_id', auth()->user()->id)->where('paid',  0)->orWhere('paid', 2)->first();
-        auth()->user()->updateCourseApplication()->update([
-            'paid' => 1,
-            'order_id' => $cart_id,
-            'paid_amount' => getCurrencyConvertedValue($course_application->course_id, $course_application->deposit_price)
-        ]);
+        $course_application = CourseApplication::where('user_id', auth()->user()->id)
+            ->where(function($query) { $query->where('paid',  0)->orWhere('paid', 2); })->first();
+        if ($course_application) {
+            auth()->user()->updateCourseApplication()->update([
+                'paid' => 1,
+                'order_id' => $cart_id,
+                'paid_amount' => getCurrencyConvertedValue($course_application->course_id, $course_application->deposit_price)
+            ]);
+        }
+
+        $course_application = CourseApplication::where('user_id', auth()->user()->id)->where('order_id',  $cart_id)->where('paid',  1)->first();
+        if ($course_application) {
+            $mail_data = getCourseApplicationPrintData($course_application->id, auth()->user()->id) + getCourseApplicationMailData($course_application->id, auth()->user()->id);
+            \Mail::to(auth()->user()->email)->send(new CourseBooked((object)$mail_data));
+        }
 
         return redirect()->route('land_page');
     }
@@ -1257,10 +1267,20 @@ class FrontendController extends Controller
         $cart_id = $_GET['cart_id'];
         $course_applications = CourseApplication::where('user_id', auth()->user()->id)->where('paid',  2)->get();
         foreach ($course_applications as $course_application) {
-            $course_application->delete();
+            // $course_application->delete();
         }
         auth()->user()->updateCourseApplication()->update(['paid' => 2, 'order_id' => $cart_id]);
         toastr()->error(__('Frontend.payment.failed'));
+
+        $course_application = CourseApplication::where('user_id', auth()->user()->id)->where('paid', 2)->first();
+        if ($course_application) {
+            $mail_data = getCourseApplicationPrintData($course_application->id, auth()->user()->id);
+            $mail_data['user'] = User::find(auth()->id());
+            $mail_data['locale'] = app()->getLocale();
+            $mail_data['id'] = $course_application->id;
+            $mail_data['registration_date'] = \Carbon\Carbon::now()->format('Y-m-d');
+            \Mail::to(auth()->user()->email)->send(new CourseBooked((object) $mail_data));
+        }
 
         return redirect()->route('land_page');
     }
@@ -1646,6 +1666,7 @@ class FrontendController extends Controller
 
         $school_cities = [];
         $school_names = [];
+        $school_ratings = [];
         foreach ($courses as $course) {
             if (app()->getLocale() == 'en') {
                 if (!$course->school->city) {
@@ -1686,8 +1707,12 @@ class FrontendController extends Controller
                     }
                 }
             }
+            $course_rating = ceil(getCourseRating($course->unique_id));
+            if ($course_rating && !in_array($course_rating, $school_ratings)) {
+                array_push($school_ratings, $course_rating);
+            }
         }
 
-        return view('frontend.course.list', compact('course_search', 'courses', 'languages', 'school_cities', 'school_names', 'now'));
+        return view('frontend.course.list', compact('course_search', 'courses', 'languages', 'school_cities', 'school_names', 'school_ratings', 'now'));
     }
 }

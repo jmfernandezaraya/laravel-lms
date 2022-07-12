@@ -89,9 +89,9 @@ class CourseApplicationController extends Controller
         $sendfile = [];
 
         if ($request->has("attachment")) {
-            foreach ($request->attachment as $attachments) {
-                $attachment[] = $move = $attachments->getClientOriginalName();
-                $attachments->move('public/attachments', $move);
+            foreach ($request->attachment as $request_attachment) {
+                $attachment[] = $move = $request_attachment->getClientOriginalName();
+                $request_attachment->move('public/attachments', $move);
                 $sendfile[] = $move;
             }
         }

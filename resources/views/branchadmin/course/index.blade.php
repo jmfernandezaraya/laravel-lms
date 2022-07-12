@@ -49,7 +49,7 @@
                                 <td>{{get_language()== 'en'  ?  $course->school->name ?? '-' :  $course->school->name_ar  ?? '-'}}</td>
                                 <td>{{is_array($course->branch) ? implode(", ", $course->branch) : $course->branch}}</td>
                                 <td>{{$course->currency}}</td>
-                                <td>{{$course->program_name}}</td>
+                                <td>{{app()->getLocale() == 'en' ? $course->program_name : $course->program_name_ar}}</td>
                                 <td>{{$course->program_level}}</td>
                                 <td>{{$course->lessons_per_week}}</td>
                                 <td>{{$course->hours_per_week}}</td>

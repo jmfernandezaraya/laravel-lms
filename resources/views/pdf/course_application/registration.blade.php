@@ -7,12 +7,12 @@
     
     @php $show_images = false; @endphp
 
-    @if (app()->getLocale() != 'en')
-        <style> 
-            * { font-family: 'DejaVu Sans', sans-serif; }
-        </style>
-    @endif
     <style>
+        @if (app()->getLocale() != 'en')
+            * { font-family: 'DejaVu Sans', sans-serif; }
+            body { direction: rtl; text-align: right; }
+        @endif
+
         .registration-form {
             padding: 0 15px;
         }
