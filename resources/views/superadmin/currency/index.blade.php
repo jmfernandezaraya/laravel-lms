@@ -13,7 +13,7 @@
                 </div>
 
                 @if (can_manage_currency() || can_add_currency())
-                    <a href="{{route('superadmin.setting.currency.create')}}" type="button" class="btn btn-primary btn-sm pull-right">
+                    <a href="{{route('superadmin.currency.create')}}" type="button" class="btn btn-primary btn-sm pull-right">
                         <i class="fa fa-plus"></i>&nbsp;{{__('Admin/backend.add')}}
                     </a>
                 @endif
@@ -49,18 +49,18 @@
                                     <td>
                                         <div class="btn-group">
                                             @if (can_manage_currency() || can_edit_currency())
-                                                <a href="{{route('superadmin.setting.currency.edit', $currency->id)}}" class="btn btn-info btn-sm fa fa-pencil"></a>
+                                                <a href="{{route('superadmin.currency.edit', $currency->id)}}" class="btn btn-info btn-sm fa fa-pencil"></a>
                                             @endif
                                             
                                             @if (can_manage_currency())
                                                 @if(!$currency->is_default)
-                                                    <form action="{{route('superadmin.setting.currency.set_default', $currency->id)}}" method="POST">
+                                                    <form action="{{route('superadmin.currency.set_default', $currency->id)}}" method="POST">
                                                         @csrf
                                                         <button type="submit" onclick="return confirm('{{__('Admin/backend.confirm_set_default')}}')" class="btn btn-primary btn-sm fa fa-check"></button>
                                                     </form>
                                                 @endif
 
-                                                <form action="{{route('superadmin.setting.currency.destroy', $currency->id)}}" method="POST">
+                                                <form action="{{route('superadmin.currency.destroy', $currency->id)}}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" onclick="return confirmDelete()" class="btn btn-danger btn-sm fa fa-trash"></button>

@@ -55,6 +55,41 @@
 
                     <div class="row">
                         <div class="col-md-12">
+                            <label><h3>{{__('Admin/backend.smtp')}}</h3></label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label><h4>{{__('Admin/backend.server')}}</h4></label>
+                            <input name="smtp_server" type="text" class="form-control" value="{{ isset($setting_value['smtp']['server']) ? $setting_value['smtp']['server'] : '' }}" />
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label><h4>{{__('Admin/backend.user_name')}}</h4></label>
+                            <input name="smtp_user_name" type="text" class="form-control" value="{{ isset($setting_value['smtp']['user_name']) ? $setting_value['smtp']['user_name'] : '' }}" />
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label><h4>{{__('Admin/backend.password')}}</h4></label>
+                            <input name="smtp_password" type="password" class="form-control" value="" />
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label><h4>{{__('Admin/backend.port')}}</h4></label>
+                            <input name="smtp_port" type="text" class="form-control" value="{{ isset($setting_value['smtp']['port']) ? $setting_value['smtp']['port'] : '' }}" />
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label><h4>{{__('Admin/backend.crypto')}}</h4></label>
+                            <select name="smtp_crypto" class="form-control">
+                                <option value="tls" {{ (isset($setting_value['smtp']['crypto']) && $setting_value['smtp']['crypto'] == 'tls') ? 'selected' : ''}}>{{__('Admin/backend.tls')}}</option>
+                                <option value="ssl" {{ (isset($setting_value['smtp']['crypto']) && $setting_value['smtp']['crypto'] == 'ssl') ? 'selected' : ''}}>{{__('Admin/backend.ssl')}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label><h4>{{__('Admin/backend.default_sender_email')}}</h4></label>
+                            <input name="smtp_default_sender_email" type="email" class="form-control" value="{{ isset($setting_value['smtp']['default_sender_email']) ? $setting_value['smtp']['default_sender_email'] : '' }}" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
                             <label><h3>{{__('Admin/backend.newsletter')}}</h3></label>
                         </div>
                     </div>
@@ -77,7 +112,7 @@
                                 <textarea class="form-control ckeditor-input" name="newsletter_description_ar" id="newsletter_description_ar" placeholder="{{__('Admin/backend.description')}}">{!! isset($setting_value['newsletter']['description_ar']) ? $setting_value['newsletter']['description_ar'] : '' !!}</textarea>
                             </div>
                         </div>
-                    </div>                    
+                    </div>
                     
                     <div class="row">
                         <div class="col-md-12">

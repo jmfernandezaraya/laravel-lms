@@ -217,6 +217,15 @@ return [
     'NZD' => 'NZD',
     'EUR' => 'EUR',
     'course_has_currency' => 'Courses have this currency',
+    
+    'email_templates' => 'Email Templates',
+    'edit_email_template' => 'Edit Email Template',
+    'sender_name' => 'Sender Name',
+    'sender_email' => 'Sender Email',
+    'keywords' => 'Keywords',
+
+    'expand' => 'Expand',
+    'collapse' => 'Collapse',
 
     'total_amount_paid' => 'Total Amount Paid',
     'total_amount_refunded' => 'Total Amount Refunded',
@@ -870,7 +879,14 @@ return [
     'phone_number' => 'Phone Number',
     'registration_cancelation_conditions' => 'Registration Cancelation Conditions',
     'newsletter' => 'Newsletter',
-
+    'smtp' => 'SMTP',
+    'server' => 'Server',
+    'port' => 'Port',
+    'crypto' => 'Crypto',
+    'tls' => 'TLS',
+    'ssl' => 'SSL',
+    'default_sender_email' => 'Default Sender Email',
+    
     'edit_home_page' => 'Edit Home Page',
     'hero' => 'Hero',
     'background' => 'Background',

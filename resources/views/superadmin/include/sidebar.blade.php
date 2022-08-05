@@ -205,7 +205,39 @@
                 </div>
             </li>
         @endif
-        @if (can_manage_currency() || can_add_currency() || can_edit_currency() || can_set_site() || can_set_home_page() || can_set_header_footer() || can_set_front_page())
+        @if (can_manage_currency() || can_add_currency() || can_edit_currency())
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#currency" aria-expanded="false" aria-controls="currency">
+                    <span class="menu-title">{{__('Admin/backend.currency')}}</span>
+                    <i class="menu-arrow"></i>
+                    <i class="mdi mdi-card-bulleted menu-icon"></i>
+                </a>
+                <div class="collapse" id="currency">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('superadmin.currency.index') }}">{{__('Admin/dashboard.view')}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        @endif
+        @if (can_manage_email_template())
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#email_template" aria-expanded="false" aria-controls="currency">
+                    <span class="menu-title">{{__('Admin/dashboard.email_template')}}</span>
+                    <i class="menu-arrow"></i>
+                    <i class="mdi mdi-card-bulleted menu-icon"></i>
+                </a>
+                <div class="collapse" id="email_template">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('superadmin.email_template.index') }}">{{__('Admin/dashboard.view')}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        @endif
+        @if (can_set_site() || can_set_home_page() || can_set_header_footer() || can_set_front_page())
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#settings" aria-expanded="false" aria-controls="settings">
                     <span class="menu-title">{{__('Admin/dashboard.settings')}}</span>
@@ -214,11 +246,6 @@
                 </a>
                 <div class="collapse" id="settings">
                     <ul class="nav flex-column sub-menu">
-                        @if (can_manage_currency() || can_add_currency() || can_edit_currency())
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{route('superadmin.setting.currency.index')}}">{{__('Admin/dashboard.currency')}}</a>
-                            </li>
-                        @endif
                         @if (can_set_site())
                             <li class="nav-item">
                                 <a class="nav-link" href="{{route('superadmin.setting.site')}}">{{__('Admin/dashboard.site')}}</a>

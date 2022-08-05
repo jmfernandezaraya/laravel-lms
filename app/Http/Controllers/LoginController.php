@@ -139,7 +139,7 @@ class LoginController extends Controller
             'user_delete' => 0,
             'user_permission' => 0,
         ]);
-        \Mail::to($user->email)->send(new RegisterOTPMail($token));
+        \Mail::to($user->email)->send(new RegisterOTPMail($token, app()->getLocale()));
 
         toastr()->success(__('Frontend.check_your_email'));
         

@@ -145,6 +145,8 @@ return [
     'subject' => 'العنوان',
     'message' => 'رسالة',
     'message_sent_thank_you' => 'تم ارسال رسالتك . شكرا لك !',
+    'message_to_school_admin' => 'Message to School Admin',
+    'message_to_student' => 'Message to Student',
     'send_message' => 'ارسال',
     'loading' => 'تحميل',
     'valid_email' => 'يرجى التأكد من البريد الالكتروني',

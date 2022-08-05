@@ -58,7 +58,7 @@ class CurrencyController extends Controller
 
         toastr()->success(__('Admin/backend.data_saved_successfully'));
 
-        return redirect()->route('superadmin.setting.currency.index');
+        return redirect()->route('superadmin.currency.index');
     }
 
     /**
@@ -125,7 +125,7 @@ class CurrencyController extends Controller
 
         $currency->fill($request->validated())->save();
 
-        return redirect()->route('superadmin.setting.currency.index');
+        return redirect()->route('superadmin.currency.index');
     }
 
     public function setDefault(Request $request, $id)
@@ -140,7 +140,7 @@ class CurrencyController extends Controller
         $currency->is_default = true;
         $currency->save();
 
-        return redirect()->route('superadmin.setting.currency.index');
+        return redirect()->route('superadmin.currency.index');
     }
 
     /**

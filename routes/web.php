@@ -158,12 +158,12 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
 
 Route::get('db_migrate', function() { return Artisan::call('migrate'); });
 
-Route::get('/verify_email/{id}', [\App\Http\Controllers\LoginController::class, 'verifyEmail'])->name('verify-email-user');
+Route::get('/verify_email/{token}', [\App\Http\Controllers\LoginController::class, 'verifyEmail'])->name('verify-email-user');
 Route::get('/verify_email_again/{id}', [\App\Http\Controllers\LoginController::class, 'verifyEmailAgain'])->name('verify-email-user-again');
 
 ///// Contact URL /////
 Route::view('/contact-us', 'frontend.contact')->name('contact-us-get');
-Route::post('/contact-us/post', [ContactController::class, 'ContactUS'])->name('contact-us');
+Route::post('/contact-us/post', [ContactController::class, 'ContactUs'])->name('contact-us');
 Route::get('/register', [\App\Http\Controllers\LoginController::class, 'register'])->name('register_user');
 Route::post('/save_rating', [\App\Http\Controllers\RatingController::class, 'saveRating'])->name('save_rating');
 Route::get('/forgot-password/{token}', function ($token) { return view('frontend.reset_password', ['token' => $token]); })->name('password.reset');
@@ -357,12 +357,14 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => [
     });
 
     Route::get('visa_application', 'VisaApplicationController@index');
-    Route::get('visa_application/other_fields/{id}', 'VisaApplicationController@getOtherFields')->name('visa.otherfields');    
+    Route::get('visa_application/other_fields/{id}', 'VisaApplicationController@getOtherFields')->name('visa.otherfields');
+
+    Route::post('currency/set_default/{id}', 'CurrencyController@setDefault')->name('currency.set_default');
+    Route::resource('currency', 'CurrencyController');
+
+    Route::resource('email_template', 'EmailTemplateController');
 
     Route::group(['prefix' => 'setting', 'as' => 'setting.'], function () {
-        Route::post('currency/set_default/{id}', 'CurrencyController@setDefault')->name('currency.set_default');
-        Route::resource('currency', 'CurrencyController');
-
         Route::get('header_footer', 'SettingController@viewHeaderFooter')->name('header_footer');
         Route::post('header_footer', 'SettingController@updateHeaderFooter')->name('header_footer.update');
 

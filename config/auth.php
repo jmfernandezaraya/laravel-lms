@@ -55,7 +55,6 @@ return [
             'driver' => 'session',
             'provider' => 'branch_admin',
         ],
-
         'api' => [
             'driver' => 'token',
             'provider' => 'users',
@@ -100,6 +99,10 @@ return [
             'driver' => 'eloquent',
             'model' => \App\Models\BranchAdmin\User::class,
         ],
+        // 'users' => [
+        //     'driver' => 'database',
+        //     'table' => 'users',
+        // ],
     ],
 
     /*

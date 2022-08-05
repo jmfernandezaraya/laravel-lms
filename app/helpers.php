@@ -147,6 +147,13 @@ function can_delete_enquiry() {
         return auth('schooladmin')->user()->permission['enquiry_delete'] == 1 ? true : false;
     }
 }
+function can_manage_email_template() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['email_template'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return false;
+    }
+}
 function can_manage_form_builder() {
     if (auth('superadmin')->check()) {
         return auth('superadmin')->user()->permission['form_builder_manager'] == 1 ? true : false;
@@ -1592,6 +1599,7 @@ function getCourseApplicationPrintData($id, $user_id, $is_admin = false)
     $data['airport_service'] = $airport_fee ? (app()->getLocale() == 'en' ? $airport_fee->service_name : $airport_fee->service_name_ar) : '';
     $data['medical'] = isset($course_application->medical_id) ? \App\Models\SuperAdmin\CourseMedical::where('unique_id', $course_application->medical_id)->first() : null;
     $data['company_name'] = $data['medical'] ? (app()->getLocale() == 'en' ? $data['medical']->company_name : $data['medical']->company_name_ar) : '';
+    $data['duration'] = $course_application->duration;
     $data['custodian'] = isset($course_application->custodian_id) ? \App\Models\SuperAdmin\CourseCustodian::where('unique_id', $course_application->medical_id)->first() : null;
 
     $default_currency = getDefaultCurrency();

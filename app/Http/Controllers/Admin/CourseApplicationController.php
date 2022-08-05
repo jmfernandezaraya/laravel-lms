@@ -120,7 +120,7 @@ class CourseApplicationController extends Controller
                     if ($course_application->course->school->userSchools) {
                         $request_save['from_user'] = auth('superadmin')->user()->id;
                         $request_save['to_user'] = [];
-                        foreach ($course_application->course->school->userSchools as $user_school) {   
+                        foreach ($course_application->course->school->userSchools as $user_school) {
                             $request_save['to_user'][] = $user_school->user_id;
 
                             $mail_pdf_data = array();
@@ -129,7 +129,7 @@ class CourseApplicationController extends Controller
                             $mail_pdf_data['user'] = \App\Models\User::find($user_school->user_id);
                             $mail_pdf_data['locale'] = app()->getLocale();
     
-                            \Mail::to($request->to_email)->send(new SendMessageToSchoolAdmin((object)$mail_pdf_data, $send_files));
+                            \Mail::to($mail_pdf_data['user']->email)->send(new SendMessageToSchoolAdmin((object)$mail_pdf_data, $send_files));
                         }
                         Message::create($request_save);
                     }
@@ -187,7 +187,7 @@ class CourseApplicationController extends Controller
                     $mail_pdf_data['user'] = \App\Models\User::find($course_application->user_id);
                     $mail_pdf_data['locale'] = app()->getLocale();
 
-                    \Mail::to($request->to_email)->send(new SendMessageToStudent((object)$mail_pdf_data, $send_files));
+                    \Mail::to($mail_pdf_data['user']->email)->send(new SendMessageToStudent((object)$mail_pdf_data, $send_files));
     
                     $data['message'] = __('Admin/backend.message_sent_thank_you');
                 }

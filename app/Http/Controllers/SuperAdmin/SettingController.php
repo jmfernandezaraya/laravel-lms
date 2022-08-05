@@ -301,6 +301,14 @@ class SettingController extends Controller
         $setting_value = [
             'email' => $request->email,
             'phone' => $request->phone,
+            'smtp' => [
+                'server' => $request->smtp_server,
+                'user_name' => $request->smtp_user_name,
+                'password' => $request->smtp_password ? $request->smtp_password : (isset($site_setting_value['smtp']['password']) ? $site_setting_value['smtp']['password'] : ''),
+                'port' => $request->smtp_port,
+                'crypto' => $request->smtp_crypto,
+                'default_sender_email' => $request->smtp_default_sender_email,
+            ],
             'newsletter' => [
                 'title' => $request->newsletter_title,
                 'title_ar' => $request->newsletter_title_ar,
@@ -324,6 +332,12 @@ class SettingController extends Controller
                 'private_policy' => '',
             ]
         ];
+
+        Config::set('mail.mailers.smtp.host', $setting_value['smtp']['server']);
+        Config::set('mail.mailers.smtp.username', $setting_value['smtp']['user_name']);
+        Config::set('mail.mailers.smtp.password', $setting_value['smtp']['password']);
+        Config::set('mail.mailers.smtp.port', $setting_value['smtp']['port']);
+        Config::set('mail.mailers.smtp.encryption', $setting_value['smtp']['crypto']);
         
 
         if (isset($request->social_twitter)) {
@@ -368,7 +382,7 @@ class SettingController extends Controller
 
         $site->setting_value = serialize($setting_value);
         $site->save();
-
+    
         return response()->json(['success' => 'success', 'message' => __('Admin/backend.data_saved_successfully'), 'reload' => true]);
     }
 }

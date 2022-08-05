@@ -645,7 +645,7 @@
     function addAirportFeeForm(object) {
         var clone_airport_fee_form = object.closest(".clone");
         var clone_airport_form = $(clone_airport_fee_form).parent().closest(".clone");
-        var airport_index = $(clone_airport_form).attr('id').replace("airport_clone", "");
+        var airport_index = parseInt($(clone_airport_form).attr('id').replace("airport_clone", ""));
         var airport_fee_clone = parseInt($(clone_airport_form).find('[name="airportfeeincrement[]"]').val());
         airport_fee_clone++;
         var new_clone_form = $(clone_airport_fee_form).clone(true);
@@ -770,7 +770,7 @@
     function addMedicalFeeForm(object) {
         var clone_medical_fee_form = object.closest(".clone");
         var clone_medical_form = $(clone_medical_fee_form).parent().closest(".clone");
-        var medical_index = $(clone_medical_form).attr('id').replace("medical_clone", "");
+        var medical_index = parseInt($(clone_medical_form).attr('id').replace("medical_clone", ""));
         var medical_fee_clone = parseInt($(clone_medical_form).find('[name="medicalfeeincrement[]"]').val());
         medical_fee_clone++;
         var new_clone_form = $(clone_medical_fee_form).clone(true);
@@ -942,7 +942,7 @@
     function addSchoolCityForm(object) {
         var clone_city_form = object.closest(".clone");
         var clone_country_form = $(clone_city_form).parent().closest(".clone");
-        var country_index = $(clone_country_form).attr('id').replace("country_clone", "");
+        var country_index = parseInt($(clone_country_form).attr('id').replace("country_clone", ""));
         var city_clone = parseInt($(clone_country_form).find('[name="city_increment[]"]').val());
         city_clone++;
         var new_clone_form = $(clone_city_form).clone(true);
@@ -1255,7 +1255,7 @@
     function addHeaderMenuSubForm(object) {
         var clone_header_menu_sub_form = object.closest(".clone");
         var clone_header_menu_form = $(clone_header_menu_sub_form).parent().closest(".clone");
-        var header_menu_index = $(clone_header_menu_form).attr('id').replace("header_menu_clone", "");
+        var header_menu_index = parseInt($(clone_header_menu_form).attr('id').replace("header_menu_clone", ""));
         var header_menu_sub_clone = parseInt($(clone_header_menu_form).find('[name="headermenusubincrement[]"]').val());
         header_menu_sub_clone++;
         var new_clone_form = $(clone_header_menu_sub_form).clone(true);
@@ -1553,6 +1553,70 @@
             object.closest('.row').find('.menu-page').hide();
             object.closest('.row').find('.menu-label').show();
         }
+    }
+
+    function fireEmailTemplateKeywordChangeEvent() {
+        showEmailTemplateKeywords();
+        
+        $('[name="keywords[]"]').change(function() {
+            showEmailTemplateKeywords();
+        });
+    }
+
+    function showEmailTemplateKeywords() {
+        var keywords_string = '';
+        var clone_keywords = $(".keyword-clone");
+        for (var keyword_index = 0; keyword_index < clone_keywords.length; keyword_index++) {
+            var keyword = $(clone_keywords[keyword_index]).find('[name="keywords[]"]').val();
+            if (keyword) {
+                keywords_string += '<span class="mx-2">[' + keyword + ']</span>';
+            }
+        }
+        $('.keywords-string').html(keywords_string);
+    }
+
+    var email_template_keyword_clone = 0;
+    function addEmailTemplateKeyword(object) {
+        var clone_keyword = object.closest(".clone");
+        var clone_keyword_index = parseInt($(clone_keyword).attr('id').replace("keyword_clone", ""));
+        var new_clone = $(clone_keyword).clone(true);
+        
+        var clone_keywords = $(".keyword-clone");
+        for (var keyword_index = 0; keyword_index < clone_keywords.length; keyword_index++) {
+            var loop_keyword_index = parseInt($(clone_keywords[keyword_index]).attr('id').replace("keyword_clone", ""));
+            if (loop_keyword_index > clone_keyword_index) {
+                $(clone_keywords[keyword_index]).attr('id', 'keyword_clone' + (loop_keyword_index + 1));
+            }
+        }
+        
+        new_clone.attr('id', 'keyword_clone' + (clone_keyword_index + 1));
+        $(new_clone).find('[name="keywords[]"]').val('');
+        new_clone.insertAfter($(clone_keyword));
+
+        email_template_keyword_clone++;
+        $('[name="emailtemplatekeywordincrement"]').val(email_template_keyword_clone);
+
+        fireEmailTemplateKeywordChangeEvent();
+    }
+    
+    function deleteEmailTemplateKeyword(object) {
+        var clone_keyword = object.closest(".clone");
+        var clone_keyword_index = parseInt($(clone_keyword).attr('id').replace("keyword_clone", ""));
+
+        $(clone_keyword).remove();
+
+        var clone_keywords = $(".keyword-clone");
+        for (var keyword_index = 0; keyword_index < clone_keywords.length; keyword_index++) {
+            var loop_keyword_index = parseInt($(clone_keywords[keyword_index]).attr('id').replace("keyword_clone", ""));
+            if (loop_keyword_index > clone_keyword_index) {
+                $(clone_keywords[keyword_index]).attr('id', 'keyword_clone' + (loop_keyword_index - 1));
+            }
+        }
+
+        email_template_keyword_clone--;
+        $('[name="emailtemplatekeywordincrement"]').val(email_template_keyword_clone);
+
+        fireEmailTemplateKeywordChangeEvent();
     }
 
     $('#blog_permission').change(function() {

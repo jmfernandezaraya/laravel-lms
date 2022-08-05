@@ -18,6 +18,7 @@ return [
 	'settings' => 'Settings',
 	'site' => 'Site',
 	'currency' => 'Currency',
+	'email_template' => 'Email Template',
 	'total_schools' => 'Total Schools',
 	'total_school_admin' => 'Total School Admin',
 	'signout' => 'Signout',

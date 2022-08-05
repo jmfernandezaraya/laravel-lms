@@ -147,6 +147,8 @@ return [
     'message_sent_thank_you' => 'Your message has been sent. Thank you!',
     'send_message' => 'Send Message',
     'loading' => 'Loading',
+    'message_to_school_admin' => 'Message to School Admin',
+    'message_to_student' => 'Message to Student',
     'valid_email' => 'Please enter a valid email',
     '4_chars_enter' => 'Please enter at least 4 chars',
     '8chars_subject' => 'Please enter at least 8 chars of subject',

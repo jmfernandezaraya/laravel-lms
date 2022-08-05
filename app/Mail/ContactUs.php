@@ -2,17 +2,12 @@
 
 namespace App\Mail;
 
-use Illuminate\Http\Request;
 use Illuminate\Bus\Queueable;
-
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-use App\Models\SuperAdmin\EmailTemplate;
-
-use Storage;
-
-class SendMessageToStudent extends Mailable
+class ContactUs extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -21,28 +16,27 @@ class SendMessageToStudent extends Mailable
      *
      * @return void
      */
-    private $request, $file;
+    private $request;
 
     private $sender_name, $sender_email;
     public $subject, $contents;
 
-    public function __construct(object $request, $files)
+    public function __construct($request, $locale)
     {
         $this->request = $request;
-        $this->files = $files;
-
+        
         $this->sender_name = env('MAIL_FROM_NAME');
-        $this->sender_email = env('MAIL_FROM_ADDRESS');
-        $this->subject = __('Frontend.message_to_student');
+        $this->sender_email = $this->request->email;
+        $this->subject = __('Frontend.contact_us');
         $this->contents = [];
-
+        
         $contents_html = '';
-        $email_template = EmailTemplate::where('template', 'send_to_student')->first();
+        $email_template = EmailTemplate::where('template', 'contact_us')->first();
         if ($email_template) {
             if ($email_template->sender_email) {
                 $this->sender_email = $email_template->sender_email;
             }
-            if ($this->request->locale == 'en') {
+            if ($locale == 'en') {
                 if ($email_template->sender_name) {
                     $this->sender_name = $email_template->sender_name;
                 }
@@ -65,7 +59,7 @@ class SendMessageToStudent extends Mailable
             }
 
             $user_name = '';
-            if ($this->request->locale == 'en') {
+            if ($locale == 'en') {
                 $user_name = $this->request->user->first_name_en . ' ' . $this->request->user->last_name_en;
             } else {
                 $user_name = $this->request->user->first_name_ar . ' ' . $this->request->user->last_name_ar;

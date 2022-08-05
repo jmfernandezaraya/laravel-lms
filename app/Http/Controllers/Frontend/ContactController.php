@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ContactUSRequest;
-use App\Mail\ContactUSMail;
+use App\Http\Requests\ContactUsRequest;
+use App\Mail\ContactUs;
 use App\Models\Frontend\ContactUs;
 
 /**
@@ -14,22 +14,22 @@ use App\Models\Frontend\ContactUs;
 class ContactController extends Controller
 {
     /*
-     * @param ContactUSRequest $request
+     * @param ContactUsRequest $request
      *
      * @return success_message : string
      *
      * */
 
     /**
-     * @param ContactUSRequest $request
+     * @param ContactUsRequest $request
      * @return string
      */
-    public function ContactUS(ContactUSRequest $request)
+    public function ContactUs(ContactUsRequest $request)
     {
         $contactUs = new ContactUs;
         $contactUs->fill($request->validated())->save();
 
-        \Mail::to(env('MAIL_TO_ADDRESS'))->send(new ContactUSMail($request));
+        \Mail::to(env('MAIL_TO_ADDRESS'))->send(new ContactUs($request, app()->getLocale()));
 
         return "Will Contact You Shortly";
     }

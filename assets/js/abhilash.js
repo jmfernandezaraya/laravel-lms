@@ -602,7 +602,7 @@ function submitForm(object, method = 'POST') {
 
                 $('.alert-danger').show();
                 $('.alert-danger ul').html(data.catch_error);
-            } else if (data.success == true) {
+            } else if (data.success == true || data.success == 'success') {
                 $("#loader").hide();
 
                 $('.alert-success').show();
@@ -1261,7 +1261,7 @@ function submitCourseForm(object) {
         contentType: false,
         processData: false,
         success: function (data) {
-            if (data.success == 'success') {
+            if (data.success == true || data.success == 'success') {
                 $("#loader").show();
                 setTimeout(function () {
                     window.location.replace(program_under_age_url);
@@ -1282,7 +1282,7 @@ function submitCourseForm(object) {
 
                 $('.alert-danger').show();
                 $('.alert-danger ul').html(data.catch_error);
-            } else if (data.success == 'success') {
+            } else if (data.success == true || data.success == 'success') {
                 $("#loader").hide();
 
                 $('.alert-success').show();
@@ -1311,7 +1311,7 @@ function updateCourseForm(object) {
         contentType: false,
         processData: false,
         success: function (data) {
-            if (data.success == 'success') {
+            if (data.success == true || data.success == 'success') {
                 $("#loader").show();
                 setTimeout(function () {
                     window.location.replace(edit_program_under_age_url);
@@ -1333,7 +1333,7 @@ function updateCourseForm(object) {
 
                 $('.alert-danger').show();
                 $('.alert-danger ul').html(data.catch_error);
-            } else if (data.success == 'success') {
+            } else if (data.success == true || data.success == 'success') {
                 $("#loader").hide();
 
                 $('.alert-success').show();
@@ -1364,7 +1364,7 @@ function submitCourseProgramForm(this_object) {
         processData: false,
         success: function (data) {
             $('#loader').hide();
-            if (data.success == 'success') {
+            if (data.success == true || data.success == 'success') {
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
                 document.documentElement.scrollTop = 0;
@@ -1411,7 +1411,7 @@ function submitAccommodationForm(object) {
         processData: false,
         success: function (data) {
             $('#loader').hide();
-            if (data.success == 'success') {
+            if (data.success == true || data.success == 'success') {
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
                 document.documentElement.scrollTop = 0;
@@ -1470,7 +1470,7 @@ function submitAccommodationUnderAgeForm(object, reload = false) {
                 if ($(form).data('mode') == 'create') {
                     window.location.href = edit_accomm_under_age_url;
                 }
-            } else if (data.success == 'success') {
+            } else if (data.success == true || data.success == 'success') {
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
                 document.documentElement.scrollTop = 0;
@@ -1507,7 +1507,7 @@ function submitOtherServiceForm(object, reload = false) {
         contentType: false,
         processData: false,
         success: function (data) {
-            if (data.success == 'success') {
+            if (data.success == true || data.success == 'success') {
                 $("#loader").hide();
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
