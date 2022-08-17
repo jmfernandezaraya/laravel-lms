@@ -20,7 +20,8 @@ class RegisterOTPMail extends Mailable
      */
     private $token;
 
-    private $sender_name, $sender_email, $subject;
+    private $sender_name, $sender_email;
+    public $subject;
     
     public function __construct($token, $locale)
     {

@@ -1274,7 +1274,7 @@ class FrontendController extends Controller
 
         $course_application = CourseApplication::where('user_id', auth()->user()->id)->where('paid', 2)->first();
         if ($course_application) {
-            $mail_data = getCourseApplicationPrintData($course_application->id, auth()->user()->id);
+            $mail_data = getCourseApplicationPrintData($course_application->id, auth()->user()->id) + getCourseApplicationMailData($course_application->id, auth()->user()->id);;
             $mail_data['user'] = User::find(auth()->id());
             $mail_data['locale'] = app()->getLocale();
             $mail_data['id'] = $course_application->id;

@@ -1002,7 +1002,7 @@ function getSchoolCountryName($country_id)
 
 function getSchoolTopReviewCourseApplications($school_id, $count = 3) {
     $top_course_applications = [];
-    $school_course_applications = \App\Models\CourseApplication::with('review')->where('school_id', $school_id)->get();
+    $school_course_applications = \App\Models\CourseApplication::with('review', 'review')->where('school_id', $school_id)->get();
     foreach ($school_course_applications as $school_course_application) {
         if ($school_course_application->review) {
             $top_course_applications[] = $school_course_application;

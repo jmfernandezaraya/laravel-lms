@@ -415,7 +415,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="school-reviews mt-3 border-bottom">
+                <div class="school-reviews mt-3">
                     @foreach ($school_top_review_course_applications as $school_top_review_course_application)
                         @php
                             $school_top_review_rating = ($school_top_review_course_application->review->quality_teaching + $school_top_review_course_application->review->school_facilities + $school_top_review_course_application->review->social_activities + 
@@ -423,107 +423,195 @@
                                 $school_top_review_course_application->review->distance_accommodation_school + $school_top_review_course_application->review->satisfied_accommodation + $school_top_review_course_application->review->airport_transfer + 
                                 $school_top_review_course_application->review->city_activities) / 10;
                         @endphp
-                        <div class="score-wrap">
-                            <span class="stars" style="width: {{$school_top_review_rating * 20}}%">
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                            </span>
-                        </div>
-                        <p class="city mb-0 mt-1">{{ $school->city ? (app()->getLocale() == 'en' ? $school->city->name : $school->city->name_ar) : '-'}}, {{$school->country ? (app()->getLocale() == 'en' ? $school->country->name : $school->country->name_ar) : '-' }}</p>
-                        <h6 class="best">{{__('Frontend.my_ratings_for_this_school')}}</h6>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <p>{{__('Frontend.quality_of_teaching')}}</p>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="score-wrap">
-                                    <span class="stars" style="width: {{$school_top_review_course_application->review->quality_teaching * 20}}%">
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                    </span>
+
+                        <div class="school-review border-bottom">
+                            <div class="mb-3 pb-2 border-bottom">
+                                <div class="d-flex align-items-center">
+                                    <h5 class="mr-3">{{ $school_top_review_course_application->fname }} {{ $school_top_review_course_application->mname }} {{ $school_top_review_course_application->lname }} - {{$school->country ? (app()->getLocale() == 'en' ? $school->country->name : $school->country->name_ar) : '-' }}</h5>
+                                    <div class="score-wrap">
+                                        <span class="stars" style="width: {{$school_top_review_rating * 20}}%">
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="">
+                                    {{__('Frontend.date_of_study')}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ date_format(date_create($school_top_review_course_application->start_date), 'd M Y') }} - {{ date_format(date_create($school_top_review_course_application->end_date), 'd M Y') }} ( {{ $school_top_review_course_application->program_duration }} {{__('Frontend.weeks')}} )
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <p>{{__('Frontend.duration_of_study')}}</p>
-                            </div>
-                            <div class="col-md-3">
-                                <p>{{ $school_top_review_course_application->program_duration }} {{__('Frontend.weeks')}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <p>{{__('Frontend.school_facilities')}}</p>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="score-wrap">
-                                    <span class="stars" style="width: {{$school_top_review_course_application->review->school_facilities * 20}}%">
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                    </span>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h3>{{__('Frontend.school_and_teaching')}}</h3>
+
+                                    <div class="review-item">
+                                        <label>{{__('Frontend.quality_of_teaching')}}</label>
+                                        <div class="score-wrap">
+                                            <span class="stars" style="width: {{$school_top_review_course_application->review->quality_teaching * 20}}%">
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="review-item">
+                                        <label>{{__('Frontend.school_facilities')}}</label>
+                                        <div class="score-wrap">
+                                            <span class="stars" style="width: {{$school_top_review_course_application->review->school_facilities * 20}}%">
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="review-item">
+                                        <label>{{__('Frontend.social_activities')}}</label>
+                                        <div class="score-wrap">
+                                            <span class="stars" style="width: {{$school_top_review_course_application->review->social_activities * 20}}%">
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="review-item">
+                                        <label>{{__('Frontend.school_location')}}</label>
+                                        <div class="score-wrap">
+                                            <span class="stars" style="width: {{$school_top_review_course_application->review->school_location * 20}}%">
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="review-item">
+                                        <label>{{__('Frontend.satisfied_teaching')}}</label>
+                                        <div class="score-wrap">
+                                            <span class="stars" style="width: {{$school_top_review_course_application->review->satisfied_teaching * 20}}%">
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                @if ($school_top_review_course_application->accommodation_id)
+                                    <div class="col-md-4">
+                                        <h3>{{__('Frontend.accommodation')}}</h3>
+
+                                        <div class="review-item">
+                                            <label>{{__('Frontend.level_of_cleanliness')}}</label>
+                                            <div class="score-wrap">
+                                                <span class="stars" style="width: {{$school_top_review_course_application->review->level_of_cleanliness * 20}}%">
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="review-item">
+                                            <label>{{__('Frontend.distance_accommodation_school')}}</label>
+                                            <div class="score-wrap">
+                                                <span class="stars" style="width: {{$school_top_review_course_application->review->distance_accommodation_school * 20}}%">
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="review-item">
+                                            <label>{{__('Frontend.satisfied_accommodation')}}</label>
+                                            <div class="score-wrap">
+                                                <span class="stars" style="width: {{$school_top_review_course_application->review->satisfied_accommodation * 20}}%">
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                <div class="col-md-4">
+                                    <h3>{{__('Frontend.others')}}</h3>
+
+                                    @if ($school_top_review_course_application->airport_id)
+                                        <div class="review-item">
+                                            <label>{{__('Frontend.airport_transfer')}}</label>
+                                            <div class="score-wrap">
+                                                <span class="stars" style="width: {{$school_top_review_course_application->review->airport_transfer * 20}}%">
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                    <div class="review-item">
+                                        <label>{{__('Frontend.city_activities')}}</label>
+                                        <div class="score-wrap">
+                                            <span class="stars" style="width: {{$school_top_review_course_application->review->city_activities * 20}}%">
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <p>{{__('Frontend.date_of_study')}}</p>
-                            </div>
-                            <div class="col-md-3">
-                                <p>{{ $school_top_review_course_application->start_date ? date('d M Y', strtotime($school_top_review_course_application->start_date)) : '' }} - {{ $school_top_review_course_application->end_date ? date('d M Y', strtotime($school_top_review_course_application->end_date)) : '' }}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <p>{{__('Frontend.social_activities')}}</p>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="score-wrap">
-                                    <span class="stars" style="width: {{$school_top_review_course_application->review->social_activities * 20}}%">
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                    </span>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label><strong>{{__('Frontend.would_you_recommend_this_school')}}</strong></label>
+                                    <label>
+                                        @if ($school_top_review_course_application->review->recommend_this_school)
+                                            {{__('Frontend.yes')}}
+                                        @else
+                                            {{__('Frontend.no')}}
+                                        @endif
+                                    </label>
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <p>{{__('Frontend.would_you_recommend_this_school')}}</p>
-                            </div>
-                            <div class="col-md-3">
-                                <p>{{ $school_top_review_course_application->recommend_this_school ? __('Frontend.yes') : __('Frontend.no') }}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <p>{{__('Frontend.school_location')}}</p>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="score-wrap">
-                                    <span class="stars" style="width: {{$school_top_review_course_application->review->school_location * 20}}%">
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                    </span>
+                                <div class="col-md-12">
+                                    <label><strong>{{__('Frontend.review')}}</strong></label>
+                                    <p>
+                                        {!! $school_top_review_course_application->review->review !!}
+                                    </p>
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <p>{{__('Frontend.use_my_full_name_for_the_rating_and_review')}}</p>
-                            </div>
-                            <div class="col-md-3">
-                                <p>{{ $school_top_review_course_application->use_full_name ? __('Frontend.yes') : __('Frontend.no') }}</p>
                             </div>
                         </div>
                     @endforeach
-                    <p>{{__('Frontend.verified_review_student_has_booked')}}</p>
+                    <p class="mt-2">{{__('Frontend.verified_review_student_has_booked')}}</p>
                 </div>
             @endif
 

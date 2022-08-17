@@ -64,6 +64,13 @@
 
                     <div class="row mt-4">
                         <div class="form-group col-md-12">
+                            <label for="keywords">{{__('Admin/backend.prereserved_keywords')}}</label>
+                            <div class="form-control">
+                                <span class="mx-2">[website_link]</span>
+                                <span class="mx-2">[app_name]</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
                             <label for="keywords">{{__('Admin/backend.keywords')}}</label>
                             <div class="form-control keywords-string">
                                 @if ($email_template->keywords)

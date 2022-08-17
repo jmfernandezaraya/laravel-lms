@@ -223,6 +223,7 @@ return [
     'sender_name' => 'Sender Name',
     'sender_email' => 'Sender Email',
     'keywords' => 'Keywords',
+    'prereserved_keywords' => 'Pre-Reserved Keywords',
 
     'expand' => 'Expand',
     'collapse' => 'Collapse',
