@@ -238,7 +238,7 @@
                             <div class="country-item" data-id="{{ $country['id'] }}">
                                 <img src="{{ $country['logo'] ? asset('storage/app/public/front_page/') . '/'. $country['logo'] : '' }}" class="img-fluid" alt="Country Logo">
                                 <div class="country-content">
-                                    <div class="country-name">{{ getSchoolCountryName($country['id']) }}</div>
+                                    <div class="country-name">{{ getCountryName($country['id']) }}</div>
                                 </div>
                             </div>
                             <!-- End Country Item-->

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\SuperAdmin;
 
-use App\Models\Country;
+use App\Models\SuperAdmin\Country;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

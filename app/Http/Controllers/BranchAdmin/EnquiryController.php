@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\BranchAdmin;
 
 use App\Http\Controllers\Controller;
+
 use App\Mail\ReplyToEnquiry;
+
 use App\Models\Frontend\Enquiry;
+
 use Illuminate\Http\Request;
 
 class EnquiryController extends Controller

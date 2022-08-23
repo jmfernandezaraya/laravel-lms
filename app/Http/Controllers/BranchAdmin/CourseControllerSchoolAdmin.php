@@ -1,16 +1,19 @@
 <?php
 
 namespace App\Http\Controllers\BranchAdmin;
+
 use App\Http\Controllers\Controller;
+
 use App\Models\SuperAdmin\CourseAccommodation;
-use App\Models\SuperAdmin\Choose_Language;
+use App\Models\SuperAdmin\ChooseLanguage;
 use App\Models\SuperAdmin\CourseAirport;
 use App\Models\SuperAdmin\CourseProgram;
 use App\Models\SuperAdmin\CourseProgramUnderAgeFee;
-use Illuminate\Http\Request;
-use App\Models\User;
 use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\School;
+
+use Illuminate\Http\Request;
+use App\Models\User;
 use Storage;
 
 class CourseControllerSchoolAdmin extends Controller
@@ -48,7 +51,7 @@ class CourseControllerSchoolAdmin extends Controller
         $schools = new School;
         $schools->setTable('schools_' . get_language());
         $schools = $schools->get();
-        $choose_languages = Choose_Language::all();
+        $choose_languages = ChooseLanguage::all();
         \Session::has('program_unique_id') ? \Session::forget('program_unique_id') : '';
         return view('branchadmin.courses.add', compact('schools', 'choose_languages'));
     }
@@ -100,7 +103,7 @@ class CourseControllerSchoolAdmin extends Controller
             $courseunderage->under_age_fee_per_week = $r->under_age_fee_per_week[0];*/
         }
 
-        $data['data'] = 'Data Saved Successfully';
+        $data['data'] = __('Admin/backend.data_saved_successfully');
 
         return response()->json($data);
 
@@ -145,27 +148,27 @@ class CourseControllerSchoolAdmin extends Controller
 
         $data['request'] = $under_age;
         $unique_id = $this->my_unique_id();
-        $courses = new Course;
-        $courses = $courses->setTable('courses_en');
-        $courses->unique_id = $unique_id;
-        $courses->language = $language;
-        $courses->branch = $branch;
-        $courses->program_type = $program_type;
-        $courses->study_mode = $study_mode;
-        $courses->school_id = $school_id;
-        $courses->currency = $currency;
-        $courses->program_name = $program_name;
-        $courses->lessons_per_week = $lessons_per_week;
-        $courses->program_level = $program_level;
-        $courses->hours_per_week = $hours_per_week;
-        $courses->study_time = $study_time;
-        $courses->every_day = $every_day;
-        $courses->about_program = $about_program;
-        $courses->program_registration_fee = $program_registration_fee;
-        $courses->program_duration = $program_duration;
-        $courses->age_range = $age_range;
-        $courses->courier_fee = $courier_fee;
-        $courses->about_courier = $about_courier;
+        $course = new Course;
+        $course = $course->setTable('courses_en');
+        $course->unique_id = $unique_id;
+        $course->language = $language;
+        $course->branch = $branch;
+        $course->program_type = $program_type;
+        $course->study_mode = $study_mode;
+        $course->school_id = $school_id;
+        $course->currency = $currency;
+        $course->program_name = $program_name;
+        $course->lessons_per_week = $lessons_per_week;
+        $course->program_level = $program_level;
+        $course->hours_per_week = $hours_per_week;
+        $course->study_time = $study_time;
+        $course->every_day = $every_day;
+        $course->about_program = $about_program;
+        $course->link_fee_enable = $link_fee_enable;
+        $course->program_duration = $program_duration;
+        $course->age_range = $age_range;
+        $course->courier_fee = $courier_fee;
+        $course->about_courier = $about_courier;
         $accom_unique_id = $unique_id + 1;
 
         $accommodation = new CourseAccommodation;
@@ -249,17 +252,17 @@ class CourseControllerSchoolAdmin extends Controller
         $this->my_unique_id(1);
         $data['success'] = true;
 
-        \DB::transaction(function () use ($courses, $airport, $accommodation, $program, $under_age, $under_age_fee_per_week) {
-            $courses->save();
+        \DB::transaction(function () use ($$course, $airport, $accommodation, $program, $under_age, $under_age_fee_per_week) {
+            $$course->save();
             $airport->save();
             $accommodation->save();
             $program->save();
-            $courseunderage = new CourseProgramUnderAgeFee;
-            $courseunderage->under_age = $under_age;
-            $courseunderage->under_age_fee_per_week = $under_age_fee_per_week;
-            $program->courseUnderAge()->save($courseunderage);
+            $course_under_age_fee = new CourseProgramUnderAgeFee;
+            $course_under_age_fee->under_age = $under_age;
+            $course_under_age_fee->under_age_fee_per_week = $under_age_fee_per_week;
+            $program->courseUnderAge()->save($course_under_age_fee);
         });
-        $data['data'] = 'Data Saved Successfully';
+        $data['data'] = __('Admin/backend.data_saved_successfully');
         return response()->json($data);
     }
 

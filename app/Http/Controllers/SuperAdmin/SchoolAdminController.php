@@ -6,10 +6,10 @@ use App\Classes\StoreClass;
 
 use App\Http\Controllers\Controller;
 
-use App\Mail\AdminCreated;
+use App\Mail\EmailTemplate;
 
-use App\Models\City;
-use App\Models\Country;
+use App\Models\SuperAdmin\City;
+use App\Models\SuperAdmin\Country;
 use App\Models\User;
 use App\Models\SuperAdmin\School;
 use App\Models\SuperAdmin\UserSchool;
@@ -27,7 +27,7 @@ class SchoolAdminController extends Controller
 {
     function index()
     {
-        $school_admins = User::where('user_type', 'school_admin')->orWhere('user_type', 'branch_admin')->get();
+        $school_admins = User::with('userSchool')->where('user_type', 'school_admin')->orWhere('user_type', 'branch_admin')->get();
 
         return view('superadmin.school_admin.index', compact('school_admins'));
     }
@@ -69,7 +69,9 @@ class SchoolAdminController extends Controller
             'password' => 'required',
             'school_name' => 'required',
             'email' => 'required|unique:users',
-            'contact' => 'required',
+            'telephone' => 'required',
+            'mobile' => 'sometimes',
+            'another_mobile' => 'sometimes',
             'image' => 'mimes:jpg,jpeg,png,bmp',
             'country' => 'sometimes',
             'city' => 'sometimes',
@@ -82,7 +84,7 @@ class SchoolAdminController extends Controller
             'last_name_en.required' => __('Admin/backend.errors.last_name_english'),
             'password.required' => __('Admin/backend.errors.password_required'),
             'image.required' => __('Admin/backend.errors.image_required'),
-            'contact.required' => __('Admin/backend.errors.contact_required'),
+            'telephone.required' => __('Admin/backend.errors.telephone_required'),
             'email.required' => __('Admin/backend.errors.email_required'),
             'image.mimes' => __('Admin/backend.errors.image_must_be_in'),
             'school_name.required' => 'School Name is Required']);
@@ -148,6 +150,7 @@ class SchoolAdminController extends Controller
                     'school_add' => ($request->school_permission == 'subscriber' && $request->school_add) ?? 0,
                     'school_edit' => ($request->school_permission == 'subscriber' && $request->school_edit) ?? 0,
                     'course_manager' => $request->course_permission == 'manager',
+                    'course_view' => ($request->course_permission == 'subscriber' && $request->course_view) ?? 0,
                     'course_add' => ($request->course_permission == 'subscriber' && $request->course_add) ?? 0,
                     'course_edit' => ($request->course_permission == 'subscriber' && $request->course_edit) ?? 0,
                     'course_display' => ($request->course_permission == 'subscriber' && $request->course_display) ?? 0,
@@ -159,6 +162,7 @@ class SchoolAdminController extends Controller
                     'course_application_contact_student' => ($request->course_application_permission == 'subscriber' && $request->course_application_contact_student) ?? 0,
                     'course_application_contact_school' => ($request->course_application_permission == 'subscriber' && $request->course_application_contact_school) ?? 0,
                     'review_manager' => $request->review_permission == 'manager',
+                    'review_apply' => ($request->review_permission == 'subscriber' && $request->review_apply) ?? 0,
                     'review_edit' => ($request->review_permission == 'subscriber' && $request->review_edit) ?? 0,
                     'review_delete' => ($request->review_permission == 'subscriber' && $request->review_delete) ?? 0,
                     'review_approve' => ($request->review_permission == 'subscriber' && $request->review_approve) ?? 0,
@@ -191,7 +195,9 @@ class SchoolAdminController extends Controller
             $mail_data['password'] = $request->password;
             $mail_data['dashbaord_link'] = route('schooladmin.dashboard');
             $mail_data['go_page'] = route('password.reset', ['token' => \Password::createToken($user)]) . '/?email=' . $user->email;
-            \Mail::to($user->email)->send(new AdminCreated($mail_data));
+            setEmailTemplateSMTP('schooladmin_created');
+            \Mail::to($user->email)->send(new EmailTemplate('schooladmin_created', $mail_data, app()->getLocale()));
+            unsetEmailTemplateSMTP();
         });
 
         $saved = __('Admin/backend.data_saved_successfully');
@@ -278,7 +284,9 @@ class SchoolAdminController extends Controller
             'last_name_en' => 'required',
             'last_name_ar' => 'required',
             'email' => 'required',
-            'contact' => 'required',
+            'telephone' => 'required',
+            'mobile' => 'sometimes',
+            'another_mobile' => 'sometimes',
             'image' => 'mimes:jpg,jpeg,png,bmp',
             'school_name' => 'required',
             'country' => 'sometimes',
@@ -291,7 +299,7 @@ class SchoolAdminController extends Controller
             'last_name_ar.required' => __('Admin/backend.errors.last_name_arabic'),
             'last_name_en.required' => __('Admin/backend.errors.last_name_english'),
             'image.required' => __('Admin/backend.errors.image_required'),
-            'contact.required' => __('Admin/backend.errors.contact_required'),
+            'telephone.required' => __('Admin/backend.errors.telephone_required'),
             'email.required' => __('Admin/backend.errors.email_required'),
             'image.mimes' => __('Admin/backend.errors.image_must_be_in'),
             'school_name.required' => 'School Name is Required']);
@@ -363,6 +371,7 @@ class SchoolAdminController extends Controller
                 'school_add' => ($request->school_permission == 'subscriber' && $request->school_add) ?? 0,
                 'school_edit' => ($request->school_permission == 'subscriber' && $request->school_edit) ?? 0,
                 'course_manager' => $request->course_permission == 'manager',
+                'course_view' => ($request->course_permission == 'subscriber' && $request->course_view) ?? 0,
                 'course_add' => ($request->course_permission == 'subscriber' && $request->course_add) ?? 0,
                 'course_edit' => ($request->course_permission == 'subscriber' && $request->course_edit) ?? 0,
                 'course_display' => ($request->course_permission == 'subscriber' && $request->course_display) ?? 0,
@@ -374,6 +383,7 @@ class SchoolAdminController extends Controller
                 'course_application_contact_student' => ($request->course_application_permission == 'subscriber' && $request->course_application_contact_student) ?? 0,
                 'course_application_contact_school' => ($request->course_application_permission == 'subscriber' && $request->course_application_contact_school) ?? 0,
                 'review_manager' => $request->review_permission == 'manager',
+                'review_apply' => ($request->review_permission == 'subscriber' && $request->review_apply) ?? 0,
                 'review_edit' => ($request->review_permission == 'subscriber' && $request->review_edit) ?? 0,
                 'review_delete' => ($request->review_permission == 'subscriber' && $request->review_delete) ?? 0,
                 'review_approve' => ($request->review_permission == 'subscriber' && $request->review_approve) ?? 0,

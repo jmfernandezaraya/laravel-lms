@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\BranchAdmin;
 
 use App\Http\Controllers\Controller;
+
 use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\CourseAirport;
 use App\Models\SuperAdmin\CourseAccommodation;
@@ -10,7 +11,9 @@ use App\Models\SuperAdmin\CourseAccommodationUnderAge;
 use App\Models\SuperAdmin\CourseMedicalFee;
 use App\Models\SuperAdmin\CourseProgram;
 use App\Models\SuperAdmin\CourseProgramUnderAgeFee;
+
 use App\Services\AssignCoursePermissionToUserService;
+
 use Illuminate\Http\Request;
 
 class CourseDetailsSchoolAdminController extends Controller

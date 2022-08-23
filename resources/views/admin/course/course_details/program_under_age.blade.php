@@ -12,7 +12,9 @@
                     <thead>
                         <tr>
                             <th># </th>
-                            <th> {{__('Admin/backend.program_registration_free')}} </th>
+                            <th> {{__('Admin/backend.link_fee')}} </th>
+                            <th> {{__('Admin/backend.bank_transfer_fee')}} </th>
+                            <th> {{__('Admin/backend.program_registration_fee')}} </th>
                             <th> {{__('Admin/backend.program_duration')}} </th>
                             <th> {{__('Admin/backend.age_range')}} </th>
                             <th> {{__('Admin/backend.courier_fee')}} </th>
@@ -49,6 +51,8 @@
                         @foreach($course_programs as  $course_program)
                             <tr>
                                 <td>{{ $loop->iteration}}  </td>
+                                <td>{{ $course_program->link_fee }}</td>
+                                <td>{{ $course_program->bank_transfer_fee }}</td>
                                 <td>{{ $course_program->program_registration_fee }}</td>
 
                                 <td>{{ $course_program->program_duration }}</td>
@@ -104,7 +108,7 @@
                                             @csrf
                                             <div class="modal-body">
                                                 <div class="form-group">
-                                                    <label>{{__('Admin/backend.program_registration_free')}}</label>
+                                                    <label>{{__('Admin/backend.program_registration_fee')}}</label>
                                                     <input hidden name="id" value="{{ $course_program->unique_id}}">
                                                     <input type="number" value="{{ $course_program->program_registration_fee}}" name="program_registration_fee" class="form-control">
                                                 </div>
@@ -117,7 +121,7 @@
                                                 <div class="form-group">
                                                     <label>{{__('Admin/backend.age_range')}}</label>
                                                     <select type="text" multiple name="program_age_range" class="form-control">
-                                                        @foreach(\App\Models\SuperAdmin\Choose_Program_Age_Range::all() as $ages)
+                                                        @foreach(\App\Models\SuperAdmin\ChooseProgramAge::all() as $ages)
                                                             <option value="{{ $ages->age }}" {{ in_array($ages->age, is_array($course_program->program_age_range) ? $course_program->program_age_range : [] ) ? 'selected' : '' }}>{{ $ages->age }}</option>
                                                         @endforeach
                                                     </select>

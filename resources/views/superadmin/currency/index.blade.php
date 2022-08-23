@@ -41,7 +41,7 @@
                         @foreach($currencies as $currency)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $currency->name }}</td>
+                                <td>{{ get_language() == 'en' ? $currency->name : $currency->name_ar }}</td>
                                 <td>{{ $currency->exchange_rate }}</td>
                                 <td>{{ $currency->is_default ? __('Admin/backend.default') : '' }}</td>
                                 <td>{{ $currency->created_at->diffForHumans() }}</td>

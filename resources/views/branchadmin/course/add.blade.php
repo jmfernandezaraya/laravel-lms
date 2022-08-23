@@ -129,7 +129,7 @@
                                   class="fa fa-trash pl-3" onclick="deleteStudyMode()"
                                     aria-hidden="true"></i></label>
                             <select name="study_mode[]" id="study_mode_choose" multiple="multiple" class="3col active">
-                                @foreach(\App\Models\SuperAdmin\Choose_Study_Mode::all() as $studymode)
+                                @foreach(\App\Models\SuperAdmin\ChooseStudyMode::all() as $studymode)
                                     <option value="{{$studymode->name}}">{{$studymode->name}}</option>
                                 @endforeach
                             </select>
@@ -144,7 +144,7 @@
                                     onclick="deleteProgramType()" class="fa fa-trash pl-3"
                                     aria-hidden="true"></i></label>
                             <select name="program_type[]" id="program_type_choose" multiple="multiple" class="3col active">
-                                @foreach(\App\Models\SuperAdmin\Choose_Program_Type::all() as $program_type)
+                                @foreach(\App\Models\SuperAdmin\ChooseProgramType::all() as $program_type)
                                     <option value="{{$program_type->name}}">{{$program_type->name}}</option>
                                 @endforeach
                             </select>
@@ -237,7 +237,7 @@
                                 <i onclick="deleteStudyTime()" class="fa fa-trash pl-3" aria-hidden="true"></i>
                             </label>
                             <select name="study_time[]" multiple="multiple" id="study_time_choose" class="3col active">
-                                @foreach (\App\Models\SuperAdmin\Choose_Study_Time::all() as $studytime)
+                                @foreach (\App\Models\SuperAdmin\ChooseStudyTime::all() as $studytime)
                                     <option value="{{$studytime->name}}">{{$studytime->name}}</option>
                                 @endforeach
                             </select>
@@ -249,7 +249,7 @@
                                 <i onclick="deleteStartDay()" class="fa fa-trash pl-3" aria-hidden="true"></i>
                             </label>
                             <select name="every_day[]" id="start_dates_option" multiple="multiple" class="3col active">
-                                @foreach(\App\Models\SuperAdmin\Choose_Start_Day::all() as $option)
+                                @foreach(\App\Models\SuperAdmin\ChooseStartDate::all() as $option)
                                     <option value="{{$option->name}}">{{$option->name}}</option>
                                 @endforeach
                             </select>
@@ -279,8 +279,8 @@
                                 <br>
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <label>{{__('Admin/backend.program_registration_free')}}:</label>
-                                        <input class="form-control" type="text" name="program_registration_fee[]" placeholder="{{__('Admin/backend.program_registration_free')}}">
+                                        <label>{{__('Admin/backend.program_registration_fee')}}:</label>
+                                        <input class="form-control" type="text" name="program_registration_fee[]" placeholder="{{__('Admin/backend.program_registration_fee')}}">
                                     </div>
                                     <div class="col-md-4">
                                         <label>Program-duration: </label>
@@ -302,7 +302,7 @@
                                     <div class="col-md-4">
                                         <div id="to_be_inserted_age0"></div>
                                         <select name="age_range[0][]" id="program_age_range_choose0" multiple="multiple" class="3col active">
-                                            @foreach(\App\Models\SuperAdmin\Choose_Program_Age_Range::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all() as $option)
+                                            @foreach(\App\Models\SuperAdmin\ChooseProgramAge::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all() as $option)
                                                 <option value="{{$option->age}}">{{$option->age}}</option>
                                             @endforeach
                                         </select>

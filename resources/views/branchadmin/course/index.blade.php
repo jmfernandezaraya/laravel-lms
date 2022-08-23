@@ -111,7 +111,7 @@
                                                 <div class="form-group">
                                                     <label class="">{{__('Admin/backend.language')}}</label>
                                                     <select name="language[]" multiple="multiple" class="form-control">
-                                                        @foreach(\App\Models\SuperAdmin\Choose_Language::all() as $language)
+                                                        @foreach(\App\Models\SuperAdmin\ChooseLanguage::all() as $language)
                                                             <option multiple="" value="{{$language->name}}" {{in_array($language->name, (array)$course->language) ? 'selected' : ''}} >{{$language->name }}</option>
                                                         @endforeach
                                                     </select>
@@ -120,7 +120,7 @@
                                                 <div class="form-group">
                                                     <label class="">{{__('Admin/backend.program_type')}}:</label>
                                                     <select name="program_type[]" multiple="multiple" class="form-control">
-                                                        @foreach(\App\Models\SuperAdmin\Choose_Program_Type::all() as $program_type)
+                                                        @foreach(\App\Models\SuperAdmin\ChooseProgramType::all() as $program_type)
                                                             <option multiple="" value="{{$program_type->name}}" {{in_array($program_type->name, (array)$course->program_type) ? 'selected' : ''}} >{{$program_type->name }}</option>
                                                         @endforeach
                                                     </select>
@@ -129,7 +129,7 @@
                                                 <div class="form-group">
                                                     <label class="">{{__('Admin/backend.study_mode')}}</label>
                                                     <select name="study_mode[]" multiple="multiple" class="form-control">
-                                                        @foreach(\App\Models\SuperAdmin\Choose_Study_Mode::all() as $study_mode)
+                                                        @foreach(\App\Models\SuperAdmin\ChooseStudyMode::all() as $study_mode)
                                                             <option multiple="" value="{{$study_mode->name}}" {{in_array($study_mode->name, (array)$course->study_mode) ? 'selected' : ''}} >{{$study_mode->name }}</option>
                                                         @endforeach
                                                     </select>
@@ -183,7 +183,7 @@
                                                 <div class="form-group">
                                                     <label class="">{{__('Admin/backend.study_time')}}:</label>
                                                     <select name="study_time[]" multiple="multiple" class="form-control">
-                                                        @foreach(\App\Models\SuperAdmin\Choose_Study_Time::all() as $study_time)
+                                                        @foreach(\App\Models\SuperAdmin\ChooseStudyTime::all() as $study_time)
                                                             <option multiple="" value="{{$study_time->name}}" {{in_array($study_time->name, (array)$course->study_time) ? 'selected' : ''}} >{{$study_time->name }}</option>
                                                         @endforeach
                                                     </select>
@@ -192,7 +192,7 @@
                                                 <div class="form-group">
                                                     <label class="">{{__('Admin/backend.start_day_every')}}</label>
                                                     <select name="every_day[]" multiple="multiple" class="form-control">
-                                                        @foreach(\App\Models\SuperAdmin\Choose_Start_Day::all() as $start_day)
+                                                        @foreach(\App\Models\SuperAdmin\ChooseStartDate::all() as $start_day)
                                                             <option multiple="" value="{{$start_day->name}}" {{in_array($start_day->name, (array)$course->every_day) ? 'selected' : ''}} >{{$start_day->name }}</option>
                                                         @endforeach
                                                     </select>

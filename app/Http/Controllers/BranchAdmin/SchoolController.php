@@ -3,13 +3,17 @@
 namespace App\Http\Controllers\BranchAdmin;
 
 use App\Http\Requests\SuperAdmin\AddSchoolRequest;
+
+use App\Http\Controllers\Controller;
+
+use App\Models\SuperAdmin\School;
+
+use Illuminate\Http\Request;
+
 use DB;
 use Storage;
 use Validator;
 use Session;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\SuperAdmin\School;
 
 class SchoolController extends Controller
 {

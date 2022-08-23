@@ -527,7 +527,7 @@ class FrontendCalculator
 
     public function CurrencyConverted($course_id, $total)
     {
-        $course = Course::where('unique_id', $course_id)->first();
+        $course = Course::where('unique_id', '' . $course_id)->first();
         $value = [];
         if ($course && $total > 0) {
             $value['currency'] = $course->getCurrency->name;
@@ -537,9 +537,25 @@ class FrontendCalculator
         return $value;
     }
 
+    public function CurrencyReverseConverted($course_id, $total)
+    {
+        $course = Course::where('unique_id', '' . $course_id)->first();
+        $value = [];
+        if ($course && $total > 0) {
+            $value['currency'] = $course->getCurrency->name;
+            if ($course->getCurrency->exchange_rate) {
+                $value['price'] = (float)(round((float)($total / $course->getCurrency->exchange_rate) * 100) / 100);
+            } else {
+                $value['price'] = 0;
+            }
+        }
+
+        return $value;
+    }
+
     public function CurrencyConvertedValue($course_id, $total)
     {
-        $course = Course::where('unique_id', $course_id)->first();
+        $course = Course::where('unique_id', '' . $course_id)->first();
         $value = 0;
         if ($course && $total > 0) {
             $value = round($total * $course->getCurrency->exchange_rate);
@@ -548,9 +564,24 @@ class FrontendCalculator
         return $value;
     }
 
+    public function CurrencyReverseConvertedValue($course_id, $total)
+    {
+        $course = Course::where('unique_id', '' . $course_id)->first();
+        $value = 0;
+        if ($course && $total > 0) {
+            if ($course->getCurrency->exchange_rate) {                
+                $value = (float)(round((float)($total / $course->getCurrency->exchange_rate) * 100) / 100);
+            } else {
+                $value = 0;
+            }
+        }
+
+        return $value;
+    }
+
     public function CurrencyConvertedValues($course_id, $values)
     {
-        $course = Course::where('unique_id', $course_id)->first();
+        $course = Course::where('unique_id', '' . $course_id)->first();
         $result_values = [
             'currency' => $course ? $course->getCurrency->name : '',
             'values' => [],
@@ -566,12 +597,34 @@ class FrontendCalculator
         return $result_values;
     }
 
+    public function CurrencyReverseConvertedValues($course_id, $values)
+    {
+        $course = Course::where('unique_id', '' . $course_id)->first();
+        $result_values = [
+            'currency' => $course ? $course->getCurrency->name : '',
+            'values' => [],
+        ];
+        foreach ($values as $value) {
+            $result_value = $value ? (float)$value : 0;
+            if ($course) {
+                if ($course->getCurrency->exchange_rate) {
+                    $result_value = (float)($result_value * $course->getCurrency->exchange_rate);
+                } else {
+                    $result_value = 0;
+                }
+            }
+            $result_values['values'][] = $result_value;
+        }
+
+        return $result_values;
+    }
+
     public function GetDefaultCurrency()
     {
         $currency = CurrencyExchangeRate::where('is_default', true)->first();
         $value = [];
         if ($currency) {
-            $value['currency'] = $currency->name;
+            $value['currency'] = app()->getLocale() == 'en' ? $currency->name : $currency->name_ar;
             $value['rate'] = $currency->exchange_rate;
         }
 
@@ -583,7 +636,7 @@ class FrontendCalculator
         $currency = CurrencyExchangeRate::where('is_default', true)->first();
         $value = '';
         if ($currency) {
-            $value = $currency->name;
+            $value = app()->getLocale() == 'en' ? $currency->name : $currency->name_ar;
         }
 
         return $value;

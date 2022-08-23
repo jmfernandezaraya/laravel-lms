@@ -151,7 +151,7 @@
                                         <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#AccomUnderAgeModal" aria-hidden="true"></i><i onclick="DeleteAccomUnderAgeRange()" class="fa fa-trash pl-3" aria-hidden="true"></i>
                                     </label>
                                     <select name="under_age[age][0][]" id="under_age_choose0" multiple="multiple" class="3col active">
-                                        @foreach(\App\Models\SuperAdmin\Choose_Accommodation_Under_Age::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all() as $option)
+                                        @foreach(\App\Models\SuperAdmin\ChooseAccommodationUnderAge::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all() as $option)
                                             <option value="{{$option->age}}">{{$option->age}}</option>
                                         @endforeach
                                     </select>

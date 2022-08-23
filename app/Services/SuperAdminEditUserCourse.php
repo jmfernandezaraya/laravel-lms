@@ -119,20 +119,20 @@ class SuperAdminEditUserCourse
                 $option .= "<option $selected  value=$program->course_unique_id data-id= $program->unique_id>$program_name </option>";
             }
 
-            $data['program_get'] = $option;
+            $data['course_program'] = $option;
         } elseif ($r->type == 'select_program') {
             $k = "<option value=''> $select</option>";
             \Session::put('program_unique_id', $r->value);
             $data['program_unique'] = \Session::get('program_unique_id');
-            $program_get = CourseProgram::where('course_unique_id', $r->value)->get();
-            if ($program_get->isEmpty()) {
-                $program_get = CourseProgram::where('unique_id', $r->program_unique_id)->get();
+            $course_program = CourseProgram::where('course_unique_id', $r->value)->get();
+            if ($course_program->isEmpty()) {
+                $course_program = CourseProgram::where('unique_id', $r->program_unique_id)->get();
             }
             $end_date = CourseProgram::where('unique_id', $r->program_unique_id)->first()['program_end_date'];
             $data['end_date'] = \Carbon\Carbon::create($end_date)->format('d-m-Y');
             $program_duration_start = [];
             $program_duration_end = [];
-            foreach ($program_get as $program) {
+            foreach ($course_program as $program) {
                 $program_duration_start[] = $program->program_duration_start;
                 $program_duration_end[] = $program->program_duration_end;
 
@@ -158,14 +158,14 @@ class SuperAdminEditUserCourse
              * Program get variable changes here
              *
              * */
-            $program_get = CourseProgram::where('course_unique_id', \Session::get('course_unique_id'))
+            $course_program = CourseProgram::where('course_unique_id', \Session::get('course_unique_id'))
                 ->where('program_duration_start', '<=', (int)$r->value)
                 ->where('program_duration_end', '>=', (int)$r->value)
                 ->with("course")->first();
 
             $under_age = $r->under_age == null ? [] : $r->under_age;
             $under_age = !is_array($r->under_age) ? array($r->under_age) : $under_age;
-            $data['value'] = in_array($under_age, $program_get->getUnderAge()) ? insertCalculationIntoDB('under_age_fee', $program_get->getUnderAgeFees($r->under_age) * $r->value) : insertCalculationIntoDB('under_age_fee', 0);
+            $data['value'] = in_array($under_age, $course_program->getUnderAge()) ? insertCalculationIntoDB('under_age_fee', $course_program->getUnderAgeFees($r->under_age) * $r->value) : insertCalculationIntoDB('under_age_fee', 0);
 
             $accoms = CourseAccommodation::where('course_unique_id', \Session::get('course_unique_id'))
                 ->where('age_range', 'LIKE', '%' . $r->under_age . '%')
@@ -180,10 +180,10 @@ class SuperAdminEditUserCourse
 
             $data['accomodations'] = $option;
             $data['airport'] = '';
-            $program_gets = CourseProgram::where('course_unique_id', \Session::get('course_unique_id'))->with("course")->first();
-            $get_accom = $program_gets->course->accomodation ? true : false;
+            $course_programs = CourseProgram::where('course_unique_id', \Session::get('course_unique_id'))->with("course")->first();
+            $get_accom = $course_programs->course->accomodation ? true : false;
             if ($get_accom) {
-                $airport_data = CourseAirport::whereCourseUniqueId(getCourseUniqueId())->get();
+                $airport_data = CourseAirport::whereCourseUniqueId(getSessionCourseUniqueId())->get();
 
                 $airport_data = collect($airport_data)->unique('airport_name_'.get_language())->values()->all();
                 $data['airport'] = "<option value=''> $select</option>";
@@ -196,13 +196,13 @@ class SuperAdminEditUserCourse
             } else {
                 $data['is_true'] = false;
             }
-            $add_program_cost = $program_get->program_cost;
+            $add_program_cost = $course_program->program_cost;
 
             // multiplying program cost here
             $multiple_program_cost = (int)$r->value * $add_program_cost;
             // $data['value'] = $r->value;
-            if ($program_get->courseTextBookFee) {
-                $data['text'] = $text_book_fee = $program_get->TextBookFee($r->value) ?? 0;
+            if ($course_program->courseTextBookFee) {
+                $data['text'] = $text_book_fee = $course_program->TextBookFee($r->value) ?? 0;
             } else {
                 $data['text'] = $text_book_fee = 0;
             }
@@ -210,18 +210,18 @@ class SuperAdminEditUserCourse
             insertCalculationIntoDB('text_book_fee', $text_book_fee);
 
             if ($r->date_set != null) {
-                $this->calculator->setSummerDateFromDbProgram($program_get->summer_fee_end_date);
-                $this->calculator->setPeakDateFromDbProgram($program_get->peak_time_end_date);
-                $this->calculator->setSummerStartDateProgram($program_get->summer_fee_start_date);
-                $this->calculator->setPeakStartDate($program_get->peak_time_start_date);
-                $this->calculator->setPeakEndDate($program_get->peak_time_end_date);
-                $this->calculator->setSummerFee($program_get->summer_fee_per_week);
+                $this->calculator->setSummerDateFromDbProgram($course_program->summer_fee_end_date);
+                $this->calculator->setPeakDateFromDbProgram($course_program->peak_time_end_date);
+                $this->calculator->setSummerStartDateProgram($course_program->summer_fee_start_date);
+                $this->calculator->setPeakStartDate($course_program->peak_time_start_date);
+                $this->calculator->setPeakEndDate($course_program->peak_time_end_date);
+                $this->calculator->setSummerFee($course_program->summer_fee_per_week);
                 $this->calculator->setFrontEndDate(getEndDate($r->date_set, (int)$r->value));
                 $this->calculator->setProgramStartDateFromFrontend(Carbon::create($r->date_set)->format('Y-m-d'));
-                $this->calculator->setSummerEndDateProgram($program_get->summer_fee_end_date);
+                $this->calculator->setSummerEndDateProgram($course_program->summer_fee_end_date);
 
-                $summer_week_fee = $program_get->summer_fee_per_week * $this->calculator->CompareDatesAndGetResult()['summer_date_program'];
-                $peakfee = $program_get->peak_time_fee_per_week * $this->calculator->CompareDatesAndGetResult()['peak_date_program'];
+                $summer_week_fee = $course_program->summer_fee_per_week * $this->calculator->CompareDatesAndGetResult()['summer_date_program'];
+                $peakfee = $course_program->peak_time_fee_per_week * $this->calculator->CompareDatesAndGetResult()['peak_date_program'];
                 $data['which'] = $this->calculator->CompareDatesAndGetResult()['which'] ?? 0;
 
                 insertCalculationIntoDB('summer_fee', $summer_week_fee);
@@ -230,10 +230,10 @@ class SuperAdminEditUserCourse
 
             //checking whether program duration is greater than the selected program duration and setting registration fee here
 
-            if ($program_get->program_duration == null) {
-                insertCalculationIntoDB('program_registration_fee', $program_get->program_registration_fee == null ? 0 : $program_get->program_registration_fee);
+            if ($course_program->program_duration == null) {
+                insertCalculationIntoDB('program_registration_fee', $course_program->program_registration_fee == null ? 0 : $course_program->program_registration_fee);
             } else {
-                (int)$r->value >= $program_get->program_duration ? insertCalculationIntoDB('program_registration_fee', 0) : insertCalculationIntoDB('program_registration_fee', $program_get->program_registration_fee == null ? 0 : $program_get->program_registration_fee);
+                (int)$r->value >= $course_program->program_duration ? insertCalculationIntoDB('program_registration_fee', 0) : insertCalculationIntoDB('program_registration_fee', $course_program->program_registration_fee == null ? 0 : $course_program->program_registration_fee);
             }
 
             if ($r->type == 'requested_for_under_age') {
@@ -243,7 +243,7 @@ class SuperAdminEditUserCourse
             //updating program cost here
             insertCalculationIntoDB('program_cost', $multiple_program_cost);
         } elseif ($r->type == 'courier_fee') {
-            $program_get = CourseProgram::where('course_unique_id', \Session::get('course_unique_id'))->where('program_duration_start', '<=', (int)$r->program_duration)
+            $course_program = CourseProgram::where('course_unique_id', \Session::get('course_unique_id'))->where('program_duration_start', '<=', (int)$r->program_duration)
                 ->where('program_duration_end', '>=', (int)$r->program_duration)
                 ->first();
 
@@ -251,7 +251,7 @@ class SuperAdminEditUserCourse
             if ($r->under_age == null)
                 $data['error'] = "Select Age First";
 
-            $r->value == 'true' ? insertCalculationIntoDB('courier_fee', $program_get->courier_fee) : insertCalculationIntoDB('courier_fee', 0);
+            $r->value == 'true' ? insertCalculationIntoDB('courier_fee', $course_program->courier_fee) : insertCalculationIntoDB('courier_fee', 0);
         }
 
         return response($data);

@@ -35,7 +35,7 @@ class AdminSeeder extends Seeder
             'remember_token' => 'dc651041150b563af507762af74c8f221e46f3db0fff87f1dda866009a1a851f',
             'image' => NULL,
             'original_image' => NULL,
-            'contact' => NULL,
+            'telephone' => NULL,
             'liked_school' => '0',
             'created_at' => '2021-03-28 05:58:59',
             'updated_at' => '2021-03-28 05:58:59',

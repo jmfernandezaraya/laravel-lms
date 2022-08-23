@@ -11,7 +11,7 @@ use App\Models\SuperAdmin\CourseAccommodation;
 use App\Models\SuperAdmin\CourseAirport;
 use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\CourseProgram;
-use App\Models\SuperAdmin\Choose_Study_Mode;
+use App\Models\SuperAdmin\ChooseStudyMode;
 
 use Carbon\Carbon;
 
@@ -67,6 +67,10 @@ class CourseController extends Controller
             $input['medical_insurance_fee'] = 0;
             $input['custodian_fee'] = 0;
 
+            $input['bank_transfer_fee'] = 0;
+            $input['link_fee'] = 0;
+            $input['link_fee_converted'] = 0;
+
             $input['total'] = 0;
 
             return $calculator->fill($input)->save();
@@ -84,6 +88,11 @@ class CourseController extends Controller
         $this->calculator->setCourierFee(read_json_file('courier_fee'));
         $this->calculator->setPeakTimeFee(read_json_file('peak_time_fee'));
         $this->calculator->setDiscount(read_json_file('discount_fee'));
+
+        json_file('bank_transfer_fee', 0);
+        json_file('link_fee', 0);
+        json_file('link_fee_converted', 0);
+
         $this->calculator->setTotalPrice();
 
         $data['program_cost'] = 'program_cost';
@@ -102,7 +111,16 @@ class CourseController extends Controller
 
         $data['express_mail'] = 'express_mail';
         $data['express_mail_value'] = read_json_file('courier_fee');
-        $data['total_value'] = $this->calculator->TotalCalculation();
+
+        $data['bank_transfer_fee'] = 'bank_transfer_fee';
+        $data['bank_transfer_fee_value'] = read_json_file('bank_transfer_fee');
+        $data['link_fee'] = 'link_fee';
+        $data['link_fee_value'] = read_json_file('link_fee');
+        $data['link_fee_converted'] = 'link_fee_converted';
+        $data['link_fee_converted_value'] = read_json_file('link_fee_converted');
+
+        $data['sub_total'] = $this->calculator->SubTotalCalculation();
+        $data['total_cost'] = $this->calculator->TotalCalculation();
 
         return response($data);
     }
@@ -148,9 +166,9 @@ class CourseController extends Controller
 
         $data['success'] = true;
 
-        $program_get = CourseProgram::where('unique_id', Session::get('program_unique_id'))->first();
+        $course_program = CourseProgram::where('unique_id', Session::get('program_unique_id'))->first();
         $program_age = "";
-        $course_age_ranges = $program_get->course->age_range;
+        $course_age_ranges = $course_program->course->age_range;
         sort($course_age_ranges);
         foreach ($course_age_ranges as $course_age_range) {
             $program_age .= "<option value = $course_age_range>$course_age_range</option>";
@@ -160,43 +178,47 @@ class CourseController extends Controller
             $data['age'] = $program_age;
 
             $program_duration_html = '';
-            for ($program_duration_index = $program_get->program_duration_start; $program_duration_index <= $program_get->program_duration_end; $program_duration_index++) {
+            for ($program_duration_index = $course_program->program_duration_start; $program_duration_index <= $course_program->program_duration_end; $program_duration_index++) {
                 $program_duration_html .= "<option value= $program_duration_index> $program_duration_index</option>";
             }
             $data['program_duration'] = $program_duration_html;
         }
 
         if ($r->type == 'duration') {
-            $add_program_cost = $program_get->program_cost;
+            $add_program_cost = $course_program->program_cost;
 
             // Multiplying program cost here
             $multiple_program_cost = (int)$r->value * $add_program_cost;
 
-            $text_book_fee = $this->inBetween($r->value, $program_get->text_fee_start_week, $program_get->text_fee_end_week) ? $program_get->text_book_fee : 0;
+            $text_book_fee = $this->inBetween($r->value, $course_program->text_fee_start_week, $course_program->text_fee_end_week) ? $course_program->text_book_fee : 0;
 
             json_file('text_book_fee', $text_book_fee);
 
             if ($r->date_set != null) {
-                $this->calculator->setSummerDateFromDbProgram($program_get->summer_fee_end_date);
-                $this->calculator->setSummerStartDateProgram($program_get->summer_fee_start_date);
-                $this->calculator->setSummerEndDateProgram($program_get->summer_fee_end_date);
-                $this->calculator->setSummerFee($program_get->summer_fee_per_week);
-                $this->calculator->setPeakDateFromDbProgram($program_get->peak_time_end_date);
-                $this->calculator->setPeakStartDate($program_get->peak_time_start_date);
-                $this->calculator->setPeakEndDate($program_get->peak_time_end_date);
+                json_file('bank_transfer_fee', $course_program->bank_transfer_fee);
+                $link_fee_converted = $course_program->course->link_fee_enable ? (($course_program->link_fee == null || $course_program->tax_percent == null) ? 0 : $course_program->link_fee * $course_program->tax_percent / 100) : 0;
+                json_file('link_fee', getCurrencyReverseConvertedValue($course->course_unique_id, $link_fee_converted));
+                json_file('link_fee_converted', $link_fee_converted);
+                $this->calculator->setSummerDateFromDbProgram($course_program->summer_fee_end_date);
+                $this->calculator->setSummerStartDateProgram($course_program->summer_fee_start_date);
+                $this->calculator->setSummerEndDateProgram($course_program->summer_fee_end_date);
+                $this->calculator->setSummerFee($course_program->summer_fee_per_week);
+                $this->calculator->setPeakDateFromDbProgram($course_program->peak_time_end_date);
+                $this->calculator->setPeakStartDate($course_program->peak_time_start_date);
+                $this->calculator->setPeakEndDate($course_program->peak_time_end_date);
                 $this->calculator->setFrontEndDate(getEndDate($r->date_set, (int)$r->value));
                 $this->calculator->setProgramStartDateFromFrontend(Carbon::create($r->date_set)->format('Y-m-d'));
-                $summer_week_fee = $program_get->summer_fee_per_week * $this->calculator->CompareDatesAndGetResult()['summer_date_program'];
-                $peakfee = $program_get->peak_time_fee_per_week * $this->calculator->CompareDatesAndGetResult()['peak_date_program'];
+                $summer_week_fee = $course_program->summer_fee_per_week * $this->calculator->CompareDatesAndGetResult()['summer_date_program'];
+                $peak_fee = $course_program->peak_time_fee_per_week * $this->calculator->CompareDatesAndGetResult()['peak_date_program'];
                 $data['which'] = $this->calculator->CompareDatesAndGetResult()['which'] ?? 0;
 
                 json_file('summer_fee', $summer_week_fee);
-                json_file('peak_time_fee', $peakfee);
+                json_file('peak_time_fee', $peak_fee);
             }
 
             // Checking whether program duration is greater than the selected program duration and setting registration fee here
-            (int)$r->value >= $program_get->course->program_duration ? json_file('program_registration_fee', 0) : json_file('program_registration_fee', $program_get->course->program_registration_fee);
-            in_array($r->under_age, $program_get->under_age) ? json_file('under_age_fee', $program_get->under_age_fee_per_week * $r->value) : json_file('under_age_fee', 0);
+            (int)$r->value >= $course_program->course->program_duration ? json_file('program_registration_fee', 0) : json_file('program_registration_fee', $course_program->course->program_registration_fee);
+            in_array($r->under_age, $course_program->under_age) ? json_file('under_age_fee', $course_program->under_age_fee_per_week * $r->value) : json_file('under_age_fee', 0);
 
             // Updating program cost here
             json_file('program_cost', $multiple_program_cost);
@@ -206,7 +228,7 @@ class CourseController extends Controller
                 $data['error'] = "Select Age First";
             }
 
-            $r->value == 'true' ? json_file('courier_fee', $program_get->course->courier_fee) : json_file('courier_fee', 0);
+            $r->value == 'true' ? json_file('courier_fee', $course_program->course->courier_fee) : json_file('courier_fee', 0);
         }
 
         return response($data);
@@ -285,31 +307,31 @@ class CourseController extends Controller
             reload_json_file();
         }
 
-        $program_getting = CourseProgram::where('unique_id', Session::get('program_unique_id'))->first();
+        $course_programting = CourseProgram::where('unique_id', Session::get('program_unique_id'))->first();
 
-        $week_selected_discount = $this->calculator->calculateDiscountWeekFree($r->value, $program_getting->x_week_selected);
+        $week_selected_discount = $this->calculator->calculateDiscountWeekFree($r->value, $course_programting->x_week_selected);
         $data['discount_fee'] = $week_selected_discount;
         
         $date_set_format = Carbon::create($r->date_set)->format('Y-m-d');
-        if ((checkBetweenDate($program_getting->discount_start_date, $program_getting->discount_end_date, Carbon::now()->format('Y-m-d'))) ) {
+        if ((checkBetweenDate($course_programting->discount_start_date, $course_programting->discount_end_date, Carbon::now()->format('Y-m-d'))) ) {
             $this->calculator->setProgramStartDateFromFrontend($date_set_format);
-            $this->calculator->setDiscountStartDateForWeekSelect($program_getting->x_week_start_date);
-            $this->calculator->setDiscountEndDateForWeekSelect($program_getting->x_week_end_date);
+            $this->calculator->setDiscountStartDateForWeekSelect($course_programting->x_week_start_date);
+            $this->calculator->setDiscountEndDateForWeekSelect($course_programting->x_week_end_date);
             $this->calculator->setProgramDuration($r->value);
             $this->calculator->setDiscountWeekGet($week_in_db);
-            $this->calculator->setDiscountStartDate($program_getting->discount_start_date);
-            $this->calculator->setDiscountEndDate($program_getting->discount_end_date);
-            $this->calculator->setHowManyWeekFree($program_getting->how_many_week_free);
-            $this->calculator->setProgramCost($program_getting->program_cost * $r->value);
-            $this->calculator->setProgramStartDate($program_getting->program_start_date);
-            $this->calculator->setProgramEndDate($program_getting->program_end_date);
+            $this->calculator->setDiscountStartDate($course_programting->discount_start_date);
+            $this->calculator->setDiscountEndDate($course_programting->discount_end_date);
+            $this->calculator->setHowManyWeekFree($course_programting->how_many_week_free);
+            $this->calculator->setProgramCost($course_programting->program_cost * $r->value);
+            $this->calculator->setProgramStartDate($course_programting->program_start_date);
+            $this->calculator->setProgramEndDate($course_programting->program_end_date);
             $discount = 0;
-            $discount_per_week = $program_getting->discount_per_week;
+            $discount_per_week = $course_programting->discount_per_week;
             if ($discount_per_week) {
                 $discount_per_weeks = explode(" ", $discount_per_week);
                 if (count($discount_per_weeks) >= 2) {
                     if ($discount_per_weeks[1] == '%') {
-                        $discount = $program_getting->program_cost * (int)$discount_per_weeks[0] / 100;
+                        $discount = $course_programting->program_cost * (int)$discount_per_weeks[0] / 100;
                     } else {
                         $discount = (int)$discount_per_weeks[0];
                     }
@@ -317,15 +339,15 @@ class CourseController extends Controller
             }
             $this->calculator->setDiscount($discount);
             $this->calculator->setFrontEndDate(getEndDate($r->date_set, $r->value));
-            $this->calculator->setFixedProgramCost($program_getting->program_cost);
-            $this->calculator->setDiscountEndDate($program_getting->discount_end_date);
+            $this->calculator->setFixedProgramCost($course_programting->program_cost);
+            $this->calculator->setDiscountEndDate($course_programting->discount_end_date);
             $this->calculator->setGetProgramWeeks($r->value);
         } else {
             json_file('accommodation_discount', 0);
         }
         $data['discount'] = $this->calculator->discountedTotal();
         $data['request'] = $r->all();
-        $data['program '] = $program_getting;
+        $data['program '] = $course_programting;
 
         return response()->json($data);
     }
@@ -414,7 +436,8 @@ class CourseController extends Controller
         $data['special_diet_fee'] = $this->calculator->getAccommodationSpecialDietFee();
         json_file('accommodation_special_diet_fee', $data['special_diet_fee']);
 
-        $data['total_fee'] = $this->calculator->TotalCalculation();
+        $data['sub_total'] = $this->calculator->SubTotalCalculation();
+        $data['total_cost'] = $this->calculator->TotalCalculation();
 
         return response($data);
     }

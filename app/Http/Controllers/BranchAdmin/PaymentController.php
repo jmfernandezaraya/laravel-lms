@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\BranchAdmin;
 
 use App\Http\Controllers\Controller;
+
 use Illuminate\Http\Request;
+
 use TelrGateway\Transaction;
 
 /**

@@ -55,7 +55,9 @@
                         <tr>
                             <th>#</th>
                             <th data-filter="checkbox">{{__('Admin/backend.select')}}</th>
+
                             <th>{{__('Admin/backend.promotion')}}</th>
+
                             <th data-filter="select" data-select="{{implode(",", $choose_fields["languages"])}}">{{__('Admin/backend.language')}}</th>
                             <th data-filter="select" data-select="{{implode(",", $choose_fields["program_types"])}}">{{__('Admin/backend.program_type')}}</th>
                             <th data-filter="select" data-select="{{implode(",", $choose_fields["study_modes"])}}">{{__('Admin/backend.study_mode')}}</th>
@@ -64,6 +66,8 @@
                             <th data-filter="select" data-select="{{implode(",", $choose_fields["school_countries"])}}">{{__('Admin/backend.country')}}</th>
                             <th data-filter="select" data-select="{{implode(",", $choose_fields["branch_names"])}}">{{__('Admin/backend.branch_name')}}</th>
                             <th data-filter="select" data-select="{{implode(",", $choose_fields["currencies"])}}">{{__('Admin/backend.currency')}}</th>
+
+                            <th>{{__('Admin/backend.link_fee')}}</th>
 
                             <th>{{__('Admin/backend.program_name')}}</th>
                             <th>{{__('Admin/backend.program_level')}}</th>
@@ -104,6 +108,16 @@
                                 <td>{{ $course->school && $course->school->country ? (get_language() == 'en' ? $course->school->country->name : $course->school->country->name_ar) : '-' }}</td>
                                 <td>{{ $course->branch }}</td>
                                 <td>{{ is_null($course->getCurrency) ? '-' : $course->getCurrency->name }}</td>
+                                <td>
+                                    @if (can_manage_course())
+                                        <form method="post" action="{{ auth('superadmin')->check() ? route('superadmin.course.link_fee', $course->unique_id) : route('schooladmin.course.link_fee', $course->unique_id) }}">
+                                            @csrf
+
+                                            <input type="hidden" name="link_fee" value="{{ $course->link_fee ? 1 : 0 }}" />
+                                            <button class="btn btn-{{ $course->link_fee ? 'info' : 'danger' }} btn-sm fa fa-{{ $course->link_fee ? 'play' : 'pause' }}"></button>
+                                        </form>
+                                    @endif
+                                </td>
                                 <td>{{ app()->getLocale() == 'en' ? $course->program_name : $course->program_name_ar }}</td>
                                 <td>{{ $course->program_level }}</td>
                                 <td>{{ $course->lessons_per_week }}</td>

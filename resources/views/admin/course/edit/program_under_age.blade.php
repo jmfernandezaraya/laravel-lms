@@ -74,10 +74,7 @@
 
                             <div class="row">
                                 <div class="form-group col-md-4 under_age">
-                                    <label for="">{{__('Admin/backend.age_range')}}: 
-                                        <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#ProgramUnderAgeModal" aria-hidden="true"></i>
-                                        <i class="fa fa-trash pl-3" onclick="deleteProgramUnderAgeRange()" aria-hidden="true"></i>
-                                    </label>
+                                    <label for="">{{__('Admin/backend.age_range')}}:</label>
                                     <select name="under_age[{{$loop->iteration - 1}}][]" id="program_under_age_range_choose0" multiple="multiple" class="3col active">
                                         @foreach($choose_program_under_ages as $choose_program_under_age)
                                             <option {{in_array($choose_program_under_age->unique_id, (array)$program_under_age_fee->under_age ?? [])  ? 'selected' : ''}} value="{{$choose_program_under_age->unique_id}}">{{$choose_program_under_age->age}}</option>
@@ -85,12 +82,12 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group col-md-4 mt-4">
+                                <div class="form-group col-md-4">
                                     <label>{{__('Admin/backend.fees_week')}}:</label>
                                     <input value="{{$program_under_age_fee->under_age_fee_per_week}}" class="form-control" type="number" name="under_age_fee_per_week[]" placeholder="{{__('Admin/backend.fees_week')}}">
                                 </div>
 
-                                <div class="form-group col-md-2 mt-4 pt-3">
+                                <div class="form-group col-md-2 mt-3 pt-1">
                                     <i class="fa fa-plus-circle" onclick="addProgramUnderAgeFee($(this))" aria-hidden="true"></i>
                                     <i class="fa fa-minus" aria-hidden="true" onclick="removeProgramUnderAgeFee($(this))"></i>
                                 </div>
@@ -106,10 +103,7 @@
 
                             <div class="row">
                                 <div class="form-group col-md-4 under_age">
-                                    <label for="">{{__('Admin/backend.age_range')}}: 
-                                        <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#ProgramUnderAgeModal" aria-hidden="true"></i>
-                                        <i class="fa fa-trash pl-3" onclick="deleteProgramUnderAgeRange()" aria-hidden="true"></i>
-                                    </label>
+                                    <label for="">{{__('Admin/backend.age_range')}}:</label>
                                     <select name="under_age[0][]" id="program_under_age_range_choose0" multiple="multiple" class="3col active">
                                         @foreach($choose_program_under_ages as $choose_program_under_age)
                                             <option value="{{$choose_program_under_age->unique_id}}">{{$choose_program_under_age->age}}</option>
@@ -117,12 +111,12 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group col-md-4 mt-4">
+                                <div class="form-group col-md-4">
                                     <label>{{__('Admin/backend.fees_week')}}:</label>
                                     <input class="form-control" type="number" name="under_age_fee_per_week[]" placeholder="{{__('Admin/backend.fees_week')}}">
                                 </div>
 
-                                <div class="form-group col-md-2 mt-4 pt-3">
+                                <div class="form-group col-md-2 mt-3 pt-1">
                                     <i class="fa fa-plus-circle" onclick="addProgramUnderAgeFee($(this))" aria-hidden="true"></i>
                                     <i class="fa fa-minus" aria-hidden="true" onclick="removeProgramUnderAgeFee($(this))"></i>
                                 </div>
@@ -163,23 +157,23 @@
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-md-12">
-                                    <label>{{__('Admin/backend.note')}}:</label>
-                                    <div class="english">
-                                        <textarea class="form-control ckeditor-input" name="text_book_note[]" placeholder="{{__('Admin/backend.note')}}" id="text_book_note{{ $loop->iteration - 1 }}">{!! $program_text_book_fee->text_book_note !!}</textarea>
-                                    </div>
-                                    <div class="arabic">
-                                        <textarea class="form-control ckeditor-input" name="text_book_note_ar[]" placeholder="{{__('Admin/backend.note')}}" id="text_book_note_ar{{ $loop->iteration - 1 }}">{!! $program_text_book_fee->text_book_note_ar !!}</textarea>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="form-group col-md-6">
                                     <button class="btn btn-primary fa fa-plus" type="button" onclick="addTextBookFee($(this))"></button>
                                 </div>
                                 <div class="pull-right">
                                     <button class="btn btn-danger fa fa-minus" type="button" onclick="removeTextBookFee($(this))"></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <label>{{__('Admin/backend.note')}}:</label>
+                                <div class="english">
+                                    <textarea class="form-control ckeditor-input" name="text_book_note" placeholder="{{__('Admin/backend.note')}}" id="text_book_note">{!! $course_program->text_book_note !!}</textarea>
+                                </div>
+                                <div class="arabic">
+                                    <textarea class="form-control ckeditor-input" name="text_book_note_ar" placeholder="{{__('Admin/backend.note')}}" id="text_book_note_ar">{!! $course_program->text_book_note_ar !!}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -214,23 +208,23 @@
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-md-12">
-                                    <label>{{__('Admin/backend.note')}}: </label>
-                                    <div class="english">
-                                        <textarea class="form-control ckeditor-input" name="text_book_note[]" placeholder="{{__('Admin/backend.note')}}" id="text_book_note0"></textarea>
-                                    </div>
-                                    <div class="arabic">
-                                        <textarea class="form-control ckeditor-input" name="text_book_note_ar[]" placeholder="{{__('Admin/backend.note')}}" id="text_book_note_ar0"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="form-group col-md-6">
                                     <button class="btn btn-primary fa fa-plus" type="button" onclick="addTextBookFee($(this))"></button>
                                 </div>
                                 <div class="pull-right">
                                     <button class="btn btn-danger fa fa-minus" type="button" onclick="removeTextBookFee($(this))"></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <label>{{__('Admin/backend.note')}}:</label>
+                                <div class="english">
+                                    <textarea class="form-control ckeditor-input" name="text_book_note" placeholder="{{__('Admin/backend.note')}}" id="text_book_note"></textarea>
+                                </div>
+                                <div class="arabic">
+                                    <textarea class="form-control ckeditor-input" name="text_book_note_ar" placeholder="{{__('Admin/backend.note')}}" id="text_book_note_ar"></textarea>
                                 </div>
                             </div>
                         </div>

@@ -2,7 +2,7 @@
 
 namespace App\Models\SuperAdmin;
 
-use App\Models\SuperAdmin\Choose_Language;
+use App\Models\SuperAdmin\ChooseLanguage;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +17,6 @@ class CurrencyExchangeRate extends Model
 
     public function language()
     {
-        return $this->belongsTo(Choose_Language::class, 'language_id', 'unique_id');
+        return $this->belongsTo(ChooseLanguage::class, 'language_id', 'unique_id');
     }
 }

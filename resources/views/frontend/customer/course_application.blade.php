@@ -242,6 +242,18 @@
                                             <th>{{ toFixedNumber($sub_total['converted_value']) }} {{ $currency['converted'] }}</th>
                                         </tr>
                                         <tr>
+                                            <td>{{__('Frontend.bank_transfer_fee')}}</td>
+                                            <td>{{ toFixedNumber($bank_transfer_fee['value']) }} {{ $currency['cost'] }}</td>
+                                            <td>{{ toFixedNumber($bank_transfer_fee['converted_value']) }} {{ $currency['converted'] }}</td>
+                                        </tr>
+                                        @if ($link_fee['value'])
+                                            <tr>
+                                                <td>{{__('Frontend.link_study_abroad_fee')}}</td>
+                                                <td>{{ toFixedNumber($link_fee['value']) }} {{ $currency['cost'] }}</td>
+                                                <td>{{ toFixedNumber($link_fee['converted_value']) }} {{ $currency['converted'] }}</td>
+                                            </tr>
+                                        @endif
+                                        <tr>
                                             <th>{{__('Frontend.total_discount')}}</th>
                                             <th class="highlight-value">-{{ toFixedNumber($total_discount['value']) }} {{ $currency['cost'] }}</th>
                                             <th class="highlight-value">-{{ toFixedNumber($total_discount['converted_value']) }} {{ $currency['converted'] }}</th>
@@ -590,7 +602,7 @@
                             <a class="card-title">{{__('Frontend.reservation_status')}}</a>
                         </div>
                         <div id="collapseReservationStatus" class="card-body collapse p-0" data-parent="#accordion">
-                            <div class="reservation-status mt-3">
+                            <div class="reservation-status my-3">
                                 <div class="col-sm-12">
                                     <p>
                                         @if ($course_application->status == 'received')

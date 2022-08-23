@@ -31,9 +31,10 @@
                             <th>{{__('Admin/backend.first_name')}}</th>
                             <th>{{__('Admin/backend.last_name')}}</th>
                             <th>{{__('Admin/backend.email')}}</th>
-                            <th>{{__('Admin/backend.contact_no')}}</th>
-                            <th>{{__('Admin/backend.profile_image')}}</th>
-                            <th>{{__('Admin/backend.permissions_given')}}</th>
+                            <th>{{__('Admin/backend.telephone')}}</th>
+                            <th>{{__('Admin/backend.school_name')}}</th>
+                            <th>{{__('Admin/backend.country')}}</th>
+                            <th>{{__('Admin/backend.city')}}</th>
                             <th>{{__('Admin/backend.created_on')}}</th>
                             @if (can_manage_user() || can_edit_user() || can_delete_user())
                                 <th>{{__('Admin/backend.action')}}</th>
@@ -44,36 +45,13 @@
                         @foreach ($school_admins as $school_admin)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ ucwords($school_admin->{'first_name_'.get_language()}) }}</td>
-                                <td>{{ ucwords($school_admin->{'last_name_'.get_language()}) }}</td>
+                                <td>{{ ucwords($school_admin->{'first_name_' . get_language()}) }}</td>
+                                <td>{{ ucwords($school_admin->{'last_name_' . get_language()}) }}</td>
                                 <td>{{ $school_admin->email == null ? '-----' : $school_admin->email }}</td>
-                                <td>{{ ucwords($school_admin->contact) }}</td>
-                                <td>
-                                    @if ($school_admin->image != null || $school_admin->image != '')
-                                        <img width="200px" height="200px" src="{{ asset($school_admin->image) }}">
-                                    @else
-                                        <img width="200px" height="200px" src="{{ asset('/assets/images/no-image.jpg') }}">
-                                    @endif
-                                </td>
-                                <td>
-                                    <div class="btn-group">
-                                        @if (optional($school_admin->editCoursePermission)->add == 1)
-                                            <button class='btn btn-success btn-sm'>{{__('Admin/backend.add')}}</button>
-                                        @else
-                                            <button class='btn btn-danger btn-sm'>{{__('Admin/backend.add')}}</button>
-                                        @endif
-                                        @if (optional($school_admin->editCoursePermission)->edit == 1)
-                                            <button class='btn btn-success btn-sm'>{{__('Admin/backend.edit')}}</button>
-                                        @else
-                                            <button class='btn btn-danger btn-sm'>{{__('Admin/backend.edit')}}</button>
-                                        @endif
-                                        @if (optional($school_admin->editCoursePermission)->delete == 1)
-                                            <button class='btn btn-success btn-sm'>{{__('Admin/backend.delete')}}</button>
-                                        @else
-                                            <button class='btn btn-danger btn-sm'>{{__('Admin/backend.delete')}}</button>
-                                        @endif
-                                    </div>
-                                </td>
+                                <td>{{ $school_admin->telephone }}</td>
+                                <td>{{ isset($school_admin->userSchool->school) ? (get_language() == 'en' ? $school_admin->userSchool->school->name->name : $school_admin->userSchool->school->name->name_ar) : '-' }}</td>
+                                <td>{{ getUserCountryNames($school_admin->id, false) }}</td>
+                                <td>{{ getUserCityNames($school_admin->id, false) }}</td>
                                 <td>{{ $school_admin->created_at->diffForHumans() }}</td>
                                 @if (can_manage_user() || can_edit_user() || can_delete_user())
                                     <td>

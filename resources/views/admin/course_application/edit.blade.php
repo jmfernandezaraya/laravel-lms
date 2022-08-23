@@ -20,6 +20,10 @@
                 <td>{{__('Admin/backend.mobile')}}</td>
                 <td>{{ $course_application->mobile }}</td>
             </tr>
+            <tr>
+                <td>{{__('Admin/backend.order_id')}}</td>
+                <td>{{ $course_application->order_id }}</td>
+            </tr>
         </tbody>
     </table>
     <div class="reservation-section">
@@ -254,6 +258,18 @@
                                     <th>{{ toFixedNumber($sub_total['value']) }} {{ $currency['cost'] }}</th>
                                     <th>{{ toFixedNumber($sub_total['converted_value']) }} {{ $currency['converted'] }}</th>
                                 </tr>
+                                <tr>
+                                    <td>{{__('Admin/backend.bank_transfer_fee')}}</td>
+                                    <td>{{ toFixedNumber($bank_transfer_fee['value']) }} {{ $currency['cost'] }}</td>
+                                    <td>{{ toFixedNumber($bank_transfer_fee['converted_value']) }} {{ $currency['converted'] }}</td>
+                                </tr>
+                                @if ($link_fee['value'])
+                                    <tr>
+                                        <td>{{__('Admin/backend.link_study_abroad_fee')}}</td>
+                                        <td>{{ toFixedNumber($link_fee['value']) }} {{ $currency['cost'] }}</td>
+                                        <td>{{ toFixedNumber($link_fee['converted_value']) }} {{ $currency['converted'] }}</td>
+                                    </tr>
+                                @endif
                                 <tr>
                                     <th>{{__('Admin/backend.total_discount')}}</th>
                                     <th class="highlight-value">-{{ toFixedNumber($total_discount['value']) }} {{ $currency['cost'] }}</th>
@@ -607,7 +623,7 @@
                     <a class="card-title">{{__('Admin/backend.reservation_status')}}</a>
                 </div>
                 <div id="collapseReservationStatus" class="card-body collapse p-0" data-parent="#accordion">
-                    <div class="reservation-status mt-3">
+                    <div class="reservation-status my-3">
                         @if (can_manage_course_application() || can_edit_course_application() || can_chanage_status_course_application())
                             <div class="col-sm-12">
                                 <form method="POST" id="update_reservation" action="{{ auth('superadmin')->check() ? route('superadmin.course_application.store') : route('schooladmin.course_application.store') }}">

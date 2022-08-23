@@ -50,21 +50,18 @@
                             <input type="hidden" value="" name="accom_under_age_id[]">
                             <div class="row">
                                 <div class="form-group col-md-4 under_age">
-                                    <label for="age_range">{{__('Admin/backend.age_range')}}:
-                                        <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#AccomUnderAgeModal" aria-hidden="true"></i>
-                                        <i onclick="deleteAccommUnderAgeRange($(this))" class="fa fa-trash pl-3" aria-hidden="true"></i>
-                                    </label>
+                                    <label for="age_range">{{__('Admin/backend.age_range')}}:</label>
                                     <select name="under_age[0][]" id="under_age_choose0" multiple="multiple" class="3col active">
                                         @foreach($choose_accomodation_under_ages as $choose_accomodation_under_age)
                                             <option value="{{$choose_accomodation_under_age->unique_id}}">{{$choose_accomodation_under_age->age}}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="form-group col-md-4 mt-4">
+                                <div class="form-group col-md-4">
                                     <label>{{__('Admin/backend.under_age_fee_per_week')}}:</label>
                                     <input class="form-control" type="number" value="" name="under_age_fee_per_week[]" placeholder="{{__('Admin/backend.under_age_fee_per_week')}}">
                                 </div>
-                                <div class="form-group col-md-4 mt-4 pt-3">
+                                <div class="form-group col-md-4 mt-3 pt-1">
                                     <i class="fa fa-plus-circle" aria-hidden="true" id="accom_plus_button" onclick="addAccommodationFormUnderAge($(this))"></i>
                                     <i class="fa fa-minus" onclick="deleteAccommodationUnderAge($(this))" aria-hidden="true"></i>
                                 </div>

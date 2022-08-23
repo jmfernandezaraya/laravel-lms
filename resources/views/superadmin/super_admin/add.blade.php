@@ -74,8 +74,18 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="contact_no">{{__('Admin/backend.contact_no')}}</label>
-                            <input value="{{old('contact')}}" name="contact" class="form-control" id="exampleSelectGender" placeholder="{{__('Admin/backend.contact_no')}}" type="number">
+                            <label for="telephone">{{__('Admin/backend.telephone')}}</label>
+                            <input value="{{old('telephone')}}" name="telephone" class="form-control" id="telephone" placeholder="{{__('Admin/backend.telephone')}}" type="tel">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="mobile">{{__('Admin/backend.mobile')}}</label>
+                            <input value="{{old('mobile')}}" name="mobile" class="form-control" id="mobile" placeholder="{{__('Admin/backend.mobile')}}" type="tel">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="another_mobile">{{__('Admin/backend.another_mobile')}}</label>
+                            <input value="{{old('another_mobile')}}" name="another_mobile" class="form-control" id="another_mobile" placeholder="{{__('Admin/backend.another_mobile')}}" type="tel">
                         </div>
                         <div class="form-group col-md-6">
                             <img src="{{ asset('/assets/images/no-image.jpg') }}" id="previewImg" alt="Uploaded Image Preview Holder" width="550px" height="250px" style="border-radius:3px;border:5px;" />
@@ -97,7 +107,7 @@
                                     <option value="subscriber" selected>{{__('Admin/backend.subscriber')}}</option>
                                     <option value="manager">{{__('Admin/backend.manager')}}</option>
                                 </select>
-                                <div class="blog-permissions">
+                                <div class="blog-permissions" style="display: none">
                                     <div class="form-check">
                                         <input name="blog_add" type="checkbox" class="form-check-inline" value='1'>
                                         <label for="blog_add">{{__('Admin/backend.add')}}</label>
@@ -115,7 +125,7 @@
                                     <option value="subscriber" selected>{{__('Admin/backend.subscriber')}}</option>
                                     <option value="manager">{{__('Admin/backend.manager')}}</option>
                                 </select>
-                                <div class="school-permissions">
+                                <div class="school-permissions" style="display: none">
                                     <div class="form-check">
                                         <input name="school_add" type="checkbox" class="form-check-inline" value='1'>
                                         <label for="school_add">{{__('Admin/backend.add')}}</label>
@@ -135,7 +145,11 @@
                                     <option value="subscriber" selected>{{__('Admin/backend.subscriber')}}</option>
                                     <option value="manager">{{__('Admin/backend.manager')}}</option>
                                 </select>
-                                <div class="course-permissions">
+                                <div class="course-permissions" style="display: none">
+                                    <div class="form-check">
+                                        <input name="course_view" type="checkbox" class="form-check-inline" value='1'>
+                                        <label for="course_view">{{__('Admin/backend.view')}}</label>
+                                    </div>
                                     <div class="form-check">
                                         <input name="course_add" type="checkbox" class="form-check-inline" value='1'>
                                         <label for="course_add">{{__('Admin/backend.add')}}</label>
@@ -161,7 +175,7 @@
                                     <option value="subscriber" selected>{{__('Admin/backend.subscriber')}}</option>
                                     <option value="manager">{{__('Admin/backend.manager')}}</option>
                                 </select>
-                                <div class="currency-permissions">
+                                <div class="currency-permissions" style="display: none">
                                     <div class="form-check">
                                         <input name="currency_add" type="checkbox" class="form-check-inline" value='1'>
                                         <label for="currency_add">{{__('Admin/backend.add')}}</label>
@@ -181,7 +195,7 @@
                                     <option value="subscriber" selected>{{__('Admin/backend.subscriber')}}</option>
                                     <option value="manager">{{__('Admin/backend.manager')}}</option>
                                 </select>
-                                <div class="course-application-permissions">
+                                <div class="course-application-permissions" style="display: none">
                                     <div class="form-check">
                                         <input name="course_application_edit" type="checkbox" class="form-check-inline" value='1'>
                                         <label for="course_application_edit">{{__('Admin/backend.edit')}}</label>
@@ -211,7 +225,7 @@
                                     <option value="subscriber" selected>{{__('Admin/backend.subscriber')}}</option>
                                     <option value="manager">{{__('Admin/backend.manager')}}</option>
                                 </select>
-                                <div class="user-permissions">
+                                <div class="user-permissions" style="display: none">
                                     <div class="form-check">
                                         <input name="user_add" type="checkbox" class="form-check-inline" value='1'>
                                         <label for="user_add">{{__('Admin/backend.add')}}</label>
@@ -239,10 +253,14 @@
                                     <option value="subscriber" selected>{{__('Admin/backend.subscriber')}}</option>
                                     <option value="manager">{{__('Admin/backend.manager')}}</option>
                                 </select>
-                                <div class="review-permissions">
+                                <div class="review-permissions" style="display: none">
                                     <div class="form-check">
                                         <input name="review_edit" type="checkbox" class="form-check-inline" value='1'>
                                         <label for="review_edit">{{__('Admin/backend.edit')}}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="review_apply" type="checkbox" class="form-check-inline" value='1'>
+                                        <label for="review_apply">{{__('Admin/backend.apply')}}</label>
                                     </div>
                                     <div class="form-check">
                                         <input name="review_approve" type="checkbox" class="form-check-inline" value='1'>
@@ -263,7 +281,7 @@
                                     <option value="subscriber" selected>{{__('Admin/backend.subscriber')}}</option>
                                     <option value="manager">{{__('Admin/backend.manager')}}</option>
                                 </select>
-                                <div class="form-builder-permissions" style="display: block">
+                                <div class="form-builder-permissions" style="display: none">
                                     <div class="form-check">
                                         <input name="form_builder_add" type="checkbox" class="form-check-inline" value='1'>
                                         <label for="form_builder_add">{{__('Admin/backend.add')}}</label>
@@ -285,7 +303,7 @@
                                     <option value="subscriber" selected>{{__('Admin/backend.subscriber')}}</option>
                                     <option value="manager">{{__('Admin/backend.manager')}}</option>
                                 </select>
-                                <div class="visa-application-permissions" style="display: block">
+                                <div class="visa-application-permissions" style="display: none">
                                     <div class="form-check">
                                         <input name="visa_application_add" type="checkbox" class="form-check-inline" value='1'>
                                         <label for="visa_application_add">{{__('Admin/backend.add')}}</label>
@@ -309,11 +327,7 @@
                                     <option value="subscriber" selected>{{__('Admin/backend.subscriber')}}</option>
                                     <option value="manager">{{__('Admin/backend.manager')}}</option>
                                 </select>
-                                <div class="payment-permissions" style="display: block">
-                                    <div class="form-check">
-                                        <input name="payment_add" type="checkbox" class="form-check-inline" value='1'>
-                                        <label for="payment_add">{{__('Admin/backend.add')}}</label>
-                                    </div>
+                                <div class="payment-permissions" style="display: none">
                                     <div class="form-check">
                                         <input name="payment_edit" type="checkbox" class="form-check-inline" value='1'>
                                         <label for="payment_edit">{{__('Admin/backend.edit')}}</label>
@@ -324,6 +338,30 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-group col-md-6">
+                                <label for="email_template_permission">{{__('Admin/backend.email_template')}}</label>
+                                <select name="email_template_permission" id="email_template_permission" class="form-control">
+                                    <option value="">{{__('Admin/backend.select_role')}}</option>
+                                    <option value="subscriber" selected>{{__('Admin/backend.subscriber')}}</option>
+                                    <option value="manager">{{__('Admin/backend.manager')}}</option>
+                                </select>
+                                <div class="email-template-permissions" style="display: none">
+                                    <div class="form-check">
+                                        <input name="email_template_add" type="checkbox" class="form-check-inline" value='1'>
+                                        <label for="email_template_add">{{__('Admin/backend.add')}}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="email_template_edit" type="checkbox" class="form-check-inline" value='1'>
+                                        <label for="email_template_edit">{{__('Admin/backend.edit')}}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="email_template_delete" type="checkbox" class="form-check-inline" value='1'>
+                                        <label for="email_template_delete">{{__('Admin/backend.delete')}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="setting_permission">{{__('Admin/backend.setting')}}</label>
                                 <div class="setting-permissions">

@@ -2,7 +2,7 @@
 
 namespace App\Models\SuperAdmin;
 
-use App\Models\SuperAdmin\Choose_Language;
+use App\Models\SuperAdmin\ChooseLanguage;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

@@ -7,6 +7,7 @@ use Illuminate\Validation\Rule;
 
 use App\Http\Controllers\Controller;
 
+use App\Models\Setting;
 use App\Models\CourseApplication;
 
 use App\Models\SuperAdmin\EmailTemplate;
@@ -36,22 +37,50 @@ class EmailTemplateController extends Controller
      */
     public function create()
     {
-        return view('superadmin.email_template.add');
+        $site = Setting::where('setting_key', 'site')->first();
+        $site_setting_value = unserialize($site->setting_value);
+        $smtp_setting = (object)$site_setting_value['smtp'];
+
+        return view('superadmin.email_template.add', compact('smtp_setting'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\CurrencyRequest $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CurrencyRequest $request, EmailTemplate $email_template)
+    public function store(Request $request)
     {
-        $email_template->fill($request->validated())->save();
+        $rules = [
+            'name' => 'required',
+            'template' => 'required',
+            'smtp_server' => 'sometimes',
+            'smtp_user_name' => 'sometimes',
+            'smtp_password' => 'sometimes',
+            'smtp_port' => 'sometimes',
+            'sender_name' => 'sometimes',
+            'sender_name_ar' => 'sometimes',
+            'sender_email' => 'sometimes',
+            'keywords' => 'sometimes',
+            'subject' => 'sometimes',
+            'subject_ar' => 'sometimes',
+            'content' => 'sometimes',
+            'content_ar' => 'sometimes',
+        ];
+        $validator = \Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validate->errors()]);
+        }
 
-        toastr()->success(__('Admin/backend.data_saved_successfully'));
+        $email_template = new EmailTemplate();
+        $email_template->fill($validator->validated())->save();
 
-        return redirect()->route('superadmin.email_template.index');
+        $data['data'] = __('Admin/backend.data_updated_successfully');
+        $data['redirect_link'] = route('superadmin.email_template.index');        
+        $data['success'] = true;
+
+        return response()->json($data);
     }
 
     /**
@@ -74,9 +103,12 @@ class EmailTemplateController extends Controller
      */
     public function edit($id)
     {
+        $site = Setting::where('setting_key', 'site')->first();
+        $site_setting_value = unserialize($site->setting_value);
+        $smtp_setting = (object)$site_setting_value['smtp'];
         $email_template = EmailTemplate::find($id);
 
-        return view('superadmin.email_template.edit', compact('email_template'));
+        return view('superadmin.email_template.edit', compact('email_template', 'smtp_setting'));
     }
 
     /**
@@ -91,6 +123,10 @@ class EmailTemplateController extends Controller
         $email_template = EmailTemplate::find($id);
 
         $rules = [
+            'smtp_server' => 'sometimes',
+            'smtp_user_name' => 'sometimes',
+            'smtp_password' => 'sometimes',
+            'smtp_port' => 'sometimes',
             'sender_name' => 'sometimes',
             'sender_name_ar' => 'sometimes',
             'sender_email' => 'sometimes',
@@ -104,10 +140,15 @@ class EmailTemplateController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validate->errors()]);
         }
+        $requested_save = $validator->validated();
+        if (!$requested_save['smtp_password']) {
+            unset($requested_save['smtp_password']);
+        }
 
-        $email_template->fill($validator->validated())->save();
+        $email_template->fill($requested_save)->save();
 
         $data['data'] = __('Admin/backend.data_updated_successfully');
+        $data['redirect_link'] = route('superadmin.email_template.index');  
         $data['success'] = true;
 
         return response()->json($data);

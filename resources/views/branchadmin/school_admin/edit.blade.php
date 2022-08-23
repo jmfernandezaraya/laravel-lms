@@ -30,30 +30,28 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="exampleInputName1">{{__('Admin/backend.first_name')}}</label>
-                            <input name="first_name_en" type="text" class="form-control" id="exampleInputName1"
-                                value="{{$users->first_name_en}}"   placeholder="{{__('Admin/backend.first_name')}}">
+                            <label for="first_name">{{__('Admin/backend.first_name')}}</label>
+                            <input name="first_name_en" type="text" class="form-control" id="first_name" value="{{$users->first_name_en}}" placeholder="{{__('Admin/backend.first_name')}}">
                         </div>
 
                         <div class="form-group">
-                            <label for="exampleInputEmail3">{{__('Admin/backend.last_name')}}</label>
-                            <input name="last_name_en" type="text" class="form-control" value="{{$users->last_name_en}}"   id="exampleInputEmail3" placeholder="{{__('Admin/backend.last_name')}}">
+                            <label for="last_name">{{__('Admin/backend.last_name')}}</label>
+                            <input name="last_name_en" type="text" class="form-control" value="{{$users->last_name_en}}" id="last_name" placeholder="{{__('Admin/backend.last_name')}}">
                         </div>
 
                         <div class="form-group">
-                            <label for="exampleInputEmail3">{{__('Admin/backend.email_address')}}</label>
-                            <input name="email" type="email" class="form-control"
-                                value="{{$users->email}}"  id="exampleInputEmail3" placeholder="{{__('Admin/backend.email_address')}}">
+                            <label for="email">{{__('Admin/backend.email_address')}}</label>
+                            <input name="email" type="email" class="form-control" value="{{$users->email}}" id="email" placeholder="{{__('Admin/backend.email_address')}}">
                         </div>
 
                         <div class="form-group">
-                            <label for="exampleInputEmail3">{{__('Admin/backend.enter_password')}}</label>
-                            <input name="password" type="password" class="form-control" id="exampleInputEmail3" placeholder="{{__('Admin/backend.enter_password')}}">
+                            <label for="password">{{__('Admin/backend.enter_password')}}</label>
+                            <input name="password" type="password" class="form-control" id="password" placeholder="{{__('Admin/backend.enter_password')}}">
                         </div>
 
                         <div class="form-group">
-                            <label for="exampleSelectGender">{{__('Admin/backend.contact_no')}}</label>
-                            <input name="contact" class="form-control" id="exampleSelectGender" value="{{$users->contact}}"   placeholder="{{__('Admin/backend.contact_no')}}" type="number">
+                            <label for="telephone">{{__('Admin/backend.telephone')}}</label>
+                            <input name="telephone" class="form-control" id="telephone" value="{{$users->telephone}}" placeholder="{{__('Admin/backend.telephone')}}" type="number">
                         </div>
 
                         @if($users->image == null || $users->image  == '')
@@ -84,7 +82,7 @@
                             <ul class="lang text-right current_page_itemm">
                                 <li class="current_page_item selected">
                                     <a class="" href="#" onclick="changeLanguage('english', 'arabic')">
-                                    <img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('Admin/backend.english')}}
+                                        <img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('Admin/backend.english')}}
                                     </a>
                                 </li>
                                 <li>
@@ -96,13 +94,13 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="exampleInputName1">{{__('Admin/backend.first_name')}}</label>
-                            <input name="first_name_ar" type="text" class="form-control" id="exampleInputName1" value="{{$users->first_name_ar}}"  placeholder="First Name">
+                            <label for="first_name_ar">{{__('Admin/backend.first_name')}}</label>
+                            <input name="first_name_ar" type="text" class="form-control" id="first_name_ar" value="{{$users->first_name_ar}}" placeholder="First Name">
                         </div>
 
                         <div class="form-group">
-                            <label for="exampleInputEmail3">{{__('Admin/backend.last_name')}}</label>
-                            <input name="last_name_ar" type="text" class="form-control" value="{{$users->last_name_ar}}"  id="exampleInputEmail3" placeholder="Last Name">
+                            <label for="last_name_ar">{{__('Admin/backend.last_name')}}</label>
+                            <input name="last_name_ar" type="text" class="form-control" value="{{$users->last_name_ar}}" id="last_name_ar" placeholder="Last Name">
                         </div>
 
                         <button onclick="submitForm($(this).parents().find('#BranchAdminForm'))" type="button" class="btn btn-gradient-primary mr-2">{{__('Admin/backend.submit')}}</button>

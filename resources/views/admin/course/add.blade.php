@@ -65,11 +65,7 @@
 
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label for="language">
-                                    {{__('Admin/backend.choose_lang')}}:
-                                    <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#LanguageModal" aria-hidden="true"></i>
-                                    <i class="fa fa-trash pl-3" onclick="deleteLanguage()" aria-hidden="true"></i>
-                                </label>
+                                <label for="language">{{__('Admin/backend.choose_lang')}}:</label>
                                 <select name="language[]" multiple="multiple" id="language_choose" class="3col active">
                                     @foreach ($choose_languages as $choose_language)
                                         <option value="{{$choose_language->unique_id}}">{{$choose_language->name}}</option>
@@ -78,11 +74,7 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label for="study_mode">
-                                    {{__('Admin/backend.choose_study_mode')}}:
-                                    <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#StudyModeModal" aria-hidden="true"></i>
-                                    <i class="fa fa-trash pl-3" onclick="deleteStudyMode()" aria-hidden="true"></i>
-                                </label>
+                                <label for="study_mode">{{__('Admin/backend.choose_study_mode')}}:</label>
                                 <select name="study_mode[]" id="study_mode_choose" multiple="multiple" class="3col active">
                                     @foreach ($choose_study_modes as $study_mode)
                                         <option value="{{$study_mode->unique_id}}">{{$study_mode->name}}</option>
@@ -91,11 +83,7 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label for="program_type">
-                                    {{__('Admin/backend.choose_program_type')}}:
-                                    <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#ProgramTypeModal" aria-hidden="true"></i>
-                                    <i onclick="deleteProgramType()" class="fa fa-trash pl-3" aria-hidden="true"></i>
-                                </label>
+                                <label for="program_type">{{__('Admin/backend.choose_program_type')}}:</label>
                                 <select name="program_type[]" id="program_type_choose" multiple="multiple" class="3col active">
                                     @foreach ($choose_program_types as $program_type)
                                         <option value="{{$program_type->unique_id}}">{{$program_type->name}}</option>
@@ -131,7 +119,7 @@
 
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label for="branch">{{__('Admin/backend.add_branch_if_applicable')}}</label>
+                                <label for="branch">{{__('Admin/backend.add_branch_if_applicable')}}:</label>
                                 <select class="form-control" name="branch" id="branch_choose">
                                     <option value="">{{__('Admin/backend.select')}}</option>
                                 </select>
@@ -141,8 +129,15 @@
                                 <select class="form-control" id="choose_currency" name="currency">
                                     <option value="">{{__('Admin/backend.select')}}</option>
                                     @foreach ($currencies as $currency)
-                                        <option value="{{$currency->id}}">{{$currency->name}}</option>
+                                        <option value="{{$currency->id}}">{{app()->getLocale() == 'en' ? $currency->name : $currency->name_ar}}</option>
                                     @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="link_fee">{{__('Admin/backend.link_fee')}}:</label>
+                                <select class="form-control" id="link_fee_enable" name="link_fee_enable">
+                                    <option value="1">{{__('Admin/backend.enable')}}</option>
+                                    <option value="0">{{__('Admin/backend.disable')}}</option>
                                 </select>
                             </div>
                         </div>
@@ -184,10 +179,7 @@
 
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label for="study_time">{{__('Admin/backend.study_time')}}:
-                                    <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#StudyTimeModal" aria-hidden="true"></i>
-                                    <i onclick="deleteStudyTime()" class="fa fa-trash pl-3" aria-hidden="true"></i>
-                                </label>
+                                <label for="study_time">{{__('Admin/backend.study_time')}}:</label>
                                 <select name="study_time[]" id="study_time_choose" multiple="multiple" class="3col active">
                                     @foreach ($choose_study_times as $study_time)
                                         <option value="{{$study_time->unique_id}}">{{$study_time->name}}</option>
@@ -196,10 +188,7 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label for="classes_day">{{__('Admin/backend.classes_days')}}:
-                                    <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#ClassesDayModal" aria-hidden="true"></i>
-                                    <i onclick="deleteClassesDay()" class="fa fa-trash pl-3" aria-hidden="true"></i>
-                                </label>
+                                <label for="classes_day">{{__('Admin/backend.classes_days')}}:</label>
                                 <select name="classes_day[]" id="classes_day_choose" multiple="multiple" class="3col active">
                                     @foreach ($choose_classes_days as $classes_day)
                                         <option value="{{$classes_day->unique_id}}">{{$classes_day->name}}</option>
@@ -208,10 +197,7 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label for="start_date">{{__('Admin/backend.start_dates')}}:
-                                    <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#StartDateModal" aria-hidden="true"></i>
-                                    <i onclick="deleteStartDate()" class="fa fa-trash pl-3" aria-hidden="true"></i>
-                                </label>
+                                <label for="start_date">{{__('Admin/backend.start_dates')}}:</label>
                                 <select name="start_date[]" id="start_date_choose" multiple="multiple" class="3col active">
                                     @foreach ($choose_start_days as $start_day)
                                         <option value="{{$start_day->unique_id}}">{{$start_day->name}}</option>
@@ -258,8 +244,23 @@
 
                             <div class="row">
                                 <div class="form-group col-md-4">
-                                    <label>{{__('Admin/backend.program_registration_free')}}:</label>
-                                    <input class="form-control" type="number" name="program_registration_fee[]" placeholder="{{__('Admin/backend.program_registration_free')}}">
+                                    <label>{{__('Admin/backend.link_study_abroad_fee')}}: ({{ getGetDefaultCurrencyName() }})</label>
+                                    <input class="form-control" type="number" name="link_fee[]" placeholder="{{__('Admin/backend.link_study_abroad_fee')}}">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>{{__('Admin/backend.tax_percent')}}(%):</label>
+                                    <input class="form-control" type="number" name="tax_percent[]" placeholder="{{__('Admin/backend.tax_percent')}}">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>{{__('Admin/backend.bank_transfer_fee')}}:</label>
+                                    <input class="form-control" type="number" name="bank_transfer_fee[]" placeholder="{{__('Admin/backend.bank_transfer_fee')}}">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label>{{__('Admin/backend.program_registration_fee')}}:</label>
+                                    <input class="form-control" type="number" name="program_registration_fee[]" placeholder="{{__('Admin/backend.program_registration_fee')}}">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>{{__('Admin/backend.program_duration')}}:</label>
@@ -280,10 +281,7 @@
 
                             <div class="row">
                                 <div class="form-group col-md-4 age_range">
-                                    <label for="program_age_range">{{__('Admin/backend.age_range')}}:
-                                        <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#ProgramAgeRangeModal" aria-hidden="true"></i>
-                                        <i onclick="deleteProgramAgeRange($(this))" class="fa fa-trash pl-3" aria-hidden="true"></i>
-                                    </label>
+                                    <label for="program_age_range">{{__('Admin/backend.age_range')}}:</label>
                                     <select id="program_age_range_choose0" name="age_range[0][]" multiple="multiple" class="3col active">
                                         @foreach ($choose_program_age_ranges as $program_age_range)
                                             <option value="{{$program_age_range->unique_id}}">{{$program_age_range->age}}</option>

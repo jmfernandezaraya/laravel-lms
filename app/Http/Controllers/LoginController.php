@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RegisterUserRequest;
 
-use App\Mail\RegisterOTPMail;
+use App\Mail\EmailTemplate;
 use App\Mail\SendVerifyEmailAgain;
 
 use App\Models\User;
@@ -100,7 +100,7 @@ class LoginController extends Controller
             return back()->withInput()->withErrors();
         }
 
-        $user = new User;
+        $user = new User();
         $token = hash_hmac('sha256', Str::random(40), env('APP_KEY'));
         $to_save = $request->validated();
 
@@ -116,6 +116,7 @@ class LoginController extends Controller
             'school_add' => 0,
             'school_edit' => 0,
             'course_manager' => 0,
+            'course_view' => 0,
             'course_add' => 0,
             'course_edit' => 0,
             'course_display' => 0,
@@ -130,6 +131,7 @@ class LoginController extends Controller
             'course_application_contact_student' => 0,
             'course_application_contact_school' => 0,
             'review_manager' => 0,
+            'review_apply' => 0,
             'review_edit' => 0,
             'review_delete' => 0,
             'review_approve' => 0,
@@ -139,7 +141,9 @@ class LoginController extends Controller
             'user_delete' => 0,
             'user_permission' => 0,
         ]);
-        \Mail::to($user->email)->send(new RegisterOTPMail($token, app()->getLocale()));
+        setEmailTemplateSMTP('verify_email');
+        \Mail::to($user->email)->send(new EmailTemplate('verify_email', $user, app()->getLocale()));
+        unsetEmailTemplateSMTP();
 
         toastr()->success(__('Frontend.check_your_email'));
         

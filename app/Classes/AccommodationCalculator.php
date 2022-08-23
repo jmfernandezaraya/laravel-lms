@@ -84,7 +84,6 @@ class AccommodationCalculator extends FrontendCalculator
         $this->custodian_fee = $custodian_fee;
     }
 
-
     /**
      * @param mixed $christmas_start_date
      */
@@ -322,9 +321,18 @@ class AccommodationCalculator extends FrontendCalculator
         return $total;
     }
 
+    public function SubTotalCalculation()
+    {
+        $total = readCalculationFromDB('total') + readCalculationFromDB('accommodation_total')
+            + readCalculationFromDB('airport_pickup_fee') + readCalculationFromDB('medical_insurance_fee') + readCalculationFromDB('custodian_fee');
+        return $total - readCalculationFromDB('discount_fee') - readCalculationFromDB('accommodation_discount');
+    }
+
     public function TotalCalculation()
     {
-        $total = readCalculationFromDB('total') + readCalculationFromDB('accommodation_total') + readCalculationFromDB('airport_pickup_fee') + readCalculationFromDB('medical_insurance_fee') + readCalculationFromDB('custodian_fee');
+        $total = readCalculationFromDB('total') + readCalculationFromDB('accommodation_total')
+            + readCalculationFromDB('airport_pickup_fee') + readCalculationFromDB('medical_insurance_fee') + readCalculationFromDB('custodian_fee')
+            + readCalculationFromDB('bank_transfer_fee') + readCalculationFromDB('link_fee');
         return $total - readCalculationFromDB('discount_fee') - readCalculationFromDB('accommodation_discount');
     }
 

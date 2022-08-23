@@ -31,7 +31,7 @@
                             <th>{{__('Admin/backend.first_name')}}</th>
                             <th>{{__('Admin/backend.last_name')}}</th>
                             <th>{{__('Admin/backend.email')}}</th>
-                            <th>{{__('Admin/backend.contact_no')}}</th>
+                            <th>{{__('Admin/backend.telephone')}}</th>
                             <th>{{__('Admin/backend.profile_image')}}</th>
                             <th>{{__('Admin/backend.created_on')}}</th>
                             @if (can_manage_user() || can_edit_user() || can_delete_user())
@@ -46,7 +46,7 @@
                                 <td>{{ ucwords($super_admin->{'first_name_' . get_language()}) }}</td>
                                 <td>{{ ucwords($super_admin->{'last_name_' . get_language()}) }}</td>
                                 <td>{{ $super_admin->email == null ? '-----' : $super_admin->email }}</td>
-                                <td>{{ ucwords($super_admin->contact) }}</td>
+                                <td>{{ ucwords($super_admin->telephone) }}</td>
                                 <td>
                                     @if ($super_admin->image != null || $super_admin->image != '')
                                         <img width="200px" height="200px" src="{{ asset($super_admin->image) }}">

@@ -2,8 +2,8 @@
 
 namespace App\Models\SuperAdmin;
 
-use App\Models\Country;
-use App\Models\SuperAdmin\Choose_Nationality;
+use App\Models\SuperAdmin\Country;
+use App\Models\SuperAdmin\ChooseNationality;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,6 +19,6 @@ class SchoolNationality extends Model
     
     public function nationality()
     {
-        return $this->belongsTo(Choose_Nationality::class, 'nationality_id', 'unique_id');
+        return $this->belongsTo(ChooseNationality::class, 'nationality_id', 'unique_id');
     }
 }

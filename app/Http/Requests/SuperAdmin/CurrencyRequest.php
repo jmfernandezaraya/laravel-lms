@@ -25,6 +25,7 @@ class CurrencyRequest extends FormRequest
     {
         return [
             'name' => 'required',
+            'name_ar' => 'required',
             'exchange_rate' => 'required|numeric|min:0|not_in:0',
         ];
     }

@@ -270,6 +270,7 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => [
         Route::post('pause/{course_id}', '\App\Http\Controllers\Admin\CourseController@pause')->name('pause');
         Route::post('play/{course_id}', '\App\Http\Controllers\Admin\CourseController@play')->name('play');
         Route::post('promotion/{course_id}', '\App\Http\Controllers\Admin\CourseController@promotion')->name('promotion');
+        Route::post('link_fee/{course_id}', '\App\Http\Controllers\Admin\CourseController@toggleLinkFee')->name('link_fee');
         Route::post('bulk', '\App\Http\Controllers\Admin\CourseController@bulk')->name('bulk');
     
         Route::post('program_under_age/fetch', '\App\Http\Controllers\Admin\CourseController@fetchProgramUnderAgePage')->name('program_under_age.fetch');
@@ -295,11 +296,25 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => [
         Route::get('program/{course_unique_id}', '\App\Http\Controllers\Admin\CourseDetailsController@detailsProgram')->name('program.details');
         Route::delete('program/{unique_id}', '\App\Http\Controllers\Admin\CourseDetailsController@deleteProgram')->name('program.delete');
     
-        Route::post('update', '\App\Http\Controllers\Admin\CourseDetailsController@courseUpdate')->name('course_update');
-    
+        Route::post('update', '\App\Http\Controllers\Admin\CourseDetailsController@courseUpdate')->name('course_update');    
         Route::post('image_upload', '\App\Http\Controllers\Admin\CourseController@upload')->name('upload');
-
         Route::get('deleted', '\App\Http\Controllers\Admin\CourseController@deleted')->name('deleted');
+        
+        Route::get('language', '\App\Http\Controllers\Admin\CourseController@viewLanguageList')->name('language');        
+        Route::get('study_mode', '\App\Http\Controllers\Admin\CourseController@viewStudyModeList')->name('study_mode');        
+        Route::get('program_type', '\App\Http\Controllers\Admin\CourseController@viewProgramTypeList')->name('program_type');        
+        Route::get('branch', '\App\Http\Controllers\Admin\CourseController@viewBranchList')->name('branch');        
+        Route::get('study_time', '\App\Http\Controllers\Admin\CourseController@viewStudyTimeList')->name('study_time');        
+        Route::get('classes_day', '\App\Http\Controllers\Admin\CourseController@viewClassesDayList')->name('classes_day');        
+        Route::get('start_date', '\App\Http\Controllers\Admin\CourseController@viewStartDateList')->name('start_date');        
+        Route::get('age', '\App\Http\Controllers\Admin\CourseController@viewProgramAgeList')->name('age');        
+        Route::get('under_age', '\App\Http\Controllers\Admin\CourseController@viewProgramUnderAgeList')->name('under_age');        
+        Route::get('accommodation_age', '\App\Http\Controllers\Admin\CourseController@viewAccommodationAgeList')->name('accommodation_age');        
+        Route::get('accommodation_under_age', '\App\Http\Controllers\Admin\CourseController@viewAccommodationUnderAgeList')->name('accommodation_under_age');
+        Route::get('custodian_under_age', '\App\Http\Controllers\Admin\CourseController@viewCustodianUnderAgeList')->name('custodian_under_age');
+        
+        Route::post('choose', '\App\Http\Controllers\Admin\CourseController@updateChooseList')->name('choose.update');
+        Route::post('choose_age', '\App\Http\Controllers\Admin\CourseController@updateChooseAgeList')->name('choose_age.update');
     });
     Route::resource('course', '\App\Http\Controllers\Admin\CourseController');
 
@@ -466,6 +481,7 @@ Route::group(['prefix' => 'schooladmin', 'as' => 'schooladmin.', 'middleware' =>
         Route::post('pause/{course_id}', '\App\Http\Controllers\Admin\CourseController@pause')->name('pause');
         Route::post('play/{course_id}', '\App\Http\Controllers\Admin\CourseController@play')->name('play');
         Route::post('promotion/{course_id}', '\App\Http\Controllers\Admin\CourseController@promotion')->name('promotion');
+        Route::post('link_fee/{course_id}', '\App\Http\Controllers\Admin\CourseController@linkFee')->name('link_fee');
         Route::post('bulk', '\App\Http\Controllers\Admin\CourseController@bulk')->name('bulk');
     
         Route::post('program_under_age/fetch', '\App\Http\Controllers\Admin\CourseController@fetchProgramUnderAgePage')->name('program_under_age.fetch');

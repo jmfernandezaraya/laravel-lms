@@ -40,7 +40,7 @@
                 </div>
             </li>
         @endif
-        @if (can_manage_school() || can_add_school() || can_edit_school())
+        @if (can_manage_school() || can_add_school() || can_edit_school() || can_delete_school())
             <li class="nav-item ">
                 <a class="nav-link" data-toggle="collapse" href="#school" aria-expanded="false" aria-controls="school">
                     <span class="menu-title">{{__('Admin/dashboard.school')}}</span>
@@ -62,7 +62,7 @@
                 </div>
             </li>
         @endif
-        @if (can_manage_course() || can_add_course() || can_edit_course() || can_display_course() || can_delete_course())
+        @if (can_manage_course() || can_view_course() || can_add_course() || can_edit_course() || can_display_course() || can_delete_course())
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#course" aria-expanded="false" aria-controls="course">
                     <span class="menu-title">{{__('Admin/dashboard.courses')}}</span>
@@ -77,6 +77,44 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('superadmin.course.deleted') }}">{{__('Admin/dashboard.deleted')}}</a>
                         </li>
+                        @if (can_manage_course() || can_add_course() || can_edit_course() || can_delete_course())
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('superadmin.course.language') }}">{{__('Admin/dashboard.language')}}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('superadmin.course.study_mode') }}">{{__('Admin/dashboard.study_mode')}}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('superadmin.course.program_type') }}">{{__('Admin/dashboard.program_type')}}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('superadmin.course.branch') }}">{{__('Admin/dashboard.branch')}}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('superadmin.course.study_time') }}">{{__('Admin/dashboard.study_time')}}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('superadmin.course.classes_day') }}">{{__('Admin/dashboard.classes_day')}}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('superadmin.course.start_date') }}">{{__('Admin/dashboard.start_date')}}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('superadmin.course.age') }}">{{__('Admin/dashboard.program_age')}}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('superadmin.course.under_age') }}">{{__('Admin/dashboard.program_under_age')}}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('superadmin.course.accommodation_age') }}">{{__('Admin/dashboard.accommodation_age')}}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('superadmin.course.accommodation_under_age') }}">{{__('Admin/dashboard.accommodation_under_age')}}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('superadmin.course.custodian_under_age') }}">{{__('Admin/dashboard.custodian_under_age')}}</a>
+                            </li>
+                        @endif
                     </ul>
                 </div>
             </li>
@@ -97,7 +135,7 @@
                 </div>
             </li>
         @endif
-        @if (can_manage_review() || can_edit_review() || can_approve_review() || can_delete_review())
+        @if (can_manage_review() || can_apply_review() || can_edit_review() || can_approve_review() || can_delete_review())
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#review" aria-expanded="false" aria-controls="school_admin">
                     <span class="menu-title">{{__('Admin/backend.rating_review')}}</span>
@@ -113,7 +151,7 @@
                 </div>
             </li>
         @endif
-        @if (can_manage_payment() || can_add_payment() || can_edit_payment() || can_delete_payment())
+        @if (can_manage_payment() || can_edit_payment() || can_delete_payment())
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#payment_received" aria-expanded="false" aria-controls="payment_received">
                     <span class="menu-title">{{__('Admin/backend.payment_received')}}</span>
@@ -221,9 +259,9 @@
                 </div>
             </li>
         @endif
-        @if (can_manage_email_template())
+        @if (can_manage_email_template() || can_add_email_template() || can_edit_email_template() || can_delete_email_template())
             <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" href="#email_template" aria-expanded="false" aria-controls="currency">
+                <a class="nav-link" data-toggle="collapse" href="#email_template" aria-expanded="false" aria-controls="email_template">
                     <span class="menu-title">{{__('Admin/dashboard.email_template')}}</span>
                     <i class="menu-arrow"></i>
                     <i class="mdi mdi-card-bulleted menu-icon"></i>

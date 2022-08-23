@@ -162,7 +162,7 @@
                             <div class="row">
                                 <div class="col-md-4" id="remove_accom_accom0">
                                     <select id="accom_age_choose0" name="age_range[0][]" multiple="multiple" class="3col active">
-                                        @foreach(\App\Models\SuperAdmin\Choose_Accommodation_Age_Range::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all() as $option)
+                                        @foreach(\App\Models\SuperAdmin\ChooseAccommodationAge::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all() as $option)
                                             <option value="{{$option->age}}">{{$option->age}}</option>
                                         @endforeach
                                     </select>

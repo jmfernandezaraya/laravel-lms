@@ -24,7 +24,7 @@
                 <i class="mdi mdi-home menu-icon"></i>
             </a>
         </li>
-        @if (can_manage_school() || can_add_school() || can_edit_school())
+        @if (can_manage_school() || can_add_school() || can_edit_school() || can_delete_school())
             <li class="nav-item ">
                 <a class="nav-link" data-toggle="collapse" href="#school" aria-expanded="false" aria-controls="school">
                     <span class="menu-title">{{__('Admin/dashboard.school')}}</span>
@@ -40,7 +40,7 @@
                 </div>
             </li>
         @endif
-        @if (can_manage_course() || can_add_course() || can_edit_course())
+        @if (can_manage_course() || can_view_course() || can_add_course() || can_edit_course() || can_display_course() || can_delete_course())
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#course" aria-expanded="false" aria-controls="course">
                     <span class="menu-title">{{__('Admin/dashboard.courses')}}</span>
@@ -75,7 +75,7 @@
                 </div>
             </li>
         @endif
-        @if (can_manage_review() || can_edit_review() || can_approve_review() || can_delete_review())
+        @if (can_manage_review() || can_apply_review() || can_edit_review() || can_approve_review() || can_delete_review())
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#review" aria-expanded="false" aria-controls="school_admin">
                     <span class="menu-title">{{__('Admin/backend.rating_review')}}</span>

@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ChooseProgramAgeRangesEnTableSeeder::class);
         $this->call(ChooseProgramTypesEnTableSeeder::class);
         $this->call(ChooseProgramUnderAgesEnTableSeeder::class);
-        $this->call(ChooseStartDaysEnTableSeeder::class);
+        $this->call(ChooseStartDatesEnTableSeeder::class);
         $this->call(ChooseStudyModesEnTableSeeder::class);
         $this->call(ChooseStudyTimesEnTableSeeder::class);
         $this->call(CoursesProgramEnTableSeeder::class);

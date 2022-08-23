@@ -4,8 +4,8 @@ namespace App\Services;
 
 use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\CourseProgram;
-use App\Models\SuperAdmin\Choose_Program_Age_Range;
-use App\Models\SuperAdmin\Choose_Study_Time;
+use App\Models\SuperAdmin\ChooseProgramAge;
+use App\Models\SuperAdmin\ChooseStudyTime;
 
 use Illuminate\Http\Request;
 
@@ -31,7 +31,7 @@ class FrontendServices {
                 $age = $minagevalue . " - " . $maxagevalue;
 
                 $course_study_time_names = '';
-                $course_study_times = Choose_Study_Time::whereIn('unique_id', $course->study_time)->get();
+                $course_study_times = ChooseStudyTime::whereIn('unique_id', $course->study_time)->get();
                 foreach ($course_study_times as $course_study_time) {
                     if ($course_study_time_names) $course_study_time_names .= ' ';
                     $course_study_time_names .= $course_study_time->name;

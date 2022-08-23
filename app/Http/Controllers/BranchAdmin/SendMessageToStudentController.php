@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\BranchAdmin;
 
 use App\Http\Controllers\Controller;
+
 use App\Mail\SendMessageToStudentMail;
+
 use App\Models\User;
+
 use Illuminate\Http\Request;
 
 class SendMessageToStudentController extends Controller

@@ -52,17 +52,17 @@ class School extends Model
 
     public function country()
     {
-        return $this->hasOne(\App\Models\Country::class, 'id', 'country_id');
+        return $this->hasOne(Country::class, 'id', 'country_id');
     }
 
     public function city()
     {
-        return $this->hasOne(\App\Models\City::class, 'id', 'city_id');
+        return $this->hasOne(City::class, 'id', 'city_id');
     }
 
     public function name()
     {
-        return $this->hasOne(\App\Models\SchoolName::class, 'id', 'name_id');
+        return $this->hasOne(SchoolName::class, 'id', 'name_id');
     }
 
     public function nationalities()

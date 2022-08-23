@@ -88,17 +88,14 @@
                         
                         <div class="row">
                             <div class="form-group col-md-4 age_range">
-                                <label for="age_range">{{__('Admin/backend.age_range')}} :
-                                    <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#AccommodationAgeRangeModal" aria-hidden="true"></i>
-                                    <i onclick="deleteAccommAgeRange($(this))" class="fa fa-trash pl-3" aria-hidden="true"></i>
-                                </label>
+                                <label for="age_range">{{__('Admin/backend.age_range')}}:</label>
                                 <select id="accom_age_choose0" name="age_range[0][]" multiple="multiple" class="3col active">
                                     @foreach($accommodation_age_ranges as $accommodation_age_range)
                                         <option value="{{$accommodation_age_range->unique_id}}">{{$accommodation_age_range->age}}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-group col-md-4 pt-3">
+                            <div class="form-group col-md-4">
                                 <label>{{__('Admin/backend.placement_fee')}}:</label>
                                 <input class="form-control" type="number" name="placement_fee[]" placeholder="{{__('Admin/backend.placement_fee')}}">
                             </div>

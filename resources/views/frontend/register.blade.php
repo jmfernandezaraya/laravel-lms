@@ -59,7 +59,7 @@
                                         </div>
                                         <div class="col-lg-12 col-md-12">
                                             <div class="form-group">
-                                                <input type="tel" name="contact" value="{{old('contact')}}" class="form-control" placeholder="{{__('Frontend.phone')}}">
+                                                <input type="tel" name="telephone" value="{{old('telephone')}}" class="form-control" placeholder="{{__('Frontend.telephone')}}">
                                             </div>
                                         </div>
                                         <div class="col-lg-12 col-md-12">

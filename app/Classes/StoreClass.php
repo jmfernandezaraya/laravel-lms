@@ -60,7 +60,7 @@ class StoreClass {
 				if ($validator->fails()) {
 					return response()->json(['errors' => $validator->getMessageBag()->toArray(), 'success' => false]);
 				}
-				$school = new User;
+				$school = new User();
 				$school = $school->setTable('users_en');
 				$school = isset($this->type_of_request) && $this->type_of_request == 'update' ? $school->whereUniqueId($this->id)->first() : $school;
 				$input['password']= \Hash::make($input['password']);
@@ -101,7 +101,7 @@ class StoreClass {
 				}
 				$input = $this->request->except('_token', 'ar');
 				$input['image'] = $this->image;
-				$school = new User;
+				$school = new User();
 				$school = $school->setTable('users_ar');
 				$school = isset($this->type_of_request) ? $school->whereUniqueId($this->id)->first() : $school;
 				$input['password']= null;
@@ -145,7 +145,7 @@ class StoreClass {
 						'email' => 'required|unique:schools_en',
 						'name' => 'required',
 						'address' => 'required',
-						'contact' => 'required',
+						'telephone' => 'required',
 						'multiple_photos.*' => 'mimes:jpg,bmp,png,jpeg',
 						'logo' => 'mimes:jpg,bmp,png,jpeg',
 						'video.*' => 'mimes:mp4,asf,wmv,mpeg,3gp,avi,flv',
@@ -158,7 +158,7 @@ class StoreClass {
 						'email' => 'required|unique:schools_en,' . 'id,' . $school->id,
 						'name' => 'required',
 						'address' => 'required',
-						'contact' => 'required',
+						'telephone' => 'required',
 						'multiple_photos.*' => 'mimes:jpg,bmp,png,jpeg',
 						'logo' => 'mimes:jpg,bmp,png,jpeg',
 						'video.*' => 'mimes:mp4,asf,wmv,mpeg,3gp,avi,flv',
@@ -172,7 +172,7 @@ class StoreClass {
 				}
 
 				$input = $this->request->except('_token', 'en');
-				$schools = new School;
+				$schools = new School();
 				$schools = $schools->setTable('schools_en');
 				$schools = isset($this->type_of_request) && $this->type_of_request == 'update' ? $schools->whereUniqueId($this->id)->first() : $schools;
 				
@@ -240,7 +240,7 @@ class StoreClass {
 						'email' => 'required|unique:schools_ar',
 						'name' => 'required',
 						'address' => 'required',
-						'contact' => 'required'
+						'telephone' => 'required'
 					];
 				} else {
 					$school = \DB::table("schools_ar")->whereUniqueId($this->id)->first();
@@ -248,7 +248,7 @@ class StoreClass {
 						'email' => 'required|unique:schools_ar,' . 'id,' . $school->id,
 						'name' => 'required',
 						'address' => 'required',
-						'contact' => 'required',
+						'telephone' => 'required',
 					];
 				}
 				
@@ -264,7 +264,7 @@ class StoreClass {
 				$input['logo'] = Session::get('logo');
 				$input['unique_id'] = $unique_id;
 
-				$schools = new School;
+				$schools = new School();
 				$schools = $schools->setTable('schools_ar');
 				$schools = isset($this->type_of_request) && $this->type_of_request == 'update' ? $schools->whereUniqueId($this->id)->first() : $schools;
 				\Cache::put('db2', $schools, $seconds = 10);

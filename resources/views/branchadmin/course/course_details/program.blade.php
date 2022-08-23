@@ -18,7 +18,7 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th> @lang('Admin/backend.program_registration_free') </th>
+                            <th> @lang('Admin/backend.program_registration_fee') </th>
                             <th> @lang('Admin/backend.program_duration') </th>
                             <th> @lang('Admin/backend.age_range') </th>
                             <th> @lang('Admin/backend.courier_fee') </th>
@@ -116,7 +116,7 @@
                                             @csrf
                                             <div class="modal-body">
                                                 <div class="form-group">
-                                                    <label>@lang('Admin/backend.program_registration_free')</label>
+                                                    <label>@lang('Admin/backend.program_registration_fee')</label>
                                                     <input hidden name="id" value="{{$course_program->unique_id}}">
                                                     <input type="number"
                                                         value="{{$course_program->program_registration_fee}}"
@@ -132,7 +132,7 @@
                                                 <div class="form-group">
                                                     <label>@lang('Admin/backend.age_range')</label>
                                                     <select type="text" multiple name="program_age_range" class="form-control">
-                                                        @foreach(\App\Models\SuperAdmin\Choose_Program_Age_Range::all() as $ages)
+                                                        @foreach(\App\Models\SuperAdmin\ChooseProgramAge::all() as $ages)
                                                             <option value="{{$ages->age}}" {{ in_array($ages->age, is_array($course_program->program_age_range) ? $course_program->program_age_range : [] ) ? 'selected' : '' }}>{{$ages->age}}</option>
                                                         @endforeach
                                                     </select>

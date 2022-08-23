@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 
-class ChooseStartDaysEnTableSeeder extends Seeder
+class ChooseStartDatesEnTableSeeder extends Seeder
 {
 
     /**

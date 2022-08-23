@@ -4,17 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 
-use App\Models\SuperAdmin\Choose_Accommodation_Age_Range;
-use App\Models\SuperAdmin\Choose_Accommodation_Under_Age;
-use App\Models\SuperAdmin\Choose_Custodian_Under_Age;
-use App\Models\SuperAdmin\Choose_Language;
-use App\Models\SuperAdmin\Choose_Program_Age_Range;
-use App\Models\SuperAdmin\Choose_Program_Type;
-use App\Models\SuperAdmin\Choose_Program_Under_Age;
-use App\Models\SuperAdmin\Choose_Start_Day;
-use App\Models\SuperAdmin\Choose_Study_Mode;
-use App\Models\SuperAdmin\Choose_Study_Time;
-use App\Models\SuperAdmin\Choose_Classes_Day;
+use App\Models\SuperAdmin\ChooseAccommodationAge;
+use App\Models\SuperAdmin\ChooseAccommodationUnderAge;
+use App\Models\SuperAdmin\ChooseCustodianUnderAge;
+use App\Models\SuperAdmin\ChooseLanguage;
+use App\Models\SuperAdmin\ChooseProgramAge;
+use App\Models\SuperAdmin\ChooseProgramType;
+use App\Models\SuperAdmin\ChooseProgramUnderAge;
+use App\Models\SuperAdmin\ChooseStartDate;
+use App\Models\SuperAdmin\ChooseStudyMode;
+use App\Models\SuperAdmin\ChooseStudyTime;
+use App\Models\SuperAdmin\ChooseClassesDay;
 use App\Models\SuperAdmin\Course;
 
 use Illuminate\Http\Request;
@@ -26,13 +26,13 @@ class CourseFormController extends Controller
         $unique_id = $this->my_unique_id();
 
         $get_id = \DB::transaction(function () use ($unique_id, $request) {
-            $LanguageEnTable = new Choose_Language;
+            $LanguageEnTable = new ChooseLanguage();
             $LanguageEnTable->setTable('choose_languages_en');
             $LanguageEnTable->unique_id = $unique_id;
             $LanguageEnTable->name = $request->english_name;
             $LanguageEnTable->save();
 
-            $LanguageArTable = new Choose_Language;
+            $LanguageArTable = new ChooseLanguage();
             $LanguageArTable->setTable('choose_languages_ar');
             $LanguageArTable->unique_id = $unique_id;
             $LanguageArTable->name = $request->arabic_name;
@@ -64,15 +64,15 @@ class CourseFormController extends Controller
         $language_ids = array_diff($language_ids, $course_language_ids);
         \DB::transaction(function () use ($language_ids) {
             $locale = get_language();
-            Choose_Language::whereIn('unique_id', $language_ids)->delete();
+            ChooseLanguage::whereIn('unique_id', $language_ids)->delete();
             $switch_locale = $locale == 'en' ? 'ar' : 'en';
             app()->setLocale($switch_locale);
-            Choose_Language::whereIn('unique_id', $language_ids)->delete();
+            ChooseLanguage::whereIn('unique_id', $language_ids)->delete();
             app()->setLocale($locale);
         });
 
         $data['result'] = '';
-        $lang = Choose_Language::all();
+        $lang = ChooseLanguage::all();
         foreach ($lang as $langs):
             $data['result'] .= "<option value=$langs->unique_id>$langs->name</option>";
         endforeach;
@@ -86,13 +86,13 @@ class CourseFormController extends Controller
         $unique_id = $this->my_unique_id();
 
         $get_id = \DB::transaction(function () use ($unique_id, $request) {
-            $StudyModeEnTable = new Choose_Study_Mode;
+            $StudyModeEnTable = new ChooseStudyMode();
             $StudyModeEnTable->setTable('choose_study_modes_en');
             $StudyModeEnTable->unique_id = $unique_id;
             $StudyModeEnTable->name = $request->english_val;
             $StudyModeEnTable->save();
 
-            $StudyModeArTable = new Choose_Study_Mode;
+            $StudyModeArTable = new ChooseStudyMode();
             $StudyModeArTable->setTable('choose_study_modes_ar');
             $StudyModeArTable->unique_id = $unique_id;
             $StudyModeArTable->name = $request->arabic_val;
@@ -117,15 +117,15 @@ class CourseFormController extends Controller
     {
         \DB::transaction(function () use ($request) {
             $locale = get_language();
-            Choose_Study_Mode::whereIn('unique_id', $request->ids)->delete();
+            ChooseStudyMode::whereIn('unique_id', $request->ids)->delete();
             $switch_locale = $locale == 'en' ? 'ar' : 'en';
             app()->setLocale($switch_locale);
-            Choose_Study_Mode::whereIn('unique_id', $request->ids)->delete();
+            ChooseStudyMode::whereIn('unique_id', $request->ids)->delete();
             app()->setLocale($locale);
         });
 
         $data['result'] = '';
-        $study_modes = Choose_Study_Mode::all();
+        $study_modes = ChooseStudyMode::all();
         foreach ($study_modes as $study_mode) :
             $data['result'] .= "<option value=$study_mode->unique_id>$study_mode->name</option>";
         endforeach;
@@ -139,13 +139,13 @@ class CourseFormController extends Controller
         $unique_id = $this->my_unique_id();
 
         $get_id = \DB::transaction(function () use ($unique_id, $request) {
-            $ProgramTypeEnTable = new Choose_Program_Type;
+            $ProgramTypeEnTable = new ChooseProgramType();
             $ProgramTypeEnTable->setTable('choose_program_types_en');
             $ProgramTypeEnTable->unique_id = $unique_id;
             $ProgramTypeEnTable->name = $request->english_val;
             $ProgramTypeEnTable->save();
 
-            $ProgramTypeArTable = new Choose_Program_Type;
+            $ProgramTypeArTable = new ChooseProgramType();
             $ProgramTypeArTable->setTable('choose_program_types_ar');
             $ProgramTypeArTable->unique_id = $unique_id;
             $ProgramTypeArTable->name = $request->arabic_val;
@@ -170,15 +170,15 @@ class CourseFormController extends Controller
     {
         \DB::transaction(function () use ($request) {
             $locale = get_language();
-            Choose_Program_Type::whereIn('unique_id', $request->ids)->delete();
+            ChooseProgramType::whereIn('unique_id', $request->ids)->delete();
             $switch_locale = $locale == 'en' ? 'ar' : 'en';
             app()->setLocale($switch_locale);
-            Choose_Program_Type::whereIn('unique_id', $request->ids)->delete();
+            ChooseProgramType::whereIn('unique_id', $request->ids)->delete();
             app()->setLocale($locale);
         });
 
         $data['result'] = '';
-        $get_options = Choose_Program_Type::all();
+        $get_options = ChooseProgramType::all();
         foreach ($get_options as $get_option) :
             $data['result'] .= "<option value=$get_option->unique_id>$get_option->name</option>";
         endforeach;
@@ -192,13 +192,13 @@ class CourseFormController extends Controller
         $unique_id = $this->my_unique_id();
 
         $get_id = \DB::transaction(function () use ($unique_id, $request) {
-            $BranchEnTable = new Choose_Branch;
+            $BranchEnTable = new ChooseBranch();
             $BranchEnTable->setTable('choose_branches_en');
             $BranchEnTable->unique_id = $unique_id;
             $BranchEnTable->name = $request->english_val;
             $BranchEnTable->save();
 
-            $BranchArTable = new Choose_Branch;
+            $BranchArTable = new ChooseBranch();
             $BranchArTable->setTable('choose_branches_ar');
             $BranchArTable->unique_id = $unique_id;
             $BranchArTable->name = $request->arabic_val;
@@ -223,15 +223,15 @@ class CourseFormController extends Controller
     {
         \DB::transaction(function () use ($request) {
             $locale = get_language();
-            Choose_Branch::whereIn('unique_id', $request->ids)->delete();
+            ChooseBranch::whereIn('unique_id', $request->ids)->delete();
             $switch_locale = $locale == 'en' ? 'ar' : 'en';
             app()->setLocale($switch_locale);
-            Choose_Branch::whereIn('unique_id', $request->ids)->delete();
+            ChooseBranch::whereIn('unique_id', $request->ids)->delete();
             app()->setLocale($locale);
         });
 
         $data['result'] = '';
-        $get_options = Choose_Branch::all();
+        $get_options = ChooseBranch::all();
         foreach ($get_options as $get_option) :
             $data['result'] .= "<option value=$get_option->unique_id>$get_option->name</option>";
         endforeach;
@@ -245,13 +245,13 @@ class CourseFormController extends Controller
         $unique_id = $this->my_unique_id();
 
         $get_id = \DB::transaction(function () use ($unique_id, $request) {
-            $StudyTimeEnTable = new Choose_Study_Time();
+            $StudyTimeEnTable = new ChooseStudyTime();
             $StudyTimeEnTable->setTable('choose_study_times_en');
             $StudyTimeEnTable->unique_id = $unique_id;
             $StudyTimeEnTable->name = $request->english_val;
             $StudyTimeEnTable->save();
 
-            $StudyTimeArTable = new Choose_Study_Time();
+            $StudyTimeArTable = new ChooseStudyTime();
             $StudyTimeArTable->setTable('choose_study_times_ar');
             $StudyTimeArTable->unique_id = $unique_id;
             $StudyTimeArTable->name = $request->arabic_val;
@@ -276,15 +276,15 @@ class CourseFormController extends Controller
     {
         \DB::transaction(function () use ($request) {
             $locale = get_language();
-            Choose_Study_Time::whereIn('unique_id', $request->ids)->delete();
+            ChooseStudyTime::whereIn('unique_id', $request->ids)->delete();
             $switch_locale = $locale == 'en' ? 'ar' : 'en';
             app()->setLocale($switch_locale);
-            Choose_Study_Time::whereIn('unique_id', $request->ids)->delete();
+            ChooseStudyTime::whereIn('unique_id', $request->ids)->delete();
             app()->setLocale($locale);
         });
 
         $data['result'] = '';
-        $get_options = Choose_Study_Time::all();
+        $get_options = ChooseStudyTime::all();
         foreach ($get_options as $get_option) :
             $data['result'] .= "<option value=$get_option->unique_id>$get_option->name</option>";
 
@@ -299,13 +299,13 @@ class CourseFormController extends Controller
         $unique_id = $this->my_unique_id();
 
         $get_id = \DB::transaction(function () use ($unique_id, $request) {
-            $ClassesDayEnTable = new Choose_Classes_Day;
+            $ClassesDayEnTable = new ChooseClassesDay;
             $ClassesDayEnTable->setTable('choose_classes_days_en');
             $ClassesDayEnTable->unique_id = $unique_id;
             $ClassesDayEnTable->name = $request->english_val;
             $ClassesDayEnTable->save();
 
-            $ClassesDayArTable = new Choose_Classes_Day;
+            $ClassesDayArTable = new ChooseClassesDay;
             $ClassesDayArTable->setTable('choose_classes_days_ar');
             $ClassesDayArTable->unique_id = $unique_id;
             $ClassesDayArTable->name = $request->arabic_val;
@@ -330,15 +330,15 @@ class CourseFormController extends Controller
     {
         \DB::transaction(function () use ($request) {
             $locale = get_language();
-            Choose_Classes_Day::whereIn('unique_id', $request->ids)->delete();
+            ChooseClassesDay::whereIn('unique_id', $request->ids)->delete();
             $switch_locale = $locale == 'en' ? 'ar' : 'en';
             app()->setLocale($switch_locale);
-            Choose_Classes_Day::whereIn('unique_id', $request->ids)->delete();
+            ChooseClassesDay::whereIn('unique_id', $request->ids)->delete();
             app()->setLocale($locale);
         });
 
         $data['result'] = '';
-        $get_options = Choose_Classes_Day::all();
+        $get_options = ChooseClassesDay::all();
         foreach ($get_options as $get_option) :
             $data['result'] .= "<option value=$get_option->unique_id>$get_option->name</option>";
         endforeach;
@@ -352,13 +352,13 @@ class CourseFormController extends Controller
         $unique_id = $this->my_unique_id();
 
         $get_id = \DB::transaction(function () use ($unique_id, $request) {
-            $StartDayEnTable = new Choose_Start_Day;
+            $StartDayEnTable = new ChooseStartDate;
             $StartDayEnTable->setTable('choose_start_days_en');
             $StartDayEnTable->unique_id = $unique_id;
             $StartDayEnTable->name = $request->english_val;
             $StartDayEnTable->save();
 
-            $StartDayArTable = new Choose_Start_Day;
+            $StartDayArTable = new ChooseStartDate;
             $StartDayArTable->setTable('choose_start_days_ar');
             $StartDayArTable->unique_id = $unique_id;
             $StartDayArTable->name = $request->arabic_val;
@@ -383,15 +383,15 @@ class CourseFormController extends Controller
     {
         \DB::transaction(function () use ($request) {
             $locale = get_language();
-            Choose_Start_Day::whereIn('unique_id', $request->ids)->delete();
+            ChooseStartDate::whereIn('unique_id', $request->ids)->delete();
             $switch_locale = $locale == 'en' ? 'ar' : 'en';
             app()->setLocale($switch_locale);
-            Choose_Start_Day::whereIn('unique_id', $request->ids)->delete();
+            ChooseStartDate::whereIn('unique_id', $request->ids)->delete();
             app()->setLocale($locale);
         });
 
         $data['result'] = '';
-        $get_options = Choose_Start_Day::all();
+        $get_options = ChooseStartDate::all();
         foreach ($get_options as $get_option) :
             $data['result'] .= "<option value=$get_option->unique_id>$get_option->name</option>";
         endforeach;
@@ -405,13 +405,13 @@ class CourseFormController extends Controller
         $unique_id = $this->my_unique_id();
 
         $get_id = \DB::transaction(function () use ($unique_id, $request) {
-            $ProgramAgeRangeEnTable = new Choose_Program_Age_Range;
+            $ProgramAgeRangeEnTable = new ChooseProgramAge;
             $ProgramAgeRangeEnTable->setTable('choose_program_age_ranges_en');
             $ProgramAgeRangeEnTable->unique_id = $unique_id;
             $ProgramAgeRangeEnTable->age = $request->english_val;
             $ProgramAgeRangeEnTable->save();
 
-            $ProgramAgeRangeArTable = new Choose_Program_Age_Range;
+            $ProgramAgeRangeArTable = new ChooseProgramAge;
             $ProgramAgeRangeArTable->setTable('choose_program_age_ranges_ar');
             $ProgramAgeRangeArTable->unique_id = $unique_id;
             $ProgramAgeRangeArTable->age = $request->arabic_val;
@@ -436,15 +436,15 @@ class CourseFormController extends Controller
     {
         \DB::transaction(function () use ($request) {
             $locale = get_language();
-            Choose_Program_Age_Range::whereIn('unique_id', $request->ids)->delete();
+            ChooseProgramAge::whereIn('unique_id', $request->ids)->delete();
             $switch_locale = $locale == 'en' ? 'ar' : 'en';
             app()->setLocale($switch_locale);
-            Choose_Program_Age_Range::whereIn('unique_id', $request->ids)->delete();
+            ChooseProgramAge::whereIn('unique_id', $request->ids)->delete();
             app()->setLocale($locale);
         });
 
         $data['result'] = '';
-        $get_options = Choose_Program_Age_Range::all();
+        $get_options = ChooseProgramAge::all();
         foreach ($get_options as $get_option) :
             $data['result'] .= "<option value=$get_option->unique_id>$get_option->age</option>";
         endforeach;
@@ -458,13 +458,13 @@ class CourseFormController extends Controller
         $unique_id = $this->my_unique_id();
 
         $get_id = \DB::transaction(function () use ($unique_id, $request) {
-            $ProgramUnderAgeEnTable = new Choose_Program_Under_Age;
+            $ProgramUnderAgeEnTable = new ChooseProgramUnderAge;
             $ProgramUnderAgeEnTable->setTable('choose_program_under_ages_en');
             $ProgramUnderAgeEnTable->unique_id = $unique_id;
             $ProgramUnderAgeEnTable->age = $request->english_val;
             $ProgramUnderAgeEnTable->save();
 
-            $ProgramUnderAgeArTable = new Choose_Program_Under_Age;
+            $ProgramUnderAgeArTable = new ChooseProgramUnderAge;
             $ProgramUnderAgeArTable->setTable('choose_program_under_ages_ar');
             $ProgramUnderAgeArTable->unique_id = $unique_id;
             $ProgramUnderAgeArTable->age = $request->arabic_val;
@@ -489,15 +489,15 @@ class CourseFormController extends Controller
     {
         \DB::transaction(function () use ($request) {
             $locale = get_language();
-            Choose_Program_Under_Age::whereIn('unique_id', $request->ids)->delete();
+            ChooseProgramUnderAge::whereIn('unique_id', $request->ids)->delete();
             $switch_locale = $locale == 'en' ? 'ar' : 'en';
             app()->setLocale($switch_locale);
-            Choose_Program_Under_Age::whereIn('unique_id', $request->ids)->delete();
+            ChooseProgramUnderAge::whereIn('unique_id', $request->ids)->delete();
             app()->setLocale($locale);
         });
 
         $data['result'] = '';
-        $get_options = Choose_Program_Under_Age::all();
+        $get_options = ChooseProgramUnderAge::all();
         foreach ($get_options as $get_option) :
             $data['result'] .= "<option value=$get_option->unique_id>$get_option->age</option>";
         endforeach;
@@ -511,13 +511,13 @@ class CourseFormController extends Controller
         $unique_id = $this->my_unique_id();
 
         $get_id = \DB::transaction(function () use ($unique_id, $request) {
-            $AccommodationAgeRangeEnTable = new Choose_Accommodation_Age_Range;
+            $AccommodationAgeRangeEnTable = new ChooseAccommodationAge;
             $AccommodationAgeRangeEnTable->setTable('choose_accommodation_age_ranges_en');
             $AccommodationAgeRangeEnTable->unique_id = $unique_id;
             $AccommodationAgeRangeEnTable->age = $request->english_val;
             $AccommodationAgeRangeEnTable->save();
 
-            $AccommodationAgeRangeArTable = new Choose_Accommodation_Age_Range;
+            $AccommodationAgeRangeArTable = new ChooseAccommodationAge;
             $AccommodationAgeRangeArTable->setTable('choose_accommodation_age_ranges_ar');
             $AccommodationAgeRangeArTable->unique_id = $unique_id;
             $AccommodationAgeRangeArTable->age = $request->arabic_val;
@@ -542,15 +542,15 @@ class CourseFormController extends Controller
     {
         \DB::transaction(function () use ($request) {
             $locale = get_language();
-            Choose_Accommodation_Age_Range::whereIn('unique_id', $request->ids)->delete();
+            ChooseAccommodationAge::whereIn('unique_id', $request->ids)->delete();
             $switch_locale = $locale == 'en' ? 'ar' : 'en';
             app()->setLocale($switch_locale);
-            Choose_Accommodation_Age_Range::whereIn('unique_id', $request->ids)->delete();
+            ChooseAccommodationAge::whereIn('unique_id', $request->ids)->delete();
             app()->setLocale($locale);
         });
 
         $data['result'] = '';
-        $get_options = Choose_Accommodation_Age_Range::all();
+        $get_options = ChooseAccommodationAge::all();
         foreach ($get_options as $get_option) :
             $data['result'] .= "<option value=$get_option->unique_id>$get_option->age</option>";
         endforeach;
@@ -564,13 +564,13 @@ class CourseFormController extends Controller
         $unique_id = $this->my_unique_id();
 
         $get_id = \DB::transaction(function () use ($unique_id, $request) {
-            $CustodianAgeRangeEnTable = new Choose_Custodian_Under_Age;
+            $CustodianAgeRangeEnTable = new ChooseCustodianUnderAge;
             $CustodianAgeRangeEnTable->setTable('choose_custodian_under_ages_en');
             $CustodianAgeRangeEnTable->unique_id = $unique_id;
             $CustodianAgeRangeEnTable->age = $request->english_val;
             $CustodianAgeRangeEnTable->save();
 
-            $CustodianAgeRangeArTable = new Choose_Custodian_Under_Age;
+            $CustodianAgeRangeArTable = new ChooseCustodianUnderAge;
             $CustodianAgeRangeArTable->setTable('choose_custodian_under_ages_ar');
             $CustodianAgeRangeArTable->unique_id = $unique_id;
             $CustodianAgeRangeArTable->age = $request->arabic_val;
@@ -595,15 +595,15 @@ class CourseFormController extends Controller
     {
         \DB::transaction(function () use ($request) {
             $locale = get_language();
-            Choose_Custodian_Under_Age::whereIn('unique_id', $request->ids)->delete();
+            ChooseCustodianUnderAge::whereIn('unique_id', $request->ids)->delete();
             $switch_locale = $locale == 'en' ? 'ar' : 'en';
             app()->setLocale($switch_locale);
-            Choose_Custodian_Under_Age::whereIn('unique_id', $request->ids)->delete();
+            ChooseCustodianUnderAge::whereIn('unique_id', $request->ids)->delete();
             app()->setLocale($locale);
         });
 
         $data['result'] = '';
-        $get_options = Choose_Custodian_Under_Age::all();
+        $get_options = ChooseCustodianUnderAge::all();
         foreach ($get_options as $get_option) :
             $data['result'] .= "<option value=$get_option->unique_id>$get_option->age</option>";
         endforeach;
@@ -617,13 +617,13 @@ class CourseFormController extends Controller
         $unique_id = $this->my_unique_id();
 
         $get_id = \DB::transaction(function () use ($unique_id, $request) {
-            $AccommodationUnderAgeEnTable = new Choose_Accommodation_Under_Age;
+            $AccommodationUnderAgeEnTable = new ChooseAccommodationUnderAge;
             $AccommodationUnderAgeEnTable->setTable('choose_accommodation_under_ages_en');
             $AccommodationUnderAgeEnTable->unique_id = $unique_id;
             $AccommodationUnderAgeEnTable->age = $request->english_val;
             $AccommodationUnderAgeEnTable->save();
 
-            $AccommodationUnderAgeArTable = new Choose_Accommodation_Under_Age;
+            $AccommodationUnderAgeArTable = new ChooseAccommodationUnderAge;
             $AccommodationUnderAgeArTable->setTable('choose_accommodation_under_ages_ar');
             $AccommodationUnderAgeArTable->unique_id = $unique_id;
             $AccommodationUnderAgeArTable->age = $request->arabic_val;
@@ -648,15 +648,15 @@ class CourseFormController extends Controller
     {
         \DB::transaction(function () use ($request) {
             $locale = get_language();
-            Choose_Accommodation_Under_Age::whereIn('unique_id', $request->ids)->delete();
+            ChooseAccommodationUnderAge::whereIn('unique_id', $request->ids)->delete();
             $switch_locale = $locale == 'en' ? 'ar' : 'en';
             app()->setLocale($switch_locale);
-            Choose_Accommodation_Under_Age::whereIn('unique_id', $request->ids)->delete();
+            ChooseAccommodationUnderAge::whereIn('unique_id', $request->ids)->delete();
             app()->setLocale($locale);
         });
 
         $data['result'] = '';
-        $get_options = Choose_Accommodation_Under_Age::all();
+        $get_options = ChooseAccommodationUnderAge::all();
         foreach ($get_options as $get_option) :
             $data['result'] .= "<option value=$get_option->unique_id>$get_option->age</option>";
         endforeach;

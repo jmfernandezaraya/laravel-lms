@@ -93,6 +93,7 @@ class CourseCreateService
         $course['language'] = $request->language;
         $course['program_type'] = $request->program_type;
         $course['study_mode'] = $request->study_mode;
+        $course['link_fee_enable'] = $request->link_fee_enable;
         $course['school_id'] = 0;
         $language = app()->getLocale();
         $course_school = School::whereHas('name', function($query) use ($request, $language)
@@ -131,7 +132,9 @@ class CourseCreateService
                     $course_program = new CourseProgram;
                     $course_program->course_unique_id = $course_id;
                     $course_program->unique_id = $request->program_id[$count];
-                    $course_program->program_name = null;
+                    $course_program->link_fee = $request->link_fee[$count];
+                    $course_program->tax_percent = $request->tax_percent[$count];
+                    $course_program->bank_transfer_fee = $request->bank_transfer_fee[$count];
                     $course_program->program_registration_fee = $request->program_registration_fee[$count];
                     $course_program->program_duration = $request->program_duration[$count] ?? null;
                     $course_program->program_age_range = $request->age_range[$count] ?? null;
@@ -195,6 +198,7 @@ class CourseCreateService
         $new_course['language'] = $course->language;
         $new_course['program_type'] = $course->program_type;
         $new_course['study_mode'] = $course->study_mode;
+        $new_course['link_fee_enable'] = $course->link_fee_enable;
         $new_course['school_id'] = $course->school_id;
         $new_course['country_id'] = $course->country_id;
         $new_course['city_id'] = $course->city_id;
@@ -231,7 +235,9 @@ class CourseCreateService
             $new_course_program = new CourseProgram;
             $new_course_program->course_unique_id = $course_id;
             $new_course_program->unique_id = $course_program_id;
-            $new_course_program->program_name = null;
+            $new_course_program->link_fee = $course_program->link_fee;
+            $new_course_program->tax_percent = $course_program->tax_percent;
+            $new_course_program->bank_transfer_fee = $course_program->bank_transfer_fee;
             $new_course_program->program_registration_fee = $course_program->program_registration_fee;
             $new_course_program->program_duration = $course_program->program_duration ?? null;
             $new_course_program->program_age_range = $course_program->program_age_range ?? null;
@@ -271,6 +277,9 @@ class CourseCreateService
             $new_course_program->peak_time_start_date = $course_program->program_peak_time_start_date;
             $new_course_program->peak_time_end_date = $course_program->program_peak_time_end_date;
 
+            $new_course_program->text_book_note = $course_program->text_book_note;
+            $new_course_program->text_book_note_ar = $course_program->text_book_note_ar;
+
             $new_course_program->order = $course_program->order;
 
             $new_course_program->save();
@@ -295,8 +304,6 @@ class CourseCreateService
                 $new_course_text_book_fee->text_book_start_date = $course_text_book_fee->text_book_start_date;
                 $new_course_text_book_fee->text_book_end_date = $course_text_book_fee->text_book_end_date;
                 $new_course_text_book_fee->text_book_fee_type = $course_text_book_fee->text_book_fee_type;
-                $new_course_text_book_fee->text_book_note = $course_text_book_fee->text_book_note;
-                $new_course_text_book_fee->text_book_note_ar = $course_text_book_fee->text_book_note_ar;
 
                 CourseProgramTextBookFee::create($new_course_text_book_fee);
             }
@@ -445,7 +452,6 @@ class CourseCreateService
             'program_id.*' => 'required',
             'text_book_fee_start_date.*' => 'required',
             'text_book_fee_end_date.*' => 'required',
-            'text_book_note.*' => 'required',
         ];
 
         /*
@@ -455,7 +461,6 @@ class CourseCreateService
             'program_id.*.required' => "Program ID is required",
             'text_book_fee_start_date.*.required' => "Text Book Fee Start Date is required",
             'text_book_fee_end_date.*.required' => "Text Book Fee End Date is required",
-            'text_book_note.*.required' => "Text Book Note is required",
         ]);
 
         if ($validation->fails()) {
@@ -466,6 +471,11 @@ class CourseCreateService
             extract($request->all());
 
             for ($program_index = 0; $program_index < count($program_id); $program_index++) {
+                $course_program = CourseProgram::where('unique_id', $program_id[$program_index])->first();
+                $course_program->text_book_note = $text_book_note[$program_index] ?? null;
+                $course_program->text_book_note_ar = $text_book_note_ar[$program_index] ?? null;
+                $course_program->save();
+
                 for ($under_age_index = 0; $under_age_index <= $underagefeeincrement; $under_age_index++) {
                     $new_course_program_under_age_fee = new CourseProgramUnderAgeFee();
                     $new_course_program_under_age_fee->course_program_id = $program_id[$program_index];
@@ -481,8 +491,6 @@ class CourseCreateService
                     $new_course_program_text_book->text_book_start_date = $text_book_fee_start_date[$text_book_fee_index];
                     $new_course_program_text_book->text_book_end_date = $text_book_fee_end_date[$text_book_fee_index];
                     $new_course_program_text_book->text_book_fee_type = $text_book_fee_type[$text_book_fee_index] ?? null;
-                    $new_course_program_text_book->text_book_note = $text_book_note[$text_book_fee_index] ?? null;
-                    $new_course_program_text_book->text_book_note_ar = $text_book_note_ar[$text_book_fee_index] ?? null;
                     $new_course_program_text_book->save();
                 }
             }
@@ -782,6 +790,7 @@ class CourseCreateService
             $course->language = $request->language;
             $course->program_type = $request->program_type ?? [];
             $course->study_mode = $request->study_mode;
+            $course->link_fee_enable = $request->link_fee_enable;
             $course->school_id = 0;
             $language = app()->getLocale();
             $course_school = School::whereHas('name', function($query) use ($request, $language)
@@ -830,7 +839,9 @@ class CourseCreateService
                         }
                     }
                     $course_program->course_unique_id = '' . $course_id;
-                    $course_program->program_name = null;
+                    $course_program->link_fee = $request->link_fee[$count];
+                    $course_program->tax_percent = $request->tax_percent[$count];
+                    $course_program->bank_transfer_fee = $request->bank_transfer_fee[$count];
                     $course_program->program_registration_fee = $request->program_registration_fee[$count];
                     $course_program->program_duration = $request->program_duration[$count] ?? null;
                     $course_program->program_age_range = $request->age_range[$count] ?? null;
@@ -899,7 +910,6 @@ class CourseCreateService
             'program_id' => 'required',
             'text_book_fee_start_date.*' => 'required',
             'text_book_fee_end_date.*' => 'required',
-            'text_book_note.*' => 'required',
         ];
 
         /*
@@ -909,7 +919,6 @@ class CourseCreateService
             'program_id.required' => "Program ID is required",
             'text_book_fee_start_date.*.required' => "Text Book Fee Start Date is required",
             'text_book_fee_end_date.*.required' => "Text Book Fee End Date is required",
-            'text_book_note.*.required' => "Text Book Note is required",
         ]);
 
         if ($validation->fails()) {
@@ -917,6 +926,11 @@ class CourseCreateService
         }
 
         extract($request->all());
+        
+        $course_program = CourseProgram::where('unique_id', $program_id)->first();
+        $course_program->text_book_note = $text_book_note;
+        $course_program->text_book_note_ar = $text_book_note_ar;
+        $course_program->save();
 
         $program_under_age_fee_ids = [];
         for ($under_age_fee_index = 0; $under_age_fee_index <= (int)$underagefeeincrement; $under_age_fee_index++) {
@@ -954,8 +968,6 @@ class CourseCreateService
             $program_text_book_fee->text_book_start_date = $text_book_fee_start_date[$text_book_fee_index];
             $program_text_book_fee->text_book_end_date = $text_book_fee_end_date[$text_book_fee_index];
             $program_text_book_fee->text_book_fee_type = $text_book_fee_type[$text_book_fee_index] ?? null;
-            $program_text_book_fee->text_book_note = $text_book_note[$text_book_fee_index];
-            $program_text_book_fee->text_book_note_ar = $text_book_note_ar[$text_book_fee_index];
             $program_text_book_fee->save();
             $program_text_book_fee_ids[] = $program_text_book_fee->id;
         }

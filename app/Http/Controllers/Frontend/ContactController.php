@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ContactUsRequest;
-use App\Mail\ContactUs;
+
 use App\Models\Frontend\ContactUs;
+
+use App\Mail\EmailTemplate;
 
 /**
  * Class ContactController
@@ -29,8 +31,10 @@ class ContactController extends Controller
         $contactUs = new ContactUs;
         $contactUs->fill($request->validated())->save();
 
-        \Mail::to(env('MAIL_TO_ADDRESS'))->send(new ContactUs($request, app()->getLocale()));
+        setEmailTemplateSMTP('contact_us');
+        \Mail::to(env('MAIL_TO_ADDRESS'))->send(new EmailTemplate('contact_us', $request, app()->getLocale()));
+        unsetEmailTemplateSMTP();
 
-        return "Will Contact You Shortly";
+        return __('Frontend.contact_us_successfully');
     }
 }

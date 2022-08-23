@@ -435,6 +435,11 @@ i.fa.fa-trash {
     color: #b94443;
 }
 
+.form-group span.multiselect-native-select {
+    display: block;
+    margin-top: 0.1rem!important;
+}
+
 .form-check {
     position: relative;
     display: block;

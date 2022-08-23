@@ -166,6 +166,88 @@
             $(object).parent().parent().remove();
         }
     }
+    
+    var course_choose_clone = 0;
+    function addCourseChooseForm(object) {
+        course_choose_clone++;
+        var course_choose_form = object.closest(".clone");
+        var course_choose_clone_index = parseInt($(course_choose_form).attr('id').replace("course_choose_clone", ""));
+        $('#course_choose_increment').val(course_choose_clone);
+        var new_clone_form = $(course_choose_form).clone(true);
+        new_clone_form.attr('id', 'course_choose_clone' + (course_choose_clone_index + 1));
+        $(new_clone_form).find('[name="course_choose_id[]"]').val('');
+        var course_choose_forms = $(".course-choose-clone");
+        for (var course_choose_index = 0; course_choose_index < course_choose_forms.length; course_choose_index++) {
+            var clone_course_choose_index = parseInt($(course_choose_forms[course_choose_index]).attr('id').replace("course_choose_clone", ""));
+            if (clone_course_choose_index > course_choose_clone_index) {
+                $(course_choose_forms[course_choose_index]).attr('id', 'course_choose_clone' + (clone_course_choose_index + 1));
+                $(course_choose_forms[course_choose_index]).find('[name="name[' + clone_course_choose_index + '][]"]').attr('name', 'name[' + (clone_course_choose_index + 1) + '][]');
+                $(course_choose_forms[course_choose_index]).find('[name="name_ar[' + clone_course_choose_index + '][]"]').attr('name', 'name_ar[' + (clone_course_choose_index + 1) + '][]');
+            }
+        }
+
+        $(new_clone_form).find('[name="name[]"]').val('');
+        $(new_clone_form).find('[name="name_ar[]"]').val('');
+        $(new_clone_form).find('.fa.fa-minus').removeClass('hide');
+        new_clone_form.insertAfter($(course_choose_form));
+    }
+
+    function deleteCourseChooseForm(object) {
+        var course_choose_form = object.closest(".clone");
+        var course_choose_clone_index = parseInt($(course_choose_form).attr('id').replace("course_choose_clone", ""));
+        $(course_choose_form).remove();
+        var course_choose_forms = $(".course-choose-clone");
+        for (var course_choose_index = 0; course_choose_index < course_choose_forms.length; course_choose_index++) {
+            var clone_course_choose_index = parseInt($(course_choose_forms[course_choose_index]).attr('id').replace("course_choose_clone", ""));
+            if (clone_course_choose_index > course_choose_clone_index) {
+                $(course_choose_forms[course_choose_index]).attr('id', 'course_choose_clone' + (clone_course_choose_index - 1));
+                $(course_choose_forms[course_choose_index]).find('[name="course_choose_id[' + clone_course_choose_index + '][]"]').attr('id', 'course_choose_id' + (clone_course_choose_index - 1));
+            }
+        }
+        course_choose_clone--;
+        $('#course_choose_increment').val(course_choose_clone);
+    }
+    
+    var course_choose_age_clone = 0;
+    function addCourseChooseAgeForm(object) {
+        course_choose_age_clone++;
+        var course_choose_age_form = object.closest(".clone");
+        var course_choose_age_clone_index = parseInt($(course_choose_age_form).attr('id').replace("course_choose_age_clone", ""));
+        $('#course_choose_age_increment').val(course_choose_age_clone);
+        var new_clone_form = $(course_choose_age_form).clone(true);
+        new_clone_form.attr('id', 'course_choose_age_clone' + (course_choose_age_clone_index + 1));
+        $(new_clone_form).find('[name="course_choose_age_id[]"]').val('');
+        var course_choose_age_forms = $(".course-choose-age-clone");
+        for (var course_choose_age_index = 0; course_choose_age_index < course_choose_age_forms.length; course_choose_age_index++) {
+            var clone_course_choose_age_index = parseInt($(course_choose_age_forms[course_choose_age_index]).attr('id').replace("course_choose_age_clone", ""));
+            if (clone_course_choose_age_index > course_choose_age_clone_index) {
+                $(course_choose_age_forms[course_choose_age_index]).attr('id', 'course_choose_age_clone' + (clone_course_choose_age_index + 1));
+                $(course_choose_age_forms[course_choose_age_index]).find('[name="age[' + clone_course_choose_age_index + '][]"]').attr('age', 'age[' + (clone_course_choose_age_index + 1) + '][]');
+                $(course_choose_age_forms[course_choose_age_index]).find('[name="age_ar[' + clone_course_choose_age_index + '][]"]').attr('name', 'age_ar[' + (clone_course_choose_age_index + 1) + '][]');
+            }
+        }
+
+        $(new_clone_form).find('[name="age[]"]').val('');
+        $(new_clone_form).find('[name="age_ar[]"]').val('');
+        $(new_clone_form).find('.fa.fa-minus').removeClass('hide');
+        new_clone_form.insertAfter($(course_choose_age_form));
+    }
+
+    function deleteCourseChooseAgeForm(object) {
+        var course_choose_age_form = object.closest(".clone");
+        var course_choose_age_clone_index = parseInt($(course_choose_age_form).attr('id').replace("course_choose_age_clone", ""));
+        $(course_choose_age_form).remove();
+        var course_choose_age_forms = $(".course-choose-age-clone");
+        for (var course_choose_age_index = 0; course_choose_age_index < course_choose_age_forms.length; course_choose_age_index++) {
+            var clone_course_choose_age_index = parseInt($(course_choose_age_forms[course_choose_age_index]).attr('id').replace("course_choose_age_clone", ""));
+            if (clone_course_choose_age_index > course_choose_age_clone_index) {
+                $(course_choose_age_forms[course_choose_age_index]).attr('id', 'course_choose_age_clone' + (clone_course_choose_age_index - 1));
+                $(course_choose_age_forms[course_choose_age_index]).find('[name="course_choose_age_id[' + clone_course_choose_age_index + '][]"]').attr('id', 'course_choose_age_id' + (clone_course_choose_age_index - 1));
+            }
+        }
+        course_choose_age_clone--;
+        $('#course_choose_age_increment').val(course_choose_age_clone);
+    }
 
     /*
     * Function for Course Program
@@ -197,6 +279,9 @@
         var course_program_id = ((new Date()).getTime()).toString();
         $(new_clone_form).find('[name="program_id[]"]').val(course_program_id);
         $(new_clone_form).find('[name="program_id[]"]').attr('id', 'program_id' + (course_program_clone_index + 1));
+        $(new_clone_form).find('[name="link_fee[]"]').val('');
+        $(new_clone_form).find('[name="tax_percent[]"]').val('');
+        $(new_clone_form).find('[name="bank_transfer_fee[]"]').val('');
         $(new_clone_form).find('[name="program_registration_fee[]"]').val('');
         $(new_clone_form).find('[name="program_duration[]"]').val('');
         $(new_clone_form).find('[name="deposit[]"]').val('');
@@ -346,10 +431,6 @@
             var clone_course_program_text_book_index = parseInt($(clone_course_program_text_book_forms[course_program_text_book_index]).attr('id').replace("text_book_fee_clone", ""));
             if (clone_course_program_text_book_index > program_text_book_clone_index) {
                 $(clone_course_program_text_book_forms[course_program_text_book_index]).attr('id', 'text_book_fee_clone' + (clone_course_program_text_book_index + 1));
-                $(clone_course_program_text_book_forms[course_program_text_book_index]).find('[name="text_book_note[]"]').attr('id', 'text_book_note' + (clone_course_program_text_book_index + 1));
-                $(clone_course_program_text_book_forms[course_program_text_book_index]).find('#cke_text_book_note' + clone_course_program_text_book_index).attr('id', 'cke_text_book_note' + (clone_course_program_text_book_index + 1));
-                $(clone_course_program_text_book_forms[course_program_text_book_index]).find('[name="text_book_note_ar[]"]').attr('id', 'text_book_note_ar' + (clone_course_program_text_book_index + 1));
-                $(clone_course_program_text_book_forms[course_program_text_book_index]).find('#cke_text_book_note_ar' + clone_course_program_text_book_index).attr('id', 'cke_text_book_note_ar' + (clone_course_program_text_book_index + 1));
             }
         }
 
@@ -360,17 +441,8 @@
         $(new_clone_form).find('[name="text_book_fee_start_date[]"]').val('');
         $(new_clone_form).find('[name="text_book_fee_end_date[]"]').val('');
         $(new_clone_form).find('[name="text_book_fee_type[]"]').val('fixed_cost');
-        $(new_clone_form).find('[name="text_book_note[]"]').attr('id', 'text_book_note' + (program_text_book_clone_index + 1));
-        $(new_clone_form).find('[name="text_book_note[]"]').text('');
-        $(new_clone_form).find('#cke_text_book_note' + program_text_book_clone_index).remove();
-        $(new_clone_form).find('[name="text_book_note_ar[]"]').attr('id', 'text_book_note_ar' + (program_text_book_clone_index + 1));
-        $(new_clone_form).find('[name="text_book_note_ar[]"]').text('');
-        $(new_clone_form).find('#cke_text_book_note_ar' + program_text_book_clone_index).remove();
 
         new_clone_form.insertAfter($(clone_program_text_book_form));
-
-        initCkeditor('text_book_note' + (program_text_book_clone_index + 1));
-        initCkeditor('text_book_note_ar' + (program_text_book_clone_index + 1));
     }
 
     function removeTextBookFee(object) {
@@ -382,8 +454,6 @@
             var clone_course_program_text_book_index = parseInt($(clone_course_program_text_book_forms[course_program_text_book_index]).attr('id').replace("text_book_fee_clone", ""));
             if (clone_course_program_text_book_index > program_text_book_clone_index) {
                 $(clone_course_program_text_book_forms[course_program_text_book_index]).attr('id', 'text_book_fee_clone' + (clone_course_program_text_book_index - 1));
-                $(clone_course_program_text_book_forms[course_program_text_book_index]).find('[name="text_book_note[]"]').attr('id', 'text_book_note' + (clone_course_program_text_book_index - 1));
-                $(clone_course_program_text_book_forms[course_program_text_book_index]).find('[name="text_book_note_ar[]"]').attr('id', 'text_book_note_ar' + (clone_course_program_text_book_index - 1));
             }
         }
         program_text_book_clone--;
@@ -590,27 +660,34 @@
         }
         var airport_fees = $(new_clone_form).find('.airport-fee-clone');
         for (var airport_fee_index = 0; airport_fee_index < airport_fees.length; airport_fee_index++) {
+            $(airport_fees[airport_fee_index]).attr('id', 'airport' + (airport_clone_index + 1) + '_fee_clone' + airport_fee_index);
+            $(airport_fees[airport_fee_index]).find('[name="airport_fee_id[' + airport_clone_index + '][]"]').attr('name', 'airport_fee_id[' + (airport_clone_index + 1) + '][]');
+            $(airport_fees[airport_fee_index]).find('[name="airport_name[' + airport_clone_index + '][]"]').attr('name', 'airport_name[' + (airport_clone_index + 1) + '][]');
+            $(airport_fees[airport_fee_index]).find('[name="airport_name_ar[' + airport_clone_index + '][]"]').attr('name', 'airport_name_ar[' + (airport_clone_index + 1) + '][]');
+            $(airport_fees[airport_fee_index]).find('[name="airport_service_name[' + airport_clone_index + '][]"]').attr('name', 'airport_service_name[' + (airport_clone_index + 1) + '][]');
+            $(airport_fees[airport_fee_index]).find('[name="airport_service_name_ar[' + airport_clone_index + '][]"]').attr('name', 'airport_service_name_ar[' + (airport_clone_index + 1) + '][]');
+            $(airport_fees[airport_fee_index]).find('[name="airport_service_fee[' + airport_clone_index + '][]"]').attr('name', 'airport_service_fee[' + (airport_clone_index + 1) + '][]');
             if (airport_fee_index == 0) {
-                $(airport_fees[airport_fee_index]).attr('id', 'airport' + (airport_clone_index + 1) + '_fee_clone0');
-                $(airport_fees[airport_fee_index]).find('[name="airport_fee_id[' + airport_clone_index + '][]"]').attr('name', 'airport_fee_id[' + (airport_clone_index + 1) + '][]').val('');
-                $(airport_fees[airport_fee_index]).find('[name="airport_name[' + airport_clone_index + '][]"]').attr('name', 'airport_name[' + (airport_clone_index + 1) + '][]').val('');
-                $(airport_fees[airport_fee_index]).find('[name="airport_name_ar[' + airport_clone_index + '][]"]').attr('name', 'airport_name_ar[' + (airport_clone_index + 1) + '][]').val('');
-                $(airport_fees[airport_fee_index]).find('[name="airport_service_name[' + airport_clone_index + '][]"]').attr('name', 'airport_service_name[' + (airport_clone_index + 1) + '][]').val('');
-                $(airport_fees[airport_fee_index]).find('[name="airport_service_name_ar[' + airport_clone_index + '][]"]').attr('name', 'airport_service_name_ar[' + (airport_clone_index + 1) + '][]').val('');
-                $(airport_fees[airport_fee_index]).find('[name="airport_service_fee[' + airport_clone_index + '][]"]').attr('name', 'airport_service_fee[' + (airport_clone_index + 1) + '][]').val('');
+                // $(airport_fees[airport_fee_index]).attr('id', 'airport' + (airport_clone_index + 1) + '_fee_clone0');
+                // $(airport_fees[airport_fee_index]).find('[name="airport_fee_id[' + airport_clone_index + '][]"]').attr('name', 'airport_fee_id[' + (airport_clone_index + 1) + '][]').val('');
+                // $(airport_fees[airport_fee_index]).find('[name="airport_name[' + airport_clone_index + '][]"]').attr('name', 'airport_name[' + (airport_clone_index + 1) + '][]').val('');
+                // $(airport_fees[airport_fee_index]).find('[name="airport_name_ar[' + airport_clone_index + '][]"]').attr('name', 'airport_name_ar[' + (airport_clone_index + 1) + '][]').val('');
+                // $(airport_fees[airport_fee_index]).find('[name="airport_service_name[' + airport_clone_index + '][]"]').attr('name', 'airport_service_name[' + (airport_clone_index + 1) + '][]').val('');
+                // $(airport_fees[airport_fee_index]).find('[name="airport_service_name_ar[' + airport_clone_index + '][]"]').attr('name', 'airport_service_name_ar[' + (airport_clone_index + 1) + '][]').val('');
+                // $(airport_fees[airport_fee_index]).find('[name="airport_service_fee[' + airport_clone_index + '][]"]').attr('name', 'airport_service_fee[' + (airport_clone_index + 1) + '][]').val('');
             } else {
-                $(airport_fees[airport_fee_index]).remove();
+                // $(airport_fees[airport_fee_index]).remove();
             }
         }
 
-        $(new_clone_form).find('[name="airport_service_provider[]"]').val('');
-        $(new_clone_form).find('[name="airport_service_provider_ar[]"]').val('');
-        $(new_clone_form).find('[name="airport_week_selected_fee[]"]').val('');
+        // $(new_clone_form).find('[name="airport_service_provider[]"]').val('');
+        // $(new_clone_form).find('[name="airport_service_provider_ar[]"]').val('');
+        // $(new_clone_form).find('[name="airport_week_selected_fee[]"]').val('');
         $(new_clone_form).find('[name="airport_note[]"]').attr('id', 'airport_note' + (airport_clone_index + 1));
-        $(new_clone_form).find('[name="airport_note[]"]').text('');
+        // $(new_clone_form).find('[name="airport_note[]"]').text('');
         $(new_clone_form).find('#cke_airport_note' + airport_clone_index).remove();
         $(new_clone_form).find('[name="airport_note_ar[]"]').attr('id', 'airport_note_ar' + (airport_clone_index + 1));
-        $(new_clone_form).find('[name="airport_note_ar[]"]').text('');
+        // $(new_clone_form).find('[name="airport_note_ar[]"]').text('');
         $(new_clone_form).find('#cke_airport_note_ar' + airport_clone_index).remove();
         new_clone_form.insertAfter($(clone_airport_form));
         
@@ -717,26 +794,31 @@
         }
         var medical_fees = $(new_clone_form).find('.medical-fee-clone');
         for (var medical_fee_index = 0; medical_fee_index < medical_fees.length; medical_fee_index++) {
+            $(medical_fees[medical_fee_index]).attr('id', 'medical' + (medical_clone_index + 1) + '_fee_clone' + medical_fee_index);
+            $(medical_fees[medical_fee_index]).find('[name="medical_fee_id[' + medical_clone_index + '][]"]').attr('name', 'medical_fee_id[' + (medical_clone_index + 1) + '][]');
+            $(medical_fees[medical_fee_index]).find('[name="medical_fees_per_week[' + medical_clone_index + '][]"]').attr('name', 'medical_fees_per_week[' + (medical_clone_index + 1) + '][]');
+            $(medical_fees[medical_fee_index]).find('[name="medical_start_date[' + medical_clone_index + '][]"]').attr('name', 'medical_start_date[' + (medical_clone_index + 1) + '][]');
+            $(medical_fees[medical_fee_index]).find('[name="medical_end_date[' + medical_clone_index + '][]"]').attr('name', 'medical_end_date[' + (medical_clone_index + 1) + '][]');
             if (medical_fee_index == 0) {
-                $(medical_fees[medical_fee_index]).attr('id', 'medical' + (medical_clone_index + 1) + '_fee_clone0');
-                $(medical_fees[medical_fee_index]).find('[name="medical_fee_id[' + medical_clone_index + '][]"]').attr('name', 'medical_fee_id[' + (medical_clone_index + 1) + '][]').val('');
-                $(medical_fees[medical_fee_index]).find('[name="medical_fees_per_week[' + medical_clone_index + '][]"]').attr('name', 'medical_fees_per_week[' + (medical_clone_index + 1) + '][]').val('');
-                $(medical_fees[medical_fee_index]).find('[name="medical_start_date[' + medical_clone_index + '][]"]').attr('name', 'medical_start_date[' + (medical_clone_index + 1) + '][]').val('');
-                $(medical_fees[medical_fee_index]).find('[name="medical_end_date[' + medical_clone_index + '][]"]').attr('name', 'medical_end_date[' + (medical_clone_index + 1) + '][]').val('');
+                // $(medical_fees[medical_fee_index]).attr('id', 'medical' + (medical_clone_index + 1) + '_fee_clone0');
+                // $(medical_fees[medical_fee_index]).find('[name="medical_fee_id[' + medical_clone_index + '][]"]').attr('name', 'medical_fee_id[' + (medical_clone_index + 1) + '][]').val('');
+                // $(medical_fees[medical_fee_index]).find('[name="medical_fees_per_week[' + medical_clone_index + '][]"]').attr('name', 'medical_fees_per_week[' + (medical_clone_index + 1) + '][]').val('');
+                // $(medical_fees[medical_fee_index]).find('[name="medical_start_date[' + medical_clone_index + '][]"]').attr('name', 'medical_start_date[' + (medical_clone_index + 1) + '][]').val('');
+                // $(medical_fees[medical_fee_index]).find('[name="medical_end_date[' + medical_clone_index + '][]"]').attr('name', 'medical_end_date[' + (medical_clone_index + 1) + '][]').val('');
             } else {
-                $(medical_fees[medical_fee_index]).remove();
+                // $(medical_fees[medical_fee_index]).remove();
             }
         }
 
-        $(new_clone_form).find('[name="medical_company_name[]"]').val('');
-        $(new_clone_form).find('[name="medical_company_name_ar[]"]').val('');
-        $(new_clone_form).find('[name="medical_deductible[]"]').val('');
-        $(new_clone_form).find('[name="medical_week_selected_fee[]"]').val('');
+        // $(new_clone_form).find('[name="medical_company_name[]"]').val('');
+        // $(new_clone_form).find('[name="medical_company_name_ar[]"]').val('');
+        // $(new_clone_form).find('[name="medical_deductible[]"]').val('');
+        // $(new_clone_form).find('[name="medical_week_selected_fee[]"]').val('');
         $(new_clone_form).find('[name="medical_note[]"]').attr('id', 'medical_note' + (medical_clone_index + 1));
-        $(new_clone_form).find('[name="medical_note[]"]').text('');
+        // $(new_clone_form).find('[name="medical_note[]"]').text('');
         $(new_clone_form).find('#cke_medical_note' + medical_clone_index).remove();
         $(new_clone_form).find('[name="medical_note_ar[]"]').attr('id', 'medical_note_ar' + (medical_clone_index + 1));
-        $(new_clone_form).find('[name="medical_note_ar[]"]').text('');
+        // $(new_clone_form).find('[name="medical_note_ar[]"]').text('');
         $(new_clone_form).find('#cke_medical_note_ar' + medical_clone_index).remove();
 
         new_clone_form.insertAfter($(clone_medical_form));
@@ -1696,6 +1778,22 @@
             $('.visa-application-permissions').show();
         } else {
             $('.visa-application-permissions').hide();
+        }
+    });
+    
+    $('#payment_permission').change(function() {
+        if ($('#payment_permission').val() == 'subscriber') {
+            $('.payment-permissions').show();
+        } else {
+            $('.payment-permissions').hide();
+        }
+    });
+    
+    $('#email_template_permission').change(function() {
+        if ($('#email_template_permission').val() == 'subscriber') {
+            $('.email-template-permissions').show();
+        } else {
+            $('.email-template-permissions').hide();
         }
     });
 

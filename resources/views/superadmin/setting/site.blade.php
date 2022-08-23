@@ -43,11 +43,15 @@
                     {{csrf_field()}}
 
                     <div class="row">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-4">
+                            <label><h4>{{__('Admin/backend.location')}}</h4></label>
+                            <input name="location" type="text" class="form-control" value="{{ isset($setting_value['location']) ? $setting_value['location'] : '' }}" />
+                        </div>
+                        <div class="form-group col-md-4">
                             <label><h4>{{__('Admin/backend.email')}}</h4></label>
                             <input name="email" type="email" class="form-control" value="{{ isset($setting_value['email']) ? $setting_value['email'] : '' }}" />
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-4">
                             <label><h4>{{__('Admin/backend.phone_number')}}</h4></label>
                             <input name="phone" type="text" class="form-control" value="{{ isset($setting_value['phone']) ? $setting_value['phone'] : '' }}" />
                         </div>
@@ -85,6 +89,17 @@
                         <div class="form-group col-md-4">
                             <label><h4>{{__('Admin/backend.default_sender_email')}}</h4></label>
                             <input name="smtp_default_sender_email" type="email" class="form-control" value="{{ isset($setting_value['smtp']['default_sender_email']) ? $setting_value['smtp']['default_sender_email'] : '' }}" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label><h4>{{__('Admin/backend.default_sender_email')}}</h4></label>
+                            <div class="english">
+                                <input name="smtp_default_sender_name" type="text" class="form-control" value="{{ isset($setting_value['smtp']['default_sender_name']) ? $setting_value['smtp']['default_sender_name'] : '' }}" />
+                            </div>
+                            <div class="arabic">
+                                <input name="smtp_default_sender_name_ar" type="text" class="form-control" value="{{ isset($setting_value['smtp']['default_sender_name_ar']) ? $setting_value['smtp']['default_sender_name_ar'] : '' }}" />
+                            </div>
                         </div>
                     </div>
 

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 
 use App\Classes\ImageSaverToStorage;
 
-use App\Models\Country;
+use App\Models\SuperAdmin\Country;
 use App\Models\FrontPage;
 use App\Models\Setting;
 use App\Models\SuperAdmin\Course;
@@ -16,6 +16,7 @@ use App\Models\SuperAdmin\School;
 use Carbon\Carbon;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Class SettingController
@@ -299,6 +300,7 @@ class SettingController extends Controller
             $site_setting_value = unserialize($site->setting_value);
         }
         $setting_value = [
+            'location' => $request->location,
             'email' => $request->email,
             'phone' => $request->phone,
             'smtp' => [
@@ -308,6 +310,8 @@ class SettingController extends Controller
                 'port' => $request->smtp_port,
                 'crypto' => $request->smtp_crypto,
                 'default_sender_email' => $request->smtp_default_sender_email,
+                'default_sender_name' => $request->smtp_default_sender_name,
+                'default_sender_name_ar' => $request->smtp_default_sender_name_ar,
             ],
             'newsletter' => [
                 'title' => $request->newsletter_title,
@@ -337,8 +341,7 @@ class SettingController extends Controller
         Config::set('mail.mailers.smtp.username', $setting_value['smtp']['user_name']);
         Config::set('mail.mailers.smtp.password', $setting_value['smtp']['password']);
         Config::set('mail.mailers.smtp.port', $setting_value['smtp']['port']);
-        Config::set('mail.mailers.smtp.encryption', $setting_value['smtp']['crypto']);
-        
+        Config::set('mail.mailers.smtp.encryption', $setting_value['smtp']['crypto']);        
 
         if (isset($request->social_twitter)) {
             $setting_value['social']['twitter'] = $request->social_twitter;

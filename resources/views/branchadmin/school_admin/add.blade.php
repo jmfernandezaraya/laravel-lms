@@ -29,28 +29,28 @@
 						</div>
 
 						<div class="form-group">
-							<label for="exampleInputName1">{{__('Admin/backend.first_name')}}</label>
-							<input name="first_name_en" type="text" class="form-control" id="exampleInputName1" placeholder="First Name" value="{{old('first_name')}}">
+							<label for="first_name">{{__('Admin/backend.first_name')}}</label>
+							<input name="first_name_en" type="text" class="form-control" id="first_name" placeholder="First Name" value="{{old('first_name')}}">
 						</div>
 
 						<div class="form-group">
-							<label for="exampleInputEmail3">{{__('Admin/backend.last_name')}}</label>
-							<input value="{{old('last_name')}}" name="last_name_en" type="text" class="form-control" id="exampleInputEmail3" placeholder="Last Name">
+							<label for="last_name">{{__('Admin/backend.last_name')}}</label>
+							<input value="{{old('last_name')}}" name="last_name_en" type="text" class="form-control" id="last_name" placeholder="Last Name">
 						</div>
 
 						<div class="form-group">
-							<label for="exampleInputEmail3">{{__('Admin/backend.email_address')}}</label>
-							<input value="{{old('email')}}" name="email" type="email" class="form-control" id="exampleInputEmail3" placeholder="Email address">
+							<label for="email">{{__('Admin/backend.email_address')}}</label>
+							<input value="{{old('email')}}" name="email" type="email" class="form-control" id="email" placeholder="Email address">
 						</div>
 
 						<div class="form-group">
-							<label for="exampleInputEmail3">{{__('Admin/backend.enter_password')}}</label>
-							<input  name="password" type="password" class="form-control" id="exampleInputEmail3" value="{{old('password')}}" placeholder="Set Password">
+							<label for="password">{{__('Admin/backend.enter_password')}}</label>
+							<input  name="password" type="password" class="form-control" id="password" value="{{old('password')}}" placeholder="Set Password">
 						</div>
 
 						<div class="form-group">
-							<label for="exampleSelectGender">{{__('Admin/backend.contact_no')}}</label>
-							<input value="{{old('contact')}}" name="contact" class="form-control" id="exampleSelectGender" placeholder = "School Contact Number" type="number">
+							<label for="telephone">{{__('Admin/backend.telephone')}}</label>
+							<input value="{{old('telephone')}}" name="telephone" class="form-control" id="telephone" placeholder="School Telephone" type="number">
 						</div>
 
 						<img src="{{ asset('/assets/images/no-image.jpg') }}" id="previewImg" alt="Uploaded Image Preview Holder" width="550px" height="250px"

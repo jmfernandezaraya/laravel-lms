@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Models;
-
-use App\Models\Country;
+namespace App\Models\SuperAdmin;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SchoolName extends Model
+class ChooseProgramUnderAge extends Model
 {
     use HasFactory;
+
+    protected $primaryKey = 'unique_id';
 }

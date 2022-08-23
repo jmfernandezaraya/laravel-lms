@@ -416,12 +416,7 @@
                                     <input value="{{ $custodian->fee }}" class="form-control" type="number" name="custodian_fee[]" placeholder="{{__('Admin/backend.custodian_fee')}}">
                                 </div>
                                 <div class="form-group col-md-4 custodian_age_range">
-                                    <label>
-                                        {{__('Admin/backend.age_range')}}
-                                        <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#CustodianAgeRangeModal" aria-hidden="true"></i>
-                                        <i onclick="deleteCustodianAgeRange($(this))" class="fa fa-trash pl-3" aria-hidden="true"></i>
-                                    </label>
-
+                                    <label>{{__('Admin/backend.age_range')}}:</label>
                                     <select name="custodian_age_range[{{ $loop->iteration - 1 }}][]" id="custodian_age_range_choose{{ $loop->iteration - 1 }}" multiple="multiple" class="3col active">
                                         @foreach($custodian_under_ages as $custodian_under_age)
                                             <option {{in_array($custodian_under_age->unique_id, (array)$custodian->age_range ?? []) ? 'selected' : ''}} value="{{ $custodian_under_age->unique_id }}">{{ $custodian_under_age->age }}</option>

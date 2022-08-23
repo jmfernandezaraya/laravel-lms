@@ -70,7 +70,7 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label>{{__('Admin/backend.mobile')}}:</label>
-                            <input class="form-control" value="{{$customer->contact}}" type="text" name="contact" placeholder="{{__('Admin/backend.mobile')}}">
+                            <input class="form-control" value="{{$customer->telephone}}" type="text" name="telephone" placeholder="{{__('Admin/backend.telephone')}}">
                         </div>
                     </div>
 

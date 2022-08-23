@@ -22,12 +22,13 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <td>{{__('Admin/backend.created_at')}}</td>
+                            <td>{{__('Admin/backend.order_id')}}</td>
                             <th>{{__('Admin/backend.user_name')}}</th>
                             <th>{{__('Admin/backend.user_email')}}</th>
                             <th>{{__('Admin/backend.name')}}</th>
                             <th>{{__('Admin/backend.email')}}</th>
                             <th>{{__('Admin/backend.mobile')}}</th>
+                            <td>{{__('Admin/backend.created_at')}}</td>
                             <th>{{__('Admin/backend.school_name')}}</th>
                             <th>{{__('Admin/backend.city')}}</th>
                             <th>{{__('Admin/backend.country')}}</th>
@@ -44,12 +45,13 @@
                         @foreach ($booked_details as $details)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $details->created_at }}</td>
+                                <td>{{ $details->order_id }}</td>
                                 <td>{{ get_language() == 'en' ? $details->User->first_name_en : $details->User->first_name_ar }} {{ get_language() == 'en' ? $details->User->last_name_en : $details->User->last_name_ar }}</td>
                                 <td>{{ $details->User->email ?? '-' }}</td>
                                 <td>{{ $details->fname ?? '' }} {{ $details->mname ?? '' }} {{ $details->lname ?? '' }}</td>
                                 <td>{{ $details->email }}</td>
-                                <td>{{ $details->User->contact ?? $details->mobile }}</td>
+                                <td>{{ $details->User->telephone ?? $details->mobile }}</td>
+                                <td>{{ $details->created_at }}</td>
                                 <td>{{ $details->course->school && $details->course->school->name ? (get_language() == 'en' ? $details->course->school->name->name : $details->course->school->name->name_ar) : '' }}</td>
                                 <td>{{ $details->course->school && $details->course->school->city ? (get_language() == 'en' ? $details->course->school->city->name : $details->course->school->city->name_ar) : '' }}</td>
                                 <td>{{ $details->course->school && $details->course->school->country ? (get_language() == 'en' ? $details->course->school->country->name : $details->course->school->country->name_ar) : '' }}</td>

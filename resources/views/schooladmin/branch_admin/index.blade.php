@@ -15,7 +15,7 @@
                             <th>{{__('Admin/backend.first_name')}}</th>
                             <th>{{__('Admin/backend.last_name')}}</th>
                             <th>{{__('Admin/backend.email')}}</th>
-                            <th>{{__('Admin/backend.contact_no')}}</th>
+                            <th>{{__('Admin/backend.telephone')}}</th>
                             <th>{{__('Admin/backend.profile_image')}}</th>
                             <th>Permissions Given</th>
                             <th>{{__('Admin/backend.created_on')}}</th>
@@ -29,7 +29,7 @@
                                 <td>{{ucwords($school->{'first_name_'.get_language()})}}</td>
                                 <td>{{ucwords($school->{'last_name_'.get_language()})}}</td>
                                 <td>{{$school->email == null ? '-----' : $school->email }}</td>
-                                <td>{{ucwords($school->contact)}}</td>
+                                <td>{{ucwords($school->telephone)}}</td>
                                 <td>
                                     @if($school->image != null || $school->image != '')
                                         <img width = "200px" height = "200px" src = "{{asset($school->image)}}">

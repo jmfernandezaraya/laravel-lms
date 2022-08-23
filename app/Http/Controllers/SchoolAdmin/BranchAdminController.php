@@ -49,7 +49,7 @@ class BranchAdminController extends Controller
             'password' => 'required',
             'school_id' => 'required',
             'email' => 'required|unique:users',
-            'contact' => 'required',
+            'telephone' => 'required',
             'first_name_ar' => 'required',
             'last_name_ar' => 'required',
             'image' => 'mimes:jpg,jpeg,png,bmp',
@@ -61,7 +61,7 @@ class BranchAdminController extends Controller
             'last_name_ar.required' => __('Admin/backend.errors.last_name_arabic'),
             'last_name_en.required' => __('Admin/backend.errors.last_name_english'),
             'image.required' => __('Admin/backend.errors.image_required'),
-            'contact.required' => __('Admin/backend.errors.contact_required'),
+            'telephone.required' => __('Admin/backend.errors.telephone_required'),
             'email.required' => __('Admin/backend.errors.email_required'),
             'image.mimes' => __('Admin/backend.errors.image_must_be_in'),
             'school_id.required' => 'School Name is Required']);

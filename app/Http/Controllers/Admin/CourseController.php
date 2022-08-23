@@ -7,24 +7,23 @@ use Session;
 
 use App\Http\Controllers\Controller;
 
-use App\Models\Country;
-use App\Models\City;
-use App\Models\User;
 use App\Models\CourseApplication;
+use App\Models\User;
 
-use App\Models\SuperAdmin\Choose_Accommodation_Age_Range;
-use App\Models\SuperAdmin\Choose_Accommodation_Under_Age;
-use App\Models\SuperAdmin\Choose_Branch;
-use App\Models\SuperAdmin\Choose_Classes_Day;
-use App\Models\SuperAdmin\Choose_Custodian_Under_Age;
-use App\Models\SuperAdmin\Choose_Language;
-use App\Models\SuperAdmin\Choose_Program_Age_Range;
-use App\Models\SuperAdmin\Choose_Program_Type;
-use App\Models\SuperAdmin\Choose_Program_Under_Age;
-use App\Models\SuperAdmin\Choose_Start_Day;
-use App\Models\SuperAdmin\Choose_Study_Mode;
-use App\Models\SuperAdmin\Choose_Study_Time;
-
+use App\Models\SuperAdmin\Country;
+use App\Models\SuperAdmin\City;
+use App\Models\SuperAdmin\ChooseAccommodationAge;
+use App\Models\SuperAdmin\ChooseAccommodationUnderAge;
+use App\Models\SuperAdmin\ChooseBranch;
+use App\Models\SuperAdmin\ChooseClassesDay;
+use App\Models\SuperAdmin\ChooseCustodianUnderAge;
+use App\Models\SuperAdmin\ChooseLanguage;
+use App\Models\SuperAdmin\ChooseProgramAge;
+use App\Models\SuperAdmin\ChooseProgramType;
+use App\Models\SuperAdmin\ChooseProgramUnderAge;
+use App\Models\SuperAdmin\ChooseStartDate;
+use App\Models\SuperAdmin\ChooseStudyMode;
+use App\Models\SuperAdmin\ChooseStudyTime;
 use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\CourseAccommodation;
 use App\Models\SuperAdmin\CourseAccommodationUnderAge;
@@ -170,9 +169,9 @@ class CourseController extends Controller
                 }
             }
         }
-        $choose_fields['languages'] = Choose_Language::whereIn('unique_id', $choose_fields['languages'])->pluck('name')->toArray();
-        $choose_fields['program_types'] = Choose_Program_Type::whereIn('unique_id', $choose_fields['program_types'])->pluck('name')->toArray();
-        $choose_fields['study_modes'] = Choose_Study_Mode::whereIn('unique_id', $choose_fields['study_modes'])->pluck('name')->toArray();
+        $choose_fields['languages'] = ChooseLanguage::whereIn('unique_id', $choose_fields['languages'])->pluck('name')->toArray();
+        $choose_fields['program_types'] = ChooseProgramType::whereIn('unique_id', $choose_fields['program_types'])->pluck('name')->toArray();
+        $choose_fields['study_modes'] = ChooseStudyMode::whereIn('unique_id', $choose_fields['study_modes'])->pluck('name')->toArray();
 
         return $choose_fields;
     }
@@ -212,13 +211,13 @@ class CourseController extends Controller
      */
     function create()
     {
-        $choose_languages = Choose_Language::all();
-        $choose_study_times = Choose_Study_Time::all();
-        $choose_study_modes = Choose_Study_Mode::all();
-        $choose_classes_days = Choose_Classes_Day::all();
-        $choose_start_days = Choose_Start_Day::all();
-        $choose_program_age_ranges = Choose_Program_Age_Range::orderBy('age', 'asc')->get();
-        $choose_program_types = Choose_Program_Type::all();
+        $choose_languages = ChooseLanguage::all();
+        $choose_study_times = ChooseStudyTime::all();
+        $choose_study_modes = ChooseStudyMode::all();
+        $choose_classes_days = ChooseClassesDay::all();
+        $choose_start_days = ChooseStartDate::all();
+        $choose_program_age_ranges = ChooseProgramAge::orderBy('age', 'asc')->get();
+        $choose_program_types = ChooseProgramType::all();
         $currencies = CurrencyExchangeRate::all();
         $schools = School::where('is_active', true)->get();
         $choose_branches = [];
@@ -276,7 +275,7 @@ class CourseController extends Controller
         $data['data'] = 'Data Not Saved';
         $data['success'] = 'failed';
         if ($coursecreate->getGetError() == '') {
-            $data['data'] = 'Data Saved Successfully';
+            $data['data'] = __('Admin/backend.data_saved_successfully');
             $data['success'] = 'success';
         } else {
             $data['errors'] = $coursecreate->getGetError();
@@ -309,14 +308,14 @@ class CourseController extends Controller
      */
     function edit($id)
     {
-        $choose_languages = Choose_Language::all();
-        $choose_study_times = Choose_Study_Time::all();
-        $choose_classes_days = Choose_Classes_Day::all();
-        $choose_start_days = Choose_Start_Day::all();
-        $choose_program_age_ranges = Choose_Program_Age_Range::orderBy('age', 'asc')->get();
-        $choose_study_modes = Choose_Study_Mode::all();
-        $choose_program_types = Choose_Program_Type::all();
-        $choose_branches = Choose_Branch::all();
+        $choose_languages = ChooseLanguage::all();
+        $choose_study_times = ChooseStudyTime::all();
+        $choose_classes_days = ChooseClassesDay::all();
+        $choose_start_days = ChooseStartDate::all();
+        $choose_program_age_ranges = ChooseProgramAge::orderBy('age', 'asc')->get();
+        $choose_study_modes = ChooseStudyMode::all();
+        $choose_program_types = ChooseProgramType::all();
+        $choose_branches = ChooseBranch::all();
         $currencies = CurrencyExchangeRate::all();
 
         $course = Course::whereUniqueId($id)->with('coursePrograms')->first();
@@ -389,7 +388,8 @@ class CourseController extends Controller
         $data['data'] = 'Data Not Saved';
         $data['success'] = 'failed';
         if ($coursecreate->getGetError() == '') {
-            $data['data'] = 'Data Saved Successfully';
+            // \Mail::to($mail_pdf_data['user']->email)->send(new SendMessageToStudent((object)$mail_pdf_data, $send_files));
+            $data['data'] = __('Admin/backend.data_saved_successfully');
             $data['success'] = 'success';
         } else {
             $data['errors'] = $coursecreate->getGetError();
@@ -519,6 +519,26 @@ class CourseController extends Controller
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
+    public function toggleLinkFee(Request $request, $course_id)
+    {
+        $db = \DB::transaction(function() use ($request, $course_id) {
+            $course = Course::where('unique_id', $course_id)->first();
+            if ($course) {
+                $course->link_fee_enable = !$request->link_fee_enable;
+                $course->save();
+                return true;
+            }
+        });
+        if ($db) {
+            toastr()->success(__('Admin/backend.data_paused_successfully'));
+        }
+        return back();
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function restore($course_id)
     {
         $db = \DB::transaction(function() use ($course_id) {
@@ -533,6 +553,341 @@ class CourseController extends Controller
             toastr()->success(__('Admin/backend.data_removed_successfully'));
         }
         return back();
+    }
+
+    private function viewChooseList($type)
+    {
+        $title = '';
+        $course_chooses = [];
+        if ($type == 'language') {
+            $title = __('Admin/backend.course_languages');
+            $course_chooses = ChooseLanguage::orderBy('unique_id', 'asc')->get();
+        } else if ($type == 'study_mode') {
+            $title = __('Admin/backend.course_study_modes');
+            $course_chooses = ChooseStudyMode::orderBy('unique_id', 'asc')->get();
+        } else if ($type == 'program_type') {
+            $title = __('Admin/backend.course_program_types');
+            $course_chooses = ChooseProgramType::orderBy('unique_id', 'asc')->get();
+        } else if ($type == 'branch') {
+            $title = __('Admin/backend.course_banches');
+            $course_chooses = ChooseBranch::orderBy('unique_id', 'asc')->get();
+        } else if ($type == 'study_time') {
+            $title = __('Admin/backend.course_study_times');
+            $course_chooses = ChooseStudyTime::orderBy('unique_id', 'asc')->get();
+        } else if ($type == 'classes_day') {
+            $title = __('Admin/backend.course_classes_days');
+            $course_chooses = ChooseClassesDay::orderBy('unique_id', 'asc')->get();
+        } else if ($type == 'start_date') {
+            $title = __('Admin/backend.course_start_dates');
+            $course_chooses = ChooseStartDate::orderBy('unique_id', 'asc')->get();
+        }
+        foreach ($course_chooses as $course_choose) {
+            $choose_value_courses = Course::get()->collect()->values()->filter(function($value) use ($type, $course_choose) {
+                return in_array($course_choose->unique_id, $value[$type] ?? []);
+            })->all();
+            if ($choose_value_courses && count($choose_value_courses)) {
+                $course_choose->can_delete = false;
+            } else {
+                $course_choose->can_delete = true;
+            }
+        }
+
+        return view('admin.course.choose', compact('type', 'title', 'course_chooses'));
+    }
+
+    public function viewLanguageList()
+    {
+        return $this->viewChooseList('language');
+    }
+
+    public function viewStudyModeList()
+    {
+        return $this->viewChooseList('study_mode');
+    }
+
+    public function viewProgramTypeList()
+    {
+        return $this->viewChooseList('program_type');
+    }
+
+    public function viewBranchList()
+    {
+        return $this->viewChooseList('branch');
+    }
+
+    public function viewStudyTimeList()
+    {
+        return $this->viewChooseList('study_time');
+    }
+
+    public function viewClassesDayList()
+    {
+        return $this->viewChooseList('classes_day');
+    }
+
+    public function viewStartDateList()
+    {
+        return $this->viewChooseList('start_date');
+    }
+
+    private function viewChooseAgeList($type)
+    {
+        $title = '';
+        $course_choose_ages = [];
+        if ($course_choose_age_type == 'program_age') {
+            $title = __('Admin/backend.course_program_ages');
+            $course_choose_ages = ChooseProgramAge::orderBy('unique_id', 'asc')->get();
+            foreach ($course_choose_ages as $course_choose_age) {
+                $choose_age_value_courses = CourseProgram::get()->collect()->values()->filter(function($value) use ($course_choose_age) {
+                    return in_array($course_choose_age->unique_id, $value['program_age_range'] ?? []);
+                })->all();
+                if ($choose_age_value_courses && count($choose_age_value_courses)) {
+                    $course_choose_age->can_delete = false;
+                } else {
+                    $course_choose_age->can_delete = true;
+                }
+            }
+        } else if ($course_choose_age_type == 'program_under_age') {
+            $title = __('Admin/backend.course_program_under_ages');
+            $course_choose_ages = ChooseProgramUnderAge::orderBy('unique_id', 'asc')->get();
+            foreach ($course_choose_ages as $course_choose_age) {
+                $choose_age_value_courses = CourseProgramUnderAgeFee::get()->collect()->values()->filter(function($value) use ($course_choose_age) {
+                    return in_array($course_choose_age->unique_id, $value['under_age'] ?? []);
+                })->all();
+                if ($choose_age_value_courses && count($choose_age_value_courses)) {
+                    $course_choose_age->can_delete = false;
+                } else {
+                    $course_choose_age->can_delete = true;
+                }
+            }
+        } else if ($course_choose_age_type == 'accommodation_age') {
+            $title = __('Admin/backend.accommodation_ages');
+            $course_choose_ages = ChooseAccommodationAge::orderBy('unique_id', 'asc')->get();
+            foreach ($course_choose_ages as $course_choose_age) {
+                $choose_age_value_courses = CourseAccommodation::get()->collect()->values()->filter(function($value) use ($course_choose_age) {
+                    return in_array($course_choose_age->unique_id, $value['age_range'] ?? []);
+                })->all();
+                if ($choose_age_value_courses && count($choose_age_value_courses)) {
+                    $course_choose_age->can_delete = false;
+                } else {
+                    $course_choose_age->can_delete = true;
+                }
+            }
+        } else if ($course_choose_age_type == 'accommodation_under_age') {
+            $title = __('Admin/backend.accommodation_under_ages');
+            $course_choose_ages = ChooseAccommodationUnderAge::orderBy('unique_id', 'asc')->get();
+            foreach ($course_choose_ages as $course_choose_age) {
+                $choose_age_value_courses = CourseAccommodationUnderAge::get()->collect()->values()->filter(function($value) use ($course_choose_age) {
+                    return in_array($course_choose_age->unique_id, $value['under_age'] ?? []);
+                })->all();
+                if ($choose_age_value_courses && count($choose_age_value_courses)) {
+                    $course_choose_age->can_delete = false;
+                } else {
+                    $course_choose_age->can_delete = true;
+                }
+            }
+        } else if ($course_choose_age_type == 'custodian_under_age') {
+            $title = __('Admin/backend.custodian_under_ages');
+            $course_choose_ages = ChooseCustodianUnderAge::orderBy('unique_id', 'asc')->get();
+            foreach ($course_choose_ages as $course_choose_age) {
+                $choose_age_value_courses = CourseCustodian::get()->collect()->values()->filter(function($value) use ($course_choose_age) {
+                    return in_array($course_choose_age->unique_id, $value['age_range'] ?? []);
+                })->all();
+                if ($choose_age_value_courses && count($choose_age_value_courses)) {
+                    $course_choose_age->can_delete = false;
+                } else {
+                    $course_choose_age->can_delete = true;
+                }
+            }
+        }
+
+        return view('admin.course.choose_age', compact('type', 'title', 'course_choose_ages'));
+    }
+
+    public function viewProgramAgeList()
+    {
+        return $this->viewChooseAgeList('program_age');
+    }
+
+    public function viewProgramUnderAgeList()
+    {
+        return $this->viewChooseAgeList('program_age');
+    }
+
+    public function viewAccommodationAgeList()
+    {
+        return $this->viewChooseAgeList('accommodation_age');
+    }
+
+    public function viewAccommodationUnderAgeList()
+    {
+        return $this->viewChooseAgeList('accommodation_under_age');
+    }
+
+    public function viewCustodianUnderAgeList()
+    {
+        return $this->viewChooseAgeList('custodian_under_age');
+    }
+
+    public function updateChooseList(Request $request)
+    {
+        $validate = \Validator::make(
+            $request->all(),
+            [
+                'name.*' => 'required',
+                'name.*' => 'required',
+                'course_choose_type.*' => 'required',
+            ]
+        );
+        if ($validate->fails()) {
+            return response()->json(['errors' => $validate->errors()]);
+        }
+        
+        $course_choose_ids = [];
+
+        $course_choose_type = $request->course_choose_type;
+        $CourseChoose = '';
+        if ($course_choose_type == 'language') {
+            $CourseChoose = '\App\Models\SuperAdmin\ChooseLanguage';
+        } else if ($course_choose_type == 'study_mode') {
+            $CourseChoose = '\App\Models\SuperAdmin\ChooseStudyMode';
+        } else if ($course_choose_type == 'program_type') {
+            $CourseChoose = '\App\Models\SuperAdmin\ChooseProgramType';
+        } else if ($course_choose_type == 'branch') {
+            $CourseChoose = '\App\Models\SuperAdmin\ChooseBranch';
+        } else if ($course_choose_type == 'study_time') {
+            $CourseChoose = '\App\Models\SuperAdmin\ChooseStudyTime';
+        } else if ($course_choose_type == 'classes_day') {
+            $CourseChoose = '\App\Models\SuperAdmin\ChooseClassesDay';
+        } else if ($course_choose_type == 'start_date') {
+            $CourseChoose = '\App\Models\SuperAdmin\ChooseStartDate';
+        }
+
+        for ($i = 0; $i <= $request->course_choose_increment; $i++) {
+            $course_choose = null;
+            if (isset($request->choose_id[$i]) && $request->choose_id[$i]) {
+                $course_choose = $CourseChoose::where('unique_id', $request->choose_id[$i])->first();
+            }
+            if (!$course_choose) {
+                $course_choose = new $CourseChoose();
+            }
+            $course_choose->name = $request->name[$i] ?? null;
+            $course_choose->name_ar = $request->name_ar[$i] ?? null;
+            $course_choose->save();
+            if (!$course_choose->unique_id) {
+                $course_choose_id = $CourseChoose::orderBy('unique_id', 'desc')->first()->unique_id;
+            } else {
+                $course_choose_id = $course_choose->unique_id;
+            }
+            $course_choose_ids[] = $course_choose_id;
+        }
+        $course_chooses = $CourseChoose::all();
+        $message_append = '';
+        foreach ($course_chooses as $course_choose) {
+            if (!in_array($course_choose->unique_id, $course_choose_ids)) {
+                $choose_courses = Course::get()->collect()->values()->filter(function($value) use ($course_choose_type, $course_choose) {
+                    return in_array($course_choose->unique_id, $value[$course_choose_type] ?? []);
+                })->all();
+                if ($choose_courses && count($choose_courses)) {
+                    $message_append = $message_append . ($message_append ? ', ' : '') . (app()->getLocale() == 'en' ? $course_choose->name : $course_choose->name_ar);
+                } else {
+                    $course_choose->delete();
+                }
+            }
+        }
+        
+        $data['success'] = true;
+        $data['data'] = __('Admin/backend.data_saved_successfully') . ($message_append ? ' ' . $message_append . ' ' . __('Admin/backend.data_can_not_delete') : '');
+
+        return response()->json($data);
+    }
+
+    public function updateChooseAgeList(Request $request)
+    {
+        $validate = \Validator::make(
+            $request->all(),
+            [
+                'age.*' => 'required',
+                'age.*' => 'required',
+                'course_choose_age_type.*' => 'required',
+            ]
+        );
+        if ($validate->fails()) {
+            return response()->json(['errors' => $validate->errors()]);
+        }
+        
+        $course_choose_age_ids = [];
+
+        $course_choose_age_type = $request->course_choose_age_type;
+        $CourseChooseAge = '';
+        if ($course_choose_age_type == 'program_age') {
+            $CourseChooseAge = '\App\Models\SuperAdmin\ChooseProgramAge';
+        } else if ($course_choose_age_type == 'program_under_age') {
+            $CourseChooseAge = '\App\Models\SuperAdmin\ChooseProgramUnderAge';
+        } else if ($course_choose_age_type == 'accommodation_age') {
+            $CourseChooseAge = '\App\Models\SuperAdmin\ChooseAccommodationAge';
+        } else if ($course_choose_age_type == 'accommodation_under_age') {
+            $CourseChooseAge = '\App\Models\SuperAdmin\ChooseAccommodationUnderAge';
+        } else if ($course_choose_age_type == 'custodian_under_age') {
+            $CourseChooseAge = '\App\Models\SuperAdmin\ChooseCustodianUnderAge';
+        }
+
+        for ($i = 0; $i <= $request->course_choose_age_increment; $i++) {
+            $course_choose_age = null;
+            if (isset($request->choose_id[$i]) && $request->choose_id[$i]) {
+                $course_choose_age = $CourseChooseAge::where('unique_id', $request->choose_id[$i])->first();
+            }
+            if (!$course_choose_age) {
+                $course_choose_age = new $CourseChooseAge;
+            }
+            $course_choose_age->age = $request->age[$i] ?? null;
+            $course_choose_age->age_ar = $request->age_ar[$i] ?? null;
+            $course_choose_age->save();
+            if (!$course_choose_age->unique_id) {
+                $course_choose_age_id = $CourseChooseAge::orderBy('unique_id', 'desc')->first()->unique_id;
+            } else {
+                $course_choose_age_id = $course_choose_age->unique_id;
+            }
+            $course_choose_age_ids[] = $course_choose_age_id;
+        }
+        $course_choose_ages = $CourseChooseAge::all();
+        foreach ($course_choose_ages as $course_choose_age) {
+            if (!in_array($course_choose_age->unique_id, $course_choose_age_ids)) {
+                $choose_age_courses = [];
+                if ($course_choose_age_type == 'program_age') {
+                    $choose_age_courses = CourseProgram::get()->collect()->values()->filter(function($value) use ($course_choose_age) {
+                        return in_array($course_choose_age->unique_id, $value['program_age_range'] ?? []);
+                    })->all();
+                } else if ($course_choose_age_type == 'program_under_age') {
+                    $choose_age_courses = CourseProgramUnderAgeFee::get()->collect()->values()->filter(function($value) use ($course_choose_age) {
+                        return in_array($course_choose_age->unique_id, $value['under_age'] ?? []);
+                    })->all();
+                } else if ($course_choose_age_type == 'accommodation_age') {
+                    $choose_age_courses = CourseAccommodation::get()->collect()->values()->filter(function($value) use ($course_choose_age) {
+                        return in_array($course_choose_age->unique_id, $value['age_range'] ?? []);
+                    })->all();
+                } else if ($course_choose_age_type == 'accommodation_under_age') {
+                    $choose_age_courses = CourseAccommodationUnderAge::get()->collect()->values()->filter(function($value) use ($course_choose_age) {
+                        return in_array($course_choose_age->unique_id, $value['under_age'] ?? []);
+                    })->all();
+                } else if ($course_choose_age_type == 'custodian_under_age') {
+                    $choose_age_courses = CourseCustodian::get()->collect()->values()->filter(function($value) use ($course_choose_age) {
+                        return in_array($course_choose_age->unique_id, $value['age_range'] ?? []);
+                    })->all();
+                }
+                if ($choose_courses && count($choose_courses)) {
+                    $message_append = $message_append . ($message_append ? ', ' : '') . (app()->getLocale() == 'en' ? $course_choose->name : $course_choose->name_ar);
+                } else {
+                    $course_choose->delete();
+                }
+                $course_choose_age->delete();
+            }
+        }
+        
+        $data['success'] = true;
+        $data['data'] = __('Admin/backend.data_saved_successfully') . ($message_append ? ' ' . $message_append . ' ' . __('Admin/backend.data_can_not_delete') : '');
+
+        return response()->json($data);
     }
 
     /**
@@ -564,7 +919,7 @@ class CourseController extends Controller
         $course_id = \Session::get('course_id');
         $course_programs = [];
         $course_programs = CourseProgram::whereIn('unique_id', is_array(\Session::get('program_ids')) ? \Session::get('program_ids') : [])->get();
-        $choose_program_under_ages = Choose_Program_Under_Age::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
+        $choose_program_under_ages = ChooseProgramUnderAge::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
         $has_accommodation = !\Session::has('has_accommodation') || (\Session::has('has_accommodation') && \Session::get('has_accommodation') == 'yes');
 
         return view('admin.course.add.program_under_age', compact('course_id', 'course_programs', 'choose_program_under_ages', 'has_accommodation'));
@@ -598,7 +953,7 @@ class CourseController extends Controller
                 }
             }
             if (!empty($course_programs) && count($course_programs)) {
-                $choose_program_under_ages = Choose_Program_Under_Age::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
+                $choose_program_under_ages = ChooseProgramUnderAge::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
         
                 return view('admin.course.edit.program_under_age', compact('course_id', 'course_program_id', 'course_programs', 'program_under_age_fees', 'program_text_book_fees', 'choose_program_under_ages'));
             } else {
@@ -620,7 +975,7 @@ class CourseController extends Controller
     public function viewAccommodation()
     {
         $course_id = \Session::get('course_id');
-        $accommodation_age_ranges = Choose_Accommodation_Age_Range::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
+        $accommodation_age_ranges = ChooseAccommodationAge::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
 
         return view('admin.course.add.accommodation', compact('course_id', 'accommodation_age_ranges'));
     }
@@ -642,7 +997,7 @@ class CourseController extends Controller
                     \Session::push('accom_ids', '' . $accom->unique_id);
                 }
                 
-                $accommodation_age_ranges = Choose_Accommodation_Age_Range::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
+                $accommodation_age_ranges = ChooseAccommodationAge::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
 
                 return view('admin.course.edit.accommodation', compact('course_id', 'accomodations', 'accommodation_age_ranges'));
             } else {
@@ -668,7 +1023,7 @@ class CourseController extends Controller
         if (\Session::get('accom_ids')) {
             $accomodations = CourseAccommodation::whereIn('unique_id', \Session::get('accom_ids'))->get();
         }
-        $choose_accomodation_under_ages = Choose_Accommodation_Under_Age::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
+        $choose_accomodation_under_ages = ChooseAccommodationUnderAge::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
         return view('admin.course.add.accommodation_under_age', compact('course_id', 'accomodations', 'choose_accomodation_under_ages'));
     }
 
@@ -698,7 +1053,7 @@ class CourseController extends Controller
                 }
             }
             if (!empty($accomodations) && count($accomodations)) {
-                $choose_accomodation_under_ages = Choose_Accommodation_Under_Age::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
+                $choose_accomodation_under_ages = ChooseAccommodationUnderAge::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
         
                 return view('admin.course.edit.accommodation_under_age', compact('course_id', 'accom_id', 'accomodations', 'accomodation_under_ages', 'choose_accomodation_under_ages'));
             } else {
@@ -722,7 +1077,7 @@ class CourseController extends Controller
      */
     public function viewOtherService()
     {
-        $custodian_under_ages = Choose_Custodian_Under_Age::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
+        $custodian_under_ages = ChooseCustodianUnderAge::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
         return view('admin.course.add.other_service', compact('custodian_under_ages'));
     }
 
@@ -733,7 +1088,7 @@ class CourseController extends Controller
     {
         if (\Session::get('course_id')) {
             $course_id = \Session::get('course_id');
-            $custodian_under_ages = Choose_Custodian_Under_Age::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
+            $custodian_under_ages = ChooseCustodianUnderAge::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all();
             $airports = CourseAirport::with('fees')->where('course_unique_id', $course_id)->get();
             $medicals = CourseMedical::with('fees')->where('course_unique_id', $course_id)->get();
             $custodians = CourseCustodian::where('course_unique_id', $course_id)->get();

@@ -271,6 +271,21 @@
                             <input type="hidden" value="{{$sub_total['value']}}" name="sub_total" />
                         </tr>
                         <tr>
+                            <td>{{__('Frontend.bank_transfer_fee')}}</td>
+                            <td>{{ toFixedNumber($bank_transfer_fee['value']) }} {{ $currency['cost'] }}</td>
+                            <td>{{ toFixedNumber($bank_transfer_fee['converted_value']) }} {{ $currency['converted'] }}</td>
+                            <input type="hidden" value="{{$bank_transfer_fee['value']}}" name="bank_transfer_fee" />
+                        </tr>
+                        @if ($link_fee['value'])
+                            <tr>
+                                <td>{{__('Frontend.link_study_abroad_fee')}}</td>
+                                <td>{{ toFixedNumber($link_fee['value']) }} {{ $currency['cost'] }}</td>
+                                <td>{{ toFixedNumber($link_fee['converted_value']) }} {{ $currency['converted'] }}</td>
+                                <input type="hidden" value="{{$link_fee['value']}}" name="link_fee" />
+                                <input type="hidden" value="{{$link_fee['converted_value']}}" name="link_fee_converted" />
+                            </tr>
+                        @endif
+                        <tr>
                             <th>{{__('Frontend.total_discount')}}</th>
                             <th class="highlight-value">-{{ toFixedNumber($total_discount['value']) }} {{ $currency['cost'] }}</th>
                             <th class="highlight-value">-{{ toFixedNumber($total_discount['converted_value']) }} {{ $currency['converted'] }}</th>

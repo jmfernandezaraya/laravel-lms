@@ -8,6 +8,8 @@ function initCkeditor(editor_id) {
             option = {
                 filebrowserUploadUrl: uploadFileOption,
                 filebrowserUploadMethod: 'form',
+                allowedContent: true,
+                extraAllowedContent: 'span(*); span a; a span; button; button a; button span; p span a; p a span; p button; p button a; p button span; a[!href]',
             };
         }
         CKEDITOR.replace(editor_id, option);
@@ -20,6 +22,8 @@ function initCkeditors() {
         option = {
             filebrowserUploadUrl: uploadFileOption,
             filebrowserUploadMethod: 'form',
+            allowedContent: true,
+            extraAllowedContent: 'span(*); span a; a span; button; button a; button span; p span a; p a span; p button; p button a; p button span; a[!href]',
         };
     }
     var textareas = $('textarea.ckeditor-input');
@@ -569,8 +573,6 @@ function submitForm(object, method = 'POST') {
     getCkEditorsData();
 
     var formData = new FormData($(object)[0]);
-
-    console.log($(object).attr('action'));
     urlname = $(object).attr('action');
     $.ajax({
         type: 'POST',
@@ -590,12 +592,6 @@ function submitForm(object, method = 'POST') {
                 for (var error in data.errors) {
                     $('.alert-danger ul').append('<li>' + data.errors[error] + '</li>');
                 }
-
-                if (data.reload) {
-                    setTimeout(function() {
-                        location.reload();
-                    });
-                }
             } else if (data.catch_error) {
                 document.documentElement.scrollTop = 0;
                 $("#loader").hide();
@@ -608,6 +604,17 @@ function submitForm(object, method = 'POST') {
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
                 document.documentElement.scrollTop = 0;
+            }
+
+            if (data.reload) {
+                setTimeout(function() {
+                    window.location.reload();
+                }, 2000);
+            }
+            if (data.redirect_link) {
+                setTimeout(function() {
+                    window.location.href = data.redirect_link;
+                }, 2000);
             }
 
             if (typeof handleResizePageContent === "function") {
@@ -717,8 +724,8 @@ function calculateCourse(type) {
 
         var default_program_duration = $("#program_duration").val();
         if (type == 'requested_for_under_age') {
-            if (data.program_get != undefined) {
-                $('#get_program_name').html(data.program_get);
+            if (data.course_program != undefined) {
+                $('#get_program_name').html(data.course_program);
                 $('#get_program_name').val('');
                 $('#datepick').val('');
                 $("#program_duration").val('');
@@ -770,6 +777,23 @@ function calculateCourse(type) {
                 } else {
                     $("#courier_fee").hide();
                 }
+            }
+            if (data.link_fee != undefined) {
+                if (data.link_fee) {
+                    $("#link_fee_table").show();
+                    if (data.link_fee_vat != undefined) {
+                        $("#link_fee_table .vat_fee").html(data.link_fee_vat);
+                    }
+                } else {
+                    $("#link_fee_table").hide();
+                }
+            }
+            if (data.text_book_note != undefined) {
+                $('.text_book_fee_note').show();
+                $("#TextBookFeeModal .modal-body").html(data.text_book_note);
+            } else {
+                $('.text_book_fee_note').hide();
+                $("#TextBookFeeModal .modal-body").html('');
             }
             if (data.accommodations != undefined) {
                 $('#accom_type').html(data.accommodations);
@@ -873,20 +897,35 @@ function reloadCourseCalclulator() {
             if (parseFloat(data.express_mail_fee.value)) $("#program_fees_table #express_mail_fee").show(); else $("#program_fees_table #express_mail_fee").hide();
             $("#program_fees_table #discount_fee .cost_value").html("-" + data.discount_fee.value);
             $("#program_fees_table #discount_fee .converted_value").html("-" + parseFloat(data.discount_fee.converted_value).toFixed(2));
-            $("#program_fees_table #program_total .cost_value").html(data.total.value);
+            $("#program_fees_table #program_total .cost_value").html(parseFloat(data.total.value).toFixed(2));
             $("#program_fees_table #program_total .converted_value").html(parseFloat(data.total.converted_value).toFixed(2));
 
-            $("#program_fees_table .cost_currency").html(data.currency.cost);
-            $("#program_fees_table .converted_currency").html(data.currency.converted);
+            $("#program_fees_table .cost_value_currency").html(data.currency.cost);
+            $("#program_fees_table .converted_value_currency").html(data.currency.converted);
+        
+            $("#sub_total_table .cost_value").html(parseFloat(data.sub_total.value).toFixed(2));
+            $("#sub_total_table .converted_value").html(parseFloat(data.sub_total.converted_value).toFixed(2));
+            $("#sub_total_table .cost_value_currency").html(data.currency.cost);
+            $("#sub_total_table .converted_value_currency").html(data.currency.converted);
 
-            $("#total_table .total_cost").html(parseFloat(data.overall_total.value).toFixed(2));
-            $("#total_table .total_converted").html(parseFloat(data.overall_total.converted_value).toFixed(2));
-            $("#total_table .total_cost_currency").html(data.currency.cost);
-            $("#total_table .total_converted_currency").html(data.currency.converted);
+            $("#bank_transfer_fee_table .cost_value").html(parseFloat(data.bank_transfer_fee.value).toFixed(2));
+            $("#bank_transfer_fee_table .converted_value").html(parseFloat(data.bank_transfer_fee.converted_value).toFixed(2));
+            $("#bank_transfer_fee_table .cost_value_currency").html(data.currency.cost);
+            $("#bank_transfer_fee_table .converted_value_currency").html(data.currency.converted);
 
-            $("#total_fees").val(data.overall_total.value);
-            $("#total_fees_to_save_to_db").val(data.overall_total.value + " " + data.currency.cost);
-            $("#other_currency_to_save_to_db").val(parseFloat(data.overall_total.converted_value).toFixed(2) + " " + data.currency.converted)
+            $("#link_fee_table .cost_value").html(data.link_fee.value);
+            $("#link_fee_table .converted_value").html(parseFloat(data.link_fee.converted_value).toFixed(2));
+            $("#link_fee_table .cost_value_currency").html(data.currency.cost);
+            $("#link_fee_table .converted_value_currency").html(data.currency.converted);
+
+            $("#total_table .cost_value").html(parseFloat(data.total_cost.value).toFixed(2));
+            $("#total_table .converted_value").html(parseFloat(data.total_cost.converted_value).toFixed(2));
+            $("#total_table .cost_value_currency").html(data.currency.cost);
+            $("#total_table .converted_value_currency").html(data.currency.converted);
+
+            $("#total_fees").val(data.total_cost.value);
+            $("#total_fees_to_save_to_db").val(data.total_cost.value + " " + data.currency.cost);
+            $("#other_currency_to_save_to_db").val(parseFloat(data.total_cost.converted_value).toFixed(2) + " " + data.currency.converted)
         }
     }).done(function () {
         $('#loader').hide();
@@ -937,17 +976,22 @@ function calcuateAccommodation() {
             $("#accommodation_fees #accommodation_total .cost_value").html(parseFloat(data.total.value).toFixed(2));
             $("#accommodation_fees #accommodation_total .converted_value").html(parseFloat(data.total.converted_value).toFixed(2));
             
-            $("#accommodation_fees .cost_currency").html(data.currency.cost);
-            $("#accommodation_fees .converted_currency").html(data.currency.converted);
+            $("#accommodation_fees .cost_value_currency").html(data.currency.cost);
+            $("#accommodation_fees .converted_value_currency").html(data.currency.converted);
+        
+            $("#sub_total_table .cost_value").html(parseFloat(data.sub_total.value).toFixed(2));
+            $("#sub_total_table .converted_value").html(parseFloat(data.sub_total.converted_value).toFixed(2));
+            $("#sub_total_table .cost_value_currency").html(data.currency.cost);
+            $("#sub_total_table .total_converted_value_currency").html(data.currency.converted);
             
-            $("#total_table .total_cost").html(parseFloat(data.overall_total.value).toFixed(2));
-            $("#total_table .total_converted").html(parseFloat(data.overall_total.converted_value).toFixed(2));
-            $("#total_table .total_cost_currency").html(data.currency.cost);
-            $("#total_table .total_converted_currency").html(data.currency.converted);
+            $("#total_table .cost_value").html(parseFloat(data.total_cost.value).toFixed(2));
+            $("#total_table .converted_value").html(parseFloat(data.total_cost.converted_value).toFixed(2));
+            $("#total_table .cost_value_currency").html(data.currency.cost);
+            $("#total_table .converted_value_currency").html(data.currency.converted);
 
-            $("#total_fees").val(data.overall_total.value);
-            $("#total_fees_to_save_to_db").val(data.overall_total.value + " " + data.currency.cost);
-            $("#other_currency_to_save_to_db").val(parseFloat(data.overall_total.converted_value).toFixed(2) + " " + data.currency.converted);
+            $("#total_fees").val(data.total_cost.value);
+            $("#total_fees_to_save_to_db").val(data.total_cost.value + " " + data.currency.cost);
+            $("#other_currency_to_save_to_db").val(parseFloat(data.total_cost.converted_value).toFixed(2) + " " + data.currency.converted);
 
             $('#accommodation_fees_table').show();
             
@@ -1001,8 +1045,8 @@ function resetAccommodation(init = false) {
         $("#accommodation_fees #accommodation_discount_fee .converted_value").html(0);
         $("#accommodation_fees #accommodation_total .cost_value").html(0);
         $("#accommodation_fees #accommodation_total .converted_value").html(0);
-        $("#accommodation_fees .cost_currency").html('');
-        $("#accommodation_fees .converted_currency").html('');
+        $("#accommodation_fees .cost_value_currency").html('');
+        $("#accommodation_fees .converted_value_currency").html('');
         $('#accommodation_fees_table').hide();
     })
 }
@@ -1044,19 +1088,24 @@ function calculateOtherService(type) {
         $("#other_service_fees_table #other_service_total .cost_value").html(data.total.value);
         $("#other_service_fees_table #other_service_total .converted_value").html(parseFloat(data.total.converted_value).toFixed(2));
         
-        $("#other_service_fees_table .cost_currency").html(data.currency.cost);
-        $("#other_service_fees_table .converted_currency").html(data.currency.converted);
+        $("#other_service_fees_table .cost_value_currency").html(data.currency.cost);
+        $("#other_service_fees_table .converted_value_currency").html(data.currency.converted);
         
-        $("#total_table .total_cost").html(parseFloat(data.overall_total.value).toFixed(2));
-        $("#total_table .total_converted").html(parseFloat(data.overall_total.converted_value).toFixed(2));
-        $("#total_table .total_cost_currency").html(data.currency.cost);
-        $("#total_table .total_converted_currency").html(data.currency.converted);
+        $("#sub_total_table .cost_value").html(parseFloat(data.sub_total.value).toFixed(2));
+        $("#sub_total_table .converted_value").html(parseFloat(data.sub_total.converted_value).toFixed(2));
+        $("#sub_total_table .cost_value_currency").html(data.currency.cost);
+        $("#sub_total_table .converted_value_currency").html(data.currency.converted);
+        
+        $("#total_table .cost_value").html(parseFloat(data.total_cost.value).toFixed(2));
+        $("#total_table .converted_value").html(parseFloat(data.total_cost.converted_value).toFixed(2));
+        $("#total_table .cost_value_currency").html(data.currency.cost);
+        $("#total_table .converted_value_currency").html(data.currency.converted);
 
         $("#other_service_fees_table").show();
 
-        $("#total_fees").val(data.overall_total.value);
-        $("#total_fees_to_save_to_db").val(data.overall_total.value + " " + data.currency.cost);
-        $("#other_currency_to_save_to_db").val(parseFloat(data.overall_total.converted_value).toFixed(2) + " " + data.currency.converted);
+        $("#total_fees").val(data.total_cost.value);
+        $("#total_fees_to_save_to_db").val(data.total_cost.value + " " + data.currency.cost);
+        $("#other_currency_to_save_to_db").val(parseFloat(data.total_cost.converted_value).toFixed(2) + " " + data.currency.converted);
 
         $("#AirportPickupModal .modal-body").html(data.airport_note);
         $("#MedicalInsuranceModal .modal-body").html(data.medical_note);
@@ -1093,8 +1142,8 @@ function resetOtherService(init = false) {
         $("#other_services #medical_insurance .converted_value").html(0);
         $("#other_services #custodian_fee .cost_value").html(0);
         $("#other_services #custodian_fee .converted_value").html(0);
-        $("#other_services .cost_currency").html('');
-        $("#other_services .converted_currency").html('');
+        $("#other_services .cost_value_currency").html('');
+        $("#other_services .converted_value_currency").html('');
         $("#other_service_fees_table").hide();
     })
 }
@@ -1327,7 +1376,6 @@ function updateCourseForm(object) {
                     $('.alert-danger ul').append('<li>' + data.errors[error] + '</li>');
                 }
             } else if (data.catch_error) {
-                console.log(data.catch_error);
                 document.documentElement.scrollTop = 0;
                 $("#loader").hide();
 
@@ -1380,7 +1428,6 @@ function submitCourseProgramForm(this_object) {
                     $('.alert-danger ul').append('<li>' + data.errors[error] + '</li>');
                 }
             } else if (data.catch_error) {
-                console.log(data.catch_error);
                 document.documentElement.scrollTop = 0;
 
                 $('.alert-danger').show();
@@ -1428,7 +1475,6 @@ function submitAccommodationForm(object) {
                     $('.alert-danger ul').append('<li>' + data.errors[error] + '</li>');
                 }
             } else if (data.catch_error) {
-                console.log(data.catch_error);
                 document.documentElement.scrollTop = 0;
                 $("#loader").hide();
                 $('.alert-danger').show();
@@ -1478,7 +1524,6 @@ function submitAccommodationUnderAgeForm(object, reload = false) {
                     window.location.reload();
                 }
             } else if (data.catch_error) {
-                console.log(data.catch_error);
                 document.documentElement.scrollTop = 0;
 
                 $('.alert-danger').show();
@@ -1525,7 +1570,6 @@ function submitOtherServiceForm(object, reload = false) {
                     $('.alert-danger ul').append('<li>' + data.errors[error] + '</li>');
                 }
             } else if (data.catch_error) {
-                console.log(data.catch_error);
                 document.documentElement.scrollTop = 0;
                 $("#loader").hide();
                 $('.alert-danger').show();
@@ -2417,7 +2461,6 @@ function deleteApplicationCenter(object) {
     var urlname = $(object).attr('data-url');
     var application_centers = $("#application_center").val();
 
-    console.log(application_centers);
     if (application_centers == '') {
         alert("Select Some option")
         return;
@@ -2820,7 +2863,6 @@ function cloneAnotherVisa(object) {
     var cloned = $(object).parents().find('.clone_visa0');
     var cloning = cloned.clone(true);
     var change_atrr = cloning.attr('class', 'clone_visa' + changing_attr_clone);
-    console.log(change_atrr);
     cloning.insertAfter(cloned);
 }
 
@@ -2838,7 +2880,6 @@ function cloneAnotherVisaService(object) {
     var cloned = $(object).parents().find('.clone_visa_service0');
     var cloning = cloned.clone(true);
     var change_atrr = cloning.attr('class', 'clone_visa_service' + changing_attr_clone_service);
-    console.log(change_atrr);
     cloning.insertAfter(cloned);
 }
 
@@ -2891,10 +2932,16 @@ function submitFormAction(id) {
                     toastr.error(data.message);
                 }
             }
+
             if (data.reload) {
                 setTimeout(function() {
-                    location.reload();
-                });
+                    window.location.reload();
+                }, 2000);
+            }
+            if (data.redirect_link) {
+                setTimeout(function() {
+                    window.location.href = data.redirect_link;
+                }, 2000);
             }
         },
         error: function (data) {

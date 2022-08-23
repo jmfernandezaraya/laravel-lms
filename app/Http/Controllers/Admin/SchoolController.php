@@ -10,13 +10,12 @@ use App\Http\Controllers\Controller;
 
 use App\Classes\ImageSaverToStorage;
 
-use App\Models\Country;
-use App\Models\City;
-use App\Models\SchoolName;
 use App\Models\CourseApplication;
-
-use App\Models\SuperAdmin\Choose_Nationality;
+use App\Models\SuperAdmin\Country;
+use App\Models\SuperAdmin\City;
 use App\Models\SuperAdmin\School;
+use App\Models\SuperAdmin\SchoolName;
+use App\Models\SuperAdmin\ChooseNationality;
 use App\Models\SuperAdmin\SchoolNationality;
 
 use App\Http\Requests\SuperAdmin\AddSchoolRequest;
@@ -116,7 +115,7 @@ class SchoolController extends Controller
     public function create()
     {
         $countries = Country::with('cities')->orderBy('id', 'asc')->get();
-        $choose_nationalities = Choose_Nationality::all();
+        $choose_nationalities = ChooseNationality::all();
         $school_names = SchoolName::all();
 
         return view('admin.school.add', compact('countries', 'choose_nationalities', 'school_names'));
@@ -180,7 +179,7 @@ class SchoolController extends Controller
             if (isset($request->nationality_increment)) {
                 for ($count = 0; $count <= (int)$request->nationality_increment; $count++) {
                     if (isset($request->nationality[$count]) && $request->nationality[$count] && isset($request->nationality_mix[$count]) && $request->nationality_mix[$count]) {
-                        $school_nationality = new SchoolNationality;
+                        $school_nationality = new SchoolNationality();
                         $school_nationality->school_id = $school->id;
                         $school_nationality->nationality_id = $request->nationality[$count];
                         $school_nationality->mix = $request->nationality_mix[$count];
@@ -208,7 +207,7 @@ class SchoolController extends Controller
     {
         $school = School::find($id);
         $countries = Country::with('cities')->orderBy('id', 'asc')->get();
-        $choose_nationalities = Choose_Nationality::all();
+        $choose_nationalities = ChooseNationality::all();
         $school_names = SchoolName::all();
 
         return view('admin.school.edit', compact('school', 'countries', 'choose_nationalities', 'school_names'));
@@ -278,7 +277,7 @@ class SchoolController extends Controller
                     $school_nationality = SchoolNationality::where('id', $request->nationality_id[$count])->first();
                 }
                 if (!$school_nationality) {
-                    $school_nationality = new SchoolNationality;
+                    $school_nationality = new SchoolNationality();
                     $school_nationality->school_id = $school->id;
                 }
                 if (isset($request->nationality[$count]) && $request->nationality[$count] && isset($request->nationality_mix[$count]) && $request->nationality_mix[$count]) {
@@ -586,7 +585,7 @@ class SchoolController extends Controller
                 $country = Country::where('id', $request->country_id[$i])->first();
             }
             if (!$country) {
-                $country = new Country;
+                $country = new Country();
             }
             $country->name = $request->name[$i] ?? null;
             $country->name_ar = $request->name_ar[$i] ?? null;
@@ -606,7 +605,7 @@ class SchoolController extends Controller
                         $city = City::where('id', $request->city_id[$i][$j])->first();
                     }
                     if (!$city) {
-                        $city = new City;
+                        $city = new City();
                     }
                     $city->country_id = $country_id;
                     $city->name = $request->city_name[$i][$j] ?? null;
@@ -666,7 +665,7 @@ class SchoolController extends Controller
                 $school_name = SchoolName::where('id', $request->school_name_id[$i])->first();
             }
             if (!$school_name) {
-                $school_name = new SchoolName;
+                $school_name = new SchoolName();
             }
             $school_name->name = $request->name[$i] ?? null;
             $school_name->name_ar = $request->name_ar[$i] ?? null;
@@ -724,13 +723,13 @@ class SchoolController extends Controller
         $unique_id = $this->my_unique_id();
 
         $get_id = \DB::transaction(function () use ($unique_id, $request) {
-            $NationalityEnTable = new Choose_Nationality;
+            $NationalityEnTable = new ChooseNationality();
             $NationalityEnTable->setTable('choose_nationalities_en');
             $NationalityEnTable->unique_id = $unique_id;
             $NationalityEnTable->name = $request->english_val;
             $NationalityEnTable->save();
 
-            $NationalityArTable = new Choose_Nationality;
+            $NationalityArTable = new ChooseNationality();
             $NationalityArTable->setTable('choose_nationalities_ar');
             $NationalityArTable->unique_id = $unique_id;
             $NationalityArTable->name = $request->arabic_val;
@@ -755,14 +754,14 @@ class SchoolController extends Controller
     {
         \DB::transaction(function () use ($request) {
             $locale = get_language();
-            Choose_Nationality::whereIn('unique_id', $request->ids)->delete();
+            ChooseNationality::whereIn('unique_id', $request->ids)->delete();
             $switch_locale = $locale == 'en' ? 'ar' : 'en';
             app()->setLocale($switch_locale);
-            Choose_Nationality::whereIn('unique_id', $request->ids)->delete();
+            ChooseNationality::whereIn('unique_id', $request->ids)->delete();
             app()->setLocale($locale);
         });
 
-        $get_options = Choose_Nationality::all();
+        $get_options = ChooseNationality::all();
         $data['result'] = '<option value="">' . __('Admin/backend.select') . '</option>';
         foreach ($get_options as $get_option) {
             $data['result'] .= "<option value=$get_option->unique_id>$get_option->name</option>";

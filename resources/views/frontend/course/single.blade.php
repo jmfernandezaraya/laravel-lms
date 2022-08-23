@@ -127,17 +127,17 @@
                         <td id="hours_per_week">{{$course_update->hours_per_week}}</td>
                     </tr>
                     <tr>
-                        @php $course_study_times = \App\Models\SuperAdmin\Choose_Study_Time::whereIn('unique_id', is_null($course_update->study_time) ? [] : $course_update->study_time)->pluck('name')->toArray(); @endphp
+                        @php $course_study_times = \App\Models\SuperAdmin\ChooseStudyTime::whereIn('unique_id', is_null($course_update->study_time) ? [] : $course_update->study_time)->pluck('name')->toArray(); @endphp
                         <td>{{__('Frontend.study_time')}}</td>
                         <td id="study_time">{{implode(", ", $course_study_times)}}</td>
                     </tr>
                     <tr>
-                        @php $course_classes_days = \App\Models\SuperAdmin\Choose_Classes_Day::whereIn('unique_id', is_null($course_update->classes_day) ? [] : $course_update->classes_day)->pluck('name')->toArray(); @endphp
+                        @php $course_classes_days = \App\Models\SuperAdmin\ChooseClassesDay::whereIn('unique_id', is_null($course_update->classes_day) ? [] : $course_update->classes_day)->pluck('name')->toArray(); @endphp
                         <td>{{__('Frontend.classes_days')}}</td>
                         <td id="classes_day">{{implode(", ", $course_classes_days)}}</td>
                     </tr>
                     <tr>
-                        @php $course_start_days = \App\Models\SuperAdmin\Choose_Start_Day::whereIn('unique_id', is_null($course_update->start_date) ? []: $course_update->start_date)->pluck('name')->toArray(); @endphp
+                        @php $course_start_days = \App\Models\SuperAdmin\ChooseStartDate::whereIn('unique_id', is_null($course_update->start_date) ? []: $course_update->start_date)->pluck('name')->toArray(); @endphp
                         <td>{{__('Frontend.start_dates')}}</td>
                         <td id="start_date">{{implode(", ", $course_start_days)}}</td>
                     </tr>
@@ -225,8 +225,8 @@
                     <thead>
                         <tr>
                             <th>{{__('Frontend.details')}}</th>
-                            <th>{{__('Frontend.amount')}} / <span class="cost_currency"></span></th>
-                            <th>{{__('Frontend.amount')}} / <span class="converted_currency"></span></th>
+                            <th>{{__('Frontend.amount')}} / <span class="cost_value_currency"></span></th>
+                            <th>{{__('Frontend.amount')}} / <span class="converted_value_currency"></span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -243,7 +243,9 @@
                         </tr>
 
                         <tr id="text_book_fee">
-                            <td>{{__('Frontend.text_book_fee')}}</td>
+                            <td>{{__('Frontend.text_book_fee')}}
+                                <i class="fa fa-question-circle pl-2 text_book_fee_note" data-toggle="modal" data-target="#TextBookFeeModal" aria-hidden="true" style="display: none"></i>
+                            </td>
                             <td class="cost_value">0</td>
                             <td class="converted_value">0</td>
                         </tr>
@@ -285,6 +287,21 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            
+            <!-- Text Book Fee Modal -->
+            <div class="modal fade" id="TextBookFeeModal" tabindex="-1" role="dialog" aria-labelledby="TextBookFeeModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="TextBookFeeModalLabel">{{__('Frontend.text_book_fee_note')}}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body"></div>
+                    </div>
+                </div>
             </div>
 
             <div id="accommodation_fees">
@@ -368,8 +385,8 @@
                             <thead>
                                 <tr>
                                     <th>{{__('Frontend.details')}}</th>
-                                    <th>{{__('Frontend.amount')}} / <span class="cost_currency"></span></th>
-                                    <th>{{__('Frontend.amount')}} / <span class="converted_currency"></span></th>
+                                    <th>{{__('Frontend.amount')}} / <span class="cost_value_currency"></span></th>
+                                    <th>{{__('Frontend.amount')}} / <span class="converted_value_currency"></span></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -530,8 +547,8 @@
                             <thead>
                                 <tr>
                                     <th>{{__('Frontend.details')}}</th>
-                                    <th>{{__('Frontend.amount')}} / <span class="cost_currency"></span></th>
-                                    <th>{{__('Frontend.amount')}} / <span class="converted_currency"></span></th>
+                                    <th>{{__('Frontend.amount')}} / <span class="cost_value_currency"></span></th>
+                                    <th>{{__('Frontend.amount')}} / <span class="converted_value_currency"></span></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -602,14 +619,44 @@
 
             <div class="total mt-3">
                 <div class="row">
-                    <div class="col-md-6"></div>
-                    <div class="col-md-6">
+                    <div class="col-md-5"></div>
+                    <div class="col-md-7">
+                        <table class="table table-bordered table-no-drawable" id="sub_total_table">
+                            <tbody>
+                                <tr>
+                                    <td>{{__('Frontend.sub_total')}}</td>
+                                    <td><span class="cost_value"></span> <span class="cost_value_currency"></span></td>
+                                    <td><span class="converted_value"></span> <span class="converted_value_currency"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="table table-bordered table-no-drawable" id="bank_transfer_fee_table">
+                            <tbody>
+                                <tr>
+                                    <td>{{__('Frontend.bank_transfer_fee')}}</td>
+                                    <td><span class="cost_value"></span> <span class="cost_value_currency"></span></td>
+                                    <td><span class="converted_value"></span> <span class="converted_value_currency"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="table table-bordered table-no-drawable" id="link_fee_table" style="display: none">
+                            <tbody>
+                                <tr>
+                                    <td>{{__('Frontend.link_fee_including_vat')}} <span class="vat_fee"></span>%</td>
+                                    <td><span class="cost_value"></span> <span class="cost_value_currency"></span></td>
+                                    <td><span class="converted_value"></span> <span class="converted_value_currency"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
                         <table class="table table-bordered table-no-drawable" id="total_table">
                             <tbody>
                                 <tr>
                                     <td>{{__('Frontend.total_cost')}}</td>
-                                    <td><span class="total_cost"></span> <span class="total_cost_currency"></span></td>
-                                    <td><span class="total_converted"></span> <span class="total_converted_currency"></span></td>
+                                    <td><span class="cost_value"></span> <span class="cost_value_currency"></span></td>
+                                    <td><span class="converted_value"></span> <span class="converted_value_currency"></span></td>
                                 </tr>
                             </tbody>
                         </table>

@@ -10,8 +10,28 @@
             <div class="card-body">
                 <div style="text-align: center;">
                     <h1 class="card-title">{{__('Admin/backend.update_exchange_rate')}}</h1>
-                    @include('common.include.alert')
+                    <change>
+                        <div class="english">
+                            {{__('Admin/backend.in_english')}}
+                        </div>
+                        <div class="arabic">
+                            {{__('Admin/backend.in_arabic')}}
+                        </div>
+                    </change>
                 </div>
+
+                <div id="menu">
+                    <ul class="lang text-right current_page_itemm">
+                        <li class="{{app()->getLocale() == 'en' ? 'current_page_item selected' : ''}}">
+                            <a onclick="changeLanguage('english', 'arabic')"><img class="pr-2" src="{{asset('public/frontend/assets/img/eng.png')}}" alt="logo">{{__('Admin/backend.english')}}</a>
+                        </li>
+                        <li class="{{app()->getLocale() == 'ar' ? 'current_page_item selected' : ''}}">
+                            <a onclick="changeLanguage('arabic', 'english')"><img class="pr-2" src="{{asset('public/frontend/assets/img/ar.png')}}" alt="logo">{{__('Admin/backend.arabic')}}</a>
+                        </li>
+                    </ul>
+                </div>
+
+                @include('common.include.alert')
             </div>
         </div>
     </div>
@@ -37,7 +57,12 @@
                         <div class="row">
                             <div class="form-group col-md-12">
                                 <label for="name">{{__('Admin/backend.currency')}}</label>
-                                <input value="{{$currency->name}}" name="name" type="text" class="form-control">
+                                <div class="english">
+                                    <input value="{{$currency->name}}" name="name" type="text" class="form-control" placeholder="{{__('Admin/backend.currency')}}">
+                                </div>
+                                <div class="arabic">
+                                    <input value="{{$currency->name_ar}}" name="name_ar" type="text" class="form-control" placeholder="{{__('Admin/backend.currency')}}">
+                                </div>
                             </div>
                             <div class="form-group col-md-12">
                                 <label for="exchange_rate">{{__('Admin/backend.exchange_rate')}}</label>

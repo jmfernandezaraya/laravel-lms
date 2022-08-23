@@ -6,8 +6,7 @@ use App\Classes\TransactionCalculator;
 use App\Events\CourseApplicationStatus;
 use App\Http\Controllers\Controller;
 
-use App\Mail\SendMessageToSchoolAdmin;
-use App\Mail\SendMessageToStudent;
+use App\Mail\EmailTemplate;
 use App\Mail\UpdatedCourseApplication;
 use App\Services\SuperAdminEditUserCourse;
 
@@ -15,12 +14,12 @@ use App\Models\Calculator;
 use App\Models\CourseApplication;
 use App\Models\Message;
 
-use App\Models\SuperAdmin\Choose_Accommodation_Under_Age;
-use App\Models\SuperAdmin\Choose_Custodian_Under_Age;
-use App\Models\SuperAdmin\Choose_Program_Age_Range;
-use App\Models\SuperAdmin\Choose_Program_Under_Age;
-use App\Models\SuperAdmin\Choose_Start_Day;
-use App\Models\SuperAdmin\Choose_Study_Mode;
+use App\Models\SuperAdmin\ChooseAccommodationUnderAge;
+use App\Models\SuperAdmin\ChooseCustodianUnderAge;
+use App\Models\SuperAdmin\ChooseProgramAge;
+use App\Models\SuperAdmin\ChooseProgramUnderAge;
+use App\Models\SuperAdmin\ChooseStartDate;
+use App\Models\SuperAdmin\ChooseStudyMode;
 use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\CourseProgram;
 use App\Models\SuperAdmin\CourseAccommodation;
@@ -30,6 +29,7 @@ use App\Models\SuperAdmin\CourseAirportFee;
 use App\Models\SuperAdmin\CourseMedical;
 use App\Models\SuperAdmin\CourseCustodian;
 use App\Models\SuperAdmin\CourseApplicationApprove;
+use App\Models\SuperAdmin\EmailTemplate;
 use App\Models\SuperAdmin\School;
 use App\Models\SuperAdmin\TransactionRefund;
 
@@ -129,7 +129,9 @@ class CourseApplicationController extends Controller
                             $mail_pdf_data['user'] = \App\Models\User::find($user_school->user_id);
                             $mail_pdf_data['locale'] = app()->getLocale();
     
-                            \Mail::to($mail_pdf_data['user']->email)->send(new SendMessageToSchoolAdmin((object)$mail_pdf_data, $send_files));
+                            setEmailTemplateSMTP('send_to_school_admin');
+                            \Mail::to($mail_pdf_data['user']->email)->send(new EmailTemplate('send_to_school_admin', (object)$mail_pdf_data, $send_files));
+                            unsetEmailTemplateSMTP();
                         }
                         Message::create($request_save);
                     }
@@ -187,7 +189,9 @@ class CourseApplicationController extends Controller
                     $mail_pdf_data['user'] = \App\Models\User::find($course_application->user_id);
                     $mail_pdf_data['locale'] = app()->getLocale();
 
-                    \Mail::to($mail_pdf_data['user']->email)->send(new SendMessageToStudent((object)$mail_pdf_data, $send_files));
+                    setEmailTemplateSMTP('send_to_student');
+                    \Mail::to($mail_pdf_data['user']->email)->send(new EmailTemplate('send_to_student', (object)$mail_pdf_data, $send_files));
+                    unsetEmailTemplateSMTP();
     
                     $data['message'] = __('Admin/backend.message_sent_thank_you');
                 }
@@ -210,7 +214,7 @@ class CourseApplicationController extends Controller
                     $transaction->store_id = 999999;
                     $transaction->test_mode = 0;
                     $transaction->amount = $course_application->total_cost;
-                    $transaction->description = __('Admin/backend.program_registration_free');
+                    $transaction->description = __('Admin/backend.program_registration_fee');
                     $transaction->success_url = '';
                     $transaction->canceled_url = '';
                     $transaction->declined_url = '';
@@ -231,7 +235,7 @@ class CourseApplicationController extends Controller
                 }
                 if ($transaction_order_id) {
                     $transation = Transaction::where('cart_id', $transaction_order_id)->first();
-                    $txnrefund = new TransactionRefund;
+                    $txnrefund = new TransactionRefund();
                     $request->symbol == '+' ? $txnrefund->amount_added = $request->amount : $txnrefund->amount_refunded = $request->amount;
                     $txnrefund->transaction_id = $transation->order_id;
                     $txnrefund->txn_reference = $request->reference;
@@ -333,13 +337,13 @@ class CourseApplicationController extends Controller
             $study_mode_ids = array_merge($study_mode_ids, $course->study_mode);
         }
 
-        $start_dates = new Choose_Start_Day;
+        $start_dates = new ChooseStartDate();
         $start_dates = $start_dates->whereIn('unique_id', $start_date_ids)->get();
 
-        $study_modes = new Choose_Study_Mode;
+        $study_modes = new ChooseStudyMode();
         $study_modes = $study_modes->whereIn('unique_id', $study_mode_ids)->get();
 
-        $program_age_ranges = new Choose_Program_Age_Range;
+        $program_age_ranges = new ChooseProgramAge();
         $program_age_ranges = $program_age_ranges->whereIn('unique_id', $program_age_range_ids)->orderBy('age', 'asc')->get();  
 
         $data['ages'] = $program_age_ranges;
@@ -495,9 +499,9 @@ class CourseApplicationController extends Controller
 
         $under_age = $request->age_selected == null ? [] : $request->age_selected;
         $under_age = !is_array($request->age_selected) ? array($request->age_selected) : $under_age;
-        $program_age_range = Choose_Program_Age_Range::where('unique_id', $request->age_selected)->first();
-        $program_age_ranges = Choose_Program_Age_Range::whereIn('unique_id', $under_age)->pluck('age')->toArray();
-        $program_under_age = Choose_Program_Under_Age::whereIn('age', $program_age_ranges)->value('unique_id');
+        $program_age_range = ChooseProgramAge::where('unique_id', $request->age_selected)->first();
+        $program_age_ranges = ChooseProgramAge::whereIn('unique_id', $under_age)->pluck('age')->toArray();
+        $program_under_age = ChooseProgramUnderAge::whereIn('age', $program_age_ranges)->value('unique_id');
         $program_under_age_fee_per_week = 0;
         if ($request->date_selected != null) {
             $date_set = substr($request->date_selected, 6, 4) . "-" . substr($request->date_selected, 3, 2) . "-" . substr($request->date_selected, 0, 2);
@@ -576,6 +580,9 @@ class CourseApplicationController extends Controller
                     $course_application->registration_fee = $course_program->program_registration_fee == null ? 0 : $course_program->program_registration_fee;
                 }
             }
+            $course_application->bank_transfer_fee = $course_program->bank_transfer_fee == null ? 0 : $course_program->bank_transfer_fee;
+            $course_application->link_fee_converted = $course->link_fee_enable ? (($course_program->link_fee == null || $course_program->tax_percent == null) ? 0 : $course_program->link_fee * $course_program->tax_percent / 100) : 0;
+            $course_application->link_fee = getCurrencyReverseConvertedValue($course->unique_id, $course_application->link_fee_converted);
             if (checkBetweenDate($course_program->x_week_start_date, $course_program->x_week_end_date, Carbon::now()->format('Y-m-d'))) {
                 // Calculating by program cost * week  - free_week
                 if (!(int)$course_program->x_week_selected) {
@@ -628,7 +635,7 @@ class CourseApplicationController extends Controller
                 $request_age = $program_age_range->age;
             }
             $under_age_fee_per_week = 0;
-            $accommodation_under_age = Choose_Accommodation_Under_Age::where('age', $request_age)->first();
+            $accommodation_under_age = ChooseAccommodationUnderAge::where('age', $request_age)->first();
             $course_accommodation_under_ages = CourseAccommodationUnderAge::where('accom_id', '' . $accommodation->unique_id)->get();
             if ($accommodation_under_age && $course_accommodation_under_ages) {
                 foreach ($course_accommodation_under_ages as $course_accommodation_under_age) {
@@ -722,8 +729,8 @@ class CourseApplicationController extends Controller
             }
         }
         $course_application->medical_insurance_fee = $medical_insurance_fee;
-        $program_age_range = Choose_Program_Age_Range::where('unique_id', $request->age_selected)->first();
-        $custodian_under_age = Choose_Custodian_Under_Age::where('age', $program_age_range ? $program_age_range->age : '')->value('unique_id');
+        $program_age_range = ChooseProgramAge::where('unique_id', $request->age_selected)->first();
+        $custodian_under_age = ChooseCustodianUnderAge::where('age', $program_age_range ? $program_age_range->age : '')->value('unique_id');
         $custodian = CourseCustodian::where('course_unique_id', $request->program_id)->where('age_range', 'LIKE', '%' . $custodian_under_age . '%')->first();
         $custodian_fee_flag = false;
         $course_application->custodian_fee = 0;
@@ -747,7 +754,8 @@ class CourseApplicationController extends Controller
             + ($course_application->accommodation_fee ?? 0) + ($course_application->accommodation_placement_fee ?? 0) + ($course_application->accommodation_special_diet_fee ?? 0)
             + ($course_application->accommodation_deposit_fee ?? 0) + ($course_application->accommodation_summer_fee ?? 0) + ($course_application->accommodation_peak_fee ?? 0)
             + ($course_application->accommodation_christmas_fee ?? 0) + ($course_application->accommodation_under_age_fee ?? 0) - ($course_application->accommodation_discount_fee ?? 0)
-            + ($course_application->airport_pickup_fee ?? 0) + ($course_application->medical_insurance_fee ?? 0) + ($course_application->custodian_fee ?? 0);
+            + ($course_application->airport_pickup_fee ?? 0) + ($course_application->medical_insurance_fee ?? 0) + ($course_application->custodian_fee ?? 0)
+            + ($course_application->bank_transfer_fee ?? 0) + ($course_application->link_fee ?? 0);
         $course_application->sub_total = $course_application->total_cost + $course_application->total_discount;
         $course_application->total_cost_fixed = getCurrencyConvertedValue($course_application->course_id, $course_application->total_cost);
         $course_application->total_balance = $course_application->total_cost - $course_application->deposit_price;

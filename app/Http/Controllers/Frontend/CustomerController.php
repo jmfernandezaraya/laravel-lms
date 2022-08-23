@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 
-use App\Mail\ContactCenterAdmin;
+use App\Mail\EmailTemplate;
 use App\Mail\SendMailToSuperAdminUserCourseApproveStatus;
 use App\Mail\SendMailToUserCourseApproveStatus;
 use App\Mail\SendVerifyEmailAgain;
@@ -19,10 +19,10 @@ use App\Models\CourseApplication;
 use App\Models\Review;
 use App\Models\Message;
 
-use App\Models\SuperAdmin\Choose_Accommodation_Age_Range;
-use App\Models\SuperAdmin\Choose_Program_Age_Range;
-use App\Models\SuperAdmin\Choose_Program_Under_Age;
-use App\Models\SuperAdmin\Choose_Study_Mode;
+use App\Models\SuperAdmin\ChooseAccommodationAge;
+use App\Models\SuperAdmin\ChooseProgramAge;
+use App\Models\SuperAdmin\ChooseProgramUnderAge;
+use App\Models\SuperAdmin\ChooseStudyMode;
 use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\CourseAccommodation;
 use App\Models\SuperAdmin\CourseAirport;
@@ -66,8 +66,8 @@ class CustomerController extends Controller
             $last_name = $user->last_name_ar;
         }
         $email = $user->email;
-        $contact = $user->contact;
-        return view('frontend.customer.login_password', compact('first_name', 'last_name', 'email', 'contact'));
+        $telephone = $user->telephone;
+        return view('frontend.customer.login_password', compact('first_name', 'last_name', 'email', 'telephone'));
     }
     
     public function verifyEmail()
@@ -94,7 +94,7 @@ class CustomerController extends Controller
             'first_name' => 'required',
             'last_name' => 'sometimes',
             'email' => 'required|email',
-            'contact' => 'sometimes',
+            'telephone' => 'sometimes',
             'password' => 'sometimes',
         ];
 
@@ -115,8 +115,8 @@ class CustomerController extends Controller
                 $user->first_name_ar = $request->first_name;
                 $user->last_name_ar = $request->last_name;
             }
-            if (isset($request->contact) && $request->contact) {
-                $user->contact = $request->contact;
+            if (isset($request->telephone) && $request->telephone) {
+                $user->telephone = $request->telephone;
             }
             if (isset($request->password) && $request->password) {
                 $user->password = \Hash::make($request->password);
@@ -215,11 +215,18 @@ class CustomerController extends Controller
             $course_application = CourseApplication::whereId($request->type_id)->first();
             $request_save['from_user'] = auth()->user()->id;
             $request_save['to_user'] = [];
-            $super_admins = User::where('user_type', 'super_admin')->get();
-            foreach ($super_admins as $super_admin) {
-                $request_save['to_user'][] = $super_admin->id;
-                \Mail::send(new ContactCenterAdmin($super_admin, $request_save, $send_files));
+            // $super_admins = User::where('user_type', 'super_admin')->get();
+            // foreach ($super_admins as $super_admin) {
+            //     $request_save['to_user'][] = $super_admin->id;
+            //     \Mail::send(new EmailTemplate($super_admin, $request_save, app()->getLocale(), $send_files));
+            // }
+            $school_admins = User::where('user_type', 'school_admin')->get();
+            setEmailTemplateSMTP('send_to_school_admin');
+            foreach ($school_admins as $school_admin) {
+                $request_save['to_user'][] = $school_admin->id;
+                \Mail::to($school_admin->email)->send(new EmailTemplate('send_to_school_admin', $request_save, app()->getLocale(), $send_files));
             }
+            unsetEmailTemplateSMTP();
             Message::create($request_save);
 
             $data['message'] = __('Frontend.message_sent_thank_you');

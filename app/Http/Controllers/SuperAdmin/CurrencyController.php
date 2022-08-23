@@ -12,7 +12,7 @@ use App\Http\Requests\SuperAdmin\CurrencyRequest;
 use App\Models\CourseApplication;
 
 use App\Models\SuperAdmin\CurrencyExchangeRate;
-use App\Models\SuperAdmin\Choose_Language;
+use App\Models\SuperAdmin\ChooseLanguage;
 use App\Models\SuperAdmin\Course;
 use App\Models\SuperAdmin\TransactionRefund;
 
@@ -120,6 +120,7 @@ class CurrencyController extends Controller
             if (($course_application->status != 'application_cancelled' && $course_application->status != 'completed') && $amount_due != 0) {
                 $course_application->total_cost_fixed = $course_application->total_cost * $currency_ratio;
             }
+            $course_application->link_fee = $course_application->link_fee * $currency_ratio;
             $course_application->save();
         }
 
