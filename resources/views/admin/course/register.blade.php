@@ -314,66 +314,12 @@
                 </div>
 
                 <script>
-                    function checkFinancialGurantee() {
-                        var country_name = $("#get_country").val();
-                        var study_finance = $("#study_finance").val();
-
-                        if (study_finance == 'personal') {
-                            $("#financial_guarantee").hide();
-                            if ((country_name == 'USA' || country_name == 'usa' || country_name == 'united states of america')) {
-                                $("#bank_statement").show();
-                            } else {
-                                $("#bank_statement").hide();
-                            }
-                        } else {
-                            $("#financial_guarantee").show();
-                            $("#bank_statement").hide();
-                        }
-                    }
-
                     function backCourseDetail(object) {
                         @if (auth('superadmin')->check())
                             window.location.href = "{{ route('superadmin.course_application.edit', $course_application->id) }}";
                         @elseif (auth('schooladmin')->check())
                             window.location.href = "{{ route('schooladmin.course_application.edit', $course_application->id) }}";
                         @endif
-                    }
-
-                    function doRegister(object) {
-                        var formdata = new FormData($(object).parents().find('#course_form_register')[0]);
-                        var urlname = ($(object).parents().find('#course_form_register').attr('action'));
-                        $("#loader").show();
-                        console.log(formdata);
-
-                        $.ajax({
-                            type: 'POST',
-                            url: urlname,
-                            data: formdata,
-                            cache: false,
-                            contentType: false,
-                            processData: false,
-                            success: function(data) {
-                                $("#loader").hide();
-                                console.log(data);
-                                if (data.success == true) {
-                                    window.location.href = data.url;
-                                } else if (data.errors) {
-                                    var alert_messages = '';
-                                    if (typeof data.errors === 'object') {
-                                        for (const [error_key, error_value] of Object.entries(data.errors)) {
-                                            alert_messages += error_value + '\n';
-                                        }
-                                    } else if (typeof data.errors === 'array') {
-                                        for (let error_index = 0; error_index < data.errors.length; error_index++) {
-                                            alert_messages += data.errors[error_index] + '\n';
-                                        }
-                                    } else {
-                                        alert_messages += error + '\n';
-                                    }
-                                    alert(alert_messages);
-                                }
-                            }
-                        });
                     }
                 </script>
             </div>

@@ -108,42 +108,8 @@ class LoginController extends Controller
         unset($to_save['password_confirmation']);
 
         $user->fill($to_save + ['user_type' => 'user', 'password' => \Hash::make($request->password), 'remember_token' => $token])->save();
-        $user->permission()->create([
-            'blog_manager' => 0,
-            'blog_add' => 0,
-            'blog_edit' => 0,
-            'school_manager' => 0,
-            'school_add' => 0,
-            'school_edit' => 0,
-            'course_manager' => 0,
-            'course_view' => 0,
-            'course_add' => 0,
-            'course_edit' => 0,
-            'course_display' => 0,
-            'course_delete' => 0,
-            'currency_manager' => 0,
-            'currency_add' => 0,
-            'currency_edit' => 0,
-            'course_application_manager' => 0,
-            'course_application_edit' => 0,
-            'course_application_chanage_status' => 0,
-            'course_application_payment_refund' => 0,
-            'course_application_contact_student' => 0,
-            'course_application_contact_school' => 0,
-            'review_manager' => 0,
-            'review_apply' => 0,
-            'review_edit' => 0,
-            'review_delete' => 0,
-            'review_approve' => 0,
-            'user_manager' => 0,
-            'user_add' => 0,
-            'user_edit' => 0,
-            'user_delete' => 0,
-            'user_permission' => 0,
-        ]);
-        setEmailTemplateSMTP('verify_email');
-        \Mail::to($user->email)->send(new EmailTemplate('verify_email', $user, app()->getLocale()));
-        unsetEmailTemplateSMTP();
+        $user->permission()->create([]);
+        sendEmail('verify_email', $user->email, $user, app()->getLocale());
 
         toastr()->success(__('Frontend.check_your_email'));
         

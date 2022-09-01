@@ -196,7 +196,7 @@ class CourseController extends Controller
 
             if ($r->date_set != null) {
                 json_file('bank_transfer_fee', $course_program->bank_transfer_fee);
-                $link_fee_converted = $course_program->course->link_fee_enable ? (($course_program->link_fee == null || $course_program->tax_percent == null) ? 0 : $course_program->link_fee * $course_program->tax_percent / 100) : 0;
+                $link_fee_converted = $course_program->course->link_fee_enable ? (($course_program->link_fee == null || $course_program->tax_percent == null) ? 0 : $course_program->link_fee + $course_program->link_fee * $course_program->tax_percent / 100) : 0;
                 json_file('link_fee', getCurrencyReverseConvertedValue($course->course_unique_id, $link_fee_converted));
                 json_file('link_fee_converted', $link_fee_converted);
                 $this->calculator->setSummerDateFromDbProgram($course_program->summer_fee_end_date);

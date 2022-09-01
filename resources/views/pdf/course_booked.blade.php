@@ -75,7 +75,7 @@
     <img src="{{$logo}}" class="logo"/>
     <hr />
 
-    <h2 class="title">{{__('Mail.reservation_qutation')}}</h3>
+    <h2 class="title">{{__('Mail.reservation_quotation')}}</h3>
 
     <table class="table-bold">
         <tr>
@@ -87,11 +87,11 @@
             <td></td>
         </tr>
         <tr>
-            <td>{{__('Mail.customer_no')}}: {{$user->id}}</td>
+            <td>{{__('Mail.customer_no')}}: {{$user_no}}</td>
             <td></td>
         </tr>
         <tr>
-            <td>{{__('Mail.qutation_no')}}: {{$id}}</td>
+            <td>{{__('Mail.quotation_no')}}: {{$quotation_no}}</td>
             <td></td>
         </tr>
     </table>

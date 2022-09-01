@@ -7,6 +7,7 @@ use App\Http\Requests\ContactUsRequest;
 
 use App\Models\Frontend\ContactUs;
 
+use App\Mail\AdminEmailTemplate;
 use App\Mail\EmailTemplate;
 
 /**
@@ -31,9 +32,7 @@ class ContactController extends Controller
         $contactUs = new ContactUs;
         $contactUs->fill($request->validated())->save();
 
-        setEmailTemplateSMTP('contact_us');
-        \Mail::to(env('MAIL_TO_ADDRESS'))->send(new EmailTemplate('contact_us', $request, app()->getLocale()));
-        unsetEmailTemplateSMTP();
+        sendEmail('contact_us', $request->email, $request, app()->getLocale());
 
         return __('Frontend.contact_us_successfully');
     }

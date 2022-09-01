@@ -50,18 +50,29 @@ class CustomerController extends Controller
      */
     public function store(CustomerRequest $request)
     {
-        try {
-            (new User($request->validated()))->save();
-            $saved = __('Admin/backend.data_saved_successfully');
-            return redirect()->route('superadmin.customer.index');
-        } catch (ValidationException $e) {
-            return response()->json(['errors' => $e->errors()]);
-        } catch (NotReadableException $e) {
-            $exception = __('Admin/backend.errors.image_required');
-            return response()->json(['catch_error' => $exception]);
-        } catch (\Exception $e) {
-            return response()->json(['catch_error' => $e->getMessage()]);
+        $rules = [
+            'first_name_en' => 'required',
+            'first_name_ar' => 'required',
+            'last_name_en' => 'required',
+            'last_name_ar' => 'required',
+            'email' => 'required',
+        ];
+        $validator = Validator::make($request->all(), $rules, [
+            'first_name_en.required' => __('Admin/backend.errors.customer_first_name_in_english'),
+            'first_name_ar.required' => __('Admin/backend.errors.customer_first_name_in_arabic'),
+            'last_name_en.required' => __('Admin/backend.errors.customer_last_name_in_english'),
+            'last_name_ar.required' => __('Admin/backend.errors.customer_last_name_in_arabic'),
+            'email.required' => __('Admin/backend.errors.customer_email'),
+        ]);
+        if ($validator->fails()) {
+            return back()->withErrors($validator->errors());
         }
+        
+        (new User($request->validated()))->save();
+
+        toastr()->success(__('Admin/backend.data_saved_successfully'));
+
+        return redirect()->route('superadmin.user.customer.index');
     }
 
     /**
@@ -92,22 +103,22 @@ class CustomerController extends Controller
             'last_name_ar' => 'required',
             'email' => 'required',
         ];
-
-        $validate = Validator::make($request->all(), $rules, [
+        $validator = Validator::make($request->all(), $rules, [
             'first_name_en.required' => __('Admin/backend.errors.customer_first_name_in_english'),
             'first_name_ar.required' => __('Admin/backend.errors.customer_first_name_in_arabic'),
             'last_name_en.required' => __('Admin/backend.errors.customer_last_name_in_english'),
             'last_name_ar.required' => __('Admin/backend.errors.customer_last_name_in_arabic'),
             'email.required' => __('Admin/backend.errors.customer_email'),
         ]);
-        if ($validate->fails()) {
-            return response()->json(['errors' => $validate->errors()]);
+        if ($validator->fails()) {
+            return back()->withErrors($validator->errors());
         }
-        $save = $validate->validated();
 
-        $customers->fill($save)->save();
-        $saved = __('Admin/backend.data_saved_successfully');
-        return response()->json(['success' => true, 'data' => $saved]);
+        $customers->fill($validate->validated())->save();
+
+        toastr()->success(__('Admin/backend.data_saved_successfully'));
+
+        return redirect()->route('superadmin.user.customer.index');
     }
 
     /**
@@ -119,13 +130,15 @@ class CustomerController extends Controller
     public function destroy($id)
     {
         $delete = User::findorFail($id);
-        $deleted = __('Admin/backend.data_deleted_successfully');
 
         if ($delete->image != '' && $delete->image != null && file_exists($delete->image)) {
             unlink($delete->image);
         }
         $delete->delete();
-        return back()->with(['message' => $deleted]);
+
+        toastr()->success(__('Admin/backend.data_deleted_successfully'));
+
+        return redirect()->route('superadmin.user.customer.index');
     }
 
     /**

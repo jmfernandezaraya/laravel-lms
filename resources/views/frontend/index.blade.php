@@ -55,7 +55,7 @@
             <div class="school-list schools-style-promotion">
                 <div class="row" data-aos="zoom-in" data-aos-delay="100">
                     @php $now = Carbon\Carbon::now()->format('Y-m-d') @endphp
-                    @foreach ($schools as $school)
+                    @foreach ($promotion_schools as $school)
                         @if ($setting_value && $setting_value['school_promotions'] && in_array($school->id, $setting_value['school_promotions']))
                             <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
                                 <!-- School Item-->
@@ -178,43 +178,45 @@
             <div class="school-list schools-style-popular">
                 <div class="row" data-aos="zoom-in" data-aos-delay="100">
                     @foreach($schools as $school)
-                        <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
-                            <div class="school-item">
-                                <a href="{{route('frontend.school.details', $school->id)}}">
-                                    <div class="school-logo" style="background-image: url('{{ $school->logo }}')"></div>
-                                    <div class="school-content">
-                                        <div class="school-information">
-                                            <a href="{{route('frontend.school.details', $school->id)}}">
-                                                <div class="school-name-branch">{{ $school->name ? (app()->getLocale() == 'en' ? $school->name->name : $school->name->name_ar) : '' }}{{ app()->getLocale() == 'en' ? ($school->branch_name ? ' / ' . $school->branch_name : '') : ($school->branch_name_ar ? ' / ' . $school->branch_name_ar : '') }}</div>
-                                                <div class="school-city">{{ $school->city ? (app()->getLocale() == 'en' ? $school->city->name : $school->city->name_ar) : '' }}</div>
-                                                <div class="school-country">{{ $school->country ? (app()->getLocale() == 'en' ? $school->country->name : $school->country->name_ar) : '' }}</div>
-                                            </a>
-                                        </div>
-                                        <div class="school-users-loves-likes">
-                                            <div class="school-users-loves">
-                                                <i class="bx bx-show"></i>&nbsp;{{$school->viewed_count}}&nbsp;&nbsp;
-                                                @auth
-                                                    @if (!empty(auth()->user()->likedSchool))
-                                                        <i class="bx bxs-heart" data-school="{{ $school->id }}" style="cursor:pointer" onclick="like_school($(this).attr('data-school'))"></i>&nbsp;{{ auth()->user()->likedSchool()->count() }}
+                        @if ($setting_value && $setting_value['popular_schools'] && in_array($school->id, $setting_value['popular_schools']))
+                            <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
+                                <div class="school-item">
+                                    <a href="{{route('frontend.school.details', $school->id)}}">
+                                        <div class="school-logo" style="background-image: url('{{ $school->logo }}')"></div>
+                                        <div class="school-content">
+                                            <div class="school-information">
+                                                <a href="{{route('frontend.school.details', $school->id)}}">
+                                                    <div class="school-name-branch">{{ $school->name ? (app()->getLocale() == 'en' ? $school->name->name : $school->name->name_ar) : '' }}{{ app()->getLocale() == 'en' ? ($school->branch_name ? ' / ' . $school->branch_name : '') : ($school->branch_name_ar ? ' / ' . $school->branch_name_ar : '') }}</div>
+                                                    <div class="school-city">{{ $school->city ? (app()->getLocale() == 'en' ? $school->city->name : $school->city->name_ar) : '' }}</div>
+                                                    <div class="school-country">{{ $school->country ? (app()->getLocale() == 'en' ? $school->country->name : $school->country->name_ar) : '' }}</div>
+                                                </a>
+                                            </div>
+                                            <div class="school-users-loves-likes">
+                                                <div class="school-users-loves">
+                                                    <i class="bx bx-show"></i>&nbsp;{{$school->viewed_count}}&nbsp;&nbsp;
+                                                    @auth
+                                                        @if (!empty(auth()->user()->likedSchool))
+                                                            <i class="bx bxs-heart" data-school="{{ $school->id }}" style="cursor:pointer" onclick="like_school($(this).attr('data-school'))"></i>&nbsp;{{ auth()->user()->likedSchool()->count() }}
+                                                        @else
+                                                            <i class="bx bx-heart" data-school="{{ $school->id }}" style="cursor:pointer" onclick="like_school($(this).attr('data-school'))">&nbsp;{{ auth()->user()->likedSchool()->count() }}</i>
+                                                        @endif
                                                     @else
-                                                        <i class="bx bx-heart" data-school="{{ $school->id }}" style="cursor:pointer" onclick="like_school($(this).attr('data-school'))">&nbsp;{{ auth()->user()->likedSchool()->count() }}</i>
-                                                    @endif
-                                                @else
-                                                    <i class="bx bx-heart" data-school="{{ $school->id }}" onclick="like_school($(this).attr('data-school'), true)" style="cursor:pointer">&nbsp;{{ \App\Models\Frontend\LikedSchool::count() }}</i>
-                                                @endauth
-                                            </div>
-                                            <div class="school-likes">
-                                                <i class="bx bxs-star"></i>
-                                                <i class="bx bxs-star"></i>
-                                                <i class="bx bxs-star"></i>
-                                                <i class="bx bxs-star"></i>
-                                                <i class="bx bxs-star-half"></i>
+                                                        <i class="bx bx-heart" data-school="{{ $school->id }}" onclick="like_school($(this).attr('data-school'), true)" style="cursor:pointer">&nbsp;{{ \App\Models\Frontend\LikedSchool::count() }}</i>
+                                                    @endauth
+                                                </div>
+                                                <div class="school-likes">
+                                                    <i class="bx bxs-star"></i>
+                                                    <i class="bx bxs-star"></i>
+                                                    <i class="bx bxs-star"></i>
+                                                    <i class="bx bxs-star"></i>
+                                                    <i class="bx bxs-star-half"></i>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </a>
-                            </div> <!-- End School Item-->
-                        </div>
+                                    </a>
+                                </div> <!-- End School Item-->
+                            </div>
+                        @endif
                     @endforeach
                 </div>
             </div>

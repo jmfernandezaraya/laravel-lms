@@ -121,6 +121,10 @@
                                         <input name="blog_edit" type="checkbox" class="form-check-inline" value='1' {{ ($super_admin->permission && $super_admin->permission->blog_edit) ? 'checked' : '' }}>
                                         <label for="blog_edit">{{__('Admin/backend.edit')}}</label>
                                     </div>
+                                    <div class="form-check">
+                                        <input name="blog_delete" type="checkbox" class="form-check-inline" value='1' {{ ($super_admin->permission && $super_admin->permission->blog_delete) ? 'checked' : '' }}>
+                                        <label for="blog_delete">{{__('Admin/backend.delete')}}</label>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group col-md-6">
@@ -138,6 +142,10 @@
                                     <div class="form-check">
                                         <input name="school_edit" type="checkbox" class="form-check-inline" value='1' {{ ($super_admin->permission && $super_admin->permission->school_edit) ? 'checked' : '' }}>
                                         <label for="school_edit">{{__('Admin/backend.edit')}}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="school_delete" type="checkbox" class="form-check-inline" value='1' {{ ($super_admin->permission && $super_admin->permission->school_delete) ? 'checked' : '' }}>
+                                        <label for="school_delete">{{__('Admin/backend.delete')}}</label>
                                     </div>
                                 </div>
                             </div>
@@ -189,10 +197,36 @@
                                         <input name="currency_edit" type="checkbox" class="form-check-inline" value='1' {{ ($super_admin->permission && $super_admin->permission->currency_edit) ? 'checked' : '' }}>
                                         <label for="currency_edit">{{__('Admin/backend.edit')}}</label>
                                     </div>
+                                    <div class="form-check">
+                                        <input name="currency_delete" type="checkbox" class="form-check-inline" value='1' {{ ($super_admin->permission && $super_admin->permission->currency_delete) ? 'checked' : '' }}>
+                                        <label for="currency_delete">{{__('Admin/backend.delete')}}</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="coupon_permission">{{__('Admin/backend.coupon')}}</label>
+                                <select name="coupon_permission" id="coupon_permission" class="form-control">
+                                    <option value="">{{__('Admin/backend.select_role')}}</option>
+                                    <option value="subscriber" {{ ($super_admin->permission && !$super_admin->permission->coupon_manager && $super_admin->permission->coupon_add && $super_admin->permission->coupon_edit) ? 'selected' : '' }}>{{__('Admin/backend.subscriber')}}</option>
+                                    <option value="manager" {{ ($super_admin->permission && $super_admin->permission->coupon_manager) ? 'selected' : '' }}>{{__('Admin/backend.manager')}}</option>
+                                </select>
+                                <div class="coupon-permissions" style="display: {{ ($super_admin->permission && !$super_admin->permission->coupon_manager && $super_admin->permission->coupon_add) ? 'block' : 'none' }}">
+                                    <div class="form-check">
+                                        <input name="coupon_add" type="checkbox" class="form-check-inline" value='1' {{ ($super_admin->permission && $super_admin->permission->coupon_add) ? 'checked' : '' }}>
+                                        <label for="coupon_add">{{__('Admin/backend.add')}}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="coupon_edit" type="checkbox" class="form-check-inline" value='1' {{ ($super_admin->permission && $super_admin->permission->coupon_edit) ? 'checked' : '' }}>
+                                        <label for="coupon_edit">{{__('Admin/backend.edit')}}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="coupon_delete" type="checkbox" class="form-check-inline" value='1' {{ ($super_admin->permission && $super_admin->permission->coupon_delete) ? 'checked' : '' }}>
+                                        <label for="coupon_delete">{{__('Admin/backend.delete')}}</label>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="form-group col-md-6">
                                 <label for="course_application_permission">{{__('Admin/backend.course_application')}}</label>
                                 <select name="course_application_permission" id="course_application_permission" class="form-control">
@@ -223,6 +257,8 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="user_permission">{{__('Admin/backend.user')}}</label>
                                 <select name="user_permission" id="user_permission" class="form-control">
@@ -249,8 +285,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="review_permission">{{__('Admin/backend.review')}}</label>
                                 <select name="review_permission" id="review_permission" class="form-control">
@@ -277,6 +311,8 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="enquiry_permission">{{__('Admin/backend.enquiry')}}</label>
                                 <select name="enquiry_permission" id="enquiry_permission" class="form-control">
@@ -299,8 +335,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="form_builder_permission">{{__('Admin/backend.form_builder')}}</label>
                                 <select name="form_builder_permission" id="form_builder_permission" class="form-control">
@@ -323,6 +357,8 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="visa_application_permission">{{__('Admin/backend.visa_application.title')}}</label>
                                 <select name="visa_application_permission" id="visa_application_permission" class="form-control">
@@ -345,8 +381,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="payment_permission">{{__('Admin/backend.payment')}}</label>
                                 <select name="payment_permission" id="payment_permission" class="form-control">
@@ -365,6 +399,8 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="email_template_permission">{{__('Admin/backend.email_template')}}</label>
                                 <select name="email_template_permission" id="email_template_permission" class="form-control">
@@ -387,8 +423,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="setting_permission">{{__('Admin/backend.setting')}}</label>
                                 <div class="setting-permissions">

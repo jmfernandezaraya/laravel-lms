@@ -29,7 +29,6 @@ use App\Models\SuperAdmin\CourseAirportFee;
 use App\Models\SuperAdmin\CourseMedical;
 use App\Models\SuperAdmin\CourseCustodian;
 use App\Models\SuperAdmin\CourseApplicationApprove;
-use App\Models\SuperAdmin\EmailTemplate;
 use App\Models\SuperAdmin\School;
 use App\Models\SuperAdmin\TransactionRefund;
 
@@ -126,12 +125,11 @@ class CourseApplicationController extends Controller
                             $mail_pdf_data = array();
                             $mail_pdf_data['subject'] = $request_save['subject'];
                             $mail_pdf_data['message'] = $request_save['message'];
-                            $mail_pdf_data['user'] = \App\Models\User::find($user_school->user_id);
+                            $mail_pdf_data['user'] = $mail_pdf_data['to_user'] = \App\Models\User::find($user_school->user_id);
+                            $mail_pdf_data['from_user'] = \App\Models\User::find(auth('superadmin')->user()->id);
                             $mail_pdf_data['locale'] = app()->getLocale();
     
-                            setEmailTemplateSMTP('send_to_school_admin');
-                            \Mail::to($mail_pdf_data['user']->email)->send(new EmailTemplate('send_to_school_admin', (object)$mail_pdf_data, $send_files));
-                            unsetEmailTemplateSMTP();
+                            sendEmail('send_to_school_admin', $mail_pdf_data['user']->email, (object)$mail_pdf_data, app()->getLocale(), $send_files);
                         }
                         Message::create($request_save);
                     }
@@ -186,12 +184,11 @@ class CourseApplicationController extends Controller
                     $mail_pdf_data = array();
                     $mail_pdf_data['subject'] = $request_save['subject'];
                     $mail_pdf_data['message'] = $request_save['message'];
-                    $mail_pdf_data['user'] = \App\Models\User::find($course_application->user_id);
+                    $mail_pdf_data['from_user'] = \App\Models\User::find(auth('superadmin')->user()->id);
+                    $mail_pdf_data['user'] = $mail_pdf_data['to_user'] = \App\Models\User::find($course_application->user_id);
                     $mail_pdf_data['locale'] = app()->getLocale();
 
-                    setEmailTemplateSMTP('send_to_student');
-                    \Mail::to($mail_pdf_data['user']->email)->send(new EmailTemplate('send_to_student', (object)$mail_pdf_data, $send_files));
-                    unsetEmailTemplateSMTP();
+                    sendEmail('send_to_student', $mail_pdf_data['user']->email, (object)$mail_pdf_data, app()->getLocale(), $send_files);
     
                     $data['message'] = __('Admin/backend.message_sent_thank_you');
                 }
@@ -581,7 +578,7 @@ class CourseApplicationController extends Controller
                 }
             }
             $course_application->bank_transfer_fee = $course_program->bank_transfer_fee == null ? 0 : $course_program->bank_transfer_fee;
-            $course_application->link_fee_converted = $course->link_fee_enable ? (($course_program->link_fee == null || $course_program->tax_percent == null) ? 0 : $course_program->link_fee * $course_program->tax_percent / 100) : 0;
+            $course_application->link_fee_converted = $course->link_fee_enable ? (($course_program->link_fee == null || $course_program->tax_percent == null) ? 0 : $course_program->link_fee + $course_program->link_fee * $course_program->tax_percent / 100) : 0;
             $course_application->link_fee = getCurrencyReverseConvertedValue($course->unique_id, $course_application->link_fee_converted);
             if (checkBetweenDate($course_program->x_week_start_date, $course_program->x_week_end_date, Carbon::now()->format('Y-m-d'))) {
                 // Calculating by program cost * week  - free_week

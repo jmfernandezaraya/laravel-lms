@@ -76,7 +76,6 @@ class SchoolAdminController extends Controller
             'country' => 'sometimes',
             'city' => 'sometimes',
         ];
-
         $validator = \Validator::make($request->all(), $rules, [
             'first_name_en.required' => __('Admin/backend.errors.first_name_english'),
             'first_name_ar.required' => __('Admin/backend.errors.first_name_arabic'),
@@ -87,7 +86,8 @@ class SchoolAdminController extends Controller
             'telephone.required' => __('Admin/backend.errors.telephone_required'),
             'email.required' => __('Admin/backend.errors.email_required'),
             'image.mimes' => __('Admin/backend.errors.image_must_be_in'),
-            'school_name.required' => 'School Name is Required']);
+            'school_name.required' => 'School Name is Required'
+        ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()]);
@@ -97,20 +97,6 @@ class SchoolAdminController extends Controller
         unset($requested_save['password']);
         unset($requested_save['image']);
         unset($requested_save['school_name']);
-        unset($requested_save['school_permission']);
-        unset($requested_save['school_add']);
-        unset($requested_save['school_edit']);
-        unset($requested_save['course_permission']);
-        unset($requested_save['course_add']);
-        unset($requested_save['course_edit']);
-        unset($requested_save['course_display']);
-        unset($requested_save['course_delete']);
-        unset($requested_save['course_application_permission']);
-        unset($requested_save['course_application_edit']);
-        unset($requested_save['course_application_chanage_status']);
-        unset($requested_save['course_application_payment_refund']);
-        unset($requested_save['course_application_contact_student']);
-        unset($requested_save['course_application_contact_school']);
 
         $user_type = 'school_admin';
         if (!is_null($request->city) && !is_null($request->country) && !is_null($request->branch)) {
@@ -146,9 +132,6 @@ class SchoolAdminController extends Controller
             }
             if (can_manage_user() || can_permission_user()) {
                 $user->permission()->create([
-                    'school_manager' => $request->school_permission == 'manager',
-                    'school_add' => ($request->school_permission == 'subscriber' && $request->school_add) ?? 0,
-                    'school_edit' => ($request->school_permission == 'subscriber' && $request->school_edit) ?? 0,
                     'course_manager' => $request->course_permission == 'manager',
                     'course_view' => ($request->course_permission == 'subscriber' && $request->course_view) ?? 0,
                     'course_add' => ($request->course_permission == 'subscriber' && $request->course_add) ?? 0,
@@ -161,15 +144,19 @@ class SchoolAdminController extends Controller
                     'course_application_payment_refund' => ($request->course_application_permission == 'subscriber' && $request->course_application_payment_refund) ?? 0,
                     'course_application_contact_student' => ($request->course_application_permission == 'subscriber' && $request->course_application_contact_student) ?? 0,
                     'course_application_contact_school' => ($request->course_application_permission == 'subscriber' && $request->course_application_contact_school) ?? 0,
+                    'enquiry_manager' => $request->enquiry_permission == 'manager',
+                    'enquiry_add' => ($request->enquiry_permission == 'subscriber' && $request->enquiry_add) ?? 0,
+                    'enquiry_edit' => ($request->enquiry_permission == 'subscriber' && $request->enquiry_edit) ?? 0,
+                    'enquiry_delete' => ($request->enquiry_permission == 'subscriber' && $request->enquiry_delete) ?? 0,
                     'review_manager' => $request->review_permission == 'manager',
                     'review_apply' => ($request->review_permission == 'subscriber' && $request->review_apply) ?? 0,
                     'review_edit' => ($request->review_permission == 'subscriber' && $request->review_edit) ?? 0,
                     'review_delete' => ($request->review_permission == 'subscriber' && $request->review_delete) ?? 0,
                     'review_approve' => ($request->review_permission == 'subscriber' && $request->review_approve) ?? 0,
-                    'enquiry_manager' => $request->enquiry_permission == 'manager',
-                    'enquiry_add' => ($request->enquiry_permission == 'subscriber' && $request->enquiry_add) ?? 0,
-                    'enquiry_edit' => ($request->enquiry_permission == 'subscriber' && $request->enquiry_edit) ?? 0,
-                    'enquiry_delete' => ($request->enquiry_permission == 'subscriber' && $request->enquiry_delete) ?? 0,
+                    'school_manager' => $request->school_permission == 'manager',
+                    'school_add' => ($request->school_permission == 'subscriber' && $request->school_add) ?? 0,
+                    'school_edit' => ($request->school_permission == 'subscriber' && $request->school_edit) ?? 0,
+                    'school_delete' => ($request->school_permission == 'subscriber' && $request->school_delete) ?? 0,
                 ]);
             }
             if ($user->school && is_array($user->school)) {
@@ -190,14 +177,12 @@ class SchoolAdminController extends Controller
                 }
             }
 
-            $mail_data['name'] = app()->getLocale() == 'en' ? $user->first_name_en . ' ' . $user->last_name_en : $user->first_name_ar . ' ' . $user->last_name_ar;
+            $mail_data['user'] = $user;
             $mail_data['email'] = $request->email;
             $mail_data['password'] = $request->password;
             $mail_data['dashbaord_link'] = route('schooladmin.dashboard');
-            $mail_data['go_page'] = route('password.reset', ['token' => \Password::createToken($user)]) . '/?email=' . $user->email;
-            setEmailTemplateSMTP('schooladmin_created');
-            \Mail::to($user->email)->send(new EmailTemplate('schooladmin_created', $mail_data, app()->getLocale()));
-            unsetEmailTemplateSMTP();
+            $mail_data['change_password_link'] = route('password.reset', ['token' => \Password::createToken($user)]) . '/?email=' . $user->email;
+            sendEmail('school_admin_created', $user->email, (object)$mail_data, app()->getLocale());
         });
 
         $saved = __('Admin/backend.data_saved_successfully');
@@ -292,7 +277,6 @@ class SchoolAdminController extends Controller
             'country' => 'sometimes',
             'city' => 'sometimes',
         ];
-
         $validator = \Validator::make($request->all(), $rules, [
             'first_name_en.required' => __('Admin/backend.errors.first_name_english'),
             'first_name_ar.required' => __('Admin/backend.errors.first_name_arabic'),
@@ -302,7 +286,8 @@ class SchoolAdminController extends Controller
             'telephone.required' => __('Admin/backend.errors.telephone_required'),
             'email.required' => __('Admin/backend.errors.email_required'),
             'image.mimes' => __('Admin/backend.errors.image_must_be_in'),
-            'school_name.required' => 'School Name is Required']);
+            'school_name.required' => 'School Name is Required'
+        ]);
 
         $password = $request->has('password') ? \Hash::make($request->password) : null;
         
@@ -314,20 +299,6 @@ class SchoolAdminController extends Controller
         unset($requested_save['password']);
         unset($requested_save['image']);
         unset($requested_save['school_name']);
-        unset($requested_save['school_permission']);
-        unset($requested_save['school_add']);
-        unset($requested_save['school_edit']);
-        unset($requested_save['course_permission']);
-        unset($requested_save['course_add']);
-        unset($requested_save['course_edit']);
-        unset($requested_save['course_display']);
-        unset($requested_save['course_delete']);
-        unset($requested_save['course_application_permission']);
-        unset($requested_save['course_application_edit']);
-        unset($requested_save['course_application_chanage_status']);
-        unset($requested_save['course_application_payment_refund']);
-        unset($requested_save['course_application_contact_student']);
-        unset($requested_save['course_application_contact_school']);
 
         $image_name = null;
         if ($request->has('image')) {
@@ -367,9 +338,6 @@ class SchoolAdminController extends Controller
         }
         if (can_manage_user() || can_permission_user()) {
             $user->permission()->updateOrCreate(['user_id' => $user->id], [
-                'school_manager' => $request->school_permission == 'manager',
-                'school_add' => ($request->school_permission == 'subscriber' && $request->school_add) ?? 0,
-                'school_edit' => ($request->school_permission == 'subscriber' && $request->school_edit) ?? 0,
                 'course_manager' => $request->course_permission == 'manager',
                 'course_view' => ($request->course_permission == 'subscriber' && $request->course_view) ?? 0,
                 'course_add' => ($request->course_permission == 'subscriber' && $request->course_add) ?? 0,
@@ -382,15 +350,19 @@ class SchoolAdminController extends Controller
                 'course_application_payment_refund' => ($request->course_application_permission == 'subscriber' && $request->course_application_payment_refund) ?? 0,
                 'course_application_contact_student' => ($request->course_application_permission == 'subscriber' && $request->course_application_contact_student) ?? 0,
                 'course_application_contact_school' => ($request->course_application_permission == 'subscriber' && $request->course_application_contact_school) ?? 0,
+                'enquiry_manager' => $request->enquiry_permission == 'manager',
+                'enquiry_add' => ($request->enquiry_permission == 'subscriber' && $request->enquiry_add) ?? 0,
+                'enquiry_edit' => ($request->enquiry_permission == 'subscriber' && $request->enquiry_edit) ?? 0,
+                'enquiry_delete' => ($request->enquiry_permission == 'subscriber' && $request->enquiry_delete) ?? 0,
                 'review_manager' => $request->review_permission == 'manager',
                 'review_apply' => ($request->review_permission == 'subscriber' && $request->review_apply) ?? 0,
                 'review_edit' => ($request->review_permission == 'subscriber' && $request->review_edit) ?? 0,
                 'review_delete' => ($request->review_permission == 'subscriber' && $request->review_delete) ?? 0,
                 'review_approve' => ($request->review_permission == 'subscriber' && $request->review_approve) ?? 0,
-                'enquiry_manager' => $request->enquiry_permission == 'manager',
-                'enquiry_add' => ($request->enquiry_permission == 'subscriber' && $request->enquiry_add) ?? 0,
-                'enquiry_edit' => ($request->enquiry_permission == 'subscriber' && $request->enquiry_edit) ?? 0,
-                'enquiry_delete' => ($request->enquiry_permission == 'subscriber' && $request->enquiry_delete) ?? 0,
+                'school_manager' => $request->school_permission == 'manager',
+                'school_add' => ($request->school_permission == 'subscriber' && $request->school_add) ?? 0,
+                'school_edit' => ($request->school_permission == 'subscriber' && $request->school_edit) ?? 0,
+                'school_delete' => ($request->school_permission == 'subscriber' && $request->school_delete) ?? 0,
             ]);
         }
         if ($user->school && is_array($user->school)) {

@@ -50,7 +50,7 @@
                             <div class="modal fade" id="EnquiryModal{{$loop->iteration}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
-                                        <form method="Post" action = "{{route('enquiry.store')}}">
+                                        <form method="Post" action="{{route('enquiry.store')}}">
                                             @csrf
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="exampleModalLabel">{{__('Admin/backend.reply_to_email')}}</h5>

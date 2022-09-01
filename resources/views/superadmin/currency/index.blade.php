@@ -45,19 +45,21 @@
                                 <td>{{ $currency->exchange_rate }}</td>
                                 <td>{{ $currency->is_default ? __('Admin/backend.default') : '' }}</td>
                                 <td>{{ $currency->created_at->diffForHumans() }}</td>
-                                @if (can_manage_currency() || can_edit_currency())
+                                @if (can_manage_currency() || can_edit_currency() || can_delete_currency())
                                     <td>
                                         <div class="btn-group">
                                             @if (can_manage_currency() || can_edit_currency())
                                                 <a href="{{route('superadmin.currency.edit', $currency->id)}}" class="btn btn-info btn-sm fa fa-pencil"></a>
                                             @endif
                                             
-                                            @if (can_manage_currency())
-                                                @if(!$currency->is_default)
-                                                    <form action="{{route('superadmin.currency.set_default', $currency->id)}}" method="POST">
-                                                        @csrf
-                                                        <button type="submit" onclick="return confirm('{{__('Admin/backend.confirm_set_default')}}')" class="btn btn-primary btn-sm fa fa-check"></button>
-                                                    </form>
+                                            @if (can_manage_currency() || can_delete_currency())
+                                                @if (can_manage_currency())
+                                                    @if(!$currency->is_default)
+                                                        <form action="{{route('superadmin.currency.set_default', $currency->id)}}" method="POST">
+                                                            @csrf
+                                                            <button type="submit" onclick="return confirm('{{__('Admin/backend.confirm_set_default')}}')" class="btn btn-primary btn-sm fa fa-check"></button>
+                                                        </form>
+                                                    @endif
                                                 @endif
 
                                                 <form action="{{route('superadmin.currency.destroy', $currency->id)}}" method="POST">
@@ -76,24 +78,4 @@
             </div>
         </div>
     </div>
-
-    @section('js')
-        <script>
-            var maxLength = 100;
-            $(".show-read-more").each(function() {
-                var myStr = $(this).text();
-                if ($.trim(myStr).length > maxLength) {
-                    var newStr = myStr.substring(0, maxLength);
-                    var removedStr = myStr.substring(maxLength, $.trim(myStr).length);
-                    $(this).empty().html(newStr);
-                    $(this).append(' <a href="javascript:void(0);" class="read-more">read more...</a>');
-                    $(this).append('<span class="more-text">' + removedStr + '</span>');
-                }
-            });
-            $(".read-more").click(function() {
-                $(this).siblings(".more-text").contents().unwrap();
-                $(this).remove();
-            });
-        </script>
-    @endsection
 @endsection

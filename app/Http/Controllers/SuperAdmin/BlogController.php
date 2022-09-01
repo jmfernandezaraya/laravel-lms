@@ -114,16 +114,16 @@ class BlogController extends Controller
             'description_ar' => 'required',
             'description_en' => 'required',
         ];
-        $validate = Validator::make($request->all(), $rules, [
+        $validator = \Validator::make($request->all(), $rules, [
             'title_ar.required' => __('Admin/backend.errors.blog_title_in_arabic'),
             'title_en.required' => __('Admin/backend.errors.blog_title_in_english'),
             'description_en.required' => __('Admin/backend.errors.description_en_required'),
             'description_ar.required' => __('Admin/backend.errors.description_ar_required'),
         ]);
-        if ($validate->fails()) {
-            return response()->json(['errors' => $validate->errors()]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()]);
         }
-        $save = $validate->validated();
+        $save = $validator->validated();
 
         $blog->fill($save)->save();
         $saved = __('Admin/backend.data_saved_successfully');

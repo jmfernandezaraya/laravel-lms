@@ -82,6 +82,7 @@ class FrontendController extends Controller
         $course_program_type_ids = [];
         $course_study_mode_ids = [];
         $course_school_ids = [];
+        $course_promotion_school_ids = [];
 
         $now = Carbon::now()->format('Y-m-d');
         $courses = Course::with('school', 'coursePrograms')->whereHas('school', function($query) {
@@ -102,14 +103,37 @@ class FrontendController extends Controller
             $course_country_ids[] = $course->country_id;
             $course_program_type_ids = array_merge($course_program_type_ids, $course->program_type ?? []);
             $course_study_mode_ids = array_merge($course_study_mode_ids, $course->study_mode ?? []);
-            if ($course_has_discount_program) $course_school_ids[] = $course->school_id;
+            $course_school_ids[] = $course->school_id;
+            if ($course_has_discount_program) $course_promotion_school_ids[] = $course->school_id;
         }
         $course_school_ids = array_unique($course_school_ids);
+        $course_promotion_school_ids = array_unique($course_promotion_school_ids);
         $course_age_range_ids = array_unique($course_age_range_ids);
 
         $languages = ChooseLanguage::whereIn('unique_id', $course_language_ids)->orderBy('name', 'asc')->get();
         $schools = School::with('courses.coursePrograms')->whereIn('id', $course_school_ids)->where('is_active', true)->get();
         foreach ($schools as $school) {
+            $school->course = null;
+            $school->course_program = null;
+            $school->age_range = [ 'min_age' => 0, 'max_age' => 0 ];
+            $school->age_ranges = [];
+            foreach ($school->courses as $school_course) {
+                foreach ($school_course->coursePrograms as $school_course_program) {
+                    if ($school_course_program->discount_per_week != ' -' && $school_course_program->discount_per_week != ' %' && 
+                        (($school_course_program->discount_start_date <= $now && $school_course_program->discount_end_date >= $now)
+                        || ($school_course_program->x_week_selected && $school_course_program->x_week_start_date <= $now && $school_course_program->x_week_end_date >= $now))) {
+                        if ($school->course) {
+                            $school->course = $school_course;
+                            $school->course_program = $school_course_program;
+                            $school->age_range = getCourseProgramAgeRange($school->course_program->program_age_range);
+                        }
+                    }
+                    $school->age_ranges = array_unique(array_merge($school->age_ranges, ChooseProgramAge::whereIn('unique_id', $school_course_program->program_age_range)->orderBy('age', 'asc')->pluck('age')->toArray()));
+                }
+            }
+        }
+        $promotion_schools = School::with('courses.coursePrograms')->whereIn('id', $course_promotion_school_ids)->where('is_active', true)->get();
+        foreach ($promotion_schools as $school) {
             $school->course = null;
             $school->course_program = null;
             $school->age_range = [ 'min_age' => 0, 'max_age' => 0 ];
@@ -136,7 +160,7 @@ class FrontendController extends Controller
             $setting_value = unserialize($home_page->setting_value);
         }
 
-        return view('frontend.index', compact('setting_value', 'schools', 'languages'));
+        return view('frontend.index', compact('setting_value', 'schools', 'promotion_schools', 'languages'));
     }
 
     public function getCountryAges(Request $request)
@@ -965,9 +989,7 @@ class FrontendController extends Controller
                 event(new CourseApplicationStatus($course_application));
 
                 $mail_data = (object)(getCourseApplicationPrintData($course_application->id, auth()->user()->id) + getCourseApplicationMailData($course_application->id, auth()->user()->id));
-                setEmailTemplateSMTP('course_booked');
-                \Mail::to(auth()->user()->email)->send(new EmailTemplate('course_booked', $mail_data, app()->getLocale()));
-                unsetEmailTemplateSMTP();
+                sendEmail('course_booked', auth()->user()->email, $mail_data, app()->getLocale());
 
                 $course_application->order_id = generateOrderId();
                 $course_application->paid_amount = getCurrencyConvertedValue($course_application->course_id, $course_application->deposit_price);
@@ -1078,9 +1100,7 @@ class FrontendController extends Controller
         $course_application = CourseApplication::where('user_id', auth()->user()->id)->where('order_id',  $cart_id)->where('paid',  1)->first();
         if ($course_application) {
             $mail_data = (object)(getCourseApplicationPrintData($course_application->id, auth()->user()->id) + getCourseApplicationMailData($course_application->id, auth()->user()->id));
-            setEmailTemplateSMTP('course_booked');
-            \Mail::to(auth()->user()->email)->send(new EmailTemplate('course_booked', $mail_data, app()->getLocale()));
-            unsetEmailTemplateSMTP();
+            sendEmail('course_booked', auth()->user()->email, $mail_data, app()->getLocale());
         }
 
         return redirect()->route('land_page');
@@ -1124,9 +1144,7 @@ class FrontendController extends Controller
         $course_application = CourseApplication::where('user_id', auth()->user()->id)->where('paid', 2)->first();
         if ($course_application) {
             $mail_data = (object)(getCourseApplicationPrintData($course_application->id, auth()->user()->id) + getCourseApplicationMailData($course_application->id, auth()->user()->id));
-            setEmailTemplateSMTP('course_booked');
-            \Mail::to(auth()->user()->email)->send(new EmailTemplate('course_booked', $mail_data, app()->getLocale()));
-            unsetEmailTemplateSMTP();
+            sendEmail('course_booked', auth()->user()->email, $mail_data, app()->getLocale());
         }
 
         return redirect()->route('land_page');

@@ -110,7 +110,7 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label for="country_name">{{__('Admin/backend.choose_country')}}:</label>
-                            <select onchange="changeCountry()" class="3col active" id="country_name" name="country[]" multiple="multiple">
+                            <select onchange="changeUserCountry()" class="3col active" id="country_name" name="country[]" multiple="multiple">
                                 @foreach ($choose_countries as $choose_country)
                                     <option value="{{ $choose_country->id }}" {{ in_array($choose_country->id, $school_admin->country) ? 'selected' : '' }}>{{ app()->getLocale() == 'en' ?  $choose_country->name : $choose_country->name_ar }}</option>
                                 @endforeach
@@ -158,6 +158,10 @@
                                     <div class="form-check">
                                         <input name="school_edit" type="checkbox" class="form-check-inline" value='1' {{ ($school_admin->permission && $school_admin->permission->school_edit) ? 'checked' : '' }}>
                                         <label for="school_edit">{{__('Admin/backend.edit')}}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="school_delete" type="checkbox" class="form-check-inline" value='1' {{ ($school_admin->permission && $school_admin->permission->school_delete) ? 'checked' : '' }}>
+                                        <label for="school_delete">{{__('Admin/backend.delete')}}</label>
                                     </div>
                                 </div>
                             </div>

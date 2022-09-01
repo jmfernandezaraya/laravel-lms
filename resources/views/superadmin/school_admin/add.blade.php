@@ -105,7 +105,7 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label for="country_name">{{__('Admin/backend.choose_country')}}:</label>
-                            <select onchange="changeCountry()" class="3col active" id="country_name" name="country[]" multiple="multiple">
+                            <select onchange="changeUserCountry()" class="3col active" id="country_name" name="country[]" multiple="multiple">
                             </select>
                         </div>
                     </div>

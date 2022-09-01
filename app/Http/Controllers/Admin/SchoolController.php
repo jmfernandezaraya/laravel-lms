@@ -471,21 +471,25 @@ class SchoolController extends Controller
     function getCityList(Request $request)
     {
         $language = app()->getLocale();
-        $schools = School::where('is_active', true)->whereHas('name', function($query) use ($request, $language)
-            { $language =='en' ? $query->where('name', $request->school) : $query->where('name_ar', $request->school); })->get();
-        $city_ids = [];
-        foreach ($schools as $school) {
-            if (is_array($request->country)) {
-                if (in_array($school->country_id, $request->country)) {
-                    $city_ids[] = $school->city_id;
-                }
-            } else {
-                if ($school->country_id == $request->country) {
-                    $city_ids[] = $school->city_id;
+        if (isset($request->school)) {
+            $city_ids = [];
+            $schools = School::where('is_active', true)->whereHas('name', function($query) use ($request, $language)
+                { $language =='en' ? $query->where('name', $request->school) : $query->where('name_ar', $request->school); })->get();
+            foreach ($schools as $school) {
+                if (is_array($request->country)) {
+                    if (in_array($school->country_id, $request->country)) {
+                        $city_ids[] = $school->city_id;
+                    }
+                } else {
+                    if ($school->country_id == $request->country) {
+                        $city_ids[] = $school->city_id;
+                    }
                 }
             }
+            $cities = City::whereIn('id', $city_ids)->get();
+        } else {
+            $cities = City::where('country_id', $request->country)->get();
         }
-        $cities = City::whereIn('id', $city_ids)->get();
         $city_list = "";
         if ($request->empty_value == 'true') $city_list .= "<option value=''>" . __('Admin/backend.select_option') . "</option>";
         foreach ($cities as $city) {

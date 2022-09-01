@@ -692,3 +692,7 @@ form > * {
 .cursor-default {
     cursor: default;
 }
+
+.ui-widget.ui-widget-content {
+    z-index: 100 !important;
+}

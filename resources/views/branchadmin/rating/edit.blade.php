@@ -6,7 +6,7 @@
 @section('content')
 
     <div class="col-12 grid-margin stretch-card">
-        <form id ="formaction" class="forms-sample" method="post" action = "{{route('branch_admin.blogs.update', $blog->id)}}">
+        <form id ="formaction" class="forms-sample" method="post" action="{{route('branch_admin.blogs.update', $blog->id)}}">
             {{csrf_field()}}
             <div class="card">
                 <div class="card-body">

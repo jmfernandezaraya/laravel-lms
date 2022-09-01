@@ -24,7 +24,8 @@
                 <i class="mdi mdi-home menu-icon"></i>
             </a>
         </li>
-        @if (can_manage_blog() || can_add_blog() || can_edit_blog())
+
+        @if (can_manage_blog() || can_add_blog() || can_edit_blog() || can_delete_blog())
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#blogs" aria-expanded="false" aria-controls="blogs">
                     <span class="menu-title">{{__('Admin/backend.manage_blogs')}}</span>
@@ -40,6 +41,7 @@
                 </div>
             </li>
         @endif
+
         @if (can_manage_school() || can_add_school() || can_edit_school() || can_delete_school())
             <li class="nav-item ">
                 <a class="nav-link" data-toggle="collapse" href="#school" aria-expanded="false" aria-controls="school">
@@ -62,6 +64,7 @@
                 </div>
             </li>
         @endif
+
         @if (can_manage_course() || can_view_course() || can_add_course() || can_edit_course() || can_display_course() || can_delete_course())
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#course" aria-expanded="false" aria-controls="course">
@@ -119,6 +122,7 @@
                 </div>
             </li>
         @endif
+
         @if (can_manage_course_application() || can_edit_course_application() || can_chanage_status_course_application() || can_payment_refund_course_application() || can_contact_student_course_application() || can_contact_school_course_application())
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#course_application" aria-expanded="false" aria-controls="course_application">
@@ -135,6 +139,7 @@
                 </div>
             </li>
         @endif
+
         @if (can_manage_review() || can_apply_review() || can_edit_review() || can_approve_review() || can_delete_review())
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#review" aria-expanded="false" aria-controls="school_admin">
@@ -151,6 +156,7 @@
                 </div>
             </li>
         @endif
+
         @if (can_manage_payment() || can_edit_payment() || can_delete_payment())
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#payment_received" aria-expanded="false" aria-controls="payment_received">
@@ -167,6 +173,7 @@
                 </div>
             </li>
         @endif
+
         @if (can_manage_user() || can_add_user() || can_edit_user() || can_delete_user() || can_permission_user())
            <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#users" aria-expanded="false" aria-controls="users">
@@ -180,6 +187,9 @@
                             <a class="nav-link" href="{{route('superadmin.user.customer.index')}}">{{__('Admin/dashboard.customers')}}</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="{{route('superadmin.user.affiliate.index')}}">{{__('Admin/dashboard.affiliate_users')}}</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{{route('superadmin.user.school_admin.index')}}">{{__('Admin/dashboard.school_admin')}}</a>
                         </li>
                         <li class="nav-item">
@@ -189,6 +199,7 @@
                 </div>
             </li>
         @endif
+
         @if (can_manage_enquiry() || can_add_enquiry() || can_edit_enquiry() || can_delete_enquiry())
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#enquiry" aria-expanded="false" aria-controls="school_admin">
@@ -205,6 +216,7 @@
                 </div>
             </li>
         @endif
+
         @if (can_manage_form_builder() || can_add_form_builder() || can_edit_form_builder() || can_delete_form_builder())
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#visas" aria-expanded="false" aria-controls="visas">
@@ -224,6 +236,7 @@
                 </div>
             </li>
         @endif
+        
         @if (can_manage_visa_application() || can_add_visa_application() || can_edit_visa_application() || can_delete_visa_application())
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#visa_application" aria-expanded="false" aria-controls="visa_application">
@@ -243,7 +256,8 @@
                 </div>
             </li>
         @endif
-        @if (can_manage_currency() || can_add_currency() || can_edit_currency())
+
+        @if (can_manage_currency() || can_add_currency() || can_edit_currency() || can_delete_currency())
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#currency" aria-expanded="false" aria-controls="currency">
                     <span class="menu-title">{{__('Admin/backend.currency')}}</span>
@@ -259,6 +273,24 @@
                 </div>
             </li>
         @endif
+
+        @if (can_manage_coupon() || can_add_coupon() || can_edit_coupon() || can_delete_coupon())
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#coupon" aria-expanded="false" aria-controls="coupon">
+                    <span class="menu-title">{{__('Admin/backend.coupon')}}</span>
+                    <i class="menu-arrow"></i>
+                    <i class="mdi mdi-card-bulleted menu-icon"></i>
+                </a>
+                <div class="collapse" id="coupon">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('superadmin.coupon.index') }}">{{__('Admin/dashboard.view')}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        @endif
+
         @if (can_manage_email_template() || can_add_email_template() || can_edit_email_template() || can_delete_email_template())
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#email_template" aria-expanded="false" aria-controls="email_template">
@@ -275,6 +307,7 @@
                 </div>
             </li>
         @endif
+
         @if (can_set_site() || can_set_home_page() || can_set_header_footer() || can_set_front_page())
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#settings" aria-expanded="false" aria-controls="settings">

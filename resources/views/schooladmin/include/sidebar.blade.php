@@ -24,6 +24,7 @@
                 <i class="mdi mdi-home menu-icon"></i>
             </a>
         </li>
+
         @if (can_manage_school() || can_add_school() || can_edit_school() || can_delete_school())
             <li class="nav-item ">
                 <a class="nav-link" data-toggle="collapse" href="#school" aria-expanded="false" aria-controls="school">
@@ -40,6 +41,7 @@
                 </div>
             </li>
         @endif
+
         @if (can_manage_course() || can_view_course() || can_add_course() || can_edit_course() || can_display_course() || can_delete_course())
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#course" aria-expanded="false" aria-controls="course">
@@ -59,6 +61,7 @@
                 </div>
             </li>
         @endif
+
         @if (can_manage_course_application() || can_edit_course_application() || can_chanage_status_course_application() || can_payment_refund_course_application() || can_contact_student_course_application() || can_contact_school_course_application())
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#course_application" aria-expanded="false" aria-controls="course_application">
@@ -75,6 +78,7 @@
                 </div>
             </li>
         @endif
+
         @if (can_manage_review() || can_apply_review() || can_edit_review() || can_approve_review() || can_delete_review())
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#review" aria-expanded="false" aria-controls="school_admin">
@@ -91,6 +95,7 @@
                 </div>
             </li>
         @endif
+        
         @if (can_manage_enquiry() || can_add_enquiry() || can_edit_enquiry() || can_delete_enquiry())
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#enquiry" aria-expanded="false" aria-controls="school_admin">

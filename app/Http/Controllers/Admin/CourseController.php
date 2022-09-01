@@ -388,7 +388,6 @@ class CourseController extends Controller
         $data['data'] = 'Data Not Saved';
         $data['success'] = 'failed';
         if ($coursecreate->getGetError() == '') {
-            // \Mail::to($mail_pdf_data['user']->email)->send(new SendMessageToStudent((object)$mail_pdf_data, $send_files));
             $data['data'] = __('Admin/backend.data_saved_successfully');
             $data['success'] = 'success';
         } else {
@@ -501,16 +500,21 @@ class CourseController extends Controller
      */
     public function promotion(Request $request, $course_id)
     {
+        $promotion_enable = false;
         $db = \DB::transaction(function() use ($request, $course_id) {
             $course = Course::where('unique_id', $course_id)->first();
             if ($course) {
-                $course->promotion = !$request->promotion;
+                $promotion_enable = $course->promotion = !$request->promotion;
                 $course->save();
                 return true;
             }
         });
         if ($db) {
-            toastr()->success(__('Admin/backend.data_paused_successfully'));
+            if ($promotion_enable) {
+                toastr()->success(__('Admin/backend.data_enabled_promotion_successfully'));
+            } else {
+                toastr()->success(__('Admin/backend.data_disabled_promotion_successfully'));
+            }
         }
         return back();
     }
@@ -521,16 +525,21 @@ class CourseController extends Controller
      */
     public function toggleLinkFee(Request $request, $course_id)
     {
+        $link_fee_enable = false;
         $db = \DB::transaction(function() use ($request, $course_id) {
             $course = Course::where('unique_id', $course_id)->first();
             if ($course) {
-                $course->link_fee_enable = !$request->link_fee_enable;
+                $link_fee_enable = $course->link_fee_enable = !$request->link_fee_enable;
                 $course->save();
                 return true;
             }
         });
         if ($db) {
-            toastr()->success(__('Admin/backend.data_paused_successfully'));
+            if ($link_fee_enable) {
+                toastr()->success(__('Admin/backend.data_enabled_link_fee_successfully'));
+            } else {
+                toastr()->success(__('Admin/backend.data_disabled_link_fee_successfully'));
+            }
         }
         return back();
     }
@@ -550,7 +559,7 @@ class CourseController extends Controller
             }
         });
         if ($db) {
-            toastr()->success(__('Admin/backend.data_removed_successfully'));
+            toastr()->success(__('Admin/backend.data_restored_successfully'));
         }
         return back();
     }
@@ -743,7 +752,7 @@ class CourseController extends Controller
             return response()->json(['errors' => $validate->errors()]);
         }
         
-        $course_choose_ids = [];
+        $choose_ids = [];
 
         $course_choose_type = $request->course_choose_type;
         $CourseChoose = '';
@@ -775,21 +784,21 @@ class CourseController extends Controller
             $course_choose->name_ar = $request->name_ar[$i] ?? null;
             $course_choose->save();
             if (!$course_choose->unique_id) {
-                $course_choose_id = $CourseChoose::orderBy('unique_id', 'desc')->first()->unique_id;
+                $choose_id = $CourseChoose::orderBy('unique_id', 'desc')->first()->unique_id;
             } else {
-                $course_choose_id = $course_choose->unique_id;
+                $choose_id = $course_choose->unique_id;
             }
-            $course_choose_ids[] = $course_choose_id;
+            $choose_ids[] = $choose_id;
         }
         $course_chooses = $CourseChoose::all();
         $message_append = '';
         foreach ($course_chooses as $course_choose) {
-            if (!in_array($course_choose->unique_id, $course_choose_ids)) {
+            if (!in_array($course_choose->unique_id, $choose_ids)) {
                 $choose_courses = Course::get()->collect()->values()->filter(function($value) use ($course_choose_type, $course_choose) {
                     return in_array($course_choose->unique_id, $value[$course_choose_type] ?? []);
                 })->all();
                 if ($choose_courses && count($choose_courses)) {
-                    $message_append = $message_append . ($message_append ? ', ' : '') . (app()->getLocale() == 'en' ? $course_choose->name : $course_choose->name_ar);
+                    $message_append = $message_append . ($message_append ? ', ' : '') . '"' . (app()->getLocale() == 'en' ? $course_choose->name : $course_choose->name_ar). '"';
                 } else {
                     $course_choose->delete();
                 }
@@ -876,7 +885,7 @@ class CourseController extends Controller
                     })->all();
                 }
                 if ($choose_courses && count($choose_courses)) {
-                    $message_append = $message_append . ($message_append ? ', ' : '') . (app()->getLocale() == 'en' ? $course_choose->name : $course_choose->name_ar);
+                    $message_append = $message_append . ($message_append ? ', ' : '') . '"' . (app()->getLocale() == 'en' ? $course_choose->name : $course_choose->name_ar) . '"';
                 } else {
                     $course_choose->delete();
                 }

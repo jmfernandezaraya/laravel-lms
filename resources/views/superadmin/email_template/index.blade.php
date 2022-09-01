@@ -56,7 +56,7 @@
                                                 <a href="{{route('superadmin.email_template.edit', $email_template->id)}}" class="btn btn-info btn-sm fa fa-pencil"></a>
                                             @endif                                                
                                                 
-                                            @if (can_manage_user() || can_delete_user())
+                                            @if (can_manage_email_template() || can_delete_email_template())
                                                 <form action="{{route('superadmin.email_template.destroy', $email_template->id)}}" method="post">
                                                     @csrf
                                                     @method('DELETE')

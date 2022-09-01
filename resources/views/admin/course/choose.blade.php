@@ -47,7 +47,7 @@
 
                     @forelse ($course_chooses as $course_choose)
                         <div id="course_choose_clone{{$loop->iteration - 1}}" class="course-choose-clone clone">
-                            <input type="hidden" value="{{ $course_choose->unique_id }}" type="text" id="course_choose_id{{ $loop->iteration - 1 }}" name="course_choose_id[]">
+                            <input type="hidden" value="{{ $course_choose->unique_id }}" type="text" id="choose_id{{ $loop->iteration - 1 }}" name="choose_id[]">
                             <div class="row mt-2">
                                 <div class="col-md-9">
                                     <div class="row">

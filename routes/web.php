@@ -152,6 +152,9 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
             Route::get('/review/{id}', [CustomerController::class, 'review'])->name('review');
             Route::post('/review/{id}', [CustomerController::class, 'reviewBooking'])->name('review.booking');
             Route::get('/payments', [CustomerController::class, 'payments'])->name('payments');
+            Route::get('/affiliate_information', [CustomerController::class, 'affiliateInformation'])->name('affiliate_information');
+            Route::get('/code_and_usage', [CustomerController::class, 'codeAndUsage'])->name('code_and_usage');
+            Route::get('/transactions', [CustomerController::class, 'transactions'])->name('transactions');
         });
     });
 });
@@ -330,22 +333,11 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => [
     });
     Route::resource('course_application', '\App\Http\Controllers\Admin\CourseApplicationController');
 
-    Route::post('programagerangeupdate', 'CourseController@update')->name('course.programagerangeupdate');
-    Route::get('update_airport_page', 'CourseController@viewAirportForUpdate')->name('update_airport_page');
-
-    Route::get('course_program_under_age_give_access_to_school_admin/{id}', [CourseDetailsController::class, 'giveAccessToSchoolAdminCourseProgramUnderAge'])->name('course_program_under_age_give_access_to_school_admin');
-    Route::get('course_give_access_to_school_admin/{id}', [CourseDetailsController::class, 'giveAccessToSchoolAdminCourse'])->name('course_give_access_to_school_admin');
-
-    Route::post('assign_course_permission', [CourseDetailsController::class, 'assignCoursePermission'])->name('assign_course_permission');
-
     Route::get('apply_visa', 'VisaFormController@index')->name('add_visa_form');
-
     Route::get('view_visa_forms', 'VisaFormController@show')->name('view_visa_forms');
     Route::get('view_visa_forms/{id}', 'VisaFormController@edit')->name('visa_form_edit');
     Route::post('view_visa_forms/{id}', 'VisaFormController@update')->name('visa_form_update');
-
     Route::delete('delete/{visaId}', 'VisaFormController@destroy')->name('delete_visa_forms');
-
     Route::post('visa_submit', 'VisaFormController@applyForVisa')->name('visa_submit');
 
     Route::resource('/visa', 'FormbuildController');
@@ -367,6 +359,7 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => [
 
     Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
         Route::resource('customer', 'CustomerController');
+        Route::resource('affiliate', 'AffiliateController');
         Route::resource('school_admin', 'SchoolAdminController');
         Route::resource('super_admin', 'SuperAdminController');
     });
@@ -376,6 +369,13 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => [
 
     Route::post('currency/set_default/{id}', 'CurrencyController@setDefault')->name('currency.set_default');
     Route::resource('currency', 'CurrencyController');
+
+    Route::group(['prefix' => 'coupon', 'as' => 'coupon.'], function () {
+        Route::post('pause/{id}', 'CouponController@pause')->name('pause');
+        Route::post('play/{id}', 'CouponController@play')->name('play');
+        Route::get('usage/{id}', 'CouponController@usage')->name('usage');
+    });
+    Route::resource('coupon', 'CouponController');
 
     Route::resource('email_template', 'EmailTemplateController');
 
@@ -531,9 +531,6 @@ Route::group(['prefix' => 'schooladmin', 'as' => 'schooladmin.', 'middleware' =>
     Route::resource('review', '\App\Http\Controllers\Admin\ReviewController');
 
     Route::post('school/save/program/session', 'CourseControllerSchoolAdmin@programSessionSave')->name('course.session_store_for_program');
-
-    Route::get('send_message_to_student', [\App\Http\Controllers\SchoolAdmin\SendMessageToStudentController::class, 'index'])->name('send_message.index');
-    Route::post('send_message_to_student/send_message', [\App\Http\Controllers\SchoolAdmin\SendMessageToStudentController::class, 'sendMessage'])->name('send_message.sendmessage');
 });
 
 ///// Branch Admin Routes /////
@@ -575,9 +572,6 @@ Route::group(['namespace' => 'BranchAdmin', 'prefix' => 'branch_admin', 'middlew
     Route::post('assign_course_permission', 'CourseDetailsSchoolAdminController@assignCoursePermission')->name('assign_course_permission');
 
     Route::post('course_program_update', 'CourseDetailsSchoolAdminController@courseProgramUpdate')->name('course_program_update');
-
-    Route::get('send_message_to_student', [\App\Http\Controllers\BranchAdmin\SendMessageToStudentController::class, 'index'])->name('send_message.index');
-    Route::post('send_message_to_student/send_message', [\App\Http\Controllers\BranchAdmin\SendMessageToStudentController::class, 'sendMessage'])->name('send_message.sendmessage');
 
     Route::resource('enquiry', 'EnquiryController');
 

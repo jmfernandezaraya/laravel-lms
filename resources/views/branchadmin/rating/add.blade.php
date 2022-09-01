@@ -5,7 +5,7 @@
 
 @section('content')
     <div class="col-12 grid-margin stretch-card">
-        <form id ="formaction" class="forms-sample" method="post" action = "{{route('blogs.store')}}">
+        <form id ="formaction" class="forms-sample" method="post" action="{{route('blogs.store')}}">
             {{csrf_field()}}
             <div class="card">
                 <div class="card-body">

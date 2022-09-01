@@ -274,7 +274,7 @@
                 <a class="btn btn-light" href="{{url()->previous()}}">{{__('Admin/backend.cancel')}}</a>
             </form>
 
-            <form id="form2" class="forms-sample" enctype="multipart/form-data" method="post" action = "{{route('branch_admin.school.store')}}">
+            <form id="form2" class="forms-sample" enctype="multipart/form-data" method="post" action="{{route('branch_admin.school.store')}}">
                 {{csrf_field()}}
                 <div class="form-group">
                     <label for="exampleInputName1">{{__('Admin/backend.name')}}</label>

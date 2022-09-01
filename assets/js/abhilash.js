@@ -103,9 +103,11 @@ function detectDatePickerMonthClick(datepickerEl) {
         else if (click_month_str == 'November') click_month = '11';
         else if (click_month_str == 'December') click_month = '12';
         var month_days = $(this).parent().parent().find('.ui-datepicker-calendar td');
-        var month_index = $.inArray(click_month + "/" + click_year, yeardatepicker_months[datepicker_index]);        
+        var month_index = $.inArray(click_month + "/" + click_year, yeardatepicker_months[datepicker_index]);
         if (month_index == -1) {
-            if (click_year && click_month) yeardatepicker_months[datepicker_index].push(click_month + "/" + click_year);
+            if (click_year && click_month) {
+                yeardatepicker_months[datepicker_index].push(click_month + "/" + click_year);
+            }
         } else {
             yeardatepicker_months[datepicker_index].splice(month_index, 1);
         }
@@ -133,7 +135,7 @@ function detectDatePickerMonthClick(datepickerEl) {
         }
         
         $(datepickerEl).val(yeardatepicker_days[datepicker_index].join(","));
-        datepickerObj.find('.ui-datepicker-today').click();            
+        datepickerObj.find('.ui-datepicker-today').click();
         setTimeout(function() {
             datepickerObj.find('.ui-datepicker-today').click();
         }, 300);
@@ -141,8 +143,9 @@ function detectDatePickerMonthClick(datepickerEl) {
 }
 
 function initYearDatePicker() {
-    $('.yeardatepicker').each(function() {
-        var datepicker_index = $(this).data('index');
+    $(document).on('focus', "input.yeardatepicker", function() {
+        $(this).attr('id', 'year-date-picker-' + $(this).data('index'));
+        $(this).removeClass('hasDatepicker');
         var todayDate = new Date();
         $(this).datepicker({
             dateFormat: 'mm/dd/yy',
@@ -153,21 +156,31 @@ function initYearDatePicker() {
             yearRange: (todayDate.getYear() + 1900) + ":" + (todayDate.getYear() + 1901),
             changeYear: true,
             selectMultiple: true,
+            closeOnSelect: false,
             showButtonPanel: true,
             onSelect: function(d) {
+                $(this).data('datepicker').inline = true;
+                $(this).data('datepicker').settings.showCurrentAtPos = 0;
+
+                var datepicker_index = parseInt($(this).data('index'));
                 var i = $.inArray(d, yeardatepicker_days[datepicker_index]);
                 if (i == -1) {
-                    yeardatepicker_days[datepicker_index].push(d);
+                    if (d != '' && d != 'df') {
+                        yeardatepicker_days[datepicker_index].push(d);
+                    }
                 } else {
                     yeardatepicker_days[datepicker_index].splice(i, 1);
                 }
-                $(this).data('datepicker').inline = true;
-                $(this).data('datepicker').settings.showCurrentAtPos = 0;
+                for (let day_index = 0; day_index < yeardatepicker_days[datepicker_index].length; day_index++) {
+                    if (!yeardatepicker_days[datepicker_index][day_index]) {
+                        yeardatepicker_days[datepicker_index].splice(day_index, 1);
+                    }
+                }
                 yeardatepicker_days[datepicker_index].sort(function (first, second) {
                     var firstDates = first.split('/');
                     var secondDates = second.split('/');
                     if (parseInt(firstDates[2]) > parseInt(secondDates[2])) {
-                    return 1;
+                        return 1;
                     } else if (parseInt(firstDates[2]) < parseInt(secondDates[2])) {
                         return -1;
                     } else {
@@ -186,7 +199,7 @@ function initYearDatePicker() {
                     return 0;
                 });
                 $(this).val(yeardatepicker_days[datepicker_index].join(","));
-                $($(this).data('datepicker').dpDiv).addClass('ui-datepicker-selected');
+                $(this).data('datepicker').dpDiv.addClass('ui-datepicker-selected');
             },
             onClose: function() {
                 $(this).data('datepicker').inline = false;
@@ -200,6 +213,7 @@ function initYearDatePicker() {
             },
             beforeShowDay: function(d) {
                 var datepickerEl = this;
+                var datepicker_index = $(this).data('index');
                 var datepickerObj = $($(datepickerEl).data('datepicker').dpDiv);
                 if (datepickerObj.hasClass('ui-datepicker-selected')) {
                     datepickerObj.removeClass('ui-datepicker-selected');
@@ -277,7 +291,7 @@ function searchCourse() {
                 if (window.location.pathname == '' || window.location.pathname == '/') {
                     window.location.href = url_course;
                 } else {
-                    $('.school-list .row').html(data.courses_html);                    
+                    $('.school-list .row').html(data.courses_html);
                 }
             } else if (data.errors) {
                 document.documentElement.scrollTop = 0;
@@ -461,11 +475,11 @@ function changeSchool() {
         if ($('#country_name').hasClass('3col') && $('#country_name').hasClass('active')) {
             $('#country_name').multiselect('rebuild');
         }
-        changeCountry();
+        changeUserCountry();
     });
 }
 
-function changeCountry() {
+function changeUserCountry() {
     var school = $('#school_name').val();
     var country = $('#country_name').val();
     $.post(url_school_city_list, {
@@ -479,6 +493,16 @@ function changeCountry() {
             $('#city_name').multiselect('rebuild');
         }
         changeCity();
+    });
+}
+
+function changeCountry() {
+    var country = $('#country_name').val();
+    $.post(url_school_city_list, {
+        _token: token,
+        country: country
+    }, function (data) {
+        $('#city_name').html(data);
     });
 }
 
@@ -1556,7 +1580,7 @@ function submitOtherServiceForm(object, reload = false) {
                 $("#loader").hide();
                 $('.alert-success').show();
                 $('.alert-success p').html(data.data);
-                document.documentElement.scrollTop = 0;                
+                document.documentElement.scrollTop = 0;
 
                 if ($(form).data('mode') == 'create') {
                     window.location.href = edit_other_service_url;
@@ -1679,7 +1703,6 @@ function deleteLanguage() {
                 document.documentElement.scrollTop = 0;
                 $("#loader").hide();
             });
-
         }
     } else {
         alert('Please select any option to delete');
@@ -2976,6 +2999,60 @@ function initLanguageSection() {
     } else {
         $('.english').hide();
     }
+}
+
+///////////////////////////////////////////
+function checkFinancialGurantee() {
+    var country_name = $("#get_country").val();
+    var study_finance = $("#study_finance").val();
+
+    if ((country_name == 'USA' || country_name == 'usa' || country_name == 'united states of america')) {
+        $("#bank_statement").show();
+    } else {
+        $("#bank_statement").hide();
+    }
+    if (study_finance == 'personal') {
+        $("#financial_guarantee").hide();
+    } else {
+        $("#financial_guarantee").show();
+    }
+}
+
+function doRegister(object) {
+    var formdata = new FormData($(object).parents().find('#course_form_register')[0]);
+    var urlname = ($(object).parents().find('#course_form_register').attr('action'));
+    $("#loader").show();
+    console.log(formdata);
+
+    $.ajax({
+        type: 'POST',
+        url: urlname,
+        data: formdata,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function(data) {
+            $("#loader").hide();
+            console.log(data);
+            if (data.success == true) {
+                window.location.href = data.url;
+            } else if (data.errors) {
+                var alert_messages = '';
+                if (typeof data.errors === 'object') {
+                    for (const [error_key, error_value] of Object.entries(data.errors)) {
+                        alert_messages += error_value + '\n';
+                    }
+                } else if (typeof data.errors === 'array') {
+                    for (let error_index = 0; error_index < data.errors.length; error_index++) {
+                        alert_messages += data.errors[error_index] + '\n';
+                    }
+                } else {
+                    alert_messages += error + '\n';
+                }
+                alert(alert_messages);
+            }
+        }
+    });
 }
 
 $(document).ready(function() {

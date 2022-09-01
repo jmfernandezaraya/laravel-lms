@@ -82,12 +82,14 @@ class SettingController extends Controller
         //             $sub_query->whereNotNull('x_week_selected')->where('x_week_start_date', '<=', $now)->where('x_week_end_date', '>=', $now);
         //         });
         //     })->pluck('course_unique_id')->toArray());
-        $school_ids = array_unique(Course::where('promotion', true)->where('display', true)->where('deleted', false)->pluck('school_id')->toArray());
+        $promotion_school_ids = array_unique(Course::where('promotion', true)->where('display', true)->where('deleted', false)->pluck('school_id')->toArray());
+        $promotion_schools = School::whereIn('id', $promotion_school_ids)->where('is_active', true)->get();
+        $school_ids = array_unique(Course::where('display', true)->where('deleted', false)->pluck('school_id')->toArray());
         $schools = School::whereIn('id', $school_ids)->where('is_active', true)->get();
         
         $countries = Country::with('cities')->get();
         
-        return view('superadmin.setting.home_page', compact('setting_value', 'schools', 'countries'));
+        return view('superadmin.setting.home_page', compact('setting_value', 'promotion_schools', 'schools', 'countries'));
     }
 
     public function updateHomePage(Request $request)
@@ -103,6 +105,7 @@ class SettingController extends Controller
         $setting_value = [
             'heros' => [],
             'school_promotions' => [],
+            'popular_schools' => [],
             'popular_countries' => [],
         ];
         for ($hero_index = 0; $hero_index <= $request->heroincretment; $hero_index++) {
@@ -119,9 +122,18 @@ class SettingController extends Controller
                     (isset($home_page_setting_value['heros']) && isset($home_page_setting_value['heros'][$hero_index]) ? $home_page_setting_value['heros'][$hero_index]['background'] : ''),
             ];
         }
-        for ($school_index = 0; $school_index < count($request->school_id); $school_index++) {
-            if ($request->school_id[$school_index]) {
-                $setting_value['school_promotions'][] = $request->school_id[$school_index];
+        if (isset($request->school_promotion)) {
+            for ($school_index = 0; $school_index < count($request->school_promotion); $school_index++) {
+                if ($request->school_promotion[$school_index]) {
+                    $setting_value['school_promotions'][] = $request->school_promotion[$school_index];
+                }
+            }
+        }
+        if (isset($request->popular_school)) {
+            for ($school_index = 0; $school_index < count($request->popular_school); $school_index++) {
+                if ($request->popular_school[$school_index]) {
+                    $setting_value['popular_schools'][] = $request->popular_school[$school_index];
+                }
             }
         }
         $popular_country_index = 0;

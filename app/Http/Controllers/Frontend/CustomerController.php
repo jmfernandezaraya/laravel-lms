@@ -4,37 +4,14 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 
-use App\Mail\EmailTemplate;
-use App\Mail\SendMailToSuperAdminUserCourseApproveStatus;
-use App\Mail\SendMailToUserCourseApproveStatus;
-use App\Mail\SendVerifyEmailAgain;
-use App\Mail\SendMessageToSuperAdminRelatedToCourse;
-
-use App\Classes\TransactionCalculator;
-
-use Ghanem\Rating\Models\Rating;
-
 use App\Models\User;
 use App\Models\CourseApplication;
 use App\Models\Review;
 use App\Models\Message;
 
-use App\Models\SuperAdmin\ChooseAccommodationAge;
-use App\Models\SuperAdmin\ChooseProgramAge;
-use App\Models\SuperAdmin\ChooseProgramUnderAge;
-use App\Models\SuperAdmin\ChooseStudyMode;
-use App\Models\SuperAdmin\Course;
-use App\Models\SuperAdmin\CourseAccommodation;
-use App\Models\SuperAdmin\CourseAirport;
-use App\Models\SuperAdmin\CourseMedical;
-use App\Models\SuperAdmin\CourseProgram;
-use App\Models\SuperAdmin\CourseProgramTextBookFee;
-use App\Models\SuperAdmin\CourseProgramUnderAgeFee;
+use App\Models\SuperAdmin\Country;
+use App\Models\SuperAdmin\City;
 use App\Models\SuperAdmin\School;
-use App\Models\SuperAdmin\ToCourseStudentMessage;
-use App\Models\SuperAdmin\TransactionRefund;
-
-use App\Models\SchoolAdmin\ReplyToSchoolAdminMessage;
 
 use PDF;
 use Storage;
@@ -74,7 +51,7 @@ class CustomerController extends Controller
     {
         $user = User::whereId(auth()->user()->id)->first();
 
-        \Mail::to($user->email)->send(new SendVerifyEmailAgain(auth()->user()->id));
+        sendEmail('verify_email', $user->email, $user, app()->getLocale());
 
         $data['data'] = __('Frontend.verify_email_sent');
         $data['success'] = true;
@@ -215,18 +192,18 @@ class CustomerController extends Controller
             $course_application = CourseApplication::whereId($request->type_id)->first();
             $request_save['from_user'] = auth()->user()->id;
             $request_save['to_user'] = [];
-            // $super_admins = User::where('user_type', 'super_admin')->get();
-            // foreach ($super_admins as $super_admin) {
-            //     $request_save['to_user'][] = $super_admin->id;
-            //     \Mail::send(new EmailTemplate($super_admin, $request_save, app()->getLocale(), $send_files));
-            // }
             $school_admins = User::where('user_type', 'school_admin')->get();
-            setEmailTemplateSMTP('send_to_school_admin');
             foreach ($school_admins as $school_admin) {
                 $request_save['to_user'][] = $school_admin->id;
-                \Mail::to($school_admin->email)->send(new EmailTemplate('send_to_school_admin', $request_save, app()->getLocale(), $send_files));
+
+                $mail_pdf_data = array();
+                $mail_pdf_data['subject'] = $request_save['subject'];
+                $mail_pdf_data['message'] = $request_save['message'];
+                $mail_pdf_data['user'] = $mail_pdf_data['to_user'] = \App\Models\User::find($school_admin->id);
+                $mail_pdf_data['from_user'] = \App\Models\User::find(auth()->user()->id);
+                $mail_pdf_data['locale'] = app()->getLocale();
+                sendEmail('send_to_school_admin', $school_admin->email, $request_save, app()->getLocale(), $send_files);
             }
-            unsetEmailTemplateSMTP();
             Message::create($request_save);
 
             $data['message'] = __('Frontend.message_sent_thank_you');
@@ -320,5 +297,40 @@ class CustomerController extends Controller
     public function payments()
     {
         return view('frontend.customer.payments');
+    }
+
+    public function affiliateInformation()
+    {
+        $affiliate = auth()->user();
+        $country_name = '';
+        $affiliate_countries = Country::whereIn('id', $affiliate->country)->get();
+        foreach ($affiliate_countries as $affiliate_country) {
+            if (app()->getLocale() == 'en') {
+                $country_name .= ($country_name ? ', '  : '') . $affiliate_country->name;
+            } else {
+                $country_name .= ($country_name ? ', '  : '') . $affiliate_country->name_ar;
+            }
+        }
+        $city_name = '';
+        $affiliate_cities = City::whereIn('id', $affiliate->city)->get();
+        foreach ($affiliate_cities as $affiliate_city) {
+            if (app()->getLocale() == 'en') {
+                $city_name .= ($city_name ? ', '  : '') . $affiliate_city->name;
+            } else {
+                $city_name .= ($city_name ? ', '  : '') . $affiliate_city->name_ar;
+            }
+        }
+
+        return view('frontend.customer.affiliate_information', compact('affiliate', 'country_name', 'city_name'));
+    }
+
+    public function codeAndUsage()
+    {
+        return view('frontend.customer.code_and_usage');
+    }
+
+    public function transactions()
+    {
+        return view('frontend.customer.transactions');
     }
 }

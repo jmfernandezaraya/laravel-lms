@@ -54,7 +54,6 @@ class BranchAdminController extends Controller
             'last_name_ar' => 'required',
             'image' => 'mimes:jpg,jpeg,png,bmp',
         ];
-
         $validator = \Validator::make($request->all(), $rules, [
             'first_name_en.required' => __('Admin/backend.errors.first_name_english'),
             'first_name_ar.required' => __('Admin/backend.errors.first_name_arabic'),

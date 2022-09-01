@@ -9,23 +9,60 @@ function can_manage_blog() {
     if (auth('superadmin')->check()) {
         return auth('superadmin')->user()->permission['blog_manager'] == 1 ? true : false;
     } else if (auth('schooladmin')->check()) {
-        return auth('schooladmin')->user()->permission['blog_manager'] == 1 ? true : false;
+        return false;
     }
 }
 function can_add_blog() {
     if (auth('superadmin')->check()) {
         return auth('superadmin')->user()->permission['blog_add'] == 1 ? true : false;
     } else if (auth('schooladmin')->check()) {
-        return auth('schooladmin')->user()->permission['blog_add'] == 1 ? true : false;
+        return false;
     }
 }
 function can_edit_blog() {
     if (auth('superadmin')->check()) {
         return auth('superadmin')->user()->permission['blog_edit'] == 1 ? true : false;
     } else if (auth('schooladmin')->check()) {
-        return auth('schooladmin')->user()->permission['blog_edit'] == 1 ? true : false;
+        return false;
     }
 }
+function can_delete_blog() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['blog_delete'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return false;
+    }
+}
+
+function can_manage_coupon() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['coupon_manager'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return false;
+    }
+}
+function can_add_coupon() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['coupon_add'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return false;
+    }
+}
+function can_edit_coupon() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['coupon_edit'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return false;
+    }
+}
+function can_delete_coupon() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['coupon_delete'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return false;
+    }
+}
+
 function can_manage_course() {
     if (auth('superadmin')->check()) {
         return auth('superadmin')->user()->permission['course_manager'] == 1 ? true : false;
@@ -68,6 +105,7 @@ function can_delete_course() {
         return auth('schooladmin')->user()->permission['course_delete'] == 1 ? true : false;
     }
 }
+
 function can_manage_currency() {
     if (auth('superadmin')->check()) {
         return auth('superadmin')->user()->permission['currency_manager'] == 1 ? true : false;
@@ -89,6 +127,14 @@ function can_edit_currency() {
         return false;
     }
 }
+function can_delete_currency() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['currency_delete'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return false;
+    }
+}
+
 function can_manage_course_application() {
     if (auth('superadmin')->check()) {
         return auth('superadmin')->user()->permission['course_application_manager'] == 1 ? true : false;
@@ -131,6 +177,7 @@ function can_contact_school_course_application() {
         return auth('schooladmin')->user()->permission['course_application_contact_school'] == 1 ? true : false;
     }
 }
+
 function can_manage_enquiry() {
     if (auth('superadmin')->check()) {
         return auth('superadmin')->user()->permission['enquiry_manager'] == 1 ? true : false;
@@ -159,6 +206,7 @@ function can_delete_enquiry() {
         return auth('schooladmin')->user()->permission['enquiry_delete'] == 1 ? true : false;
     }
 }
+
 function can_manage_form_builder() {
     if (auth('superadmin')->check()) {
         return auth('superadmin')->user()->permission['form_builder_manager'] == 1 ? true : false;
@@ -187,6 +235,7 @@ function can_delete_form_builder() {
         return auth('schooladmin')->user()->permission['form_builder_delete'] == 1 ? true : false;
     }
 }
+
 function can_manage_payment() {
     if (auth('superadmin')->check()) {
         return auth('superadmin')->user()->permission['payment_manager'] == 1 ? true : false;
@@ -208,6 +257,7 @@ function can_delete_payment() {
         return auth('schooladmin')->user()->permission['payment_delete'] == 1 ? true : false;
     }
 }
+
 function can_manage_review() {
     if (auth('superadmin')->check()) {
         return auth('superadmin')->user()->permission['review_manager'] == 1 ? true : false;
@@ -243,6 +293,7 @@ function can_delete_review() {
         return auth('schooladmin')->user()->permission['review_delete'] == 1 ? true : false;
     }
 }
+
 function can_manage_school() {
     if (auth('superadmin')->check()) {
         return auth('superadmin')->user()->permission['school_manager'] == 1 ? true : false;
@@ -271,6 +322,7 @@ function can_delete_school() {
         return auth('schooladmin')->user()->permission['school_delete'] == 1 ? true : false;
     }
 }
+
 function can_manage_user() {
     if (auth('superadmin')->check()) {
         return auth('superadmin')->user()->permission['user_manager'] == 1 ? true : false;
@@ -299,6 +351,7 @@ function can_delete_user() {
         return false;
     }
 }
+
 function can_permission_user() {
     if (auth('superadmin')->check()) {
         return auth('superadmin')->user()->permission['user_permission'] == 1 ? true : false;
@@ -306,6 +359,7 @@ function can_permission_user() {
         return false;
     }
 }
+
 function can_manage_visa_application() {
     if (auth('superadmin')->check()) {
         return auth('superadmin')->user()->permission['visa_application_manager'] == 1 ? true : false;
@@ -334,6 +388,7 @@ function can_delete_visa_application() {
         return auth('schooladmin')->user()->permission['visa_application_delete'] == 1 ? true : false;
     }
 }
+
 function can_manage_email_template() {
     if (auth('superadmin')->check()) {
         return auth('superadmin')->user()->permission['email_template_manager'] == 1 ? true : false;
@@ -362,6 +417,7 @@ function can_delete_email_template() {
         return false;
     }
 }
+
 function can_set_site() {
     if (auth('superadmin')->check()) {
         return auth('superadmin')->user()->permission['set_site'] == 1 ? true : false;
@@ -1852,9 +1908,10 @@ function getCourseApplicationPrintData($id, $user_id, $is_admin = false)
 function getCourseApplicationMailData($id, $user_id)
 {
     $course_application = \App\Models\CourseApplication::whereId($id)->firstOrFail();
+    $mail_data['user_no'] = $user_id;
     $mail_data['user'] = \App\Models\User::find($user_id);
     $mail_data['locale'] = app()->getLocale();
-    $mail_data['id'] = $course_application->id;
+    $mail_data['id'] = $mail_data['quotation_no'] = $course_application->id;
     
     $mail_data['program_duration'] = $course_application->program_duration ?? null;    
     $mail_data['accommodation_duration'] = $course_application->accommodation_duration ?? null;
@@ -1982,11 +2039,11 @@ function getUserCityNames($user_id, $is_array = true) {
 function setEmailTemplateSMTP($template) {
     $email_template = \App\Models\SuperAdmin\EmailTemplate::where('template', $template)->first();
     if ($email_template->smtp_server && $email_template->smtp_user_name && $email_template->smtp_password) {
-        Config::set('mail.mailers.smtp.host', $email_template->smtp_server);
-        Config::set('mail.mailers.smtp.username', $email_template->smtp_user_name);
-        Config::set('mail.mailers.smtp.password', $email_template->smtp_password);
+        config('mail.mailers.smtp.host', $email_template->smtp_server);
+        config('mail.mailers.smtp.username', $email_template->smtp_user_name);
+        config('mail.mailers.smtp.password', $email_template->smtp_password);
         if ($email_template->smtp_port) {
-            Config::set('mail.mailers.smtp.port', $email_template->smtp_port);
+            config('mail.mailers.smtp.port', $email_template->smtp_port);
         }
     }
     return;
@@ -1995,11 +2052,52 @@ function setEmailTemplateSMTP($template) {
 function unsetEmailTemplateSMTP() {
     $site_setting = \App\Models\Setting::where('setting_key', 'site')->first();
     $site_setting_value = unserialize($site_setting->setting_value);
-    Config::set('mail.mailers.smtp.host', $site_setting_value['smtp']['server']);
-    Config::set('mail.mailers.smtp.username', $site_setting_value['smtp']['user_name']);
-    Config::set('mail.mailers.smtp.password', $site_setting_value['smtp']['password']);
-    Config::set('mail.mailers.smtp.port', $site_setting_value['smtp']['port']);
-    Config::set('mail.mailers.smtp.encryption', $site_setting_value['smtp']['crypto']);
+
+    config('mail.mailers.smtp.host', $site_setting_value['smtp']['server']);
+    config('mail.mailers.smtp.username', $site_setting_value['smtp']['user_name']);
+    config('mail.mailers.smtp.password', $site_setting_value['smtp']['password']);
+    config('mail.mailers.smtp.port', $site_setting_value['smtp']['port']);
+    config('mail.mailers.smtp.encryption', $site_setting_value['smtp']['crypto']);
+}
+
+function sendEmail($template, $receiver = '', $data, $locale, array $files = [], $subject = '') {
+    $email_template = \App\Models\SuperAdmin\EmailTemplate::where('template', $template)->first();
+    if ($email_template->smtp_server && $email_template->smtp_user_name && $email_template->smtp_password) {
+        config('mail.mailers.smtp.host', $email_template->smtp_server);
+        config('mail.mailers.smtp.username', $email_template->smtp_user_name);
+        config('mail.mailers.smtp.password', $email_template->smtp_password);
+        if ($email_template->smtp_port) {
+            config('mail.mailers.smtp.port', $email_template->smtp_port);
+        }
+    }
+
+    if ($email_template->sender_email) {
+        $send_admin = false;
+        if ($locale == 'en') {
+            if ($email_template->admin_subject && $email_template->admin_content) {
+                $send_admin = true;
+            }
+        } else {
+            if ($email_template->admin_subject_ar && $email_template->admin_content_ar) {
+                $send_admin = true;
+            }
+        }
+        if ($send_admin) {
+            \Mail::to($email_template->sender_email)->send(new \App\Mail\AdminEmailTemplate($template, $data, $locale, $files, $subject));
+        }
+    }
+    if ($receiver) {
+        \Mail::to($receiver)->send(new \App\Mail\EmailTemplate($template, $data, $locale, $files, $subject));
+    }
+
+    $site_setting = \App\Models\Setting::where('setting_key', 'site')->first();
+    $site_setting_value = unserialize($site_setting->setting_value);
+
+    config('mail.mailers.smtp.host', $site_setting_value['smtp']['server']);
+    config('mail.mailers.smtp.username', $site_setting_value['smtp']['user_name']);
+    config('mail.mailers.smtp.password', $site_setting_value['smtp']['password']);
+    config('mail.mailers.smtp.port', $site_setting_value['smtp']['port']);
+    config('mail.mailers.smtp.encryption', $site_setting_value['smtp']['crypto']);
 }
 
 ?>

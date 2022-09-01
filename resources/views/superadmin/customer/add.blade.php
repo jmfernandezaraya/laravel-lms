@@ -68,12 +68,12 @@
                             <input class="form-control" type="email" name="email" placeholder="{{__('Admin/backend.email')}}">
                         </div>
                         <div class="form-group col-md-6">
-                            <label>{{__('Admin/backend.mobile')}}:</label>
-                            <input class="form-control" type="text" name="contact" placeholder="{{__('Admin/backend.mobile')}}">
+                            <label>{{__('Admin/backend.telephone')}}:</label>
+                            <input class="form-control" type="text" name="telephone" placeholder="{{__('Admin/backend.telephone')}}">
                         </div>
                     </div>
 
-                    <button onclick="submitForm($(this).parents().find('#customerForm'))" class="btn btn-primary pull-right" type="button">{{__('Admin/backend.submit')}}</button>
+                    <button class="btn btn-primary pull-right" type="submit">{{__('Admin/backend.submit')}}</button>
                 </form>
             </div>
         </div>

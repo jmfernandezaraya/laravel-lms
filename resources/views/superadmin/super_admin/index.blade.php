@@ -43,10 +43,10 @@
                         @foreach ($super_admins as $super_admin)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ ucwords($super_admin->{'first_name_' . get_language()}) }}</td>
-                                <td>{{ ucwords($super_admin->{'last_name_' . get_language()}) }}</td>
+                                <td>{{ $super_admin->{'first_name_' . get_language()} }}</td>
+                                <td>{{ $super_admin->{'last_name_' . get_language()} }}</td>
                                 <td>{{ $super_admin->email == null ? '-----' : $super_admin->email }}</td>
-                                <td>{{ ucwords($super_admin->telephone) }}</td>
+                                <td>{{ $super_admin->telephone }}</td>
                                 <td>
                                     @if ($super_admin->image != null || $super_admin->image != '')
                                         <img width="200px" height="200px" src="{{ asset($super_admin->image) }}">

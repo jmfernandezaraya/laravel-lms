@@ -43,7 +43,7 @@
                     {{csrf_field()}}
 
                     <div class="row">
-                        <div class="form-group col-md-12 mb-0">
+                        <div class="form-group col-md-12">
                             <h3 class="mb-0">{{__('Admin/backend.template')}}</h3>
                         </div>
                     </div>
@@ -59,46 +59,33 @@
                     </div>
                     
                     <div class="row">
-                        <div class="form-group col-md-12 mb-0">
+                        <div class="form-group col-md-12">
                             <h3 class="mb-0">{{__('Admin/backend.smtp')}}</h3>
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-6">
                             <label for="smtp_server">{{__('Admin/backend.smtp_server')}}</label>
                             <input value="{{$smtp_setting->server}}" name="smtp_server" type="text" class="form-control" placeholder="{{__('Admin/backend.smtp_server')}}">
                         </div>
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-6">
                             <label for="smtp_user_name">{{__('Admin/backend.smtp_user_name')}}</label>
                             <input value="{{$smtp_setting->user_name}}" name="smtp_user_name" type="email" class="form-control" placeholder="{{__('Admin/backend.smtp_user_name')}}">
                         </div>
-                        <div class="form-group col-md-4">
+                    </div>
+                    <div class="row mb-2">
+                        <div class="form-group col-md-6">
                             <label for="smtp_password">{{__('Admin/backend.smtp_password')}}</label>
                             <input value="" name="smtp_password" type="password" class="form-control" placeholder="{{__('Admin/backend.smtp_password')}}">
                         </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-6">
                             <label for="smtp_port">{{__('Admin/backend.smtp_port')}}</label>
                             <input value="{{$smtp_setting->port}}" name="smtp_port" type="number" class="form-control" placeholder="{{__('Admin/backend.smtp_port')}}">
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="sender_name">{{__('Admin/backend.sender_name')}}</label>
-                            <div class="english">
-                                <input value="{{$smtp_setting->default_sender_name}}" name="sender_name" type="text" class="form-control" placeholder="{{__('Admin/backend.sender_name')}}">
-                            </div>
-                            <div class="arabic">
-                                <input value="{{$smtp_setting->default_sender_name_ar}}" name="sender_name_ar" type="text" class="form-control" placeholder="{{__('Admin/backend.sender_name')}}">
-                            </div>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="sender_email">{{__('Admin/backend.sender_email')}}</label>
-                            <input value="{{$smtp_setting->default_sender_email}}" name="sender_email" type="email" class="form-control" placeholder="{{__('Admin/backend.sender_email')}}">
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="form-group col-md-12 mb-0">
+                        <div class="form-group col-md-12">
                             <h3 class="mb-0">{{__('Admin/backend.keywords')}}</h3>
                         </div>
                     </div>
@@ -136,8 +123,23 @@
                     </div>
 
                     <div class="row">
-                        <div class="form-group col-md-12 mb-0">
+                        <div class="form-group col-md-12">
                             <h3 class="mb-0">{{__('Admin/backend.email_template')}}</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="sender_name">{{__('Admin/backend.sender_name')}}</label>
+                            <div class="english">
+                                <input value="{{$smtp_setting->default_sender_name}}" name="sender_name" type="text" class="form-control" placeholder="{{__('Admin/backend.sender_name')}}">
+                            </div>
+                            <div class="arabic">
+                                <input value="{{$smtp_setting->default_sender_name_ar}}" name="sender_name_ar" type="text" class="form-control" placeholder="{{__('Admin/backend.sender_name')}}">
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="sender_email">{{__('Admin/backend.sender_email')}}</label>
+                            <input value="{{$smtp_setting->default_sender_email}}" name="sender_email" type="email" class="form-control" placeholder="{{__('Admin/backend.sender_email')}}">
                         </div>
                     </div>
                     <div class="row">
@@ -159,6 +161,49 @@
                             </div>
                             <div class="arabic">
                                 <textarea id="content_ar" name="content_ar" class="form-control ckeditor-input" placeholder="{{__('Admin/backend.content')}}"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <h3 class="mb-0">{{__('Admin/backend.admin_email_template')}}</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label for="admin_subject">{{__('Admin/backend.admin_subject')}}</label>
+                            <div class="english">
+                                <input name="admin_subject" type="text" class="form-control" placeholder="{{__('Admin/backend.admin_subject')}}">
+                            </div>
+                            <div class="arabic">
+                                <input name="admin_subject_ar" type="text" class="form-control" placeholder="{{__('Admin/backend.admin_subject')}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="admin_sender_name">{{__('Admin/backend.admin_sender_name')}}</label>
+                            <div class="english">
+                                <input value="{{ env('MAIL_FROM_NAME') }}" name="admin_sender_name" type="text" class="form-control" placeholder="{{__('Admin/backend.admin_sender_name')}}">
+                            </div>
+                            <div class="arabic">
+                                <input value="{{ env('MAIL_FROM_NAME') }}" name="admin_sender_name_ar" type="text" class="form-control" placeholder="{{__('Admin/backend.admin_sender_name')}}">
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="admin_sender_email">{{__('Admin/backend.sender_email')}}</label>
+                            <input value="{{ env('MAIL_FROM_ADDRESS') }}" name="admin_sender_email" type="email" class="form-control" placeholder="{{__('Admin/backend.admin_sender_email')}}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label for="admin_content">{{__('Admin/backend.admin_content')}}</label>
+                            <div class="english">
+                                <textarea id="admin_content" name="admin_content" class="form-control ckeditor-input" placeholder="{{__('Admin/backend.admin_content')}}"></textarea>
+                            </div>
+                            <div class="arabic">
+                                <textarea id="admin_content_ar" name="admin_content_ar" class="form-control ckeditor-input" placeholder="{{__('Admin/backend.admin_content')}}"></textarea>
                             </div>
                         </div>
                     </div>

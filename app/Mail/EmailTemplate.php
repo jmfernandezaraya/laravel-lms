@@ -47,8 +47,9 @@ class EmailTemplate extends Mailable
         }
         $email_template = \App\Models\SuperAdmin\EmailTemplate::where('template', $this->template)->first();
         if ($email_template) {
-            $user_name = '';
-            $user_no = '';
+            $user_name = $user_no = $user_email = '';
+            $from_name = $from_no = $from_email = '';
+            $to_name = $to_no = $to_email = '';
             if (isset($this->data->user)) {
                 if ($locale == 'en') {
                     $user_name = $this->data->user->first_name_en . ' ' . $this->data->user->last_name_en;
@@ -56,6 +57,7 @@ class EmailTemplate extends Mailable
                     $user_name = $this->data->user->first_name_ar . ' ' . $this->data->user->last_name_ar;
                 }
                 $user_no = $this->data->user->id;
+                $user_email = $this->data->user->email;
             } else {
                 if ($locale == 'en') {
                     if (isset($this->data->first_name_en) && isset($this->data->last_name_en)) {
@@ -69,6 +71,27 @@ class EmailTemplate extends Mailable
                 if (isset($this->data->user_id)) {
                     $user_no = $this->data->user_id;
                 }
+                if (isset($this->data->email)) {
+                    $user_email = $this->data->email;
+                }
+            }
+            if (isset($this->data->from_user)) {
+                if ($locale == 'en') {
+                    $from_name = $this->data->from_user->first_name_en . ' ' . $this->data->from_user->last_name_en;
+                } else {
+                    $from_name = $this->data->from_user->first_name_ar . ' ' . $this->data->from_user->last_name_ar;
+                }
+                $from_no = $this->data->from_user->id;
+                $from_email = $this->data->from_user->email;
+            }
+            if (isset($this->data->to_user)) {
+                if ($locale == 'en') {
+                    $to_name = $this->data->to_user->first_name_en . ' ' . $this->data->to_user->last_name_en;
+                } else {
+                    $to_name = $this->data->to_user->first_name_ar . ' ' . $this->data->to_user->last_name_ar;
+                }
+                $to_no = $this->data->to_user->id;
+                $to_email = $this->data->to_user->email;
             }
 
             if ($email_template->sender_email) {
@@ -113,6 +136,20 @@ class EmailTemplate extends Mailable
                     $contents_html = str_replace('[user_name]', $user_name, $contents_html);
                 } else if ($email_template_keyword == 'user_no') {
                     $contents_html = str_replace('[user_no]', $user_no, $contents_html);
+                } else if ($email_template_keyword == 'user_email') {
+                    $contents_html = str_replace('[user_email]', $user_email, $contents_html);
+                } else if ($email_template_keyword == 'from_name') {
+                    $contents_html = str_replace('[from_name]', $from_name, $contents_html);
+                } else if ($email_template_keyword == 'from_no') {
+                    $contents_html = str_replace('[from_no]', $from_no, $contents_html);
+                } else if ($email_template_keyword == 'from_email') {
+                    $contents_html = str_replace('[from_email]', $from_email, $contents_html);
+                } else if ($email_template_keyword == 'to_name') {
+                    $contents_html = str_replace('[to_name]', $to_name, $contents_html);
+                } else if ($email_template_keyword == 'to_no') {
+                    $contents_html = str_replace('[to_no]', $to_no, $contents_html);
+                } else if ($email_template_keyword == 'to_email') {
+                    $contents_html = str_replace('[to_email]', $to_email, $contents_html);
                 } else {
                     if (isset($this->data->{$email_template_keyword})) {
                         $contents_html = str_replace('[' . $email_template_keyword . ']', $this->data->{$email_template_keyword}, $contents_html);                        
@@ -124,14 +161,18 @@ class EmailTemplate extends Mailable
             
             $contents_html = str_replace('[website_link]', url('/'), $contents_html);
             $contents_html = str_replace('[app_name]', config('app.name'), $contents_html);
+
             $this->sender_name = str_replace('[website_link]', url('/'), $this->sender_name);
+            $this->sender_name = str_replace('[app_name]', config('app.name'), $this->sender_name);
             $this->sender_name = str_replace('[user_name]', $user_name, $this->sender_name);
             $this->sender_name = str_replace('[user_no]', $user_no, $this->sender_name);
-            $this->sender_name = str_replace('[app_name]', config('app.name'), $this->sender_name);
+            $this->sender_name = str_replace('[user_email]', $user_email, $this->sender_name);
+
             $this->subject = str_replace('[website_link]', url('/'), $this->subject);
             $this->subject = str_replace('[app_name]', config('app.name'), $this->subject);
             $this->subject = str_replace('[user_name]', $user_name, $this->subject);
             $this->subject = str_replace('[user_no]', $user_no, $this->subject);
+            $this->subject = str_replace('[user_email]', $user_email, $this->subject);
         }
 
         $this->contents = [];

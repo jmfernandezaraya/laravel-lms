@@ -407,18 +407,18 @@ class CourseControllerFrontend extends Controller
                     $under_age_flag = in_array($accommodation_under_ages[0], $value['age_range'] ?? []);
                     $date_flag = false;
                     if ($r_date_set) {
-                        if ($value['available_date'] == 'all_year_round') {
-                            $program_start_date = Carbon::create($r_date_set)->format('Y-m-d');
-                            $program_end_date = Carbon::create($r_date_set)->addWeeks($r_duration)->format('Y-m-d');
-                            if ($value['start_date'] <= $program_start_date && $value['end_date'] >= $program_end_date) {
+                        $program_start_date = Carbon::create($r_date_set)->format('Y-m-d');
+                        $program_end_date = Carbon::create($r_date_set)->addWeeks($r_duration)->format('Y-m-d');
+                        if ($value['start_date'] <= $program_start_date && $value['end_date'] >= $program_end_date) {
+                            if ($value['available_date'] == 'all_year_round') {
                                 $date_flag = true;
-                            }
-                        } else if ($value['available_date'] == 'selected_dates') {
-                            if ($value['available_days']) {
-                                for ($accmmodation_duration = $program_duration_start; $accmmodation_duration <= $r_duration; $accmmodation_duration++) {
-                                    $accmmodation_duration_date = Carbon::create($r_date_set)->addWeeks($accmmodation_duration)->format('m/d/Y');
-                                    if (strpos($value['available_days'], $accmmodation_duration_date) != false) {
-                                        $date_flag = true;
+                            } else if ($value['available_date'] == 'selected_dates') {
+                                if ($value['available_days']) {
+                                    for ($accmmodation_duration = $program_duration_start; $accmmodation_duration <= $r_duration; $accmmodation_duration++) {
+                                        $accmmodation_duration_date = Carbon::create($r_date_set)->addWeeks($accmmodation_duration)->format('m/d/Y');
+                                        if (strpos($value['available_days'], $accmmodation_duration_date) != false) {
+                                            $date_flag = true;
+                                        }
                                     }
                                 }
                             }
@@ -508,7 +508,7 @@ class CourseControllerFrontend extends Controller
             insertCalculationIntoDB('bank_transfer_fee', $course_program->bank_transfer_fee == null ? 0 : $course_program->bank_transfer_fee);
             $data['link_fee_vat'] = $course_program->tax_percent;
             $data['link_fee'] = $course->link_fee_enable ? true : false;
-            $course_link_fee = $course->link_fee_enable ? (($course_program->link_fee == null || $course_program->tax_percent == null) ? 0 : $course_program->link_fee * $course_program->tax_percent / 100) : 0;
+            $course_link_fee = $course->link_fee_enable ? (($course_program->link_fee == null || $course_program->tax_percent == null) ? 0 : $course_program->link_fee + $course_program->link_fee * $course_program->tax_percent / 100) : 0;
             insertCalculationIntoDB('link_fee', getCurrencyReverseConvertedValue($course->unique_id, $course_link_fee));
             insertCalculationIntoDB('link_fee_converted', $course_link_fee);
         }

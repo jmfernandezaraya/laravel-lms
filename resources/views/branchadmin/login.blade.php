@@ -12,7 +12,7 @@
 
     <!-- ======= login Section ======= -->
     <div class="container mt-5 mb-5">
-        <form id="login-form" method="post" action = "{{route('branchlogin.submit')}}">
+        <form id="login-form" method="post" action="{{route('branchlogin.submit')}}">
             @csrf
             <div class="heading">Login</div>
 

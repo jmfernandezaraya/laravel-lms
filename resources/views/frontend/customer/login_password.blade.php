@@ -68,10 +68,10 @@
                                     <div class="col-lg-8 col-md-8">
                                         <label><strong>{{__('Frontend.mobile_phone_number')}}</strong></label>
                                         <div class="show-area show">
-                                            <p>{{ $contact }}</p>
+                                            <p>{{ $telephone }}</p>
                                         </div>
                                         <div class="editable-area">
-                                            <input type="text" name="contact" class="form-control" value="{{ $contact }}" />
+                                            <input type="text" name="telephone" class="form-control" value="{{ $telephone }}" />
                                         </div>
                                     </div>
                                     <div class="col-lg-4 col-md-4">

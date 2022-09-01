@@ -67,6 +67,13 @@ class EmailTemplateController extends Controller
             'subject_ar' => 'sometimes',
             'content' => 'sometimes',
             'content_ar' => 'sometimes',
+            'admin_sender_name' => 'sometimes',
+            'admin_sender_name_ar' => 'sometimes',
+            'admin_sender_email' => 'sometimes',
+            'admin_subject' => 'sometimes',
+            'admin_subject_ar' => 'sometimes',
+            'admin_content' => 'sometimes',
+            'admin_content_ar' => 'sometimes',
         ];
         $validator = \Validator::make($request->all(), $rules);
         if ($validator->fails()) {
@@ -135,10 +142,17 @@ class EmailTemplateController extends Controller
             'subject_ar' => 'sometimes',
             'content' => 'sometimes',
             'content_ar' => 'sometimes',
+            'admin_sender_name' => 'sometimes',
+            'admin_sender_name_ar' => 'sometimes',
+            'admin_sender_email' => 'sometimes',
+            'admin_subject' => 'sometimes',
+            'admin_subject_ar' => 'sometimes',
+            'admin_content' => 'sometimes',
+            'admin_content_ar' => 'sometimes',
         ];
         $validator = \Validator::make($request->all(), $rules);
         if ($validator->fails()) {
-            return response()->json(['errors' => $validate->errors()]);
+            return response()->json(['errors' => $validator->errors()]);
         }
         $requested_save = $validator->validated();
         if (!$requested_save['smtp_password']) {

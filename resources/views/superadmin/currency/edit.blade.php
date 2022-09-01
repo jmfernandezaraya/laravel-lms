@@ -39,7 +39,7 @@
     <div class="page-content">
         <div class="card">
             <div class="card-body">
-                <form id="formaction" class="forms-sample" method="post" action = "{{route('superadmin.currency.update', $currency->id)}}">
+                <form id="formaction" class="forms-sample" method="post" action="{{route('superadmin.currency.update', $currency->id)}}">
                     {{csrf_field()}}
                     @method('PUT')
 

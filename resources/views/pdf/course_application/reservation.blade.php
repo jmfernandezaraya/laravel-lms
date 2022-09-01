@@ -76,7 +76,7 @@
 <body>
     <img src="{{$logo}}" class="logo"/>
 
-    <h2 class="title">{{__('Mail.reservation_qutation')}}</h3>
+    <h2 class="title">{{__('Mail.reservation_quotation')}}</h3>
 
     <table class="table table-bordered">
         <tbody>

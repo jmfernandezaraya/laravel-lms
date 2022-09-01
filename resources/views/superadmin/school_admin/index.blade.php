@@ -45,8 +45,8 @@
                         @foreach ($school_admins as $school_admin)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ ucwords($school_admin->{'first_name_' . get_language()}) }}</td>
-                                <td>{{ ucwords($school_admin->{'last_name_' . get_language()}) }}</td>
+                                <td>{{ $school_admin->{'first_name_' . get_language()} }}</td>
+                                <td>{{ $school_admin->{'last_name_' . get_language()} }}</td>
                                 <td>{{ $school_admin->email == null ? '-----' : $school_admin->email }}</td>
                                 <td>{{ $school_admin->telephone }}</td>
                                 <td>{{ isset($school_admin->userSchool->school) ? (get_language() == 'en' ? $school_admin->userSchool->school->name->name : $school_admin->userSchool->school->name->name_ar) : '-' }}</td>

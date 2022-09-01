@@ -55,7 +55,7 @@
                             <div class="modal-dialog" role="document">
 
                                 <div class="modal-content">
-                                    <form method="Post" action = "{{route('enquiry.store')}}">
+                                    <form method="Post" action="{{route('enquiry.store')}}">
                                         @csrf
                                         <div class="modal-header">
 
