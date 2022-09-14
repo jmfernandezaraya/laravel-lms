@@ -5,7 +5,12 @@
 @endsection
 
 @section('breadcrumbs')
-    <h1>{{__('Frontend.login_password')}}</h1>
+    <div class="breadcrumb-head">
+        <a href="{{route('frontend.dashboard')}}" class="breadcrumb-home">
+            <i class="bx bxs-dashboard"></i>&nbsp;
+        </a>
+        <h1>{{__('Frontend.login_password')}}</h1>
+    </div>
 @endsection
 
 @section('content')

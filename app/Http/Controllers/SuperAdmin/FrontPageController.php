@@ -77,13 +77,13 @@ class FrontPageController extends Controller
             'title_ar' => 'required',
             'slug' => 'required',
         ];
-        $validate = \Validator::make($request->all(), $rules, [
+        $validator = \Validator::make($request->all(), $rules, [
             'title.required' => __('Admin/backend.errors.title_in_english'),
             'title_ar.required' => __('Admin/backend.errors.title_in_arabic'),
             'slug.required' => __('Admin/backend.errors.slug'),
         ]);
-        if ($validate->fails()) {
-            return response()->json(['errors' => $validate->errors()]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()]);
         }
 
         try {
@@ -134,13 +134,13 @@ class FrontPageController extends Controller
             'title_ar' => 'required',
             'slug' => 'required',
         ];
-        $validate = \Validator::make($request->all(), $rules, [
+        $validator = \Validator::make($request->all(), $rules, [
             'title.required' => __('Admin/backend.errors.title_in_english'),
             'title_ar.required' => __('Admin/backend.errors.title_in_arabic'),
             'slug.required' => __('Admin/backend.errors.slug'),
         ]);
-        if ($validate->fails()) {
-            return response()->json(['errors' => $validate->errors()]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()]);
         }
 
         $front_page->title = $request->title;

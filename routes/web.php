@@ -119,6 +119,8 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
             Route::get('details', [FrontendController::class, 'viewRegister'])->name('details.save');
             Route::post('details', [FrontendController::class, 'viewRegister'])->name('details.save');
         });
+
+        Route::post('coupon/apply', [CourseControllerFrontend::class, 'applyCoupon'])->name('coupon.apply');
     });
 
     ///// Frontend Middleware Starts //////
@@ -152,8 +154,9 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
             Route::get('/review/{id}', [CustomerController::class, 'review'])->name('review');
             Route::post('/review/{id}', [CustomerController::class, 'reviewBooking'])->name('review.booking');
             Route::get('/payments', [CustomerController::class, 'payments'])->name('payments');
-            Route::get('/affiliate_information', [CustomerController::class, 'affiliateInformation'])->name('affiliate_information');
-            Route::get('/code_and_usage', [CustomerController::class, 'codeAndUsage'])->name('code_and_usage');
+            Route::get('/affiliate', [CustomerController::class, 'affiliate'])->name('affiliate');
+            Route::get('/coupons', [CustomerController::class, 'coupons'])->name('coupons');
+            Route::get('/coupons/{id}', [CustomerController::class, 'couponUsage'])->name('coupon.usage');
             Route::get('/transactions', [CustomerController::class, 'transactions'])->name('transactions');
         });
     });
@@ -359,6 +362,7 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => [
 
     Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
         Route::resource('customer', 'CustomerController');
+        Route::post('affiliate/{id}/transaction', 'AffiliateController@transaction')->name('affiliate.transaction');
         Route::resource('affiliate', 'AffiliateController');
         Route::resource('school_admin', 'SchoolAdminController');
         Route::resource('super_admin', 'SuperAdminController');

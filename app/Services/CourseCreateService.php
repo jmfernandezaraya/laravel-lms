@@ -134,7 +134,7 @@ class CourseCreateService
                     $course_program->unique_id = $request->program_id[$count];
                     $course_program->link_fee = $request->link_fee[$count];
                     $course_program->tax_percent = $request->tax_percent[$count];
-                    $course_program->bank_transfer_fee = $request->bank_transfer_fee[$count];
+                    $course_program->bank_charge_fee = $request->bank_charge_fee[$count];
                     $course_program->program_registration_fee = $request->program_registration_fee[$count];
                     $course_program->program_duration = $request->program_duration[$count] ?? null;
                     $course_program->program_age_range = $request->age_range[$count] ?? null;
@@ -237,7 +237,7 @@ class CourseCreateService
             $new_course_program->unique_id = $course_program_id;
             $new_course_program->link_fee = $course_program->link_fee;
             $new_course_program->tax_percent = $course_program->tax_percent;
-            $new_course_program->bank_transfer_fee = $course_program->bank_transfer_fee;
+            $new_course_program->bank_charge_fee = $course_program->bank_charge_fee;
             $new_course_program->program_registration_fee = $course_program->program_registration_fee;
             $new_course_program->program_duration = $course_program->program_duration ?? null;
             $new_course_program->program_age_range = $course_program->program_age_range ?? null;
@@ -841,7 +841,7 @@ class CourseCreateService
                     $course_program->course_unique_id = '' . $course_id;
                     $course_program->link_fee = $request->link_fee[$count];
                     $course_program->tax_percent = $request->tax_percent[$count];
-                    $course_program->bank_transfer_fee = $request->bank_transfer_fee[$count];
+                    $course_program->bank_charge_fee = $request->bank_charge_fee[$count];
                     $course_program->program_registration_fee = $request->program_registration_fee[$count];
                     $course_program->program_duration = $request->program_duration[$count] ?? null;
                     $course_program->program_age_range = $request->age_range[$count] ?? null;
@@ -1028,7 +1028,7 @@ class CourseCreateService
                     $course_accomodation->unique_id = $accommodation_id[$accom];
                 } else {
                     (new Controller())->my_unique_id(1);
-                    $course_accomodation->unique_id = (new Controller())->my_unique_id();;
+                    $course_accomodation->unique_id = (new Controller())->my_unique_id();
                 }
                 $course_accomodation->course_unique_id = '' . \Session::get('course_id');
             }

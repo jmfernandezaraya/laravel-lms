@@ -9,8 +9,15 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 @section('breadcrumbs')
-    <h1>{{__('Frontend.reservation_details')}}</h1>
-    <p>{{__('Frontend.reservation_details_description')}}</p>
+    <div class="breadcrumb-head">
+        <a href="{{ url('/') }}" class="breadcrumb-home">
+            <i class="bx bx-home"></i>&nbsp;
+        </a>
+        <h1>{{__('Frontend.reservation_details')}}</h1>
+    </div>
+    <div class="breadcrumb-description">
+        <p>{{__('Frontend.reservation_details_description')}}</p>
+    </div>
 @endsection
 
 @section('content')
@@ -23,7 +30,7 @@
             <form id="course_reversation" enctype="multipart/form-data" action="{{route('frontend.course.reservation')}}" method="POST">
                 {{csrf_field()}}
 
-                <table class="table table-bordered">
+                <table class="table table-bordered table-no-drawable">
                     <tbody>
                         <tr>
                             <td>{{__('Frontend.name')}}</td>
@@ -40,7 +47,7 @@
                     </tbody>
                 </table>
 
-                <table class="table table-bordered">
+                <table class="table table-bordered table-no-drawable">
                     <thead>
                         <tr>
                             <th>{{__('Frontend.course_details')}}</th>
@@ -121,7 +128,7 @@
                 </table>
 
                 @if ($accommodation)
-                    <table class="table table-bordered">
+                    <table class="table table-bordered table-no-drawable">
                         <thead>
                             <tr>
                                 <th>{{__('Frontend.accommodation_details')}}</th>
@@ -212,7 +219,7 @@
                 @endif
                 
                 @if ($airport || $medical || $custodian)
-                    <table class="table table-bordered">
+                    <table class="table table-bordered table-no-drawable">
                         <thead>
                             <tr>
                                 <th>{{__('Frontend.other_services')}}</th>
@@ -262,7 +269,7 @@
                     </table>
                 @endif
                 
-                <table class="table table-bordered">
+                <table class="table table-bordered table-no-drawable">
                     <thead>
                         <tr>
                             <th>{{__('Frontend.sub_total')}}</th>
@@ -271,14 +278,14 @@
                             <input type="hidden" value="{{$sub_total['value']}}" name="sub_total" />
                         </tr>
                         <tr>
-                            <td>{{__('Frontend.bank_transfer_fee')}}</td>
-                            <td>{{ toFixedNumber($bank_transfer_fee['value']) }} {{ $currency['cost'] }}</td>
-                            <td>{{ toFixedNumber($bank_transfer_fee['converted_value']) }} {{ $currency['converted'] }}</td>
-                            <input type="hidden" value="{{$bank_transfer_fee['value']}}" name="bank_transfer_fee" />
+                            <td>{{__('Frontend.bank_charge_fee')}}</td>
+                            <td>{{ toFixedNumber($bank_charge_fee['value']) }} {{ $currency['cost'] }}</td>
+                            <td>{{ toFixedNumber($bank_charge_fee['converted_value']) }} {{ $currency['converted'] }}</td>
+                            <input type="hidden" value="{{$bank_charge_fee['value']}}" name="bank_charge_fee" />
                         </tr>
                         @if ($link_fee['value'])
                             <tr>
-                                <td>{{__('Frontend.link_study_abroad_fee')}}</td>
+                                <td>{{__('Frontend.link_fee_including_vat')}} <span class="vat_fee">{{ $vat_fee }}</span>%</td>
                                 <td>{{ toFixedNumber($link_fee['value']) }} {{ $currency['cost'] }}</td>
                                 <td>{{ toFixedNumber($link_fee['converted_value']) }} {{ $currency['converted'] }}</td>
                                 <input type="hidden" value="{{$link_fee['value']}}" name="link_fee" />
@@ -303,6 +310,15 @@
                                 <th>{{ toFixedNumber($deposit_price['value']) }} {{ $currency['cost'] }}</th>
                                 <th>{{ toFixedNumber($deposit_price['converted_value']) }} {{ $currency['converted'] }}</th>
                                 <input type="hidden" value="{{$deposit_price['value']}}" name="deposit_price" />
+                            </tr>
+                        @endif
+                        @if ($coupon_discount['value'])
+                            <tr>
+                                <td>{{__('Frontend.discount')}}</td>
+                                <td>{{ toFixedNumber($coupon_discount['value']) }} {{ $currency['cost'] }}</td>
+                                <td>{{ toFixedNumber($coupon_discount['converted_value']) }} {{ $currency['converted'] }}</td>
+                                <input type="hidden" value="{{$coupon_discount['value']}}" name="coupon_discount" />
+                                <input type="hidden" value="{{$coupon_discount['converted_value']}}" name="coupon_discount_converted" />
                             </tr>
                         @endif
                         <tr>

@@ -27,18 +27,10 @@
 
         @if (can_manage_blog() || can_add_blog() || can_edit_blog() || can_delete_blog())
             <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" href="#blogs" aria-expanded="false" aria-controls="blogs">
+                <a class="nav-link" href="{{route('superadmin.blog.index')}}">
                     <span class="menu-title">{{__('Admin/backend.manage_blogs')}}</span>
-                    <i class="menu-arrow"></i>
                     <i class="mdi mdi-crosshairs-gps menu-icon"></i>
                 </a>
-                <div class="collapse" id="blogs">
-                    <ul class="nav flex-column sub-menu">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{route('superadmin.blog.index')}}">{{__('Admin/dashboard.view')}}</a>
-                        </li>
-                    </ul>
-                </div>
             </li>
         @endif
 
@@ -125,52 +117,29 @@
 
         @if (can_manage_course_application() || can_edit_course_application() || can_chanage_status_course_application() || can_payment_refund_course_application() || can_contact_student_course_application() || can_contact_school_course_application())
             <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" href="#course_application" aria-expanded="false" aria-controls="course_application">
+                <a class="nav-link" href="{{route('superadmin.course_application.index')}}">
                     <span class="menu-title">{{__('Admin/backend.course_application')}}</span>
-                    <i class="menu-arrow"></i>
                     <i class="mdi mdi-crosshairs-gps menu-icon"></i>
                 </a>
-                <div class="collapse" id="course_application">
-                    <ul class="nav flex-column sub-menu">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{route('superadmin.course_application.index')}}">{{__('Admin/dashboard.view')}}</a>
-                        </li>
-                    </ul>
-                </div>
             </li>
         @endif
 
         @if (can_manage_review() || can_apply_review() || can_edit_review() || can_approve_review() || can_delete_review())
             <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" href="#review" aria-expanded="false" aria-controls="school_admin">
+                <a class="nav-link" href="{{route('superadmin.review.index')}}">
                     <span class="menu-title">{{__('Admin/backend.rating_review')}}</span>
-                    <i class="menu-arrow"></i>
                     <i class="mdi mdi-crosshairs-gps menu-icon"></i>
                 </a>
-                <div class="collapse" id="review">
-                    <ul class="nav flex-column sub-menu">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{route('superadmin.review.index')}}">{{__('Admin/dashboard.view')}}</a>
-                        </li>
-                    </ul>
-                </div>
             </li>
         @endif
 
         @if (can_manage_payment() || can_edit_payment() || can_delete_payment())
             <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" href="#payment_received" aria-expanded="false" aria-controls="payment_received">
+                <a class="nav-link" href="{{route('superadmin.payment_received.index')}}">
                     <span class="menu-title">{{__('Admin/backend.payment_received')}}</span>
                     <i class="menu-arrow"></i>
                     <i class="mdi mdi-crosshairs-gps menu-icon"></i>
                 </a>
-                <div class="collapse" id="payment_received">
-                    <ul class="nav flex-column sub-menu">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{route('superadmin.payment_received.index')}}">{{ __('Admin/dashboard.view')}}</a>
-                        </li>
-                    </ul>
-                </div>
             </li>
         @endif
 
@@ -202,18 +171,10 @@
 
         @if (can_manage_enquiry() || can_add_enquiry() || can_edit_enquiry() || can_delete_enquiry())
             <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" href="#enquiry" aria-expanded="false" aria-controls="school_admin">
+                <a class="nav-link" href="{{url('superadmin/enquiry')}}">
                     <span class="menu-title">{{__('Admin/backend.manage_enquiries')}}</span>
-                    <i class="menu-arrow"></i>
                     <i class="mdi mdi-crosshairs-gps menu-icon"></i>
                 </a>
-                <div class="collapse" id="enquiry">
-                    <ul class="nav flex-column sub-menu">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{url('superadmin/enquiry')}}">{{ __('Admin/dashboard.view')}}</a>
-                        </li>
-                    </ul>
-                </div>
             </li>
         @endif
 
@@ -259,52 +220,29 @@
 
         @if (can_manage_currency() || can_add_currency() || can_edit_currency() || can_delete_currency())
             <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" href="#currency" aria-expanded="false" aria-controls="currency">
+                <a class="nav-link" href="{{ route('superadmin.currency.index') }}">
                     <span class="menu-title">{{__('Admin/backend.currency')}}</span>
-                    <i class="menu-arrow"></i>
                     <i class="mdi mdi-card-bulleted menu-icon"></i>
                 </a>
-                <div class="collapse" id="currency">
-                    <ul class="nav flex-column sub-menu">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('superadmin.currency.index') }}">{{__('Admin/dashboard.view')}}</a>
-                        </li>
-                    </ul>
-                </div>
             </li>
         @endif
 
         @if (can_manage_coupon() || can_add_coupon() || can_edit_coupon() || can_delete_coupon())
             <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" href="#coupon" aria-expanded="false" aria-controls="coupon">
+                <a class="nav-link" href="{{ route('superadmin.coupon.index') }}">
                     <span class="menu-title">{{__('Admin/backend.coupon')}}</span>
-                    <i class="menu-arrow"></i>
                     <i class="mdi mdi-card-bulleted menu-icon"></i>
                 </a>
-                <div class="collapse" id="coupon">
-                    <ul class="nav flex-column sub-menu">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('superadmin.coupon.index') }}">{{__('Admin/dashboard.view')}}</a>
-                        </li>
-                    </ul>
-                </div>
             </li>
         @endif
 
         @if (can_manage_email_template() || can_add_email_template() || can_edit_email_template() || can_delete_email_template())
             <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" href="#email_template" aria-expanded="false" aria-controls="email_template">
+                <a class="nav-link" href="{{ route('superadmin.email_template.index') }}">
                     <span class="menu-title">{{__('Admin/dashboard.email_template')}}</span>
                     <i class="menu-arrow"></i>
                     <i class="mdi mdi-card-bulleted menu-icon"></i>
                 </a>
-                <div class="collapse" id="email_template">
-                    <ul class="nav flex-column sub-menu">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('superadmin.email_template.index') }}">{{__('Admin/dashboard.view')}}</a>
-                        </li>
-                    </ul>
-                </div>
             </li>
         @endif
 

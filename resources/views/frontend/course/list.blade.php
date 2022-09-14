@@ -5,7 +5,12 @@
 @endsection
 
 @section('breadcrumbs')
-    <h1>{{__('Frontend.courses')}}</h1>
+    <div class="breadcrumb-head">
+        <a href="{{ url('/') }}" class="breadcrumb-home">
+            <i class="bx bx-home"></i>&nbsp;
+        </a>
+        <h1>{{__('Frontend.courses')}}</h1>
+    </div>
 @endsection
 
 @section('content')

@@ -9,11 +9,12 @@ use App\Models\CourseApplication;
 use App\Models\Review;
 use App\Models\Message;
 
-use App\Models\SuperAdmin\Country;
-use App\Models\SuperAdmin\City;
+use App\Models\SuperAdmin\Coupon;
 use App\Models\SuperAdmin\School;
 
+use DB;
 use PDF;
+use Image;
 use Storage;
 
 use Carbon\Carbon;
@@ -74,13 +75,12 @@ class CustomerController extends Controller
             'telephone' => 'sometimes',
             'password' => 'sometimes',
         ];
-
-        $validate = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
         
         $data['success'] = true;
-        if ($validate->fails()) {
+        if ($validator->fails()) {
             $data['success'] = false;
-            $data['errors'] = $validate->errors();
+            $data['errors'] = $validator->errors();
         } else {
             $data['data'] = __('Frontend.data_saved');
 
@@ -125,12 +125,12 @@ class CustomerController extends Controller
             'id' => 'required',
             'section' => 'required',
         ];
-        $validate = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
         
         $data['success'] = true;
-        if ($validate->fails()) {
+        if ($validator->fails()) {
             $data['success'] = false;
-            $data['errors'] = $validate->errors();
+            $data['errors'] = $validator->errors();
             return response($data);
         } else {
             $pdf_data = getCourseApplicationPrintData($request->id, auth()->user()->id);
@@ -169,10 +169,10 @@ class CustomerController extends Controller
             'type' => 'required',
             'type_id' => 'required',
         ];
-        $validate = Validator::make($request->all(), $rules);
-        if ($validate->fails()) {
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
             $data['success'] = false;
-            $data['errors'] = $validate->errors();
+            $data['errors'] = $validator->errors();
         } else {
             $request_save = $request->only('subject', 'message', 'type', 'type_id');
 
@@ -299,38 +299,30 @@ class CustomerController extends Controller
         return view('frontend.customer.payments');
     }
 
-    public function affiliateInformation()
+    public function affiliate()
     {
         $affiliate = auth()->user();
-        $country_name = '';
-        $affiliate_countries = Country::whereIn('id', $affiliate->country)->get();
-        foreach ($affiliate_countries as $affiliate_country) {
-            if (app()->getLocale() == 'en') {
-                $country_name .= ($country_name ? ', '  : '') . $affiliate_country->name;
-            } else {
-                $country_name .= ($country_name ? ', '  : '') . $affiliate_country->name_ar;
-            }
-        }
-        $city_name = '';
-        $affiliate_cities = City::whereIn('id', $affiliate->city)->get();
-        foreach ($affiliate_cities as $affiliate_city) {
-            if (app()->getLocale() == 'en') {
-                $city_name .= ($city_name ? ', '  : '') . $affiliate_city->name;
-            } else {
-                $city_name .= ($city_name ? ', '  : '') . $affiliate_city->name_ar;
-            }
-        }
 
-        return view('frontend.customer.affiliate_information', compact('affiliate', 'country_name', 'city_name'));
+        return view('frontend.customer.affiliate', compact('affiliate'));
     }
 
-    public function codeAndUsage()
+    public function coupons()
     {
-        return view('frontend.customer.code_and_usage');
+        $coupons = Coupon::where('affiliate_id', auth()->user()->id)->get();
+
+        return view('frontend.customer.coupons', compact('coupons'));
+    }
+
+    public function couponUsage($id)
+    {
+        $coupon_usages = CouponUsage::with('course_application.course.school')->where('coupon_id', $id)->get();
+
+        return view('frontend.customer.coupon_usage', compact('coupon_usages'));
     }
 
     public function transactions()
     {
+        
         return view('frontend.customer.transactions');
     }
 }

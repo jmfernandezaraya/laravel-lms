@@ -571,15 +571,15 @@ class SchoolController extends Controller
 
     public function updateCoutryCityList(Request $request)
     {
-        $validate = \Validator::make(
+        $validator = \Validator::make(
             $request->all(),
             [
                 'name.*' => 'required',
                 'name_ar.*' => 'required',
             ]
         );
-        if ($validate->fails()) {
-            return response()->json(['errors' => $validate->errors()]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()]);
         }
         
         $country_ids = [];
@@ -651,15 +651,15 @@ class SchoolController extends Controller
 
     public function updateNameList(Request $request)
     {
-        $validate = \Validator::make(
+        $validator = \Validator::make(
             $request->all(),
             [
                 'name.*' => 'required',
                 'name_ar.*' => 'required',
             ]
         );
-        if ($validate->fails()) {
-            return response()->json(['errors' => $validate->errors()]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()]);
         }
         
         $school_name_ids = [];

@@ -77,7 +77,7 @@ class CourseFormController extends Controller
             $data['result'] .= "<option value=$langs->unique_id>$langs->name</option>";
         endforeach;
 
-        $data['data'] = __('Admin/backend.data_removed_successfully');;
+        $data['data'] = __('Admin/backend.data_removed_successfully');
         return response($data);
     }
 

@@ -252,8 +252,8 @@
                                     <input class="form-control" type="number" name="tax_percent[]" placeholder="{{__('Admin/backend.tax_percent')}}">
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>{{__('Admin/backend.bank_transfer_fee')}}:</label>
-                                    <input class="form-control" type="number" name="bank_transfer_fee[]" placeholder="{{__('Admin/backend.bank_transfer_fee')}}">
+                                    <label>{{__('Admin/backend.bank_charge_fee')}}:</label>
+                                    <input class="form-control" type="number" name="bank_charge_fee[]" placeholder="{{__('Admin/backend.bank_charge_fee')}}">
                                 </div>
                             </div>
 

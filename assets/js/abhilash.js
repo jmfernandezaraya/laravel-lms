@@ -805,8 +805,8 @@ function calculateCourse(type) {
             if (data.link_fee != undefined) {
                 if (data.link_fee) {
                     $("#link_fee_table").show();
-                    if (data.link_fee_vat != undefined) {
-                        $("#link_fee_table .vat_fee").html(data.link_fee_vat);
+                    if (data.vat_fee != undefined) {
+                        $("#link_fee_table .vat_fee").html(data.vat_fee);
                     }
                 } else {
                     $("#link_fee_table").hide();
@@ -872,6 +872,11 @@ function calculateCourse(type) {
             if (data.christmas_notification != undefined) {
                 confirm(data.christmas_notification);
             }
+            if (data.coupon_exist) {
+                $("#discount_code_row").show();
+            } else {
+                $("#discount_code_row").hide();
+            }
         }
 
         resetAccommodation(true);
@@ -932,15 +937,20 @@ function reloadCourseCalclulator() {
             $("#sub_total_table .cost_value_currency").html(data.currency.cost);
             $("#sub_total_table .converted_value_currency").html(data.currency.converted);
 
-            $("#bank_transfer_fee_table .cost_value").html(parseFloat(data.bank_transfer_fee.value).toFixed(2));
-            $("#bank_transfer_fee_table .converted_value").html(parseFloat(data.bank_transfer_fee.converted_value).toFixed(2));
-            $("#bank_transfer_fee_table .cost_value_currency").html(data.currency.cost);
-            $("#bank_transfer_fee_table .converted_value_currency").html(data.currency.converted);
+            $("#bank_charge_fee_table .cost_value").html(parseFloat(data.bank_charge_fee.value).toFixed(2));
+            $("#bank_charge_fee_table .converted_value").html(parseFloat(data.bank_charge_fee.converted_value).toFixed(2));
+            $("#bank_charge_fee_table .cost_value_currency").html(data.currency.cost);
+            $("#bank_charge_fee_table .converted_value_currency").html(data.currency.converted);
 
             $("#link_fee_table .cost_value").html(data.link_fee.value);
             $("#link_fee_table .converted_value").html(parseFloat(data.link_fee.converted_value).toFixed(2));
             $("#link_fee_table .cost_value_currency").html(data.currency.cost);
             $("#link_fee_table .converted_value_currency").html(data.currency.converted);
+
+            $("#coupon_discount_table .cost_value").html(parseFloat(data.coupon_discount.value).toFixed(2));
+            $("#coupon_discount_table .converted_value").html(parseFloat(data.coupon_discount.converted_value).toFixed(2));
+            $("#coupon_discount_table .cost_value_currency").html(data.currency.cost);
+            $("#coupon_discount_table .converted_value_currency").html(data.currency.converted);
 
             $("#total_table .cost_value").html(parseFloat(data.total_cost.value).toFixed(2));
             $("#total_table .converted_value").html(parseFloat(data.total_cost.converted_value).toFixed(2));
@@ -1186,6 +1196,29 @@ function discountPrice(value, form_token = '') {
     }
 }
 
+function setProgramUniqueId(object) {
+    $('#program_unique_id').val(object);
+}
+
+function applyDiscount() {
+    $('#loader').show();
+    $.post(apply_coupon_url, {
+        _token: $('meta[name="csrf-token"]').attr('content'),
+        code: $('#discount_code').val(),
+        course_unique_id: $('#get_program_name').val()
+    }).done(function (data) {
+        $('#loader').hide();
+        if (data.success == true) {
+            $('#coupon_discount_table').show();
+            
+            $('#coupon_id').val(data.coupon_id);
+            reloadCourseCalclulator();
+        } else if (data.message) {
+            alert(data.message);
+        }
+    });
+}
+
 $(document).ready(function() {
     $('#under_age').change(function () {
         calculateCourse('requested_for_under_age');
@@ -1355,12 +1388,6 @@ function submitCourseForm(object) {
 
                 $('.alert-danger').show();
                 $('.alert-danger ul').html(data.catch_error);
-            } else if (data.success == true || data.success == 'success') {
-                $("#loader").hide();
-
-                $('.alert-success').show();
-                $('.alert-success p').html(data.data);
-                document.documentElement.scrollTop = 0;
             }
 
             if (typeof handleResizePageContent === "function") {
@@ -1405,12 +1432,6 @@ function updateCourseForm(object) {
 
                 $('.alert-danger').show();
                 $('.alert-danger ul').html(data.catch_error);
-            } else if (data.success == true || data.success == 'success') {
-                $("#loader").hide();
-
-                $('.alert-success').show();
-                $('.alert-success p').html(data.data);
-                document.documentElement.scrollTop = 0;
             }
 
             if (typeof handleResizePageContent === "function") {

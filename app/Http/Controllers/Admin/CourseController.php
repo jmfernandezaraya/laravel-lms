@@ -740,7 +740,7 @@ class CourseController extends Controller
 
     public function updateChooseList(Request $request)
     {
-        $validate = \Validator::make(
+        $validator = \Validator::make(
             $request->all(),
             [
                 'name.*' => 'required',
@@ -748,8 +748,8 @@ class CourseController extends Controller
                 'course_choose_type.*' => 'required',
             ]
         );
-        if ($validate->fails()) {
-            return response()->json(['errors' => $validate->errors()]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()]);
         }
         
         $choose_ids = [];
@@ -813,7 +813,7 @@ class CourseController extends Controller
 
     public function updateChooseAgeList(Request $request)
     {
-        $validate = \Validator::make(
+        $validator = \Validator::make(
             $request->all(),
             [
                 'age.*' => 'required',
@@ -821,8 +821,8 @@ class CourseController extends Controller
                 'course_choose_age_type.*' => 'required',
             ]
         );
-        if ($validate->fails()) {
-            return response()->json(['errors' => $validate->errors()]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()]);
         }
         
         $course_choose_age_ids = [];

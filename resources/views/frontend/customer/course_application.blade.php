@@ -5,7 +5,12 @@
 @endsection
 
 @section('breadcrumbs')
-    <h1>{{__('Frontend.reservation_details')}}</h1>
+    <div class="breadcrumb-head">
+        <a href="{{route('frontend.dashboard')}}" class="breadcrumb-home">
+            <i class="bx bxs-dashboard"></i>&nbsp;
+        </a>
+        <h1>{{__('Frontend.reservation_details')}}</h1>
+    </div>
 @endsection
 
 @section('content')
@@ -19,7 +24,7 @@
                         </div>
                         <div id="collapseReservationDetails" class="card-body collapse p-0" data-parent="#accordion">
                             <div class="course-details">
-                                <table class="table table-bordered">
+                                <table class="table table-bordered table-no-drawable">
                                     <tbody>
                                         <tr>
                                             <td>{{__('Frontend.name')}}</td>
@@ -36,7 +41,7 @@
                                     </tbody>
                                 </table>
 
-                                <table class="table table-bordered">
+                                <table class="table table-bordered table-no-drawable">
                                     <thead>
                                         <tr>
                                             <th>{{__('Frontend.course_details')}}</th>
@@ -108,7 +113,7 @@
                                 </table>
 
                                 @if ($accommodation)
-                                    <table class="table table-bordered">
+                                    <table class="table table-bordered table-no-drawable">
                                         <thead>
                                             <tr>
                                                 <th>{{__('Frontend.accommodation_details')}}</th>
@@ -188,7 +193,7 @@
                                 @endif
                                 
                                 @if ($airport || $medical)
-                                    <table class="table table-bordered">
+                                    <table class="table table-bordered table-no-drawable">
                                         <thead>
                                             <tr>
                                                 <th>{{__('Frontend.other_services')}}</th>
@@ -234,7 +239,7 @@
                                     </table>
                                 @endif
                                 
-                                <table class="table table-bordered">
+                                <table class="table table-bordered table-no-drawable">
                                     <thead>
                                         <tr>
                                             <th>{{__('Frontend.sub_total')}}</th>
@@ -242,13 +247,13 @@
                                             <th>{{ toFixedNumber($sub_total['converted_value']) }} {{ $currency['converted'] }}</th>
                                         </tr>
                                         <tr>
-                                            <td>{{__('Frontend.bank_transfer_fee')}}</td>
-                                            <td>{{ toFixedNumber($bank_transfer_fee['value']) }} {{ $currency['cost'] }}</td>
-                                            <td>{{ toFixedNumber($bank_transfer_fee['converted_value']) }} {{ $currency['converted'] }}</td>
+                                            <td>{{__('Frontend.bank_charge_fee')}}</td>
+                                            <td>{{ toFixedNumber($bank_charge_fee['value']) }} {{ $currency['cost'] }}</td>
+                                            <td>{{ toFixedNumber($bank_charge_fee['converted_value']) }} {{ $currency['converted'] }}</td>
                                         </tr>
                                         @if ($link_fee['value'])
                                             <tr>
-                                                <td>{{__('Frontend.link_study_abroad_fee')}}</td>
+                                                <td>{{__('Frontend.link_fee_including_vat')}} <span class="vat_fee">{{ $vat_fee }}</span>%</td>
                                                 <td>{{ toFixedNumber($link_fee['value']) }} {{ $currency['cost'] }}</td>
                                                 <td>{{ toFixedNumber($link_fee['converted_value']) }} {{ $currency['converted'] }}</td>
                                             </tr>
@@ -268,6 +273,13 @@
                                                 <th>{{__('Frontend.amount_to_pay_now_deposit')}}</th>
                                                 <th>{{ toFixedNumber($deposit_price['value']) }} {{ $currency['cost'] }}</th>
                                                 <th>{{ toFixedNumber($deposit_price['converted_value']) }} {{ $currency['converted'] }}</th>
+                                            </tr>
+                                        @endif
+                                        @if ($coupon_discount['value'])
+                                            <tr>
+                                                <th>{{__('Frontend.discount')}}</th>
+                                                <th class="highlight-value">-{{ toFixedNumber($coupon_discount['value']) }} {{ $currency['cost'] }}</th>
+                                                <th class="highlight-value">-{{ toFixedNumber($coupon_discount['converted_value']) }} {{ $currency['converted'] }}</th>
                                             </tr>
                                         @endif
                                         <tr>
@@ -635,7 +647,7 @@
                                     </p>
                                 </div>
                                 <div class="col-sm-12">
-                                    <table class="table table-bordered">
+                                    <table class="table table-bordered table-no-drawable">
                                         <tbody>
                                             <tr>
                                                 <th>{{__('Frontend.status')}}</th>
@@ -675,7 +687,7 @@
                         <div id="collapsePaymentsRefundsStatement" class="card-body collapse p-0" data-parent="#accordion">
                             <div class="payments-refunds-statement mt-3">
                                 <div class="col-sm-12">
-                                    <table class="table table-bordered">
+                                    <table class="table table-bordered table-no-drawable">
                                         <tbody>
                                             <tr>
                                                 <th>#</th>
@@ -711,7 +723,7 @@
                                     </table>
                                 </div>
                                 <div class="col-sm-12">
-                                    <table class="table table-bordered">
+                                    <table class="table table-bordered table-no-drawable">
                                         <tbody>
                                             <tr>
                                                 <th>{{__('Frontend.currency')}}</th>

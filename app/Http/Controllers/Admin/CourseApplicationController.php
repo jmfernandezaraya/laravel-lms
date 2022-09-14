@@ -21,6 +21,8 @@ use App\Models\SuperAdmin\ChooseProgramUnderAge;
 use App\Models\SuperAdmin\ChooseStartDate;
 use App\Models\SuperAdmin\ChooseStudyMode;
 use App\Models\SuperAdmin\Course;
+use App\Models\SuperAdmin\Coupon;
+use App\Models\SuperAdmin\CouponUsage;
 use App\Models\SuperAdmin\CourseProgram;
 use App\Models\SuperAdmin\CourseAccommodation;
 use App\Models\SuperAdmin\CourseAccommodationUnderAge;
@@ -328,7 +330,7 @@ class CourseApplicationController extends Controller
             $start_dates[] = $course->start_date;
             $course_programs = $course->coursePrograms;
             foreach ($course_programs as $course_program) {
-                $program_age_range_ids = array_merge($program_age_range_ids, $course_program->program_age_range);
+                $program_age_range_ids = array_merge($program_age_range_ids, $course_program->program_age_range ?? []);
             }
             $start_date_ids = array_merge($start_date_ids, $course->start_date);
             $study_mode_ids = array_merge($study_mode_ids, $course->study_mode);
@@ -418,7 +420,7 @@ class CourseApplicationController extends Controller
         $course_application->course_id = '' . $request->program_id;
         $course_application->course_program_id = '' . $request->program_unique_id;
         $course_application->start_date = $request->date_selected;
-        $course_application->end_date = (isset($request->date_selected) && isset($request->program_duration)) ? Carbon::create($request->date_selected)->addWeeks($request->program_duration)->format('Y-m-d') : null;;
+        $course_application->end_date = (isset($request->date_selected) && isset($request->program_duration)) ? Carbon::create($request->date_selected)->addWeeks($request->program_duration)->format('Y-m-d') : null;
         $course_application->study_mode = $request->study_mode;
         $course_application->age_selected = $request->age_selected;
         $course_application->program_duration = $request->program_duration ?? null;        
@@ -577,7 +579,7 @@ class CourseApplicationController extends Controller
                     $course_application->registration_fee = $course_program->program_registration_fee == null ? 0 : $course_program->program_registration_fee;
                 }
             }
-            $course_application->bank_transfer_fee = $course_program->bank_transfer_fee == null ? 0 : $course_program->bank_transfer_fee;
+            $course_application->bank_charge_fee = $course_program->bank_charge_fee == null ? 0 : $course_program->bank_charge_fee;
             $course_application->link_fee_converted = $course->link_fee_enable ? (($course_program->link_fee == null || $course_program->tax_percent == null) ? 0 : $course_program->link_fee + $course_program->link_fee * $course_program->tax_percent / 100) : 0;
             $course_application->link_fee = getCurrencyReverseConvertedValue($course->unique_id, $course_application->link_fee_converted);
             if (checkBetweenDate($course_program->x_week_start_date, $course_program->x_week_end_date, Carbon::now()->format('Y-m-d'))) {
@@ -744,6 +746,7 @@ class CourseApplicationController extends Controller
             }
         }
         $course_application->total_discount = $course_application->discount_fee + $course_application->accommodation_discount_fee;
+
         $course_application->total_cost =
             ($course_application->program_cost ?? 0) + ($course_application->registration_fee ?? 0) + ($course_application->text_book_fee ?? 0)
             + ($course_application->summer_fees ?? 0) + ($course_application->peak_time_fees ?? 0) + ($course_application->under_age_fees ?? 0)
@@ -751,11 +754,30 @@ class CourseApplicationController extends Controller
             + ($course_application->accommodation_fee ?? 0) + ($course_application->accommodation_placement_fee ?? 0) + ($course_application->accommodation_special_diet_fee ?? 0)
             + ($course_application->accommodation_deposit_fee ?? 0) + ($course_application->accommodation_summer_fee ?? 0) + ($course_application->accommodation_peak_fee ?? 0)
             + ($course_application->accommodation_christmas_fee ?? 0) + ($course_application->accommodation_under_age_fee ?? 0) - ($course_application->accommodation_discount_fee ?? 0)
-            + ($course_application->airport_pickup_fee ?? 0) + ($course_application->medical_insurance_fee ?? 0) + ($course_application->custodian_fee ?? 0)
-            + ($course_application->bank_transfer_fee ?? 0) + ($course_application->link_fee ?? 0);
+            + ($course_application->airport_pickup_fee ?? 0) + ($course_application->medical_insurance_fee ?? 0) + ($course_application->custodian_fee ?? 0);
+
         $course_application->sub_total = $course_application->total_cost + $course_application->total_discount;
         $course_application->total_cost_fixed = getCurrencyConvertedValue($course_application->course_id, $course_application->total_cost);
-        $course_application->total_balance = $course_application->total_cost - $course_application->deposit_price;
+        $course_application->total_balance = $course_application->total_cost + ($course_application->bank_charge_fee ?? 0) + ($course_application->link_fee ?? 0) - $course_application->deposit_price;
+        
+        $course_application->coupon_discount = 0;
+        $course_application->coupon_discount_converted = 0;
+
+        $coupon_usage = CouponUsage::where('course_application_id', $course_application->id)->first();
+        if ($coupon_usage) {
+            $coupon = Coupon::where('unique_id', $coupon_usage->coupon_id)->first();
+            if ($coupon) {
+                if ($coupon->type == 'percent') {
+                    $course_application->coupon_discount = $course_application->total_balance * $coupon->discount / 100;
+                    $course_application->coupon_discount_converted = getCurrencyConvertedValue($course->unique_id, $course_application->coupon_discount);
+                } else {
+                    $course_application->coupon_discount_converted = $coupon->discount;
+                    $course_application->coupon_discount = getCurrencyReverseConvertedValue($course->unique_id, $course_application->coupon_discount_converted);
+                }
+                $course_application->total_balance = $course_application->total_balance - $course_application->coupon_discount;
+            }
+        }
+
         $course_application->save();
 
         toastSuccess(__('Admin/backend.data_updated_successfully'));
@@ -850,12 +872,12 @@ class CourseApplicationController extends Controller
             'id' => 'required',
             'section' => 'required',
         ];
-        $validate = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
         
         $data['success'] = true;
-        if ($validate->fails()) {
+        if ($validator->fails()) {
             $data['success'] = false;
-            $data['errors'] = $validate->errors();
+            $data['errors'] = $validator->errors();
             return response($data);
         } else {
             if (auth('superadmin')->check()) {

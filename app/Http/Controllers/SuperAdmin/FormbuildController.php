@@ -40,11 +40,10 @@ class FormbuildController extends Controller
      */
     public function store(Request $request)
     {
-        $validate = \Validator::make($request->all(), ['form_name' => 'unique:form_builders', 'visa_id' => 'required']);
+        $validator = \Validator::make($request->all(), ['form_name' => 'unique:form_builders', 'visa_id' => 'required']);
 
-        if($validate->fails()){
-        $failed  = __('Admin/backend.errors.name');
-            toastr()->error($failed);
+        if ($validator->fails()) {
+            toastr()->error(__('Admin/backend.errors.name'));
             return back();
         }
         $change_name = json_decode($request->formvalue);
@@ -55,11 +54,9 @@ class FormbuildController extends Controller
             }
         }
 
-
         Formbuilder::create(['visa_form_id' => $request->visa_id, 'form_name' => $request->form_name, 'form_data' => json_encode($change_name), 'active' => 1]);
-            $success = __('Admin/backend.data_saved_successfully');
-            toastr()->success($success);
-            return view('superadmin.visa.formbuilder');
+        toastr()->success(__('Admin/backend.data_saved_successfully'));
+        return view('superadmin.visa.formbuilder');
     }
 
     /**

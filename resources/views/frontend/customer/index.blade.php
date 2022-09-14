@@ -5,7 +5,12 @@
 @endsection
 
 @section('breadcrumbs')
-    <h1>{{__('Frontend.your_account')}}</h1>
+    <div class="breadcrumb-head">
+        <a href="{{route('frontend.dashboard')}}" class="breadcrumb-home">
+            <i class="bx bxs-dashboard"></i>&nbsp;
+        </a>
+        <h1>{{__('Frontend.your_account')}}</h1>
+    </div>
 @endsection
 
 @section('content')
@@ -31,14 +36,14 @@
                 @if (auth()->user()->user_type == 'affiliate')
                     <div class="col-lg-4 col-md-4">
                         <div class="list-box">
-                            <a href="{{ route('frontend.dashboard.affiliate_information') }}">
+                            <a href="{{ route('frontend.dashboard.affiliate') }}">
                                 <span>{{__('Frontend.affiliate_information')}}</span>
                             </a>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="list-box">
-                            <a href="{{ route('frontend.dashboard.code_and_usage') }}">
+                            <a href="{{ route('frontend.dashboard.coupons') }}">
                                 <span>{{__('Frontend.code_and_usage')}}</span>
                             </a>
                         </div>

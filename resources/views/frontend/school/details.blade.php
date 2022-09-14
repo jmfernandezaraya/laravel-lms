@@ -90,7 +90,7 @@
                             </div>
                             <div class="col-md-8">
                                 <div class="school-name">
-                                    <table class="table">
+                                    <table class="table table-no-drawable">
                                         <tbody>
                                             <tr>
                                                 <th class="border-none" scope="row">
@@ -138,7 +138,7 @@
                                     <div class="nationality-mix border-bottom">
                                         <h5 class="text-center best">{{__('Frontend.nationality_mix')}}</h5>
                                         <div class="nationality-mix-chart">
-                                            <table class="table table-borderless">
+                                            <table class="table table-borderless table-no-drawable">
                                                 <tbody>
                                                     @foreach ($school->nationalities as $school_nationality)
                                                         <tr>

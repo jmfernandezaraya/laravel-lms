@@ -77,7 +77,7 @@ class EmailTemplateController extends Controller
         ];
         $validator = \Validator::make($request->all(), $rules);
         if ($validator->fails()) {
-            return response()->json(['errors' => $validate->errors()]);
+            return response()->json(['errors' => $validator->errors()]);
         }
 
         $email_template = new EmailTemplate();

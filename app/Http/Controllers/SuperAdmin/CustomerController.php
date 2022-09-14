@@ -114,7 +114,7 @@ class CustomerController extends Controller
             return back()->withErrors($validator->errors());
         }
 
-        $customers->fill($validate->validated())->save();
+        $customers->fill($validator->validated())->save();
 
         toastr()->success(__('Admin/backend.data_saved_successfully'));
 

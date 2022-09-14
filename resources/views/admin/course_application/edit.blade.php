@@ -6,7 +6,7 @@
 
 @section('content')
     <h3>{{__('Admin/backend.reservation_details')}}</h3>
-    <table class="table table-bordered">
+    <table class="table table-bordered table-no-drawable">
         <tbody>
             <tr>
                 <td>{{__('Admin/backend.name')}}</td>
@@ -34,7 +34,7 @@
                 </div>
                 <div id="collapseReservationDetails" class="card-body collapse p-0" data-parent="#accordion">
                     <div class="course-details">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered table-no-drawable">
                             <tbody>
                                 <tr>
                                     <td>{{__('Admin/backend.name')}}</td>
@@ -55,82 +55,11 @@
                             </tbody>
                         </table>
 
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>{{__('Admin/backend.course_details')}}</th>
-                                    <th>{{__('Admin/backend.amount')}} / <span class="cost_currency">{{ $currency['cost'] }}</span></th>
-                                    <th>{{__('Admin/backend.amount')}} / <span class="converted_currency">{{ $currency['converted'] }}</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        {{ app()->getLocale() == 'en' ? $course->program_name : $course->program_name_ar }}, {{ $course->lessons_per_week }} {{__('Admin/backend.lessons')}} / {{ $course->hours_per_week }} {{__('Admin/backend.hours_per_week')}}<br />
-                                        {{ $program_start_date }} {{__('Admin/backend.to')}} {{ $program_end_date }} ( {{ $course_application->program_duration }} {{__('Admin/backend.weeks')}} )
-                                    </td>
-                                    <td>{{ toFixedNumber($program_cost['value']) }}</td>
-                                    <td>{{ toFixedNumber($program_cost['converted_value']) }}</td>
-                                </tr>
-                                <tr>
-                                    <td>{{__('Admin/backend.registraion_fees')}}</td>
-                                    <td>{{ toFixedNumber($program_registration_fee['value']) }}</td>
-                                    <td>{{ toFixedNumber($program_registration_fee['converted_value']) }}</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        {{__('Admin/backend.text_book_fees')}}
-                                    </td>
-                                    <td>{{ toFixedNumber($program_text_book_fee['value']) }}</td>
-                                    <td>{{ toFixedNumber($program_text_book_fee['converted_value']) }}</td>
-                                </tr>
-                                @if ($program_summer_fees['value'])
-                                    <tr>
-                                        <td>{{__('Admin/backend.summer_fees')}}</td>
-                                        <td>{{ toFixedNumber($program_summer_fees['value']) }}</td>
-                                        <td>{{ toFixedNumber($program_summer_fees['converted_value']) }}</td>
-                                    </tr>
-                                @endif
-                                @if ($program_peak_time_fees['value'])
-                                    <tr>
-                                        <td>{{__('Admin/backend.peak_time_fees')}}</td>
-                                        <td>{{ toFixedNumber($program_peak_time_fees['value']) }}</td>
-                                        <td>{{ toFixedNumber($program_peak_time_fees['converted_value']) }}</td>
-                                    </tr>
-                                @endif
-                                @if ($program_under_age_fees['value'])
-                                    <tr>
-                                        <td>{{__('Admin/backend.under_age_fees')}}</td>
-                                        <td>{{ toFixedNumber($program_under_age_fees['value']) }}</td>
-                                        <td>{{ toFixedNumber($program_under_age_fees['converted_value']) }}</td>
-                                    </tr>
-                                @endif
-                                @if ($program_express_mail_fee['value'])
-                                    <tr>
-                                        <td>{{__('Admin/backend.express_mail_fee')}}</td>
-                                        <td>{{ toFixedNumber($program_express_mail_fee['value']) }}</td>
-                                        <td>{{ toFixedNumber($program_express_mail_fee['converted_value']) }}</td>
-                                    </tr>
-                                @endif
-                                @if ($program_discount_fee['value'])
-                                    <tr>
-                                        <td>{{__('Admin/backend.discount')}}</td>
-                                        <td class="highlight-value">-{{ toFixedNumber($program_discount_fee['value']) }}</td>
-                                        <td class="highlight-value">-{{ toFixedNumber($program_discount_fee['converted_value']) }}</td>
-                                    </tr>
-                                @endif
-                                <tr>
-                                    <td>{{__('Admin/backend.age_range')}}</td>
-                                    <td colspan="2">{{ $min_age ?? ''}} - {{ $max_age ?? ''}} {{__('Admin/backend.years')}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        @if ($accommodation)
-                            <table class="table table-bordered">
+                        @if (auth('superadmin')->check())
+                            <table class="table table-bordered table-no-drawable">
                                 <thead>
                                     <tr>
-                                        <th>{{__('Admin/backend.accommodation_details')}}</th>
+                                        <th>{{__('Admin/backend.course_details')}}</th>
                                         <th>{{__('Admin/backend.amount')}} / <span class="cost_currency">{{ $currency['cost'] }}</span></th>
                                         <th>{{__('Admin/backend.amount')}} / <span class="converted_currency">{{ $currency['converted'] }}</span></th>
                                     </tr>
@@ -138,167 +67,247 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            {{app()->getLocale() == 'en' ? $accommodation->type : $accommodation->type_ar}} - {{app()->getLocale() == 'en' ? $accommodation->room_type : $accommodation->room_type_ar}} - {{app()->getLocale() == 'en' ? $accommodation->meal : $accommodation->meal_ar}}<br />
-                                            {{$accommodation_start_date}} to {{$accommodation_end_date}} ( {{$course_application->accommodation_duration}} {{__('Admin/backend.weeks')}} )
+                                            {{ app()->getLocale() == 'en' ? $course->program_name : $course->program_name_ar }}, {{ $course->lessons_per_week }} {{__('Admin/backend.lessons')}} / {{ $course->hours_per_week }} {{__('Admin/backend.hours_per_week')}}<br />
+                                            {{ $program_start_date }} {{__('Admin/backend.to')}} {{ $program_end_date }} ( {{ $course_application->program_duration }} {{__('Admin/backend.weeks')}} )
                                         </td>
-                                        <td>{{ toFixedNumber($accommodation_fee['value']) }}</td>
-                                        <td>{{ toFixedNumber($accommodation_fee['converted_value']) }}</td>
+                                        <td>{{ toFixedNumber($program_cost['value']) }}</td>
+                                        <td>{{ toFixedNumber($program_cost['converted_value']) }}</td>
                                     </tr>
                                     <tr>
-                                        <td>{{__('Admin/backend.placement_fee')}}</td>
-                                        <td>{{ toFixedNumber($accommodation_placement_fee['value']) }}</td>
-                                        <td>{{ toFixedNumber($accommodation_placement_fee['converted_value']) }}</td>
+                                        <td>{{__('Admin/backend.registraion_fees')}}</td>
+                                        <td>{{ toFixedNumber($program_registration_fee['value']) }}</td>
+                                        <td>{{ toFixedNumber($program_registration_fee['converted_value']) }}</td>
                                     </tr>
-                                    @if ($accommodation_special_diet_fee['value'])
-                                        <tr>
-                                            <td>{{__('Admin/backend.special_diet_fee')}}</td>
-                                            <td>{{ toFixedNumber($accommodation_special_diet_fee['value']) }}</td>
-                                            <td>{{ toFixedNumber($accommodation_special_diet_fee['converted_value']) }}</td>
-                                        </tr>
-                                    @endif
-                                    @if ($accommodation_deposit_fee['value'])
-                                        <tr>
-                                            <td>{{__('Admin/backend.deposit_fee')}}</td>
-                                            <td>{{ toFixedNumber($accommodation_deposit_fee['value']) }}</td>
-                                            <td>{{ toFixedNumber($accommodation_deposit_fee['converted_value']) }}</td>
-                                        </tr>
-                                    @endif
-                                    @if ($accommodation_summer_fee['value'])
+                                    <tr>
+                                        <td>
+                                            {{__('Admin/backend.text_book_fees')}}
+                                        </td>
+                                        <td>{{ toFixedNumber($program_text_book_fee['value']) }}</td>
+                                        <td>{{ toFixedNumber($program_text_book_fee['converted_value']) }}</td>
+                                    </tr>
+                                    @if ($program_summer_fees['value'])
                                         <tr>
                                             <td>{{__('Admin/backend.summer_fees')}}</td>
-                                            <td>{{ toFixedNumber($accommodation_summer_fee['value']) }}</td>
-                                            <td>{{ toFixedNumber($accommodation_summer_fee['converted_value']) }}</td>
+                                            <td>{{ toFixedNumber($program_summer_fees['value']) }}</td>
+                                            <td>{{ toFixedNumber($program_summer_fees['converted_value']) }}</td>
                                         </tr>
                                     @endif
-                                    @if ($accommodation_peak_fee['value'])
+                                    @if ($program_peak_time_fees['value'])
                                         <tr>
                                             <td>{{__('Admin/backend.peak_time_fees')}}</td>
-                                            <td>{{ toFixedNumber($accommodation_peak_fee['value']) }}</td>
-                                            <td>{{ toFixedNumber($accommodation_peak_fee['converted_value']) }}</td>
+                                            <td>{{ toFixedNumber($program_peak_time_fees['value']) }}</td>
+                                            <td>{{ toFixedNumber($program_peak_time_fees['converted_value']) }}</td>
                                         </tr>
                                     @endif
-                                    @if ($accommodation_christmas_fee['value'])
-                                        <tr>
-                                            <td>{{__('Admin/backend.christmas_fees')}}</td>
-                                            <td>{{ toFixedNumber($accommodation_christmas_fee['value']) }}</td>
-                                            <td>{{ toFixedNumber($accommodation_christmas_fee['converted_value']) }}</td>
-                                        </tr>
-                                    @endif
-                                    @if ($accommodation_under_age_fee['value'])
+                                    @if ($program_under_age_fees['value'])
                                         <tr>
                                             <td>{{__('Admin/backend.under_age_fees')}}</td>
-                                            <td>{{ toFixedNumber($accommodation_under_age_fee['value']) }}</td>
-                                            <td>{{ toFixedNumber($accommodation_under_age_fee['converted_value']) }}</td>
+                                            <td>{{ toFixedNumber($program_under_age_fees['value']) }}</td>
+                                            <td>{{ toFixedNumber($program_under_age_fees['converted_value']) }}</td>
                                         </tr>
                                     @endif
-                                    @if ($accommodation_discount_fee['value'])
+                                    @if ($program_express_mail_fee['value'])
+                                        <tr>
+                                            <td>{{__('Admin/backend.express_mail_fee')}}</td>
+                                            <td>{{ toFixedNumber($program_express_mail_fee['value']) }}</td>
+                                            <td>{{ toFixedNumber($program_express_mail_fee['converted_value']) }}</td>
+                                        </tr>
+                                    @endif
+                                    @if ($program_discount_fee['value'])
                                         <tr>
                                             <td>{{__('Admin/backend.discount')}}</td>
-                                            <td class="highlight-value">-{{ toFixedNumber($accommodation_discount_fee['value']) }}</td>
-                                            <td class="highlight-value">-{{ toFixedNumber($accommodation_discount_fee['converted_value']) }}</td>
+                                            <td class="highlight-value">-{{ toFixedNumber($program_discount_fee['value']) }}</td>
+                                            <td class="highlight-value">-{{ toFixedNumber($program_discount_fee['converted_value']) }}</td>
                                         </tr>
                                     @endif
                                     <tr>
                                         <td>{{__('Admin/backend.age_range')}}</td>
-                                        <td colspan="2">{{ $accommodation_min_age ?? ''}} - {{ $accommodation_max_age ?? ''}} {{__('Admin/backend.years')}}</td>
+                                        <td colspan="2">{{ $min_age ?? ''}} - {{ $max_age ?? ''}} {{__('Admin/backend.years')}}</td>
                                     </tr>
                                 </tbody>
                             </table>
-                        @endif
-                        
-                        @if ($airport || $medical || $custodian)
-                            <table class="table table-bordered">
+
+                            @if ($accommodation)
+                                <table class="table table-bordered table-no-drawable">
+                                    <thead>
+                                        <tr>
+                                            <th>{{__('Admin/backend.accommodation_details')}}</th>
+                                            <th>{{__('Admin/backend.amount')}} / <span class="cost_currency">{{ $currency['cost'] }}</span></th>
+                                            <th>{{__('Admin/backend.amount')}} / <span class="converted_currency">{{ $currency['converted'] }}</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                {{app()->getLocale() == 'en' ? $accommodation->type : $accommodation->type_ar}} - {{app()->getLocale() == 'en' ? $accommodation->room_type : $accommodation->room_type_ar}} - {{app()->getLocale() == 'en' ? $accommodation->meal : $accommodation->meal_ar}}<br />
+                                                {{$accommodation_start_date}} to {{$accommodation_end_date}} ( {{$course_application->accommodation_duration}} {{__('Admin/backend.weeks')}} )
+                                            </td>
+                                            <td>{{ toFixedNumber($accommodation_fee['value']) }}</td>
+                                            <td>{{ toFixedNumber($accommodation_fee['converted_value']) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>{{__('Admin/backend.placement_fee')}}</td>
+                                            <td>{{ toFixedNumber($accommodation_placement_fee['value']) }}</td>
+                                            <td>{{ toFixedNumber($accommodation_placement_fee['converted_value']) }}</td>
+                                        </tr>
+                                        @if ($accommodation_special_diet_fee['value'])
+                                            <tr>
+                                                <td>{{__('Admin/backend.special_diet_fee')}}</td>
+                                                <td>{{ toFixedNumber($accommodation_special_diet_fee['value']) }}</td>
+                                                <td>{{ toFixedNumber($accommodation_special_diet_fee['converted_value']) }}</td>
+                                            </tr>
+                                        @endif
+                                        @if ($accommodation_deposit_fee['value'])
+                                            <tr>
+                                                <td>{{__('Admin/backend.deposit_fee')}}</td>
+                                                <td>{{ toFixedNumber($accommodation_deposit_fee['value']) }}</td>
+                                                <td>{{ toFixedNumber($accommodation_deposit_fee['converted_value']) }}</td>
+                                            </tr>
+                                        @endif
+                                        @if ($accommodation_summer_fee['value'])
+                                            <tr>
+                                                <td>{{__('Admin/backend.summer_fees')}}</td>
+                                                <td>{{ toFixedNumber($accommodation_summer_fee['value']) }}</td>
+                                                <td>{{ toFixedNumber($accommodation_summer_fee['converted_value']) }}</td>
+                                            </tr>
+                                        @endif
+                                        @if ($accommodation_peak_fee['value'])
+                                            <tr>
+                                                <td>{{__('Admin/backend.peak_time_fees')}}</td>
+                                                <td>{{ toFixedNumber($accommodation_peak_fee['value']) }}</td>
+                                                <td>{{ toFixedNumber($accommodation_peak_fee['converted_value']) }}</td>
+                                            </tr>
+                                        @endif
+                                        @if ($accommodation_christmas_fee['value'])
+                                            <tr>
+                                                <td>{{__('Admin/backend.christmas_fees')}}</td>
+                                                <td>{{ toFixedNumber($accommodation_christmas_fee['value']) }}</td>
+                                                <td>{{ toFixedNumber($accommodation_christmas_fee['converted_value']) }}</td>
+                                            </tr>
+                                        @endif
+                                        @if ($accommodation_under_age_fee['value'])
+                                            <tr>
+                                                <td>{{__('Admin/backend.under_age_fees')}}</td>
+                                                <td>{{ toFixedNumber($accommodation_under_age_fee['value']) }}</td>
+                                                <td>{{ toFixedNumber($accommodation_under_age_fee['converted_value']) }}</td>
+                                            </tr>
+                                        @endif
+                                        @if ($accommodation_discount_fee['value'])
+                                            <tr>
+                                                <td>{{__('Admin/backend.discount')}}</td>
+                                                <td class="highlight-value">-{{ toFixedNumber($accommodation_discount_fee['value']) }}</td>
+                                                <td class="highlight-value">-{{ toFixedNumber($accommodation_discount_fee['converted_value']) }}</td>
+                                            </tr>
+                                        @endif
+                                        <tr>
+                                            <td>{{__('Admin/backend.age_range')}}</td>
+                                            <td colspan="2">{{ $accommodation_min_age ?? ''}} - {{ $accommodation_max_age ?? ''}} {{__('Admin/backend.years')}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            @endif
+                            
+                            @if ($airport || $medical || $custodian)
+                                <table class="table table-bordered table-no-drawable">
+                                    <thead>
+                                        <tr>
+                                            <th>{{__('Admin/backend.other_services')}}</th>
+                                            <th>{{__('Admin/backend.amount')}} / <span class="cost_currency">{{ $currency['cost'] }}</span></th>
+                                            <th>{{__('Admin/backend.amount')}} / <span class="converted_currency">{{ $currency['converted'] }}</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if ($airport)
+                                            <tr>
+                                                <td>
+                                                    {{__('Admin/backend.transport')}}<br />
+                                                    {{__('Admin/backend.service_provider')}}: {{ $airport_provider }}<br />
+                                                    {{ $airport_name }} - {{ $airport_service }}<br />
+                                                </td>
+                                                <td>{{ toFixedNumber($airport_pickup_fee['value']) }}</td>
+                                                <td>{{ toFixedNumber($airport_pickup_fee['converted_value']) }}</td>
+                                            </tr>
+                                        @endif
+                                        @if ($medical)
+                                            <tr>
+                                                <td>
+                                                    {{__('Admin/backend.medical_insurance')}}<br />
+                                                    {{__('Admin/backend.company_name')}}: {{ $company_name }}<br />
+                                                    {{ $medical_start_date }} - {{ $medical_end_date }} ( {{ $course_application->medical_duration }} {{__('Admin/backend.weeks')}} )<br />
+                                                </td>
+                                                <td>{{ toFixedNumber($medical_insurance_fee['value']) }}</td>
+                                                <td>{{ toFixedNumber($medical_insurance_fee['converted_value']) }}</td>
+                                            </tr>
+                                        @endif
+                                        @if ($custodian)
+                                            <tr>
+                                                <td>
+                                                    {{__('Admin/backend.custodian_fee')}}<br />
+                                                </td>
+                                                <td>{{ toFixedNumber($custodian_fee['value']) }}</td>
+                                                <td>{{ toFixedNumber($custodian_fee['converted_value']) }}</td>
+                                            </tr>
+                                        @endif
+                                    </tbody>
+                                </table>
+                            @endif
+                            
+                            <table class="table table-bordered table-no-drawable mb-3">
                                 <thead>
                                     <tr>
-                                        <th>{{__('Admin/backend.other_services')}}</th>
-                                        <th>{{__('Admin/backend.amount')}} / <span class="cost_currency">{{ $currency['cost'] }}</span></th>
-                                        <th>{{__('Admin/backend.amount')}} / <span class="converted_currency">{{ $currency['converted'] }}</span></th>
+                                        <th>{{__('Admin/backend.sub_total')}}</th>
+                                        <th>{{ toFixedNumber($sub_total['value']) }} {{ $currency['cost'] }}</th>
+                                        <th>{{ toFixedNumber($sub_total['converted_value']) }} {{ $currency['converted'] }}</th>
+                                    </tr>
+                                    <tr>
+                                        <td>{{__('Admin/backend.bank_charge_fee')}}</td>
+                                        <td>{{ toFixedNumber($bank_charge_fee['value']) }} {{ $currency['cost'] }}</td>
+                                        <td>{{ toFixedNumber($bank_charge_fee['converted_value']) }} {{ $currency['converted'] }}</td>
+                                    </tr>
+                                    @if ($link_fee['value'])
+                                        <tr>
+                                            <td>{{__('Admin/backend.link_fee_including_vat')}} <span class="vat_fee">{{ $vat_fee }}</span>%</td>
+                                            <td>{{ toFixedNumber($link_fee['value']) }} {{ $currency['cost'] }}</td>
+                                            <td>{{ toFixedNumber($link_fee['converted_value']) }} {{ $currency['converted'] }}</td>
+                                        </tr>
+                                    @endif
+                                    <tr>
+                                        <th>{{__('Admin/backend.total_discount')}}</th>
+                                        <th class="highlight-value">-{{ toFixedNumber($total_discount['value']) }} {{ $currency['cost'] }}</th>
+                                        <th class="highlight-value">-{{ toFixedNumber($total_discount['converted_value']) }} {{ $currency['converted'] }}</th>
+                                    </tr>
+                                    <tr>
+                                        <th>{{__('Admin/backend.total_cost')}}</th>
+                                        <th>{{ toFixedNumber($total_cost['value']) }} {{ $currency['cost'] }}</th>
+                                        <th>{{ toFixedNumber($total_cost['converted_value']) }} {{ $currency['converted'] }}</th>
+                                    </tr>
+                                    @if (!isset($course_register_details->financial_guarantee))
+                                        <tr>
+                                            <th>{{__('Admin/backend.total_amount_paid')}}</th>
+                                            <th>{{ toFixedNumber($amount_paid['value']) }} {{ $currency['cost'] }}</th>
+                                            <th>{{ toFixedNumber($amount_paid['converted_value']) }} {{ $currency['converted'] }}</th>
+                                        </tr>
+                                    @endif
+                                    @if ($coupon_discount['value'])
+                                        <tr>
+                                            <th>{{__('Admin/backend.discount')}}</th>
+                                            <th class="highlight-value">-{{ toFixedNumber($coupon_discount['value']) }} {{ $currency['cost'] }}</th>
+                                            <th class="highlight-value">-{{ toFixedNumber($coupon_discount['converted_value']) }} {{ $currency['converted'] }}</th>
+                                        </tr>
+                                    @endif
+                                    <tr>
+                                        <th>{{__('Admin/backend.total_balance_due')}}</th>
+                                        <th class="highlight-value">{{ toFixedNumber($amount_balance['value']) }} {{ $currency['cost'] }}</th>
+                                        <th class="highlight-value">{{ toFixedNumber($amount_balance['converted_value']) }} {{ $currency['converted'] }}</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    @if ($airport)
-                                        <tr>
-                                            <td>
-                                                {{__('Admin/backend.transport')}}<br />
-                                                {{__('Admin/backend.service_provider')}}: {{ $airport_provider }}<br />
-                                                {{ $airport_name }} - {{ $airport_service }}<br />
-                                            </td>
-                                            <td>{{ toFixedNumber($airport_pickup_fee['value']) }}</td>
-                                            <td>{{ toFixedNumber($airport_pickup_fee['converted_value']) }}</td>
-                                        </tr>
-                                    @endif
-                                    @if ($medical)
-                                        <tr>
-                                            <td>
-                                                {{__('Admin/backend.medical_insurance')}}<br />
-                                                {{__('Admin/backend.company_name')}}: {{ $company_name }}<br />
-                                                {{ $medical_start_date }} - {{ $medical_end_date }} ( {{ $course_application->medical_duration }} {{__('Admin/backend.weeks')}} )<br />
-                                            </td>
-                                            <td>{{ toFixedNumber($medical_insurance_fee['value']) }}</td>
-                                            <td>{{ toFixedNumber($medical_insurance_fee['converted_value']) }}</td>
-                                        </tr>
-                                    @endif
-                                    @if ($custodian)
-                                        <tr>
-                                            <td>
-                                                {{__('Admin/backend.custodian_fee')}}<br />
-                                            </td>
-                                            <td>{{ toFixedNumber($custodian_fee['value']) }}</td>
-                                            <td>{{ toFixedNumber($custodian_fee['converted_value']) }}</td>
-                                        </tr>
-                                    @endif
-                                </tbody>
                             </table>
+                            
+                            @if (can_edit_course_application())
+                                <a href="{{ auth('superadmin')->check() ? route('superadmin.course_application.course.edit', ['id' => $course_application->id]) : route('schooladmin.course_application.course.edit', ['id' => $course_application->id]) }}" class="btn btn-primary px-5">{{__('Admin/backend.edit')}}</a>
+                            @endif
+                            <button type="button" class="btn btn-primary float-right px-5" onclick="printCourseApplication('reservation')">{{__('Admin/backend.print')}}</button>
                         @endif
-                        
-                        <table class="table table-bordered mb-3">
-                            <thead>
-                                <tr>
-                                    <th>{{__('Admin/backend.sub_total')}}</th>
-                                    <th>{{ toFixedNumber($sub_total['value']) }} {{ $currency['cost'] }}</th>
-                                    <th>{{ toFixedNumber($sub_total['converted_value']) }} {{ $currency['converted'] }}</th>
-                                </tr>
-                                <tr>
-                                    <td>{{__('Admin/backend.bank_transfer_fee')}}</td>
-                                    <td>{{ toFixedNumber($bank_transfer_fee['value']) }} {{ $currency['cost'] }}</td>
-                                    <td>{{ toFixedNumber($bank_transfer_fee['converted_value']) }} {{ $currency['converted'] }}</td>
-                                </tr>
-                                @if ($link_fee['value'])
-                                    <tr>
-                                        <td>{{__('Admin/backend.link_study_abroad_fee')}}</td>
-                                        <td>{{ toFixedNumber($link_fee['value']) }} {{ $currency['cost'] }}</td>
-                                        <td>{{ toFixedNumber($link_fee['converted_value']) }} {{ $currency['converted'] }}</td>
-                                    </tr>
-                                @endif
-                                <tr>
-                                    <th>{{__('Admin/backend.total_discount')}}</th>
-                                    <th class="highlight-value">-{{ toFixedNumber($total_discount['value']) }} {{ $currency['cost'] }}</th>
-                                    <th class="highlight-value">-{{ toFixedNumber($total_discount['converted_value']) }} {{ $currency['converted'] }}</th>
-                                </tr>
-                                <tr>
-                                    <th>{{__('Admin/backend.total_cost')}}</th>
-                                    <th>{{ toFixedNumber($total_cost['value']) }} {{ $currency['cost'] }}</th>
-                                    <th>{{ toFixedNumber($total_cost['converted_value']) }} {{ $currency['converted'] }}</th>
-                                </tr>
-                                @if (!isset($course_register_details->financial_guarantee))
-                                    <tr>
-                                        <th>{{__('Admin/backend.total_amount_paid')}}</th>
-                                        <th>{{ toFixedNumber($amount_paid['value']) }} {{ $currency['cost'] }}</th>
-                                        <th>{{ toFixedNumber($amount_paid['converted_value']) }} {{ $currency['converted'] }}</th>
-                                    </tr>
-                                @endif
-                                <tr>
-                                    <th>{{__('Admin/backend.total_balance_due')}}</th>
-                                    <th class="highlight-value">{{ toFixedNumber($amount_balance['value']) }} {{ $currency['cost'] }}</th>
-                                    <th class="highlight-value">{{ toFixedNumber($amount_balance['converted_value']) }} {{ $currency['converted'] }}</th>
-                                </tr>
-                            </thead>
-                        </table>
-                        
-                        @if (can_edit_course_application())
-                            <a href="{{ auth('superadmin')->check() ? route('superadmin.course_application.course.edit', ['id' => $course_application->id]) : route('schooladmin.course_application.course.edit', ['id' => $course_application->id]) }}" class="btn btn-primary px-5">{{__('Admin/backend.edit')}}</a>
-                        @endif
-                        <button type="button" class="btn btn-primary float-right px-5" onclick="printCourseApplication('reservation')">{{__('Admin/backend.print')}}</button>
                     </div>
                 </div>
 
@@ -574,51 +583,53 @@
                     </div>
                 </div>
                 
-                <div class="card-header collapsed" data-toggle="collapse" href="#collapseRegistrationCancellationConditions">
-                    <a class="card-title">{{__('Admin/backend.registration_cancelation_conditions')}}</a>
-                </div>
-                <div id="collapseRegistrationCancellationConditions" class="card-body collapse p-0" data-parent="#accordion">
-                    <div class="study m-2">
-                        <div class="row align-items-center">
-                            <div class="col-md-3">
-                                <img src="{{asset('public/frontend/assets/img/logo.png')}}" class="img-fluid" alt="" />
-                            </div>
-                            <div class="col-md-9">
-                                <h2>{{__('Admin/backend.registration_cancelation_conditions')}}</h2>
-                            </div>
-                        </div>
-                        <div class="row border-top-bottom form-group">
-                            <div class="col-md-12">
-                                {!! app()->getLocale() == 'en' ? $course_application->registration_cancelation_conditions : $course_application->registration_cancelation_conditions_ar !!}
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <div class="col-md-12">
-                                <label for="student_guardian_full_name" class="col-form-label"><strong>{{__('Admin/backend.student_guardian_full_name')}}</strong>:</label>
-                                <p>{{ $course_application->guardian_full_name }}</p>
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <div class="col-md-2">
-                                <label class="col-form-label"><strong>{{__('Admin/backend.date')}}:</strong></label>
-                            </div>
-                            <div class="col-md-10">
-                                <label class="col-form-label">{{ $today }}</label>
-                            </div>
-                        </div>
-                        <div class="row form-group mb-3">
-                            <div class="col-md-2">
-                                <label class="col-form-label"><strong>{{__('Admin/backend.signature')}}:</strong></label>
-                            </div>
-                            <div class="col-md-10">
-                                <img src="{{ $course_application->signature }}" />
-                            </div>
-                        </div>
+                @if (auth('superadmin')->check())
+                    <div class="card-header collapsed" data-toggle="collapse" href="#collapseRegistrationCancellationConditions">
+                        <a class="card-title">{{__('Admin/backend.registration_cancelation_conditions')}}</a>
                     </div>
-                        
-                    <button type="button" class="btn btn-primary float-right mt-3 px-5" onclick="printCourseApplication('registration_cancellation')">{{__('Admin/backend.print')}}</button>
-                </div>
-                
+                    <div id="collapseRegistrationCancellationConditions" class="card-body collapse p-0" data-parent="#accordion">
+                        <div class="study m-2">
+                            <div class="row align-items-center">
+                                <div class="col-md-3">
+                                    <img src="{{asset('public/frontend/assets/img/logo.png')}}" class="img-fluid" alt="" />
+                                </div>
+                                <div class="col-md-9">
+                                    <h2>{{__('Admin/backend.registration_cancelation_conditions')}}</h2>
+                                </div>
+                            </div>
+                            <div class="row border-top-bottom form-group">
+                                <div class="col-md-12">
+                                    {!! app()->getLocale() == 'en' ? $course_application->registration_cancelation_conditions : $course_application->registration_cancelation_conditions_ar !!}
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-12">
+                                    <label for="student_guardian_full_name" class="col-form-label"><strong>{{__('Admin/backend.student_guardian_full_name')}}</strong>:</label>
+                                    <p>{{ $course_application->guardian_full_name }}</p>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-2">
+                                    <label class="col-form-label"><strong>{{__('Admin/backend.date')}}:</strong></label>
+                                </div>
+                                <div class="col-md-10">
+                                    <label class="col-form-label">{{ $today }}</label>
+                                </div>
+                            </div>
+                            <div class="row form-group mb-3">
+                                <div class="col-md-2">
+                                    <label class="col-form-label"><strong>{{__('Admin/backend.signature')}}:</strong></label>
+                                </div>
+                                <div class="col-md-10">
+                                    <img src="{{ $course_application->signature }}" />
+                                </div>
+                            </div>
+                        </div>
+                            
+                        <button type="button" class="btn btn-primary float-right mt-3 px-5" onclick="printCourseApplication('registration_cancellation')">{{__('Admin/backend.print')}}</button>
+                    </div>
+                @endif
+
                 <div class="card-header collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseReservationStatus">
                     <a class="card-title">{{__('Admin/backend.reservation_status')}}</a>
                 </div>
@@ -659,7 +670,7 @@
                         @endif
 
                         <div class="col-sm-12">
-                            <table class="table table-bordered">
+                            <table class="table table-bordered table-no-drawable">
                                 <tbody>
                                     <tr>
                                         <th>{{__('Admin/backend.status')}}</th>
@@ -703,132 +714,136 @@
                     </div>
                 </div>
                 
-                <div class="card-header collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapsePaymentsRefundsStatement">
-                    <a class="card-title">{{__('Admin/backend.payments_refunds_statement')}}</a>
-                </div>
-                <div id="collapsePaymentsRefundsStatement" class="card-body collapse p-0" data-parent="#accordion">
-                    <div class="payments-refunds-statement mt-3">
-                        <div class="col-sm-12">
-                            <table class="table table-bordered">
-                                <tbody>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>{{__('Admin/backend.date_of_payment')}}</th>
-                                        <th>{{__('Admin/backend.amount_refunded')}}</th>
-                                        <th>{{__('Admin/backend.amount_paid')}}</th>
-                                        <th>{{__('Admin/backend.details')}}</th>
-                                        <th>{{__('Admin/backend.transaction_reference')}}</th>
-                                    </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>{{ $course_application->created_at->format("d M Y") }}</td>
-                                        <td> -</td>
-                                        <td>{{ toFixedNumber($deposit_price['converted_value']) }}</td>
-                                        <td>{{ __('Admin/backend.deposit_for_course') }} {{ $course_application->course->program_name }}</td>
-                                        <td>{{ optional($course_application->transaction)->trx_reference }}</td>
-                                    </tr>
-                                    @forelse ($transaction_refunds as $transaction_refund)
-                                        <tr>
-                                            <td>{{ $loop->iteration + 1 }}</td>
-                                            <td>{{ $transaction_refund->created_at->format("d M Y") }}</td>
-                                            <td>{{ $transaction_refund->amount_refunded == null ? '-' : $transaction_refund->amount_refunded }}</td>
-                                            <td>{{ $transaction_refund->amount_added == null ? '-' : $transaction_refund->amount_added }}</td>
-                                            <td>{{ $transaction_refund->details }}</td>
-                                            <td>{{ $transaction_refund->txn_reference }}</td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="6" style="text-align:center">{{__('Admin/backend.details_not_available')}}</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                        @if (can_manage_course_application() || can_edit_course_application() || can_payment_refund_course_application())
-                            <div class="col-sm-12 my-3">
-                                <form id="update_payment" method="POST" action="{{ auth('superadmin')->check() ? route('superadmin.course_application.store') : route('schooladmin.course_application.store') }}">
-                                    {{csrf_field()}}
-
-                                    <div class="form-row">
-                                        <input hidden name="id" value="{{ $course_application->id }}">
-                                        <div class="form-group col-md-6">
-                                            <div class="form-group row">
-                                                <label for="inputamount" class="col-sm-4 col-form-label">{{__('Admin/backend.amount')}}</label>
-                                                <div class="col-sm-8">
-                                                    <input type="decimal" name="amount" value="" class="form-control" id="inputamount" placeholder="amount">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <div class="form-group row">
-                                                <label for="inputdetails" class="col-sm-4 col-form-label"></label>
-                                                <div class="col-sm-8">
-                                                    <select name="symbol" class="form-control form-control-lg">
-                                                        <option value='+'>+</option>
-                                                        <option value='-'>-</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <input hidden name="order_id" value="{{ $course_application->order_id }}">
-                                        <div class="form-group col-md-6 mb-0">
-                                            <div class="form-group row mb-0">
-                                                <label for="course_details" class="col-sm-4 col-form-label">{{__('Admin/backend.details')}}</label>
-                                                <div class="col-sm-8">
-                                                    <input type="text" name="course_details" value="" class="form-control" id="course_details" placeholder="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-6 mb-0">
-                                            <div class="form-group row mb-0">
-                                                <label for="reference" class="col-sm-4 col-form-label">{{__('Admin/backend.transaction_reference')}}</label>
-                                                <div class="col-sm-8">
-                                                    <input type="text" name="reference" value="" class="form-control" id="reference" placeholder="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <button type="button" onclick="submitFormAction('update_payment')" class="btn btn-primary float-right mt-1 choose">{{__('Admin/backend.update')}}</button>
-                                    </div>
-                                </form>
-                            </div>
-                        @endif
-                        <div class="col-sm-12">
-                            <table class="table table-bordered">
-                                <tbody>
-                                    <tr>
-                                        <th>{{__('Admin/backend.currency')}}</th>
-                                        <th>{{__('Admin/backend.amount')}} / <span class="cost_currency">{{ $currency['cost'] }}</span></th>
-                                        <th>{{__('Admin/backend.amount')}} / <span class="converted_currency">{{ $currency['converted'] }}</span></th>
-                                    </tr>
-                                    <tr>
-                                        <td>{{__('Admin/backend.total_cost')}}</td>
-                                        <td>{{ toFixedNumber($total_cost_fixed['value']) }}</td>
-                                        <td>{{ toFixedNumber($total_cost_fixed['converted_value']) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>{{__('Admin/backend.total_amount_paid')}}</td>
-                                        <td>{{ toFixedNumber($amount_paid['value']) }}</td>
-                                        <td>{{ toFixedNumber($amount_paid['converted_value']) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>{{__('Admin/backend.total_amount_refunded')}}</td>
-                                        <td>{{ toFixedNumber($amount_refunded['value']) }}</td>
-                                        <td>{{ toFixedNumber($amount_refunded['converted_value']) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>{{__('Admin/backend.total_amount_due')}}</td>
-                                        <td>{{ toFixedNumber($amount_due['value']) }}</td>
-                                        <td>{{ toFixedNumber($amount_due['converted_value']) }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        
-                        <button type="button" class="btn btn-primary float-right mt-3 px-5" onclick="printCourseApplication('payments_refunds')">{{__('Admin/backend.print')}}</button>
+                @if (auth('superadmin')->check())
+                    <div class="card-header collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapsePaymentsRefundsStatement">
+                        <a class="card-title">{{__('Admin/backend.payments_refunds_statement')}}</a>
                     </div>
-                </div>
+                    <div id="collapsePaymentsRefundsStatement" class="card-body collapse p-0" data-parent="#accordion">
+                        <div class="payments-refunds-statement mt-3">
+                            <div class="col-sm-12">
+                                <table class="table table-bordered table-no-drawable">
+                                    <tbody>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>{{__('Admin/backend.date_of_payment')}}</th>
+                                            <th>{{__('Admin/backend.amount_refunded')}}</th>
+                                            <th>{{__('Admin/backend.amount_paid')}}</th>
+                                            <th>{{__('Admin/backend.details')}}</th>
+                                            <th>{{__('Admin/backend.transaction_reference')}}</th>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>{{ $course_application->created_at->format("d M Y") }}</td>
+                                            <td> -</td>
+                                            <td>{{ toFixedNumber($deposit_price['converted_value']) }}</td>
+                                            <td>{{ __('Admin/backend.deposit_for_course') }} {{ $course_application->course->program_name }}</td>
+                                            <td>{{ optional($course_application->transaction)->trx_reference }}</td>
+                                        </tr>
+                                        @forelse ($transaction_refunds as $transaction_refund)
+                                            <tr>
+                                                <td>{{ $loop->iteration + 1 }}</td>
+                                                <td>{{ $transaction_refund->created_at->format("d M Y") }}</td>
+                                                <td>{{ $transaction_refund->amount_refunded == null ? '-' : $transaction_refund->amount_refunded }}</td>
+                                                <td>{{ $transaction_refund->amount_added == null ? '-' : $transaction_refund->amount_added }}</td>
+                                                <td>{{ $transaction_refund->details }}</td>
+                                                <td>{{ $transaction_refund->txn_reference }}</td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="6" style="text-align:center">{{__('Admin/backend.details_not_available')}}</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                            @if (can_manage_course_application() || can_edit_course_application() || can_payment_refund_course_application())
+                                <div class="col-sm-12 my-3">
+                                    <form id="update_payment" method="POST" action="{{ auth('superadmin')->check() ? route('superadmin.course_application.store') : route('schooladmin.course_application.store') }}">
+                                        {{csrf_field()}}
+
+                                        <div class="form-row">
+                                            <input hidden name="id" value="{{ $course_application->id }}">
+                                            <div class="form-group col-md-6">
+                                                <div class="form-group row">
+                                                    <label for="inputamount" class="col-sm-4 col-form-label">{{__('Admin/backend.amount')}}</label>
+                                                    <div class="col-sm-8">
+                                                        <input type="decimal" name="amount" value="" class="form-control" id="inputamount" placeholder="amount">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <div class="form-group row">
+                                                    <label for="inputdetails" class="col-sm-4 col-form-label"></label>
+                                                    <div class="col-sm-8">
+                                                        <select name="symbol" class="form-control form-control-lg">
+                                                            <option value='+'>+</option>
+                                                            <option value='-'>-</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <input hidden name="order_id" value="{{ $course_application->order_id }}">
+                                            <div class="form-group col-md-6 mb-0">
+                                                <div class="form-group row mb-0">
+                                                    <label for="course_details" class="col-sm-4 col-form-label">{{__('Admin/backend.details')}}</label>
+                                                    <div class="col-sm-8">
+                                                        <input type="text" name="course_details" value="" class="form-control" id="course_details" placeholder="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-6 mb-0">
+                                                <div class="form-group row mb-0">
+                                                    <label for="reference" class="col-sm-4 col-form-label">{{__('Admin/backend.transaction_reference')}}</label>
+                                                    <div class="col-sm-8">
+                                                        <input type="text" name="reference" value="" class="form-control" id="reference" placeholder="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="button" onclick="submitFormAction('update_payment')" class="btn btn-primary float-right mt-1 choose">{{__('Admin/backend.update')}}</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            @endif
+                            <div class="col-sm-12">
+                                <table class="table table-bordered table-no-drawable">
+                                    <thead>
+                                        <tr>
+                                            <th>{{__('Admin/backend.currency')}}</th>
+                                            <th>{{__('Admin/backend.amount')}} / <span class="cost_currency">{{ $currency['cost'] }}</span></th>
+                                            <th>{{__('Admin/backend.amount')}} / <span class="converted_currency">{{ $currency['converted'] }}</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{{__('Admin/backend.total_cost')}}</td>
+                                            <td>{{ toFixedNumber($total_cost_fixed['value']) }}</td>
+                                            <td>{{ toFixedNumber($total_cost_fixed['converted_value']) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>{{__('Admin/backend.total_amount_paid')}}</td>
+                                            <td>{{ toFixedNumber($amount_paid['value']) }}</td>
+                                            <td>{{ toFixedNumber($amount_paid['converted_value']) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>{{__('Admin/backend.total_amount_refunded')}}</td>
+                                            <td>{{ toFixedNumber($amount_refunded['value']) }}</td>
+                                            <td>{{ toFixedNumber($amount_refunded['converted_value']) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>{{__('Admin/backend.total_amount_due')}}</td>
+                                            <td>{{ toFixedNumber($amount_due['value']) }}</td>
+                                            <td>{{ toFixedNumber($amount_due['converted_value']) }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <button type="button" class="btn btn-primary float-right mt-3 px-5" onclick="printCourseApplication('payments_refunds')">{{__('Admin/backend.print')}}</button>
+                        </div>
+                    </div>
+                @endif
                 
                 <div class="card-header collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseContactCenter">
                     <a class="card-title">{{__('Admin/backend.contact_center')}}</a>

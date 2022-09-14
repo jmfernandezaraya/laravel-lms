@@ -86,13 +86,13 @@
                 <div class="col-md-8">
                     <h3>
                         <p class="m-0 inter-school">
-                            {{$school->name ? (app()->getLocale() == 'en' ? $school->name->name : $school->name->name_ar) : '-'}} - 
+                            {{ $school->name ? (app()->getLocale() == 'en' ? $school->name->name : $school->name->name_ar) : '-' }} - 
                             {{ app()->getLocale() == 'en' ? $school->branch_name : $school->branch_name_ar }}
                         </p>
-                        <span class="city">{{$school->city ? (app()->getLocale() == 'en' ? $school->city->name : $school->city->name_ar) : '-'}}, {{$school->country ? (app()->getLocale() == 'en' ? $school->country->name : $school->country->name_ar) : '-'}}</span>
+                        <span class="city">{{ $school->city ? (app()->getLocale() == 'en' ? $school->city->name : $school->city->name_ar) : '-' }}, {{ $school->country ? (app()->getLocale() == 'en' ? $school->country->name : $school->country->name_ar) : '-' }}</span>
                     </h3>
                     <ul>
-                        @for($i = 1; $i <= 5; $i ++)
+                        @for ($i = 1; $i <= 5; $i ++)
                             <li class="dynamic_starli" aria-hidden="true" id="rating{{$i}}">★</li>
                         @endfor
                     </ul>
@@ -178,7 +178,7 @@
                         <label for="program_name">{{__('Frontend.program_name')}}:</label>
                         <input hidden name="program_unique_id" id="program_unique_id">
 
-                        <select class="form-control" id="get_program_name" onchange="set_program_unique_id($(this).children('option:selected').data('id')); calculateCourse('select_program');" name="program_id" required>
+                        <select class="form-control" id="get_program_name" onchange="setProgramUniqueId($(this).children('option:selected').data('id')); calculateCourse('select_program');" name="program_id" required>
                             <option value="" selected>{{__('Frontend.select_option')}}</option>
                         </select>
                     </div>
@@ -631,10 +631,10 @@
                             </tbody>
                         </table>
 
-                        <table class="table table-bordered table-no-drawable" id="bank_transfer_fee_table">
+                        <table class="table table-bordered table-no-drawable" id="bank_charge_fee_table">
                             <tbody>
                                 <tr>
-                                    <td>{{__('Frontend.bank_transfer_fee')}}</td>
+                                    <td>{{__('Frontend.bank_charge_fee')}}</td>
                                     <td><span class="cost_value"></span> <span class="cost_value_currency"></span></td>
                                     <td><span class="converted_value"></span> <span class="converted_value_currency"></span></td>
                                 </tr>
@@ -645,6 +645,26 @@
                             <tbody>
                                 <tr>
                                     <td>{{__('Frontend.link_fee_including_vat')}} <span class="vat_fee"></span>%</td>
+                                    <td><span class="cost_value"></span> <span class="cost_value_currency"></span></td>
+                                    <td><span class="converted_value"></span> <span class="converted_value_currency"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="row mb-3" id="discount_code_row" style="display: none">
+                            <div class="col-md-7">
+                                <input type="text" class="form-control" id="discount_code" />
+                                <input type="hidden" name="coupon_id" id="coupon_id" placeholder="{{__('Frontend.courier_fee')}}"/>
+                            </div>
+                            <div class="col-md-5">
+                                <button type="button" class="btn btn-primary w-100" onclick="applyDiscount()">{{__('Frontend.apply')}}</button>
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered table-no-drawable" id="coupon_discount_table" style="display: none">
+                            <tbody>
+                                <tr>
+                                    <td>{{__('Frontend.discount')}}</td>
                                     <td><span class="cost_value"></span> <span class="cost_value_currency"></span></td>
                                     <td><span class="converted_value"></span> <span class="converted_value_currency"></span></td>
                                 </tr>
@@ -696,6 +716,8 @@
         var medical_fee_url = "{{route('frontend.course.medical.fee')}}";
 
         var other_service_fee_url = "{{route('frontend.course.other_service.fee')}}";
+
+        var apply_coupon_url = "{{route('frontend.course.coupon.apply')}}";
 
         $(document).ready(function () {
             setTimeout(function() {
@@ -949,9 +971,5 @@
                 $("#rating" + i).addClass('selected');
             }
         });
-
-        function set_program_unique_id(object) {
-            $('#program_unique_id').val(object);
-        }
     </script>
 @endsection

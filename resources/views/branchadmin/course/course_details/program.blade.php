@@ -57,8 +57,8 @@
                                 <td>{{$course_program->program_registration_fee}}</td>
 
                                 <td>{{$course_program->program_duration}}</td>
-                                @if(is_array($course_program->program_age_range))
-                                    <td>{{is_null($course_program->program_age_range) ? '-'  : implode(", ", $course_program->program_age_range)}}</td>
+                                @if(is_array($course_program->program_age_range ?? []))
+                                    <td>{{is_null($course_program->program_age_range ?? []) ? '-'  : implode(", ", $course_program->program_age_range ?? [])}}</td>
                                 @else
                                     <td>{{$course_program->program_age_range}}</td>
                                 @endif
@@ -133,7 +133,7 @@
                                                     <label>@lang('Admin/backend.age_range')</label>
                                                     <select type="text" multiple name="program_age_range" class="form-control">
                                                         @foreach(\App\Models\SuperAdmin\ChooseProgramAge::all() as $ages)
-                                                            <option value="{{$ages->age}}" {{ in_array($ages->age, is_array($course_program->program_age_range) ? $course_program->program_age_range : [] ) ? 'selected' : '' }}>{{$ages->age}}</option>
+                                                            <option value="{{$ages->age}}" {{ in_array($ages->age, is_array($course_program->program_age_range ?? []) ? $course_program->program_age_range : [] ) ? 'selected' : '' }}>{{$ages->age}}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>

@@ -328,12 +328,22 @@ class AccommodationCalculator extends FrontendCalculator
         return $total - readCalculationFromDB('discount_fee') - readCalculationFromDB('accommodation_discount');
     }
 
+    public function CouponDiscount()
+    {
+        return readCalculationFromDB('coupon_discount');
+    }
+
+    public function CouponDiscountConverted()
+    {
+        return readCalculationFromDB('coupon_discount_converted');
+    }
+
     public function TotalCalculation()
     {
         $total = readCalculationFromDB('total') + readCalculationFromDB('accommodation_total')
-            + readCalculationFromDB('airport_pickup_fee') + readCalculationFromDB('medical_insurance_fee') + readCalculationFromDB('custodian_fee')
-            + readCalculationFromDB('bank_transfer_fee') + readCalculationFromDB('link_fee');
-        return $total - readCalculationFromDB('discount_fee') - readCalculationFromDB('accommodation_discount');
+            + readCalculationFromDB('airport_pickup_fee') + readCalculationFromDB('medical_insurance_fee') + readCalculationFromDB('custodian_fee');
+        return $total + readCalculationFromDB('bank_charge_fee') + readCalculationFromDB('link_fee') - readCalculationFromDB('discount_fee')
+            - readCalculationFromDB('accommodation_discount') - readCalculationFromDB('coupon_discount');
     }
 
     public function resultAccommodationDiscount()

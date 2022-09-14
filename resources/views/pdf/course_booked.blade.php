@@ -318,13 +318,13 @@
                         <th>{{ toFixedNumber($sub_total['converted_value']) }} {{ $currency['converted'] }}</th>
                     </tr>
                     <tr>
-                        <th>{{__('Mail.bank_transfer_fee')}}</th>
-                        <th>{{ toFixedNumber($bank_transfer_fee['value']) }} {{ $currency['cost'] }}</th>
-                        <th>{{ toFixedNumber($bank_transfer_fee['converted_value']) }} {{ $currency['converted'] }}</th>
+                        <th>{{__('Mail.bank_charge_fee')}}</th>
+                        <th>{{ toFixedNumber($bank_charge_fee['value']) }} {{ $currency['cost'] }}</th>
+                        <th>{{ toFixedNumber($bank_charge_fee['converted_value']) }} {{ $currency['converted'] }}</th>
                     </tr>
                     @if ($link_fee['value'])
                         <tr>
-                            <th>{{__('Mail.link_study_abroad_fee')}}</th>
+                            <td>{{__('Mail.link_fee_including_vat')}} <span class="vat_fee">{{ $vat_fee }}</span>%</td>
                             <th>{{ toFixedNumber($link_fee['value']) }} {{ $currency['cost'] }}</th>
                             <th>{{ toFixedNumber($link_fee['converted_value']) }} {{ $currency['converted'] }}</th>
                         </tr>

@@ -5,7 +5,12 @@
 @endsection
 
 @section('breadcrumbs')
-    <h1>{{__('Frontend.course_application')}}</h1>
+    <div class="breadcrumb-head">
+        <a href="{{route('frontend.dashboard')}}" class="breadcrumb-home">
+            <i class="bx bxs-dashboard"></i>&nbsp;
+        </a>
+        <h1>{{__('Frontend.course_application')}}</h1>
+    </div>
 @endsection
 
 @section('content')
@@ -44,8 +49,8 @@
                                 <td>{{ $booked_course->course->school->city ? (app()->getLocale() == 'en' ? ($booked_course->course->school->city->name ?? '-') : ($booked_course->course->school->city->name_ar ?? '-')) : '-' }}</td>
                                 <td>{{ $booked_course->course->school->country ? (app()->getLocale() == 'en' ? ($booked_course->course->school->country->name ?? '-') : ($booked_course->course->school->country->name_ar ?? '-')) : '-' }}</td>
                                 <td>{{ ucwords($booked_course->course->program_name) }}</td>
-                                <td>{{ ucwords($booked_course->start_date) }}</td>
-                                <td>{{ ucwords($booked_course->program_duration) }}</td>
+                                <td>{{ $booked_course->start_date }}</td>
+                                <td>{{ $booked_course->program_duration }}</td>
                                 <td>{{ toFixedNumber(getCurrencyConvertedValue($booked_course->course_id, $booked_course->program_cost)) }}</td>
                                 <td>{{ toFixedNumber(getCurrencyConvertedValue($booked_course->course_id, $booked_course->deposit_price)) }}</td>
                                 <td>{{ isset($booked_course->courseApplicationApprove->approve) ? ($booked_course->courseApplicationApprove->approve == 1 ? __("Frontend.application_recevied") : __("Frontend.send_to_school_admin") ) : __("Frontend.application_recevied") }}</td>

@@ -96,7 +96,7 @@
                                 <label for="program_name">{{__('Admin/backend.program_name')}}:</label>
                                 <input hidden name="program_unique_id" id="program_unique_id">
 
-                                <select class="form-control" id="get_program_name" onchange="set_program_unique_id($(this).children('option:selected').data('id')); calculateCourse('select_program');" name="program_id" required>
+                                <select class="form-control" id="get_program_name" onchange="setProgramUniqueId($(this).children('option:selected').data('id')); calculateCourse('select_program');" name="program_id" required>
                                     <option value="" selected>{{__('Admin/backend.select_option')}}</option>
                                 </select>
                             </div>
@@ -532,10 +532,10 @@
                                     </tbody>
                                 </table>
 
-                                <table class="table table-bordered table-no-drawable" id="bank_transfer_fee_table">
+                                <table class="table table-bordered table-no-drawable" id="bank_charge_fee_table">
                                     <tbody>
                                         <tr>
-                                            <td>{{__('Admin/backend.bank_transfer_fee')}}</td>
+                                            <td>{{__('Admin/backend.bank_charge_fee')}}</td>
                                             <td><span class="cost_value"></span> <span class="cost_value_currency"></span></td>
                                             <td><span class="converted_value"></span> <span class="converted_value_currency"></span></td>
                                         </tr>
@@ -546,6 +546,16 @@
                                     <tbody>
                                         <tr>
                                             <td>{{__('Frontend.link_fee_including_vat')}} <span class="vat_fee"></span>%</td>
+                                            <td><span class="cost_value"></span> <span class="cost_value_currency"></span></td>
+                                            <td><span class="converted_value"></span> <span class="converted_value_currency"></span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <table class="table table-bordered table-no-drawable" id="coupon_discount_table" style="display: none">
+                                    <tbody>
+                                        <tr>
+                                            <td>{{__('Frontend.discount')}}</td>
                                             <td><span class="cost_value"></span> <span class="cost_value_currency"></span></td>
                                             <td><span class="converted_value"></span> <span class="converted_value_currency"></span></td>
                                         </tr>
@@ -819,10 +829,6 @@
                     fill_course_form = true;
                 }
             }
-        }
-
-        function set_program_unique_id(object) {
-            $('#program_unique_id').val(object);
         }
     </script>
 @endsection

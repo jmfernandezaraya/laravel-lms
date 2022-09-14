@@ -10,6 +10,8 @@ use App\Models\Calculator;
 use App\Models\SuperAdmin\CourseAccommodation;
 use App\Models\SuperAdmin\CourseAirport;
 use App\Models\SuperAdmin\Course;
+use App\Models\SuperAdmin\Coupon;
+use App\Models\SuperAdmin\CouponUsage;
 use App\Models\SuperAdmin\CourseProgram;
 use App\Models\SuperAdmin\ChooseStudyMode;
 
@@ -31,12 +33,12 @@ class CourseController extends Controller
 
     public function __construct()
     {
-        $this->creteCalculatorDb();
+        $this->createCalculatorDb();
 
         $this->calculator = new AccommodationCalculator;
     }
 
-    private function creteCalculatorDb()
+    private function createCalculatorDb()
     {
         if (!Calculator::whereCalcId(request()->ip())->first()) {
             $calculator = new Calculator;
@@ -67,9 +69,12 @@ class CourseController extends Controller
             $input['medical_insurance_fee'] = 0;
             $input['custodian_fee'] = 0;
 
-            $input['bank_transfer_fee'] = 0;
+            $input['bank_charge_fee'] = 0;
             $input['link_fee'] = 0;
             $input['link_fee_converted'] = 0;
+
+            $input['coupon_discount'] = 0;
+            $input['coupon_discount_converted'] = 0;
 
             $input['total'] = 0;
 
@@ -89,7 +94,7 @@ class CourseController extends Controller
         $this->calculator->setPeakTimeFee(read_json_file('peak_time_fee'));
         $this->calculator->setDiscount(read_json_file('discount_fee'));
 
-        json_file('bank_transfer_fee', 0);
+        json_file('bank_charge_fee', 0);
         json_file('link_fee', 0);
         json_file('link_fee_converted', 0);
 
@@ -112,12 +117,17 @@ class CourseController extends Controller
         $data['express_mail'] = 'express_mail';
         $data['express_mail_value'] = read_json_file('courier_fee');
 
-        $data['bank_transfer_fee'] = 'bank_transfer_fee';
-        $data['bank_transfer_fee_value'] = read_json_file('bank_transfer_fee');
+        $data['bank_charge_fee'] = 'bank_charge_fee';
+        $data['bank_charge_fee_value'] = read_json_file('bank_charge_fee');
         $data['link_fee'] = 'link_fee';
         $data['link_fee_value'] = read_json_file('link_fee');
         $data['link_fee_converted'] = 'link_fee_converted';
         $data['link_fee_converted_value'] = read_json_file('link_fee_converted');
+
+        $data['coupon_discount'] = 'coupon_discount';
+        $data['coupon_discount_value'] = read_json_file('coupon_discount');
+        $data['coupon_discount_converted'] = 'coupon_discount_converted';
+        $data['coupon_discount_converted_value'] = read_json_file('coupon_discount_converted');
 
         $data['sub_total'] = $this->calculator->SubTotalCalculation();
         $data['total_cost'] = $this->calculator->TotalCalculation();
@@ -195,7 +205,7 @@ class CourseController extends Controller
             json_file('text_book_fee', $text_book_fee);
 
             if ($r->date_set != null) {
-                json_file('bank_transfer_fee', $course_program->bank_transfer_fee);
+                json_file('bank_charge_fee', $course_program->bank_charge_fee);
                 $link_fee_converted = $course_program->course->link_fee_enable ? (($course_program->link_fee == null || $course_program->tax_percent == null) ? 0 : $course_program->link_fee + $course_program->link_fee * $course_program->tax_percent / 100) : 0;
                 json_file('link_fee', getCurrencyReverseConvertedValue($course->course_unique_id, $link_fee_converted));
                 json_file('link_fee_converted', $link_fee_converted);

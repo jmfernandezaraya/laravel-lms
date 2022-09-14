@@ -24,7 +24,7 @@ use TelrGateway\Transaction;
  */
 class CourseApplication extends Model
 {
-    use HasFactory;    
+    use HasFactory;
     use Notifiable;
 
     /**

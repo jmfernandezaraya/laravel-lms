@@ -9,13 +9,18 @@
 @endsection
 
 @section('breadcrumbs')
-    <h1>
-        @if ($course_application->review)
-            {{__('Frontend.edit_the_review')}}
-        @else
-            {{__('Frontend.rate_write_a_review')}}
-        @endif
-    </h1>
+    <div class="breadcrumb-head">
+        <a href="{{route('frontend.dashboard')}}" class="breadcrumb-home">
+            <i class="bx bxs-dashboard"></i>&nbsp;
+        </a>
+        <h1>
+            @if ($course_application->review)
+                {{__('Frontend.edit_the_review')}}
+            @else
+                {{__('Frontend.rate_write_a_review')}}
+            @endif
+        </h1>
+    </div>
 @endsection
 
 @section('content')

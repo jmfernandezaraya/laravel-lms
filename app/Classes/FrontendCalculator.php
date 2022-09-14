@@ -322,6 +322,16 @@ class FrontendCalculator
         $this->under_age_fee = $cost == null ? 0 : $cost;
     }
 
+    public function setCouponDiscount($cost)
+    {
+        $this->coupon_discount = $cost == null ? 0 : $cost;
+    }
+
+    public function setCouponDiscountConverted($cost)
+    {
+        $this->coupon_discount_converted = $cost == null ? 0 : $cost;
+    }
+
     public function setTotalPrice()
     {
         $total =

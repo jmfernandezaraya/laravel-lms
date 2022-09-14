@@ -597,32 +597,39 @@ section {
 .breadcrumbs {
   margin-top: 73px;
   text-align: center;
-  background: #97d0db;
   padding: 30px 0;
+  background: #97d0db;
   color: #fff;
 }
-
-@media (max-width: 992px) {
-  .breadcrumbs {
-    margin-top: 63px;
-  }
+.breadcrumb-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
 .breadcrumbs h1 {
   font-size: 32px;
   font-weight: 500;
   margin: 0;
 }
-
 .breadcrumbs h2 {
   font-size: 30px;
   font-weight: 500;
   margin: 0;
 }
-
 .breadcrumbs p {
   font-size: 14px;
   margin-bottom: 0;
+}
+.breadcrumbs a {
+  color: #fff;
+  font-size: 32px;
+  font-weight: 500;
+  margin: 0;
+}
+@media (max-width: 992px) {
+  .breadcrumbs {
+    margin-top: 63px;
+  }
 }
 
 .form-control {

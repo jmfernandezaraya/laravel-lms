@@ -13,7 +13,7 @@
                         <tr>
                             <th># </th>
                             <th> {{__('Admin/backend.link_fee')}} </th>
-                            <th> {{__('Admin/backend.bank_transfer_fee')}} </th>
+                            <th> {{__('Admin/backend.bank_charge_fee')}} </th>
                             <th> {{__('Admin/backend.program_registration_fee')}} </th>
                             <th> {{__('Admin/backend.program_duration')}} </th>
                             <th> {{__('Admin/backend.age_range')}} </th>
@@ -52,12 +52,12 @@
                             <tr>
                                 <td>{{ $loop->iteration}}  </td>
                                 <td>{{ $course_program->link_fee }}</td>
-                                <td>{{ $course_program->bank_transfer_fee }}</td>
+                                <td>{{ $course_program->bank_charge_fee }}</td>
                                 <td>{{ $course_program->program_registration_fee }}</td>
 
                                 <td>{{ $course_program->program_duration }}</td>
-                                @if(is_array($course_program->program_age_range))
-                                    <td>{{is_null($course_program->program_age_range) ? '-'  : implode(", ", $course_program->program_age_range) }}</td>
+                                @if(is_array($course_program->program_age_range ?? []))
+                                    <td>{{is_null($course_program->program_age_range ?? []) ? '-'  : implode(", ", $course_program->program_age_range ?? []) }}</td>
                                 @else
                                     <td>{{ $course_program->program_age_range }}</td>
                                 @endif
@@ -122,7 +122,7 @@
                                                     <label>{{__('Admin/backend.age_range')}}</label>
                                                     <select type="text" multiple name="program_age_range" class="form-control">
                                                         @foreach(\App\Models\SuperAdmin\ChooseProgramAge::all() as $ages)
-                                                            <option value="{{ $ages->age }}" {{ in_array($ages->age, is_array($course_program->program_age_range) ? $course_program->program_age_range : [] ) ? 'selected' : '' }}>{{ $ages->age }}</option>
+                                                            <option value="{{ $ages->age }}" {{ in_array($ages->age, is_array($course_program->program_age_range ?? []) ? $course_program->program_age_range : [] ) ? 'selected' : '' }}>{{ $ages->age }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>

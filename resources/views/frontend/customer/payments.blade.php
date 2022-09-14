@@ -5,17 +5,17 @@
 @endsection
 
 @section('breadcrumbs')
-    <h1>{{__('Frontend.your_account')}}</h1>
+    <div class="breadcrumb-head">
+        <a href="{{route('frontend.dashboard')}}" class="breadcrumb-home">
+            <i class="bx bxs-dashboard"></i>&nbsp;
+        </a>
+        <h1>{{__('Frontend.your_account')}}</h1>
+    </div>
 @endsection
 
 @section('content')
     <div class="dashboard">
         <div class="container" data-aos="fade-up">
-            <div class="row" data-aos="zoom-in" data-aos-delay="100">
-                <div class="col-lg-12">
-                    <h3>{{__('Frontend.your_account')}}</h3>
-                </div>
-            </div>
             <div class="row" data-aos="zoom-in" data-aos-delay="100">
                 <div class="col-lg-4 col-md-4">
                     <div class="list-box">

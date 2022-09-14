@@ -33,6 +33,8 @@ use App\Models\SuperAdmin\ChooseProgramType;
 use App\Models\SuperAdmin\ChooseProgramUnderAge;
 use App\Models\SuperAdmin\ChooseStudyMode;
 use App\Models\SuperAdmin\Course;
+use App\Models\SuperAdmin\Coupon;
+use App\Models\SuperAdmin\CouponUsage;
 use App\Models\SuperAdmin\CourseAccommodation;
 use App\Models\SuperAdmin\CourseAirport;
 use App\Models\SuperAdmin\CourseAirportFee;
@@ -92,7 +94,7 @@ class FrontendController extends Controller
             $course_programs = $course->coursePrograms;
             $course_has_discount_program = false;
             foreach ($course_programs as $course_program) {
-                $course_age_range_ids = array_merge($course_age_range_ids, $course_program->program_age_range);
+                $course_age_range_ids = array_merge($course_age_range_ids, $course_program->program_age_range ?? []);
                 if ($course_program->discount_per_week != ' -' && $course_program->discount_per_week != ' %' && 
                     (($course_program->discount_start_date <= $now && $course_program->discount_end_date >= $now)
                     || ($course_program->x_week_selected && $course_program->x_week_start_date <= $now && $course_program->x_week_end_date >= $now))) {
@@ -125,10 +127,10 @@ class FrontendController extends Controller
                         if ($school->course) {
                             $school->course = $school_course;
                             $school->course_program = $school_course_program;
-                            $school->age_range = getCourseProgramAgeRange($school->course_program->program_age_range);
+                            $school->age_range = getCourseProgramAgeRange($school->course_program->program_age_range ?? []);
                         }
                     }
-                    $school->age_ranges = array_unique(array_merge($school->age_ranges, ChooseProgramAge::whereIn('unique_id', $school_course_program->program_age_range)->orderBy('age', 'asc')->pluck('age')->toArray()));
+                    $school->age_ranges = array_unique(array_merge($school->age_ranges, ChooseProgramAge::whereIn('unique_id', $school_course_program->program_age_range ?? [])->orderBy('age', 'asc')->pluck('age')->toArray()));
                 }
             }
         }
@@ -146,10 +148,10 @@ class FrontendController extends Controller
                         if ($school->course) {
                             $school->course = $school_course;
                             $school->course_program = $school_course_program;
-                            $school->age_range = getCourseProgramAgeRange($school->course_program->program_age_range);
+                            $school->age_range = getCourseProgramAgeRange($school->course_program->program_age_range ?? []);
                         }
                     }
-                    $school->age_ranges = array_unique(array_merge($school->age_ranges, ChooseProgramAge::whereIn('unique_id', $school_course_program->program_age_range)->orderBy('age', 'asc')->pluck('age')->toArray()));
+                    $school->age_ranges = array_unique(array_merge($school->age_ranges, ChooseProgramAge::whereIn('unique_id', $school_course_program->program_age_range ?? [])->orderBy('age', 'asc')->pluck('age')->toArray()));
                 }
             }
         }
@@ -176,7 +178,7 @@ class FrontendController extends Controller
             ->get();
         $ages = [];
         foreach ($course_programs as $course_program) {
-            $ages = array_unique(array_merge($ages, ChooseProgramAge::whereIn('unique_id', $course_program->program_age_range)->orderBy('age', 'asc')->pluck('age')->toArray()));
+            $ages = array_unique(array_merge($ages, ChooseProgramAge::whereIn('unique_id', $course_program->program_age_range ?? [])->orderBy('age', 'asc')->pluck('age')->toArray()));
         }
         
         $data['ages_html'] = '';
@@ -209,9 +211,9 @@ class FrontendController extends Controller
                 if ($school->courses) {
                     foreach ($school->courses as $school_course) {
                         foreach ($school_course->coursePrograms as $course_program) {
-                            if (in_array($age_unique_id, $course_program->program_age_range)) {
+                            if (in_array($age_unique_id, $course_program->program_age_range ?? [])) {
                                 $school_flag = true;
-                                $ages = array_unique(array_merge($ages, ChooseProgramAge::whereIn('unique_id', $course_program->program_age_range)->orderBy('age', 'asc')->pluck('age')->toArray()));
+                                $ages = array_unique(array_merge($ages, ChooseProgramAge::whereIn('unique_id', $course_program->program_age_range ?? [])->orderBy('age', 'asc')->pluck('age')->toArray()));
                             }
                         }
                     }
@@ -232,7 +234,7 @@ class FrontendController extends Controller
             if ($age_unique_id) {
                 $course_flag = false;
                 foreach ($course->coursePrograms as $course_program) {
-                    if (in_array($age_unique_id, $course_program->program_age_range)) {
+                    if (in_array($age_unique_id, $course_program->program_age_range ?? [])) {
                         $course_flag = true;
                         break;
                     }
@@ -282,7 +284,7 @@ class FrontendController extends Controller
             $language_ids = array_merge($language_ids, $school_course->language);
             $study_mode_ids = array_merge($study_mode_ids, $school_course->study_mode);
             foreach ($school_course->coursePrograms as $school_course_program) {
-                $program_age_range_ids = array_merge($program_age_range_ids, $school_course_program->program_age_range);
+                $program_age_range_ids = array_merge($program_age_range_ids, $school_course_program->program_age_range ?? []);
             }
         }
         $languages = ChooseLanguage::whereIn('unique_id', $language_ids)->get();
@@ -432,7 +434,7 @@ class FrontendController extends Controller
 
             'comments' => 'sometimes',
         ];
-        $validate = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
 
         $course_details = (object)(\Session::get('course_details') ?? []);
 
@@ -446,13 +448,13 @@ class FrontendController extends Controller
             $data['errors'][] = "Age Not Eligible in Accommodation";
             return response($data);
         }
-        if ($validate->fails()) {
-            $data['errors'] = $validate->errors();
+        if ($validator->fails()) {
+            $data['errors'] = $validator->errors();
             return response($data);
         }
 
         try {
-            $to_be_saved = $validate->validated();
+            $to_be_saved = $validator->validated();
             unset($to_be_saved['passport_copy']);
             unset($to_be_saved['financial_guarantee']);
             unset($to_be_saved['bank_statement']);
@@ -538,7 +540,8 @@ class FrontendController extends Controller
         $data['airport'] = isset($course_details->airport_id) ? CourseAirport::where('unique_id', $course_details->airport_id)->first() : null;
         $data['medical'] = isset($course_details->medical_id) ? CourseMedical::where('unique_id', $course_details->medical_id)->first() : null;
         $data['custodian'] = CourseCustodian::where('course_unique_id', $course_details->program_id)->where('age_range', 'LIKE', '%' . $custodian_under_age . '%')->first();
-
+        $data['vat_fee'] = $data['program'] ? $data['program']->tax_percent : 0;
+    
         if (isset($course_details->airport_id)) {
             if ($data['airport']) {
                 if (app()->getLocale() == 'en') {
@@ -599,9 +602,12 @@ class FrontendController extends Controller
         $program_courier_fee = readCalculationFromDB('courier_fee') ?? 0;
         $program_discount_fee = readCalculationFromDB('discount_fee') ?? 0;
         
-        $bank_transfer_fee = readCalculationFromDB('bank_transfer_fee') ?? 0;
+        $bank_charge_fee = readCalculationFromDB('bank_charge_fee') ?? 0;
         $link_fee = readCalculationFromDB('link_fee') ?? 0;
         $link_fee_converted = readCalculationFromDB('link_fee_converted') ?? 0;
+
+        $coupon_discount = readCalculationFromDB('coupon_discount') ?? 0;
+        $coupon_discount_converted = readCalculationFromDB('coupon_discount_converted') ?? 0;
 
         $program_total = readCalculationFromDB('total') ?? 0;
         
@@ -623,10 +629,9 @@ class FrontendController extends Controller
         $total_discount = $program_discount_fee + $accommodation_discount_fee;
         $total_cost = (readCalculationFromDB('total') ?? 0) + (readCalculationFromDB('accommodation_total') ?? 0)
                 + (readCalculationFromDB('airport_pickup_fee') ?? 0) + (readCalculationFromDB('medical_insurance_fee') ?? 0) + (readCalculationFromDB('custodian_fee') ?? 0)
-                - (readCalculationFromDB('discount_fee') ?? 0) - (readCalculationFromDB('accommodation_discount') ?? 0)
-                + (readCalculationFromDB('link_fee') ?? 0) + (readCalculationFromDB('bank_transfer_fee') ?? 0);
+                - (readCalculationFromDB('discount_fee') ?? 0) - (readCalculationFromDB('accommodation_discount') ?? 0);
         $sub_total = $total_cost + $total_discount;
-        $total_balance = $total_cost - $deposit_price;
+        $total_balance = $total_cost + (readCalculationFromDB('link_fee') ?? 0) + (readCalculationFromDB('bank_charge_fee') ?? 0) - $deposit_price - $coupon_discount;
 
         $calculator_values = getCurrencyConvertedValues($course_details->program_id,
             [
@@ -654,7 +659,7 @@ class FrontendController extends Controller
                 $custodian_fee,
                 $total_discount,
                 $sub_total,
-                $bank_transfer_fee,
+                $bank_charge_fee,
                 $total_cost,
                 $deposit_price,
                 $total_balance
@@ -756,13 +761,17 @@ class FrontendController extends Controller
             'value' => (float)$sub_total,
             'converted_value' => $calculator_values['values'][23]
         ];
-        $data['bank_transfer_fee'] = [
-            'value' => (float)$bank_transfer_fee,
+        $data['bank_charge_fee'] = [
+            'value' => (float)$bank_charge_fee,
             'converted_value' => $calculator_values['values'][24]
         ];
         $data['link_fee'] = [
             'value' => $link_fee,
             'converted_value' => $link_fee_converted
+        ];
+        $data['coupon_discount'] = [
+            'value' => $coupon_discount,
+            'converted_value' => $coupon_discount_converted
         ];
         $data['total_cost'] = [
             'value' => (float)$total_cost,
@@ -825,24 +834,23 @@ class FrontendController extends Controller
             'terms' => 'required',
             'signature' => 'required',
         ];
-
-        $validate = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
 
         $data['success'] = false;
-        if ($validate->fails()) {
-            $data['errors'] = $validate->errors();
+        if ($validator->fails()) {
+            $data['errors'] = $validator->errors();
             return response($data);
         }
 
         try {
-            $to_be_saved = $validate->validated();
+            $to_be_saved = $validator->validated();
             unset($to_be_saved['student_guardian_full_name']);
             unset($to_be_saved['registraion_terms_conditions_privacy_policy']);
             unset($to_be_saved['terms']);
 
             $mail_pdf_data = array();
 
-            // Course_details
+            // course_details
             $to_be_saved['school_id'] = $course_details->school_id ?? 0;
             $to_be_saved['course_id'] = $course_details->program_id ?? 0;
             $to_be_saved['course_program_id'] = $course_details->program_unique_id;
@@ -852,6 +860,8 @@ class FrontendController extends Controller
             $to_be_saved['age_selected'] = $course_details->age_selected;
             $to_be_saved['program_duration'] = $course_details->program_duration ?? null;
             $to_be_saved['accommodation_id'] = $course_details->accommodation_id ?? 0;
+            
+            $to_be_saved['coupon_id'] = $course_details->coupon_id ?? 0;
             
             // course_reservation_details
             $to_be_saved['accommodation_start_date'] = isset($course_reservation_details->accommodation_start_date) ? Carbon::create($course_reservation_details->accommodation_start_date)->format('Y-m-d') : null;
@@ -869,6 +879,7 @@ class FrontendController extends Controller
 
             $course_medical = (isset($course_details->company_name) && isset($course_details->deductible_up_to)) ? CourseMedical::where('course_unique_id', '' . $course_details->program_id)->where('company_name', $course_details->company_name)->where('deductible', $course_details->deductible_up_to)->first() : null;
             $to_be_saved['medical_id'] = $course_medical ? $course_medical->unique_id : 0;
+            
             // course_reservation_details
             $to_be_saved['medical_start_date']  = isset($course_reservation_details->medical_start_date) ? Carbon::create($course_reservation_details->medical_start_date)->format('Y-m-d') : null;
             $to_be_saved['medical_end_date']  = isset($course_reservation_details->medical_end_date) ? Carbon::create($course_reservation_details->medical_end_date)->format('Y-m-d') : null;
@@ -901,17 +912,19 @@ class FrontendController extends Controller
             $to_be_saved['custodian_fee'] = $course_reservation_details->custodian_fee ?? 0;
             
             $to_be_saved['sub_total'] = $course_reservation_details->sub_total ?? 0;
-            $to_be_saved['bank_transfer_fee'] = $course_reservation_details->bank_transfer_fee ?? 0;
+            $to_be_saved['bank_charge_fee'] = $course_reservation_details->bank_charge_fee ?? 0;
             $to_be_saved['link_fee'] = $course_reservation_details->link_fee ?? 0;
             $to_be_saved['link_fee_converted'] = $course_reservation_details->link_fee_converted ?? 0;
             $to_be_saved['total_discount'] = $course_reservation_details->total_discount ?? 0;
             $to_be_saved['total_cost'] = $course_reservation_details->total_cost ?? 0;
             $to_be_saved['deposit_price'] = $course_reservation_details->deposit_price ?? 0;
+            $to_be_saved['coupon_discount'] = $course_reservation_details->coupon_discount ?? 0;
+            $to_be_saved['coupon_discount_converted'] = $course_reservation_details->coupon_discount_converted ?? 0;
             $to_be_saved['total_balance'] = $course_reservation_details->total_balance ?? 0;
 
             $to_be_saved['other_currency'] = $course_reservation_details->other_currency;
             
-            // course_reservation_details
+            // course_register_details
             $to_be_saved['fname'] = $course_register_details->fname ?? '';
             $to_be_saved['mname'] = $course_register_details->mname ?? '';
             $to_be_saved['lname'] = $course_register_details->lname ?? '';
@@ -969,26 +982,59 @@ class FrontendController extends Controller
             $to_be_saved['total_cost_fixed'] = $calculator_values['values'][0];
             $deposit_price_converted = $calculator_values['values'][1];
 
+            $course_application = CourseApplication::updateOrCreate($to_be_saved, $to_be_saved + [
+                'user_id' => auth()->id(),
+                'paid' => isset($course_reservation_details->deposit_price) ? 0 : 1,
+                'status' => 'received'
+            ]);
+            $calc = Calculator::where('calc_id', request()->ip())->latest()->first();
+            $course_application_fee = $calc->replicate()->setTable('course_application_fees');
+            $course_application_fee->course_application_id = $course_application->id;
+            $course_application_fee->save();
+
+            event(new CourseApplicationStatus($course_application));
+
+            $mail_data = (object)(getCourseApplicationPrintData($course_application->id, auth()->user()->id) + getCourseApplicationMailData($course_application->id, auth()->user()->id));
+
+            $coupon = Coupon::where('unique_id', $to_be_saved['coupon_id'])->first();
+            if ($coupon) {
+                $coupon_usage = new CouponUsage;
+                $coupon_usage->coupon_id = '' . $coupon->unique_id;
+                $coupon_usage->course_application_id = $course_application->id;
+                $coupon_usage->save();
+
+                if ($coupon->affiliate_id) {
+                    $affilate_user = User::where('id', $coupon->affiliate_id)->first();
+                    if ($affilate_user) {
+                        sendEmail('affiliate_commission', $affilate_user->email, $mail_data, app()->getLocale());
+                    }
+                }
+            }
+
             if (isset($course_reservation_details->deposit_price)) {
-                $course_application = CourseApplication::updateOrCreate($to_be_saved, $to_be_saved + ['user_id' => auth()->id(), 'paid' => 0, 'status' => 'received']);
-                $calc = Calculator::where('calc_id', request()->ip())->latest()->first();
-                $course_application_fee = $calc->replicate()->setTable('course_application_fees');
-                $course_application_fee->course_application_id = $course_application->id;
-                $course_application_fee->save();
-
-                event(new CourseApplicationStatus($course_application));
+                $telrManager = new \TelrGateway\TelrManager();
+    
+                $billingParams = [
+                    'first_name' => $course_application->fname,
+                    'sur_name' => ($course_application->mname ? $course_application->mname . ' ' : '') . $course_application->lname,
+                    'address_1' => $course_application->address,
+                    'address_2' => '',
+                    'city' => $to_be_saved['city_contact'],
+                    'region' => auth()->user()->state,
+                    'zip' => auth()->user()->zip,
+                    'country' =>  $to_be_saved['country_contact'],
+                    'email' =>  $to_be_saved['email'],
+                ];
+                if ($course_application) {
+                    $data['data'] = 'Success';
+                    $data['success'] = true;
+                }
+    
+                $url = $telrManager->pay(time() . rand(00, 99), $deposit_price_converted, __('Frontend.program_registration_fee'), $billingParams)->redirect();
+                $data['url'] = $url->getTargetUrl();
             } else {
-                $course_application = CourseApplication::updateOrCreate($to_be_saved, $to_be_saved + ['user_id' => auth()->id(), 'paid' => 1, 'status' => 'received']);
-                $calc = Calculator::where('calc_id', request()->ip())->latest()->first();
-                $course_application_fee = $calc->replicate()->setTable('course_application_fees');
-                $course_application_fee->course_application_id = $course_application->id;
-                $course_application_fee->save();
-
                 toastr()->success(__('Frontend.user_course_booked'));
 
-                event(new CourseApplicationStatus($course_application));
-
-                $mail_data = (object)(getCourseApplicationPrintData($course_application->id, auth()->user()->id) + getCourseApplicationMailData($course_application->id, auth()->user()->id));
                 sendEmail('course_booked', auth()->user()->email, $mail_data, app()->getLocale());
 
                 $course_application->order_id = generateOrderId();
@@ -1001,7 +1047,7 @@ class FrontendController extends Controller
                 $transaction->store_id = 999999;
                 $transaction->test_mode = 0;
                 $transaction->amount = $mail_pdf_data['total_balance']['converted_value'];
-                $transaction->description = __('Admin/backend.program_registration_fee');
+                $transaction->description = __('Frontend.program_registration_fee');
                 $transaction->success_url = '';
                 $transaction->canceled_url = '';
                 $transaction->declined_url = '';
@@ -1028,26 +1074,6 @@ class FrontendController extends Controller
                 return response()->json($data);
             }
 
-            $telrManager = new \TelrGateway\TelrManager();
-
-            $billingParams = [
-                'first_name' => $course_application->fname,
-                'sur_name' => ($course_application->mname ? $course_application->mname . ' ' : '') . $course_application->lname,
-                'address_1' => $course_application->address,
-                'address_2' => '',
-                'city' => $to_be_saved['city_contact'],
-                'region' => auth()->user()->state,
-                'zip' => auth()->user()->zip,
-                'country' =>  $to_be_saved['country_contact'],
-                'email' =>  $to_be_saved['email'],
-            ];
-            if ($course_application) {
-                $data['data'] = 'Success';
-                $data['success'] = true;
-            }
-
-            $url = $telrManager->pay(time() . rand(00, 99), $deposit_price_converted, __('Admin/backend.program_registration_fee'), $billingParams)->redirect();
-            $data['url'] = $url->getTargetUrl();
         } catch(\Exception $e) {
             $data['errors'] = 'Something Went Wrong Check Log File';
 			$data['catch_error'] = $e->getMessage();
@@ -1161,7 +1187,7 @@ class FrontendController extends Controller
                 $course_programs = $course->coursePrograms;
                 if (in_array($request->language, $course->language)) {
                     foreach ($course_programs as $course_program) {
-                        $age_range_ids = array_merge($age_range_ids, $course_program->program_age_range);
+                        $age_range_ids = array_merge($age_range_ids, $course_program->program_age_range ?? []);
                     }
                 }
             }
@@ -1188,7 +1214,7 @@ class FrontendController extends Controller
                 $course_programs = $course->coursePrograms;
                 if (in_array($request->language, $course->language)) {
                     foreach ($course_programs as $course_program) {
-                        if (in_array($request->age, $course_program->program_age_range)) {
+                        if (in_array($request->age, $course_program->program_age_range ?? [])) {
                             $course_has_age_range = true;
                         }
                     }
@@ -1220,7 +1246,7 @@ class FrontendController extends Controller
                 $course_programs = $course->coursePrograms;
                 if (in_array($request->language, $course->language) && $request->country == $course->country_id) {
                     foreach ($course_programs as $course_program) {
-                        if (in_array($request->age, $course_program->program_age_range)) {
+                        if (in_array($request->age, $course_program->program_age_range ?? [])) {
                             $course_has_age_range = true;
                         }
                     }
@@ -1252,7 +1278,7 @@ class FrontendController extends Controller
                 $course_programs = $course->coursePrograms;
                 if (in_array($request->language, $course->language) && $request->country == $course->country_id && in_array($request->program_type, $course->program_type)) {
                     foreach ($course_programs as $course_program) {
-                        if (in_array($request->age, $course_program->program_age_range)) {
+                        if (in_array($request->age, $course_program->program_age_range ?? [])) {
                             $course_has_age_range = true;
                         }
                     }
@@ -1285,7 +1311,7 @@ class FrontendController extends Controller
                 if (in_array($request->language, $course->language) && $request->country == $course->country_id && in_array($request->program_type, $course->program_type)
                     && in_array($request->study_mode, $course->study_mode)) {
                     foreach ($course_programs as $course_program) {
-                        if (in_array($request->age, $course_program->program_age_range)) {
+                        if (in_array($request->age, $course_program->program_age_range ?? [])) {
                             $course_has_age_range = true;
                         }
                     }
@@ -1318,7 +1344,7 @@ class FrontendController extends Controller
                 if (in_array($request->language, $course->language) && $request->country == $course->country_id && in_array($request->program_type, $course->program_type)
                     && in_array($request->study_mode, $course->study_mode) && $request->city == $course->city_id) {
                     foreach ($course_programs as $course_program) {
-                        if (in_array($request->age, $course_program->program_age_range)) {
+                        if (in_array($request->age, $course_program->program_age_range ?? [])) {
                             $course_has_age_range = true;
                         }
                     }
@@ -1350,7 +1376,7 @@ class FrontendController extends Controller
                     && in_array($request->study_mode, $course->study_mode) && $request->city == $course->city_id
                     && ((app()->getLocale() == 'en' && $request->program_name == $course->program_name) || (app()->getLocale() != 'en' && $request->program_name == $course->program_name_ar))) {
                     foreach ($course_programs as $course_program) {
-                        if (in_array($request->age, $course_program->program_age_range)) {
+                        if (in_array($request->age, $course_program->program_age_range ?? [])) {
                             if (!$program_duration_start) $program_duration_start = (int)$course_program->program_duration_start;
                             if ($program_duration_start > $course_program->program_duration_start) $program_duration_start = (int)$course_program->program_duration_start;
                             if (!$program_duration_end) $program_duration_end = (int)$course_program->program_duration_end;
@@ -1385,7 +1411,7 @@ class FrontendController extends Controller
             if (isset($condition->age) && $condition->age) {
                 $course_program_satisified = false;
                 foreach ($course_programs as $course_program) {
-                    if (in_array($condition->age, $course_program->program_age_range)) {
+                    if (in_array($condition->age, $course_program->program_age_range ?? [])) {
                         $course_program_satisified = true;
                     }
                 }
@@ -1454,7 +1480,7 @@ class FrontendController extends Controller
                 foreach ($course_programs as $course_program) {
                     $course_program_satisified = true;
                     if (isset($condition->age) && $condition->age) {
-                        if (!in_array($condition->age, $course_program->program_age_range)) {
+                        if (!in_array($condition->age, $course_program->program_age_range ?? [])) {
                             $course_program_satisified = false;
                         }
                     }
@@ -1470,7 +1496,7 @@ class FrontendController extends Controller
                     }
                     if ($course_program_satisified) {
                         $result_course->course_program = $course_program;
-                        $result_course->age_range = getCourseProgramAgeRange($course_program->program_age_range);
+                        $result_course->age_range = getCourseProgramAgeRange($course_program->program_age_range ?? []);
                         break;
                     }
                 }
@@ -1495,11 +1521,11 @@ class FrontendController extends Controller
             'program_name' => 'sometimes',
             'program_duration' => 'sometimes',
         ];
-        $validate = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
 
         $data['success'] = false;
-        if ($validate->fails()) {
-            $data['errors'] = $validate->errors();
+        if ($validator->fails()) {
+            $data['errors'] = $validator->errors();
             return response($data);
         }
         

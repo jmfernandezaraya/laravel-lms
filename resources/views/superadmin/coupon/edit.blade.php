@@ -55,22 +55,22 @@
                     
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="name">{{__('Admin/backend.coupon_name')}} *:</label>
+                            <label for="name">{{__('Admin/backend.coupon_name')}} <span class="text-danger">*</span></label>
                             <input value="{{ $coupon->name }}" name="name" type="text" class="form-control" placeholder="{{__('Admin/backend.coupon_name')}}">
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="code">{{__('Admin/backend.discount_code')}} *:</label>
+                            <label for="code">{{__('Admin/backend.discount_code')}} <span class="text-danger">*</span></label>
                             <input value="{{ $coupon->code }}" name="code" type="text" class="form-control" placeholder="{{__('Admin/backend.discount_code')}}">
                             <small class="form-text text-muted">{{__('Admin/backend.discount_code_description')}}</small>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="discount">{{__('Admin/backend.discount_value')}} *:</label>
+                            <label for="discount">{{__('Admin/backend.discount_value')}} <span class="text-danger">*</span></label>
                             <input value="{{ $coupon->discount }}" name="discount" type="text" class="form-control" placeholder="{{__('Admin/backend.discount')}}">
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="type">{{__('Admin/backend.discount_type')}} *:</label>
+                            <label for="type">{{__('Admin/backend.discount_type')}} <span class="text-danger">*</span></label>
                             <select class="form-control" name="type">
                                 <option value="percent" {{ $coupon->type == 'percent' ? 'selected' : ''}}>{{__('Admin/backend.percentage')}}</option>
                                 <option value="fixed" {{ $coupon->type == 'fixed' ? 'selected' : ''}}>{{__('Admin/backend.fixed_amount')}}</option>
@@ -79,7 +79,7 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="number_of_weeks">{{__('Admin/backend.usage_rules')}} *:</label>
+                            <label for="number_of_weeks">{{__('Admin/backend.usage_rules')}} <span class="text-danger">*</span></label>
                             <input value="{{ $coupon->number_of_weeks }}" name="number_of_weeks" type="number" class="form-control" placeholder="{{__('Admin/backend.number_of_weeks')}}">
                             <small class="form-text text-muted">{{__('Admin/backend.usage_rules_description')}}</small>
                         </div>
@@ -92,11 +92,11 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="start_date">{{__('Admin/backend.start_date')}} *:</label>
+                            <label for="start_date">{{__('Admin/backend.start_date')}} <span class="text-danger">*</span></label>
                             <input value="{{ $coupon->start_date }}" name="start_date" type="date" class="form-control" placeholder="{{__('Admin/backend.start_date')}}">
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="end_date">{{__('Admin/backend.end_date')}} *:</label>
+                            <label for="end_date">{{__('Admin/backend.end_date')}} <span class="text-danger">*</span></label>
                             <input value="{{ $coupon->end_date }}" name="end_date" type="date" class="form-control" placeholder="{{__('Admin/backend.end_date')}}">
                         </div>
                     </div>

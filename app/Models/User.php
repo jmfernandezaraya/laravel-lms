@@ -8,6 +8,7 @@ use App\Models\Frontend\LikedSchool;
 use App\Models\SuperAdmin\SchoolAdminCourseEditPermissions;
 use App\Models\SuperAdmin\UserSchool;
 use App\Models\SuperAdmin\UserPermission;
+use App\Models\SuperAdmin\AffiliateTransaction;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -48,8 +49,8 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'school' => 'array',
-        'country' => 'array',
-        'city' => 'array',
+        // 'country' => 'array',
+        // 'city' => 'array',
         'branch' => 'array',
         'branch_ar' => 'array',
         'email_verified_at' => 'datetime',
@@ -149,6 +150,14 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(UserPermission::class, 'user_id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function transactions()
+    {
+        return $this->hasMany(AffiliateTransaction::class, 'affiliate_id');
+    }    
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

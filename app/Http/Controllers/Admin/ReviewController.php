@@ -52,14 +52,14 @@ class ReviewController extends Controller
      */
     public function store(Request $request)
     {
-        $validate = \Validator::make(
+        $validator = \Validator::make(
             $request->all(),
             [
                 'review' => 'required',
             ]
         );
-        if ($validate->fails()) {
-            return response()->json(['errors' => $validate->errors()]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()]);
         }
 
         $review = new Review;
@@ -120,16 +120,16 @@ class ReviewController extends Controller
     public function update(Request $request, $id)
     {
         $review = Review::find($id);
-        $validate = \Validator::make(
+        $validator = \Validator::make(
             $request->all(),
             [
                 'review' => 'required',
             ]
         );
-        if ($validate->fails()) {
-            return response()->json(['errors' => $validate->errors()]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()]);
         }
-        $save = $validate->validated();
+        $save = $validator->validated();
 
         $review->review = $request->review;
         $review->quality_teaching = $request->quality_teaching;

@@ -970,9 +970,12 @@ function reloadInsertCalculationIntoDB()
     $inpu['medical_insurance_fee'] = 0;
     $inpu['custodian_fee'] = 0;
     
-    $inpu['bank_transfer_fee'] = 0;
+    $inpu['bank_charge_fee'] = 0;
     $inpu['link_fee'] = 0;
     $inpu['link_fee_converted'] = 0;
+
+    $inpu['coupon_discount'] = 0;
+    $inpu['coupon_discount_converted'] = 0;
 
     $inpu['total'] = 0;
 
@@ -1620,7 +1623,7 @@ function getCourseAgeRanges($course_id)
 
     $age_range_ids = [];
     foreach($course_programs as $course_program) {
-        $age_range_ids = array_unique(array_merge($age_range_ids, $course_program->program_age_range));
+        $age_range_ids = array_unique(array_merge($age_range_ids, $course_program->program_age_range ?? []));
     }
     $age_ranges = \App\Models\SuperAdmin\ChooseProgramAge::whereIn('unique_id', $age_range_ids)->pluck('age')->toArray();
     sort($age_ranges); 
@@ -1633,7 +1636,7 @@ function getCourseMinMaxAgeRange($course_id)
 
     $age_range_ids = [];
     foreach($course_programs as $course_program) {
-        $age_range_ids = array_unique(array_merge($age_range_ids, $course_program->program_age_range));
+        $age_range_ids = array_unique(array_merge($age_range_ids, $course_program->program_age_range ?? []));
     }
     $age_ranges = \App\Models\SuperAdmin\ChooseProgramAge::whereIn('unique_id', $age_range_ids)->pluck('age')->toArray();
     sort($age_ranges); 
@@ -1794,7 +1797,7 @@ function getCourseApplicationPrintData($id, $user_id, $is_admin = false)
             $course_application->custodian_fee,
             $course_application->sub_total,
             // $course_application->link_fee,
-            $course_application->bank_transfer_fee,
+            $course_application->bank_charge_fee,
             $course_application->total_discount,
             $course_application->total_cost,
             $course_application->deposit_price,
@@ -1824,11 +1827,13 @@ function getCourseApplicationPrintData($id, $user_id, $is_admin = false)
     $data['medical_insurance_fee'] = [ 'value' => (float)$course_application->medical_insurance_fee, 'converted_value' => $calculator_values['values'][20] ];
     $data['custodian_fee'] = [ 'value' => (float)($course_application->custodian_fee), 'converted_value' => $calculator_values['values'][21] ];
     $data['sub_total'] = [ 'value' => (float)$course_application->sub_total, 'converted_value' => $calculator_values['values'][22] ];
-    $data['bank_transfer_fee'] = [ 'value' => (float)$course_application->bank_transfer_fee, 'converted_value' => $calculator_values['values'][23] ];
+    $data['bank_charge_fee'] = [ 'value' => (float)$course_application->bank_charge_fee, 'converted_value' => $calculator_values['values'][23] ];
     $data['link_fee'] = [ 'value' => (float)$course_application->link_fee, 'converted_value' => (float)$course_application->link_fee_converted ];
+    $data['vat_fee'] = $data['program'] ? $data['program']->tax_percent : 0;
     $data['total_discount'] = [ 'value' => (float)$course_application->total_discount, 'converted_value' => $calculator_values['values'][24] ];
     $data['total_cost'] = [ 'value' => (float)$course_application->total_cost, 'converted_value' => $calculator_values['values'][25] ];
     $data['deposit_price'] = [ 'value' => (float)$course_application->deposit_price, 'converted_value' => $calculator_values['values'][26] ];
+    $data['coupon_discount'] = [ 'value' => (float)$course_application->coupon_discount, 'converted_value' => (float)$course_application->coupon_discount_converted ];
     $data['total_balance'] = [ 'value' => (float)$course_application->total_balance, 'converted_value' => $calculator_values['values'][27] ];
     
     $amount_added = 0;
@@ -1959,12 +1964,14 @@ function getCourseApplicationMailData($id, $user_id)
 /**
  ******************** User Functions ********************
  */
-function getUserSchools($user_id) {
+function getUserSchools($user_id)
+{
     $user = \App\Models\User::find($user_id);
     return \App\Models\SuperAdmin\School::whereIn('id', $user ? $user->school : [])->get();
 }
 
-function getUserSchoolNames($user_id, $is_array = true) {
+function getUserSchoolNames($user_id, $is_array = true)
+{
     $user = \App\Models\User::find($user_id);
     $user_schools = \App\Models\SuperAdmin\School::with('name')->whereIn('id', $user ? $user->school : []);
     $user_school_names = $is_array ? [] : '';
@@ -1986,12 +1993,14 @@ function getUserSchoolNames($user_id, $is_array = true) {
     return $user_school_names;
 }
 
-function getUserCountries($user_id) {
+function getUserCountries($user_id)
+{
     $user = \App\Models\User::find($user_id);
     return \App\Models\SuperAdmin\Country::whereIn('id', $user ? $user->country : [])->get();
 }
 
-function getUserCountryNames($user_id, $is_array = true) {
+function getUserCountryNames($user_id, $is_array = true)
+{
     $user = \App\Models\User::find($user_id);
     $user_countries = \App\Models\SuperAdmin\Country::whereIn('id', $user ? $user->country : [])->get();
     $user_country_names = $is_array ? [] : '';
@@ -2011,12 +2020,14 @@ function getUserCountryNames($user_id, $is_array = true) {
     return $user_country_names;
 }
 
-function getUserCities($user_id) {
+function getUserCities($user_id)
+{
     $user = \App\Models\User::find($user_id);
     return \App\Models\SuperAdmin\City::whereIn('id', $user ? $user->city : [])->get();
 }
 
-function getUserCityNames($user_id, $is_array = true) {
+function getUserCityNames($user_id, $is_array = true)
+{
     $user = \App\Models\User::find($user_id);
     $user_cities = \App\Models\SuperAdmin\City::whereIn('id', $user ? $user->city : [])->get();
     $user_city_names = $is_array ? [] : '';
@@ -2036,7 +2047,8 @@ function getUserCityNames($user_id, $is_array = true) {
     return $user_city_names;
 }
 
-function setEmailTemplateSMTP($template) {
+function setEmailTemplateSMTP($template)
+{
     $email_template = \App\Models\SuperAdmin\EmailTemplate::where('template', $template)->first();
     if ($email_template->smtp_server && $email_template->smtp_user_name && $email_template->smtp_password) {
         config('mail.mailers.smtp.host', $email_template->smtp_server);
@@ -2049,7 +2061,8 @@ function setEmailTemplateSMTP($template) {
     return;
 }
 
-function unsetEmailTemplateSMTP() {
+function unsetEmailTemplateSMTP()
+{
     $site_setting = \App\Models\Setting::where('setting_key', 'site')->first();
     $site_setting_value = unserialize($site_setting->setting_value);
 
@@ -2060,7 +2073,8 @@ function unsetEmailTemplateSMTP() {
     config('mail.mailers.smtp.encryption', $site_setting_value['smtp']['crypto']);
 }
 
-function sendEmail($template, $receiver = '', $data, $locale, array $files = [], $subject = '') {
+function sendEmail($template, $receiver = '', $data, $locale, array $files = [], $subject = '')
+{
     $email_template = \App\Models\SuperAdmin\EmailTemplate::where('template', $template)->first();
     if ($email_template->smtp_server && $email_template->smtp_user_name && $email_template->smtp_password) {
         config('mail.mailers.smtp.host', $email_template->smtp_server);

@@ -25,6 +25,8 @@ use App\Models\SuperAdmin\ChooseStartDate;
 use App\Models\SuperAdmin\ChooseStudyMode;
 use App\Models\SuperAdmin\ChooseStudyTime;
 use App\Models\SuperAdmin\Course;
+use App\Models\SuperAdmin\Coupon;
+use App\Models\SuperAdmin\CouponUsage;
 use App\Models\SuperAdmin\CourseAccommodation;
 use App\Models\SuperAdmin\CourseAccommodationUnderAge;
 use App\Models\SuperAdmin\CourseAirport;
@@ -88,7 +90,7 @@ class CourseControllerFrontend extends Controller
             $start_dates[] = $course->start_date;
             $course_programs = $course->coursePrograms;
             foreach ($course_programs as $course_program) {
-                $program_age_range_ids = array_merge($program_age_range_ids, $course_program->program_age_range);
+                $program_age_range_ids = array_merge($program_age_range_ids, $course_program->program_age_range ?? []);
             }
             $start_date_ids = array_merge($start_date_ids, $course->start_date);
             $study_mode_ids = array_merge($study_mode_ids, $course->study_mode);
@@ -505,12 +507,33 @@ class CourseControllerFrontend extends Controller
             // Updating program cost here
             insertCalculationIntoDB('program_cost', $multiple_program_cost);
 
-            insertCalculationIntoDB('bank_transfer_fee', $course_program->bank_transfer_fee == null ? 0 : $course_program->bank_transfer_fee);
-            $data['link_fee_vat'] = $course_program->tax_percent;
+            insertCalculationIntoDB('bank_charge_fee', $course_program->bank_charge_fee == null ? 0 : $course_program->bank_charge_fee);
+            $data['vat_fee'] = $course_program->tax_percent;
             $data['link_fee'] = $course->link_fee_enable ? true : false;
             $course_link_fee = $course->link_fee_enable ? (($course_program->link_fee == null || $course_program->tax_percent == null) ? 0 : $course_program->link_fee + $course_program->link_fee * $course_program->tax_percent / 100) : 0;
             insertCalculationIntoDB('link_fee', getCurrencyReverseConvertedValue($course->unique_id, $course_link_fee));
             insertCalculationIntoDB('link_fee_converted', $course_link_fee);
+            
+            $today_date = \Carbon\Carbon::now();
+            $data['coupon_exist'] = Coupon::where('course_unique_ids', 'LIKE', '%' . \Session::get('course_unique_id') . '%')
+                ->get()->collect()->values()->filter(function($value) use ($request, $today_date) {
+                    if ($value['start_date']) {
+                        if ($value['end_date']) {
+                            if ($value['start_date'] <= $today_date && $value['end_date'] >= $today_date) {
+                                return true;
+                            }
+                        } else {
+                            return true;
+                        }
+                    } else {
+                        if ($value['end_date']) {
+                            if ($value['end_date'] >= $today_date) {
+                                return true;
+                            }
+                        } 
+                    }
+                    return false;
+                })->count();
         }
 
         if (!$request->program_unique_id || !$request->date_set || !$request->program_duration) {
@@ -533,9 +556,11 @@ class CourseControllerFrontend extends Controller
         insertCalculationIntoDB('courier_fee', 0);
         insertCalculationIntoDB('peak_time_fee', 0);
         insertCalculationIntoDB('discount_fee', 0);
-        insertCalculationIntoDB('bank_transfer_fee', 0);
+        insertCalculationIntoDB('bank_charge_fee', 0);
         insertCalculationIntoDB('link_fee', 0);
         insertCalculationIntoDB('link_fee_converted', 0);
+        insertCalculationIntoDB('coupon_discount', 0);
+        insertCalculationIntoDB('coupon_discount_converted', 0);
         insertCalculationIntoDB('total', 0);
         $this->calculator->setTotalPrice();
     }
@@ -567,11 +592,13 @@ class CourseControllerFrontend extends Controller
         $peak_time_fee = readCalculationFromDB('peak_time_fee') ?? 0;
         $courier_fee = readCalculationFromDB('courier_fee') ?? 0;
         $discount_fee = readCalculationFromDB('discount_fee') ?? 0;
-        $bank_transfer_fee = readCalculationFromDB('bank_transfer_fee') ?? 0;
+        $bank_charge_fee = readCalculationFromDB('bank_charge_fee') ?? 0;
         $link_fee = readCalculationFromDB('link_fee') ?? 0;
         $link_fee_converted = readCalculationFromDB('link_fee_converted') ?? 0;
         $total = (readCalculationFromDB('total') ?? 0) - $discount_fee;
         $sub_total = $this->calculator->SubTotalCalculation();
+        $coupon_discount = $this->calculator->CouponDiscount();
+        $coupon_discount_converted = $this->calculator->CouponDiscountConverted();
         $total_cost = $this->calculator->TotalCalculation();
         $calculator_values = getCurrencyConvertedValues($this->getCourseId(),
             [
@@ -586,7 +613,7 @@ class CourseControllerFrontend extends Controller
                 $discount_fee,
                 $total,
                 $sub_total,
-                $bank_transfer_fee,
+                $bank_charge_fee,
                 $total_cost,
             ]
         );
@@ -634,13 +661,17 @@ class CourseControllerFrontend extends Controller
             'value' => $sub_total,
             'converted_value' => $calculator_values['values'][9]
         ];
-        $data['bank_transfer_fee'] = [
-            'value' => $bank_transfer_fee,
+        $data['bank_charge_fee'] = [
+            'value' => $bank_charge_fee,
             'converted_value' => $calculator_values['values'][10]
         ];
         $data['link_fee'] = [
             'value' => $link_fee,
             'converted_value' => $link_fee_converted
+        ];
+        $data['coupon_discount'] = [
+            'value' => $coupon_discount,
+            'converted_value' => $coupon_discount_converted
         ];
         $data['total_cost'] = [
             'value' => $total_cost,
@@ -1535,6 +1566,64 @@ class CourseControllerFrontend extends Controller
         ];
 
         $data['request'] = $request->all();
+
+        return response($data);
+    }
+
+    public function applyCoupon(Request $request)
+    {
+        $data['success'] = false;
+
+        $now = \Carbon\Carbon::now()->format('Y-m-d');
+        if ($request->code && $request->course_unique_id) {
+            $coupon = Coupon::where('code', $request->code)
+                ->where('course_unique_ids', 'LIKE', '%' . $request->course_unique_id . '%')
+                ->get()->collect()->values()->filter(function($value) use ($request, $now) {
+                    if ($value['start_date']) {
+                        if ($value['end_date']) {
+                            if ($value['start_date'] <= $now && $value['end_date'] >= $now) {
+                                return true;
+                            }
+                        } else {
+                            return true;
+                        }
+                    } else {
+                        if ($value['end_date']) {
+                            if ($value['end_date'] >= $now) {
+                                return true;
+                            }
+                        } 
+                    }
+                    return false;
+                })->first();
+            if ($coupon) {
+                $monday = strtotime('monday this week');
+                $coupon_usages = CouponUsage::where('coupon_id', $coupon->unique_id)->where('created_at', '>=', $monday)->count();
+                if ($coupon_usages >= $coupon->number_of_weeks) {
+                    $data['message'] = __('Frontend.coupon_excessed_usage_of_week');
+                } else {
+                    $data['coupon_id'] = $coupon->unique_id;
+                    $data['success'] = true;
+                    
+                    $coupon_discount = 0;
+                    $coupon_discount_converted = 0;
+                    $total_amount = $this->calculator->TotalCalculation();
+                    if ($coupon->type == 'percent') {
+                        $coupon_discount = $total_amount * $coupon->discount / 100;
+                        $coupon_discount_converted = getCurrencyConvertedValue($request->course_unique_id, $coupon_discount);
+                    } else {
+                        $coupon_discount_converted = $coupon->discount;
+                        $coupon_discount = getCurrencyReverseConvertedValue($request->course_unique_id, $coupon_discount_converted);
+                    }
+                    insertCalculationIntoDB('coupon_discount', $coupon_discount);
+                    insertCalculationIntoDB('coupon_discount_converted', $coupon_discount_converted);
+                }
+            } else {
+                $data['message'] = __('Frontend.coupon_does_not_exist');
+            }
+        } else {
+            $data['message'] = __('Frontend.please_insert_code_and_select_course');
+        }
 
         return response($data);
     }

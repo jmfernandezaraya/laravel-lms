@@ -23,8 +23,10 @@
                         <tr>
                             <th>#</th>
                             <td>{{__('Admin/backend.order_id')}}</td>
-                            <th>{{__('Admin/backend.user_name')}}</th>
-                            <th>{{__('Admin/backend.user_email')}}</th>
+                            @if (auth('superadmin')->check())
+                                <th>{{__('Admin/backend.user_name')}}</th>
+                                <th>{{__('Admin/backend.user_email')}}</th>
+                            @endif
                             <th>{{__('Admin/backend.name')}}</th>
                             <th>{{__('Admin/backend.email')}}</th>
                             <th>{{__('Admin/backend.mobile')}}</th>
@@ -35,8 +37,10 @@
                             <th>{{__('Admin/backend.programme_name')}}</th>
                             <th>{{__('Admin/backend.start_date')}}</th>
                             <th>{{__('Admin/backend.duration')}}</th>
-                            <th>{{__('Admin/backend.course_cost')}}</th>
-                            <th>{{__('Admin/backend.amount_paid')}}</th>
+                            @if (auth('superadmin')->check())
+                                <th>{{__('Admin/backend.course_cost')}}</th>
+                                <th>{{__('Admin/backend.amount_paid')}}</th>
+                            @endif
                             <th>{{__('Admin/backend.application_status')}}</th>
                             <th>{{__('Admin/backend.action')}}</th>
                         </tr>
@@ -46,8 +50,10 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $details->order_id }}</td>
-                                <td>{{ get_language() == 'en' ? $details->User->first_name_en : $details->User->first_name_ar }} {{ get_language() == 'en' ? $details->User->last_name_en : $details->User->last_name_ar }}</td>
-                                <td>{{ $details->User->email ?? '-' }}</td>
+                                @if (auth('superadmin')->check())
+                                    <td>{{ get_language() == 'en' ? $details->User->first_name_en : $details->User->first_name_ar }} {{ get_language() == 'en' ? $details->User->last_name_en : $details->User->last_name_ar }}</td>
+                                    <td>{{ $details->User->email ?? '-' }}</td>
+                                @endif
                                 <td>{{ $details->fname ?? '' }} {{ $details->mname ?? '' }} {{ $details->lname ?? '' }}</td>
                                 <td>{{ $details->email }}</td>
                                 <td>{{ $details->User->telephone ?? $details->mobile }}</td>
@@ -58,8 +64,10 @@
                                 <td>{{ $details->course->program_name }}</td>
                                 <td>{{ $details->start_date }}</td>
                                 <td>{{ $details->program_duration }}</td>
-                                <td>{{ toFixedNumber(getCurrencyConvertedValue($details->course_id, $details->total_cost)) }}</td>
-                                <td>{{ toFixedNumber(getCurrencyConvertedValue($details->course_id, $details->deposit_price)) }}</td>
+                                @if (auth('superadmin')->check())
+                                    <td>{{ toFixedNumber(getCurrencyConvertedValue($details->course_id, $details->total_cost)) }}</td>
+                                    <td>{{ toFixedNumber(getCurrencyConvertedValue($details->course_id, $details->deposit_price)) }}</td>
+                                @endif
                                 <td>{{ isset($details->courseApplicationApprove->approve) ? ucwords($details->courseApplicationApprove->approve  == 1 ? 'Application Recevived' : 'Send To School Admin' ) : 'Application Recevived' }}</td>
                                 <td>
                                     <div class="btn-group">

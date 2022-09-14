@@ -282,7 +282,7 @@
         $(new_clone_form).find('[name="program_id[]"]').attr('id', 'program_id' + (course_program_clone_index + 1));
         if (clone_clear_data) $(new_clone_form).find('[name="link_fee[]"]').val('');
         if (clone_clear_data) $(new_clone_form).find('[name="tax_percent[]"]').val('');
-        if (clone_clear_data) $(new_clone_form).find('[name="bank_transfer_fee[]"]').val('');
+        if (clone_clear_data) $(new_clone_form).find('[name="bank_charge_fee[]"]').val('');
         if (clone_clear_data) $(new_clone_form).find('[name="program_registration_fee[]"]').val('');
         if (clone_clear_data) $(new_clone_form).find('[name="program_duration[]"]').val('');
         if (clone_clear_data) $(new_clone_form).find('[name="deposit[]"]').val('');
