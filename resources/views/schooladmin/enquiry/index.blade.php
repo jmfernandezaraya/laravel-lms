@@ -38,7 +38,7 @@
 
                             <td>
                                 <div class="btn-group">
-                                    <a data-toggle="modal" data-target="#EnquiryModal{{$loop->iteration}}" href  = "javascript:void(0);" class="btn btn-info btn-sm fa fa-send"></a>
+                                    <a data-toggle="modal" data-target="#EnquiryModal{{$loop->iteration}}" href="javascript:void(0);" class="btn btn-info btn-sm fa fa-send"></a>
 
 
                                 </div>

@@ -338,7 +338,7 @@
         <table class="table mt-2">
             <tbody>
                 <tr>
-                    <th><h3>{{__('Frontend.how_you_heard_about_link_for_study_abroad')}}:</h3></th>
+                    <th><h3>{{ str_replace("###SITE_NAME", __('Frontend.how_you_heard_about_site_name'), __('Frontend.site_name')) }}:</h3></th>
                 </tr>
             </tbody>
         </table>

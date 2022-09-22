@@ -47,7 +47,7 @@
                         {{--
                         <td>
                             <div class="btn-group">
-                                <a href  = "" class="btn btn-info btn-sm fa fa-pencil"></a>
+                                <a href="" class="btn btn-info btn-sm fa fa-pencil"></a>
                                 <form action="" method="post">
                                     <button onclick="return confirmDelete()" class="btn btn-danger btn-sm fa fa-trash"></button>
                                 </form>

@@ -683,12 +683,20 @@ form > * {
 .bg-danger {
     background-color: #fe7c96;
 }
+
 .color-white {
     color: #ffffff;
 }
 .color-danger {
     color: #fe7c96;
 }
+.color-info {
+    color: #1575c1;
+}
+.color-primary {
+    color: #a347ff;
+}
+
 .cursor-default {
     cursor: default;
 }

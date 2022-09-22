@@ -95,8 +95,8 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="name">{{__('Admin/backend.choose_school')}}:</label>
-                            <select onchange="changeSchool()" class="form-control" id="school_name" name="school_name">
+                            <label for="school_ids">{{__('Admin/backend.choose_school')}}:</label>
+                            <select onchange="changeSchool()" class="form-control" id="school_ids" name="school_ids">
                                 <option value="">{{__('Admin/backend.select_school')}}</option>
                                 @foreach ($choose_schools as $choose_school)
                                     <option value="{{ $choose_school }}">{{ $choose_school }}</option>
@@ -104,15 +104,15 @@
                             </select>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="country_name">{{__('Admin/backend.choose_country')}}:</label>
-                            <select onchange="changeUserCountry()" class="3col active" id="country_name" name="country[]" multiple="multiple">
+                            <label for="country_ids">{{__('Admin/backend.choose_country')}}:</label>
+                            <select onchange="changeUserCountry()" class="3col active" id="country_ids" name="country_ids[]" multiple="multiple">
                             </select>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="city_name">{{__('Admin/backend.choose_city')}}:</label>
-                            <select onchange="changeCity()" class="3col active" id="city_name" name="city[]" multiple="multiple">
+                            <label for="city_ids">{{__('Admin/backend.choose_city')}}:</label>
+                            <select onchange="changeCity()" class="3col active" id="city_ids" name="city_ids[]" multiple="multiple">
                             </select>
                         </div>
                         <div class="form-group col-md-6">

@@ -34,7 +34,7 @@
                             <td>{{$customer->created_at->diffForHumans()}}</td>
                             <td>
                                 <div class="btn-group">
-                                    <a href  = "#" data-toggle="modal" data-target="#SendMessageModal{{$customer->id}}" class="btn btn-info btn-sm fa fa-telegram"></a>
+                                    <a href="#" data-toggle="modal" data-target="#SendMessageModal{{$customer->id}}" class="btn btn-info btn-sm fa fa-telegram"></a>
 
 
                                 </div>

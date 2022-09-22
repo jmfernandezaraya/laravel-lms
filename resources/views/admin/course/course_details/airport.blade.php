@@ -30,7 +30,7 @@
                                 <td>{{$airport->week_selected_fee}}</td>
                                 <td>{{$airport->created_at->diffForHumans()}}</td>
                                 <td>
-                                    <div class ="btn-group">
+                                    <div class="btn-group">
                                         <form method="post" action="{{ auth('superadmin')->check() ? route('superadmin.course.airport.delete', $airport->unique_id) : route('schooladmin.course.airport.delete', $airport->unique_id) }}">
                                             @csrf
                                             @method('DELETE')

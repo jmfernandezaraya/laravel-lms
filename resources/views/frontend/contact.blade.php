@@ -14,7 +14,7 @@
     <!-- End Breadcrumbs -->
 
     <!-- ======= Contact Section ======= -->
-    <section id="contact" class="contact mt-3">
+    <section id="contact-form" class="contact mt-3">
         <div class="container" data-aos="fade-up">
             <form action="{{route('contact-us')}}" method="post" role="form" class="php-email-form">
                 {{csrf_field()}}

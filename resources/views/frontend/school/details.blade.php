@@ -116,7 +116,7 @@
                                             </tr>
                                             <tr>
                                                 <th scope="row">{{__('Frontend.number_of_classrooms')}}</th>
-                                                <td>{{$school->opening_hours}}</td>
+                                                <td>{{$school->number_of_classrooms}}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">{{__('Frontend.class_size')}}</th>
@@ -427,7 +427,7 @@
                         <div class="school-review border-bottom">
                             <div class="mb-3 pb-2 border-bottom">
                                 <div class="d-flex align-items-center">
-                                    <h5 class="mr-3">{{ $school_top_review_course_application->fname }} {{ $school_top_review_course_application->mname }} {{ $school_top_review_course_application->lname }} - {{$school->country ? (app()->getLocale() == 'en' ? $school->country->name : $school->country->name_ar) : '-' }}</h5>
+                                    <h5 class="mr-3">{{ $school_top_review_course_application->fname }} {{ $school_top_review_course_application->mname }} {{ $school_top_review_course_application->lname }} - {{ $school_top_review_course_application->nationality }}</h5>
                                     <div class="score-wrap">
                                         <span class="stars" style="width: {{$school_top_review_rating * 20}}%">
                                             <i class="fa fa-star" aria-hidden="true"></i>
@@ -611,7 +611,7 @@
                             </div>
                         </div>
                     @endforeach
-                    <p class="mt-2">{{__('Frontend.verified_review_student_has_booked')}}</p>
+                    <p class="mt-2">{{__('Frontend.verified_review_student_has_booked')}} {{__('Frontend.site_name')}}.</p>
                 </div>
             @endif
 

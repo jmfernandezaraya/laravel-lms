@@ -160,7 +160,7 @@
             <br><br>
 
             <div id="clone_program_form0" >
-                <div class ="clone_program_with_clone_data">
+                <div class="clone_program_with_clone_data">
                     <h2>{{__('Admin/backend.program_cost')}}</h2>
                     <br>
 

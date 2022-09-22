@@ -118,11 +118,11 @@
                                                     @endif
                                                 </div>
                                                 <div class="program-information">
-                                                    <div class="program-name">{{ app()->getLocale() == 'en' ? $course->program_name : $course->program_name_ar }}</div>
-                                                    <div class="program-lessons">{{__('Frontend.lessons_w')}}: {{ $course->lessons_per_week }} {{__('Frontend.lessons')}}</div>
-                                                    <div class="program-hours">{{__('Frontend.hours_w')}}: {{ $course->hours_per_week }} {{__('Frontend.hours')}}</div>
-                                                    <div class="program-level">{{__('Frontend.level_required')}}: {{ app()->getLocale() == 'en' ? $course->program_level : $course->program_level_ar }}</div>
-                                                    <div class="program-age_range">{{__('Frontend.age_range')}}: {{ $$school->age_range['min_age'] }} - {{ $$school->age_range['max_age'] }}  {{__('Frontend.years')}}</div>
+                                                    <div class="program-name">{{ app()->getLocale() == 'en' ? $school->course->program_name : $school->course->program_name_ar }}</div>
+                                                    <div class="program-lessons">{{__('Frontend.lessons_w')}}: {{ $school->course->lessons_per_week }} {{__('Frontend.lessons')}}</div>
+                                                    <div class="program-hours">{{__('Frontend.hours_w')}}: {{ $school->course->hours_per_week }} {{__('Frontend.hours')}}</div>
+                                                    <div class="program-level">{{__('Frontend.level_required')}}: {{ app()->getLocale() == 'en' ? $school->course->program_level : $school->course->program_level_ar }}</div>
+                                                    <div class="program-age_range">{{__('Frontend.age_range')}}: {{ $school->age_range['min_age'] }} - {{ $school->age_range['max_age'] }}  {{__('Frontend.years')}}</div>
                                                 </div>
                                             </div>
                                             <div class="school-content">

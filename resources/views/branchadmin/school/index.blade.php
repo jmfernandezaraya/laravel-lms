@@ -35,10 +35,10 @@
                                 <td>{{$school->created_at->diffForHumans()}}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <a href  = "{{route('school.edit', $school->unique_id)}}" class="btn btn-info btn-sm fa fa-pencil"></a>
+                                        <a href="{{route('school.edit', $school->unique_id)}}" class="btn btn-info btn-sm fa fa-pencil"></a>
                                         <form action="{{route('school.destroy', $school->unique_id)}}" method="post">
                                             @csrf
-                                            {{ method_field('delete') }}
+                                            @method('DELETE')
                                             <button type="submit" onclick="return confirmDelete()" class="btn btn-danger btn-sm fa fa-trash"></button>
                                         </form>
                                     </div>

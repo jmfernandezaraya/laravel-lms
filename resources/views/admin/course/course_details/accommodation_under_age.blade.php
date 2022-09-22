@@ -26,7 +26,7 @@
                                 <td>
                                     <div class="btn-group">
                                         &nbsp;
-                                        <a href ="javascript:void(0)" data-toggle="modal" data-target="#edit_modal{{$underage->id}}"  type="button" class ="btn btn-primary btn-sm fa fa-pencil"></a>
+                                        <a href ="javascript:void(0)" data-toggle="modal" data-target="#edit_modal{{$underage->id}}"  type="button" class="btn btn-primary btn-sm fa fa-pencil"></a>
                                         @php $confirm = __('Admin/backend.are_you_sure_delete'); @endphp
                                         <a type="button" onclick="return confirm('<?= $confirm ?>')" href="{{ auth('superadmin')->check() ? route('superadmin.course_accommodation_under_age_delete', $underage->id) : route('schooladmin.course_accommodation_under_age_delete', $underage->id) }}" class="btn btn-sm btn-danger fa fa-trash"> </a>
                                     </div>

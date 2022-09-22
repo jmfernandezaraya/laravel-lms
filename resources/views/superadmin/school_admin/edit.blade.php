@@ -100,8 +100,8 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="name">{{__('Admin/backend.choose_school')}}:</label>
-                            <select onchange="changeSchool()" class="form-control" id="school_name" name="school_name">
+                            <label for="school_ids">{{__('Admin/backend.choose_school')}}:</label>
+                            <select onchange="changeSchool()" class="form-control" id="school_ids" name="school_ids">
                                 <option value="">{{__('Admin/backend.select_school')}}</option>
                                 @foreach ($choose_schools as $choose_school)
                                     <option value="{{ $choose_school }}" {{ $choose_school == $school_name ? 'selected' : '' }}>{{ $choose_school }}</option>
@@ -109,20 +109,20 @@
                             </select>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="country_name">{{__('Admin/backend.choose_country')}}:</label>
-                            <select onchange="changeUserCountry()" class="3col active" id="country_name" name="country[]" multiple="multiple">
+                            <label for="country_ids">{{__('Admin/backend.choose_country')}}:</label>
+                            <select onchange="changeUserCountry()" class="3col active" id="country_ids" name="country_ids[]" multiple="multiple">
                                 @foreach ($choose_countries as $choose_country)
-                                    <option value="{{ $choose_country->id }}" {{ in_array($choose_country->id, $school_admin->country) ? 'selected' : '' }}>{{ app()->getLocale() == 'en' ?  $choose_country->name : $choose_country->name_ar }}</option>
+                                    <option value="{{ $choose_country->id }}" {{ in_array($choose_country->id, $school_admin->country_ids) ? 'selected' : '' }}>{{ app()->getLocale() == 'en' ?  $choose_country->name : $choose_country->name_ar }}</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="city_name">{{__('Admin/backend.choose_city')}}:</label>
-                            <select onchange="changeCity()" class="3col active" id="city_name" name="city[]" multiple="multiple">
+                            <label for="city_ids">{{__('Admin/backend.choose_city')}}:</label>
+                            <select onchange="changeCity()" class="3col active" id="city_ids" name="city_ids[]" multiple="multiple">
                                 @foreach ($choose_cities as $choose_city)
-                                    <option value="{{ $choose_city->id }}" {{ in_array($choose_city->id, $school_admin->city) ? 'selected' : '' }}>{{ app()->getLocale() == 'en' ? $choose_city->name : $choose_city->name_ar }}</option>
+                                    <option value="{{ $choose_city->id }}" {{ in_array($choose_city->id, $school_admin->city_ids) ? 'selected' : '' }}>{{ app()->getLocale() == 'en' ? $choose_city->name : $choose_city->name_ar }}</option>
                                 @endforeach
                             </select>
                         </div>

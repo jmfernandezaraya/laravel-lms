@@ -67,14 +67,14 @@ class SchoolAdminController extends Controller
             'last_name_en' => 'required',
             'last_name_ar' => 'required',
             'password' => 'required',
-            'school_name' => 'required',
+            'school_ids' => 'required',
             'email' => 'required|unique:users',
             'telephone' => 'required',
             'mobile' => 'sometimes',
             'another_mobile' => 'sometimes',
             'image' => 'mimes:jpg,jpeg,png,bmp',
-            'country' => 'sometimes',
-            'city' => 'sometimes',
+            'country_ids' => 'sometimes',
+            'city_ids' => 'sometimes',
         ];
         $validator = \Validator::make($request->all(), $rules, [
             'first_name_en.required' => __('Admin/backend.errors.first_name_english'),
@@ -86,7 +86,7 @@ class SchoolAdminController extends Controller
             'telephone.required' => __('Admin/backend.errors.telephone_required'),
             'email.required' => __('Admin/backend.errors.email_required'),
             'image.mimes' => __('Admin/backend.errors.image_must_be_in'),
-            'school_name.required' => 'School Name is Required'
+            'school_ids.required' => 'School Name is Required'
         ]);
 
         if ($validator->fails()) {
@@ -273,9 +273,9 @@ class SchoolAdminController extends Controller
             'mobile' => 'sometimes',
             'another_mobile' => 'sometimes',
             'image' => 'mimes:jpg,jpeg,png,bmp',
-            'school_name' => 'required',
-            'country' => 'sometimes',
-            'city' => 'sometimes',
+            'school_ids' => 'required',
+            'country_ids' => 'sometimes',
+            'city_ids' => 'sometimes',
         ];
         $validator = \Validator::make($request->all(), $rules, [
             'first_name_en.required' => __('Admin/backend.errors.first_name_english'),
@@ -286,7 +286,7 @@ class SchoolAdminController extends Controller
             'telephone.required' => __('Admin/backend.errors.telephone_required'),
             'email.required' => __('Admin/backend.errors.email_required'),
             'image.mimes' => __('Admin/backend.errors.image_must_be_in'),
-            'school_name.required' => 'School Name is Required'
+            'school_ids.required' => 'School Name is Required'
         ]);
 
         $password = $request->has('password') ? \Hash::make($request->password) : null;

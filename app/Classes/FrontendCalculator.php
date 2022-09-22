@@ -540,7 +540,7 @@ class FrontendCalculator
         $course = Course::where('unique_id', '' . $course_id)->first();
         $value = [];
         if ($course && $total > 0) {
-            $value['currency'] = $course->getCurrency->name;
+            $value['currency'] = app()->getLocale() == 'en' ? $course->getCurrency->name : $course->getCurrency->name_ar;
             $value['price'] = round($total * $course->getCurrency->exchange_rate);
         }
 
@@ -552,7 +552,7 @@ class FrontendCalculator
         $course = Course::where('unique_id', '' . $course_id)->first();
         $value = [];
         if ($course && $total > 0) {
-            $value['currency'] = $course->getCurrency->name;
+            $value['currency'] = app()->getLocale() == 'en' ? $course->getCurrency->name : $course->getCurrency->name_ar;
             if ($course->getCurrency->exchange_rate) {
                 $value['price'] = (float)(round((float)($total / $course->getCurrency->exchange_rate) * 100) / 100);
             } else {
@@ -593,7 +593,7 @@ class FrontendCalculator
     {
         $course = Course::where('unique_id', '' . $course_id)->first();
         $result_values = [
-            'currency' => $course ? $course->getCurrency->name : '',
+            'currency' => $course ? (app()->getLocale() == 'en' ? $course->getCurrency->name : $course->getCurrency->name_ar) : '',
             'values' => [],
         ];
         foreach ($values as $value) {
@@ -611,7 +611,7 @@ class FrontendCalculator
     {
         $course = Course::where('unique_id', '' . $course_id)->first();
         $result_values = [
-            'currency' => $course ? $course->getCurrency->name : '',
+            'currency' => $course ? (app()->getLocale() == 'en' ? $course->getCurrency->name : $course->getCurrency->name_ar) : '',
             'values' => [],
         ];
         foreach ($values as $value) {

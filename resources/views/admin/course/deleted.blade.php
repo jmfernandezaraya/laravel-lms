@@ -76,7 +76,7 @@
                                 <td>{{ $course->school && $course->school->city ? (get_language() == 'en' ? $course->school->city->name : $course->school->city->name_ar) : '-' }}</td>
                                 <td>{{ $course->school && $course->school->country ? (get_language() == 'en' ? $course->school->country->name : $course->school->country->name_ar) : '-' }}</td>
                                 <td>{{ $course->branch }}</td>
-                                <td>{{ is_null($course->getCurrency) ? '-' : $course->getCurrency->name }}</td>
+                                <td>{{ is_null($course->getCurrency) ? '-' : (app()->getLocale() == 'en' ? $course->getCurrency->name : $course->getCurrency->name_ar) }}</td>
                                 <td>{{ app()->getLocale() == 'en' ? $course->program_name : $course->program_name_ar }}</td>
                                 <td>{{ $course->program_level }}</td>
                                 <td>{{ $course->lessons_per_week }}</td>

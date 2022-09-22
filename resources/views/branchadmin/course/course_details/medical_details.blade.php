@@ -27,7 +27,7 @@
                                 <td>{{$medical->{'medical_insurance_note_'.get_language() } }}</td>
                                 <td>{{$medical->created_at->diffForHumans()}}</td>
                                 <td>
-                                    <div class ="btn-group">
+                                    <div class="btn-group">
                                         <a type="button" data-toggle="modal" data-target="#edit_modal{{$medical->id}}" class="btn btn-sm btn-primary fa fa-pencil" onclick="tinymceInit();"> </a>
                                         @php $confirm = __('Admin/backend.are_you_sure_delete'); @endphp
                                         <a type="button" onclick="return confirm('<?= $confirm ?>')" href="{{route('superadmin.airport_delete', $medical->id)}}" class="btn btn-sm btn-danger fa fa-trash"> </a>

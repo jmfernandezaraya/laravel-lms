@@ -121,37 +121,32 @@ class FrontendController extends Controller
             $school->age_ranges = [];
             foreach ($school->courses as $school_course) {
                 foreach ($school_course->coursePrograms as $school_course_program) {
-                    if ($school_course_program->discount_per_week != ' -' && $school_course_program->discount_per_week != ' %' && 
-                        (($school_course_program->discount_start_date <= $now && $school_course_program->discount_end_date >= $now)
-                        || ($school_course_program->x_week_selected && $school_course_program->x_week_start_date <= $now && $school_course_program->x_week_end_date >= $now))) {
-                        if ($school->course) {
-                            $school->course = $school_course;
-                            $school->course_program = $school_course_program;
-                            $school->age_range = getCourseProgramAgeRange($school->course_program->program_age_range ?? []);
-                        }
-                    }
+                    $school->course = $school_course;
+                    $school->course_program = $school_course_program;
+                    $school->age_range = getCourseProgramAgeRange($school->course_program->program_age_range ?? []);
                     $school->age_ranges = array_unique(array_merge($school->age_ranges, ChooseProgramAge::whereIn('unique_id', $school_course_program->program_age_range ?? [])->orderBy('age', 'asc')->pluck('age')->toArray()));
+                    break;
                 }
             }
         }
         $promotion_schools = School::with('courses.coursePrograms')->whereIn('id', $course_promotion_school_ids)->where('is_active', true)->get();
-        foreach ($promotion_schools as $school) {
-            $school->course = null;
-            $school->course_program = null;
-            $school->age_range = [ 'min_age' => 0, 'max_age' => 0 ];
-            $school->age_ranges = [];
-            foreach ($school->courses as $school_course) {
-                foreach ($school_course->coursePrograms as $school_course_program) {
-                    if ($school_course_program->discount_per_week != ' -' && $school_course_program->discount_per_week != ' %' && 
-                        (($school_course_program->discount_start_date <= $now && $school_course_program->discount_end_date >= $now)
-                        || ($school_course_program->x_week_selected && $school_course_program->x_week_start_date <= $now && $school_course_program->x_week_end_date >= $now))) {
-                        if ($school->course) {
-                            $school->course = $school_course;
-                            $school->course_program = $school_course_program;
-                            $school->age_range = getCourseProgramAgeRange($school->course_program->program_age_range ?? []);
+        foreach ($promotion_schools as $promotion_school) {
+            $promotion_school->course = null;
+            $promotion_school->course_program = null;
+            $promotion_school->age_range = [ 'min_age' => 0, 'max_age' => 0 ];
+            $promotion_school->age_ranges = [];
+            foreach ($promotion_school->courses as $promotion_school_course) {
+                foreach ($promotion_school_course->coursePrograms as $promotion_school_course_program) {
+                    if ($promotion_school_course_program->discount_per_week != ' -' && $promotion_school_course_program->discount_per_week != ' %' && 
+                        (($promotion_school_course_program->discount_start_date <= $now && $promotion_school_course_program->discount_end_date >= $now)
+                        || ($promotion_school_course_program->x_week_selected && $promotion_school_course_program->x_week_start_date <= $now && $promotion_school_course_program->x_week_end_date >= $now))) {
+                        if (!$promotion_school->course) {
+                            $promotion_school->course = $promotion_school_course;
+                            $promotion_school->course_program = $promotion_school_course_program;
+                            $promotion_school->age_range = getCourseProgramAgeRange($promotion_school->course_program->program_age_range ?? []);
                         }
                     }
-                    $school->age_ranges = array_unique(array_merge($school->age_ranges, ChooseProgramAge::whereIn('unique_id', $school_course_program->program_age_range ?? [])->orderBy('age', 'asc')->pluck('age')->toArray()));
+                    $promotion_school->age_ranges = array_unique(array_merge($promotion_school->age_ranges, ChooseProgramAge::whereIn('unique_id', $promotion_school_course_program->program_age_range ?? [])->orderBy('age', 'asc')->pluck('age')->toArray()));
                 }
             }
         }
@@ -201,7 +196,6 @@ class FrontendController extends Controller
         }
 
         $ages = [];
-
         $schools = [];
         $country_schools = School::with('courses.coursePrograms')->where('country_id', $id)->where('is_active', true)->get();
         foreach ($country_schools as $school) {
@@ -363,8 +357,8 @@ class FrontendController extends Controller
 
         if (!isset($course_details->program_id)) return redirect()->route('frontend.course');
 
-        $course = Course::where('unique_id', '' . $course_details->program_id)->first();
-        $course_country = $course ? $course->country_id : '';
+        $course = Course::with('country')->where('unique_id', '' . $course_details->program_id)->first();
+        $course_country = $course ? ($course->country ? $course->country->name : '') : '';
 
         $course_program = CourseProgram::where('unique_id', '' . $course_details->program_unique_id)->first();
         $age_ranges = $course_program ? $course_program->program_age_range : [];
@@ -984,8 +978,9 @@ class FrontendController extends Controller
 
             $course_application = CourseApplication::updateOrCreate($to_be_saved, $to_be_saved + [
                 'user_id' => auth()->id(),
+                'order_number' => getCourseApplicationOrderNumber(),
                 'paid' => isset($course_reservation_details->deposit_price) ? 0 : 1,
-                'status' => 'received'
+                'status' => 'received',
             ]);
             $calc = Calculator::where('calc_id', request()->ip())->latest()->first();
             $course_application_fee = $calc->replicate()->setTable('course_application_fees');
@@ -1033,7 +1028,7 @@ class FrontendController extends Controller
                 $url = $telrManager->pay(time() . rand(00, 99), $deposit_price_converted, __('Frontend.program_registration_fee'), $billingParams)->redirect();
                 $data['url'] = $url->getTargetUrl();
             } else {
-                toastr()->success(__('Frontend.user_course_booked'));
+                toastr()->success(str_replace("###SITE_NAME###", __('Frontend.site_name'), __('Frontend.user_course_booked')));
 
                 sendEmail('course_booked', auth()->user()->email, $mail_data, app()->getLocale());
 
@@ -1073,7 +1068,6 @@ class FrontendController extends Controller
 
                 return response()->json($data);
             }
-
         } catch(\Exception $e) {
             $data['errors'] = 'Something Went Wrong Check Log File';
 			$data['catch_error'] = $e->getMessage();
@@ -1106,7 +1100,7 @@ class FrontendController extends Controller
         $telr = $telrManager->handleTransactionResponse(request());
         $cart_id = $_GET['cart_id'];
 
-        $telr->status == 1 ? toastr()->success(__('Frontend.user_course_booked')) : toastr()->error(__('Frontend.payment.failed'));
+        $telr->status == 1 ? toastr()->success(str_replace("###SITE_NAME###", __('Frontend.site_name'), __('Frontend.user_course_booked'))) : toastr()->error(__('Frontend.payment.failed'));
 
         $course_applications = CourseApplication::where('user_id', auth()->user()->id)->where('order_id',  $cart_id)
             ->where('paid',  1)->get();

@@ -563,7 +563,7 @@
                             </div>
                         </div>
 
-                        <h4 class="best">{{__('Admin/backend.how_you_heard_about_link_for_study_abroad')}}</h4>
+                        <h4 class="best">{{str_replace("###SITE_NAME", __('Admin/backend.how_you_heard_about_site_name'), __('Admin/backend.site_name'))}}</h4>
                         <div class="row">
                             <div class="col-md-12">
                                 <p>{{ implode($course_application->heard_where, ", ") }}</p>

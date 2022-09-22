@@ -298,7 +298,7 @@ class SettingController extends Controller
 
         $front_pages = FrontPage::all();
         
-        return view('superadmin.setting.site', compact('setting_value', 'setting_value', 'front_pages'));
+        return view('superadmin.setting.site', compact('setting_value', 'front_pages'));
     }
 
     public function updateSite(Request $request)
@@ -346,6 +346,14 @@ class SettingController extends Controller
                 'registration_conditions' => '',
                 'terms_and_conditions' => '',
                 'private_policy' => '',
+            ],
+            'course_application' => [
+                'order_number_prefix' => '',
+                'order_number_digits' => '',
+            ],
+            'recaptcha' => [
+                'site_key' => '',
+                'secret_key' => '',
             ]
         ];
 
@@ -386,13 +394,25 @@ class SettingController extends Controller
         if (isset($request->course_reservation_registration_conditions)) {
             $setting_value['course_reservation_links']['registration_conditions'] = $request->course_reservation_registration_conditions;
         }
-        
         if (isset($request->course_reservation_terms_and_conditions)) {
             $setting_value['course_reservation_links']['terms_and_conditions'] = $request->course_reservation_terms_and_conditions;
         }
-        
         if (isset($request->course_reservation_private_policy)) {
             $setting_value['course_reservation_links']['private_policy'] = $request->course_reservation_private_policy;
+        }
+
+        if (isset($request->ca_order_number_prefix)) {
+            $setting_value['course_application']['order_number_prefix'] = $request->ca_order_number_prefix;
+        }
+        if (isset($request->ca_order_number_digits)) {
+            $setting_value['course_application']['order_number_digits'] = $request->ca_order_number_digits;
+        }
+
+        if (isset($request->recaptcha_site_key)) {
+            $setting_value['recaptcha']['site_key'] = $request->recaptcha_site_key;
+        }
+        if (isset($request->recaptcha_secret_key)) {
+            $setting_value['recaptcha']['secret_key'] = $request->recaptcha_secret_key;
         }
 
         $site->setting_value = serialize($setting_value);

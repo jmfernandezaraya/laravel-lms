@@ -41,6 +41,8 @@
         <link rel="stylesheet" href="{{ asset('public/frontend/assets/css/style.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
 
+        <script src="https://www.google.com/recaptcha/api.js?render={{ getreCAPTCHASiteKey() }}"></script>
+
         @toastr_css
         @yield('css')
 

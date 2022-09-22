@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col-md-12">
             <div id="tab-contents" class="tab-content">
-                <div id="tab-photo" class="tab-pane fade active show">
+                <div id="tab-photos" class="tab-pane fade in active show">
                     <div id="carousel-photo" class="carousel slide" data-ride="carousel">
                         <ol class="carousel-indicators">
                             @foreach((array)$school->multiple_photos as $photos)
@@ -36,7 +36,7 @@
                     </div>
                 </div>
 
-                <div id="tab-video" class="tab-pane fade">
+                <div id="tab-video" class="tab-pane fade in">
                     <div class="row pb-2">
                         <div class="col-md-12">
                             <div id="carousel-video" class="carousel slide" data-ride="carousel">
@@ -49,7 +49,7 @@
                                 <div class="carousel-inner">
                                     @foreach((array)$school->video_url as $video_url)
                                         <div class="carousel-item active" href="#carousel-video-item{{$loop->iteration - 1}}">
-                                            <iframe class="embed-responsive-item" src="{{$video_url}}" class="video" allowfullscreen height="450"></iframe>
+                                            <iframe class="embed-responsive-item" src="{{ checkYouTubeUrl($video_url) }}" class="video" allowfullscreen height="450"></iframe>
                                         </div>
                                     @endforeach
                                 </div>
@@ -71,10 +71,10 @@
 
             <ul id="nav-tabs" class="nav nav-tabs nav-fill">
                 <li class="nav-item">
-                    <a href="" data-target="#tab-photos" data-toggle="tab" class="nav-link small text-uppercase active">{{__('Frontend.photos')}}</a>
+                    <a href="#tab-photos" data-target="#tab-photos" data-toggle="tab" role="tab" class="nav-link small text-uppercase">{{__('Frontend.photos')}}</a>
                 </li>
                 <li class="nav-item">
-                    <a href="" data-target="#tab-video" data-toggle="tab" class="nav-link small text-uppercase">{{__('Frontend.video')}}</a>
+                    <a href="#tab-video" data-target="#tab-video" data-toggle="tab" role="tab" class="nav-link small text-uppercase">{{__('Frontend.video')}}</a>
                 </li>
             </ul>
         </div>
@@ -155,7 +155,7 @@
                         <select class="form-control" id="study_mode" name="study_mode" required>
                             <option value="" selected>{{__('Frontend.select_mode')}}</option>
                             @foreach ($study_modes as $study_mode)
-                                <option value="{{$study_mode->unique_id}}">{{$study_mode->name}}</option>
+                                <option value="{{$study_mode->unique_id}}">{{ app()->getLocale() == 'en' ? $study_mode->name : $study_mode->name_ar }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -653,8 +653,8 @@
 
                         <div class="row mb-3" id="discount_code_row" style="display: none">
                             <div class="col-md-7">
-                                <input type="text" class="form-control" id="discount_code" />
-                                <input type="hidden" name="coupon_id" id="coupon_id" placeholder="{{__('Frontend.courier_fee')}}"/>
+                                <input type="text" class="form-control" id="discount_code" placeholder="{{__('Frontend.add_discount_code')}}" />
+                                <input type="hidden" name="coupon_id" id="coupon_id" />
                             </div>
                             <div class="col-md-5">
                                 <button type="button" class="btn btn-primary w-100" onclick="applyDiscount()">{{__('Frontend.apply')}}</button>
@@ -762,43 +762,62 @@
         }
 
         function callbackCalculateCourse(type) {
-            if (!fill_course_form) {
-                if (type == 'requested_for_under_age') {
+            if (type == 'requested_for_under_age') {
+                if (!fill_course_form) {
                     @if (isset($course_details->program_id) && $course_details->program_id)
                         $('#get_program_name').val('');
                         $('#get_program_name').val('{{$course_details->program_id}}').trigger('change');
                     @else
                         fill_course_form = true;
                     @endif
-                } else if (type == 'select_program') {
+                }
+            } else if (type == 'select_program') {
+                if (!fill_course_form) {
                     @if (isset($course_details->date_selected) && $course_details->date_selected)
                         $('#datepick').val('');
                         $('#datepick').val('{{$course_details->date_selected}}').trigger('change');
                     @else
                         fill_course_form = true;
                     @endif
-                } else if (type == 'date_selected') {
+                }
+            } else if (type == 'date_selected') {
+                if (!fill_course_form) {
                     @if (isset($course_details->program_duration) && $course_details->program_duration)
                         $('#program_duration').val('');
                         $('#program_duration').val('{{$course_details->program_duration}}').trigger('change');
                     @else
+                        if (!$('#program_duration').val()) {
+                            $('#program_duration').val($($("#program_duration option")[0]).attr('value')).trigger('change');
+                            calculateCourse('duration');
+                        }
                         fill_course_form = true;
                     @endif
-                } else if (type == 'duration') {
+                } else {
+                    if (!$('#program_duration').val()) {
+                        $('#program_duration').val($($("#program_duration option")[0]).attr('value')).trigger('change');
+                        calculateCourse('duration');
+                    }
+                }
+            } else if (type == 'duration') {
+                if (!fill_course_form) {
                     @if (isset($course_details->accommodation_id) && $course_details->accommodation_id)
                         $('#accom_type').val('');
                         $('#accom_type').val('{{$course_details->accom_type}}').trigger('change');
                     @else
                         fill_course_form = true;
                     @endif
-                    calculateOtherService();
+                } else {
+                    if (!$('#accom_type').val()) {
+                        $('#accom_type').val($($("#accom_type option")[0]).attr('value')).trigger('change');
+                    }
                 }
+                calculateOtherService();
             }
         }
 
         function callbackChangeAccommodation(type) {
-            if (!fill_course_form) {
-                if (type == 'accom_type') {
+            if (type == 'accom_type') {
+                if (!fill_course_form) {
                     @if (isset($course_details->room_type))
                         @if ($course_details->room_type)
                             $('#room_type').val('');
@@ -819,7 +838,9 @@
                     @else
                         fill_course_form = true;
                     @endif
-                } else if (type == 'room_type') {
+                }
+            } else if (type == 'room_type') {
+                if (!fill_course_form) {
                     @if (isset($course_details->meal_type))
                         @if ($course_details->meal_type)
                             $('#meal_type').val('');
@@ -838,7 +859,9 @@
                             @endif
                         @endif
                     @endif
-                } else if (type == 'meal_type') {
+                }
+            } else if (type == 'meal_type') {
+                if (!fill_course_form) {
                     @if (isset($course_details->accommodation_duration) && $course_details->accommodation_duration)
                         $('#accom_duration').val('');
                         $('#accom_duration').val('{{$course_details->accommodation_duration}}').trigger('change');
@@ -855,7 +878,13 @@
                             @endif
                         @endif
                     @endif
-                } else if (type == 'calculate') {
+                } else {
+                    if (!$('#accom_duration').val()) {
+                        $('#accom_duration').val($($("#accom_duration option")[0]).attr('value')).trigger('change');
+                    }
+                }
+            } else if (type == 'calculate') {
+                if (!fill_course_form) {
                     @if (isset($course_details->airport_provider) && $course_details->airport_provider)
                         $('#airport_service_provider').val('');
                         $('#airport_service_provider').val('{{$course_details->airport_provider}}').trigger('change');
@@ -906,21 +935,27 @@
         }
 
         function callbackChangeMedical(type) {
-            if (!fill_course_form) {
-                if (type == 'company_name') {
+            if (type == 'company_name') {
+                if (!fill_course_form) {
                     @if (isset($course_details->deductible_up_to))
                         $('#medical_deductible_up_to').val('');
                         $('#medical_deductible_up_to').val('{{$course_details->deductible_up_to}}').trigger('change');
                     @else
                         fill_course_form = true;
                     @endif
-                } else if (type == 'deductible_up_to') {
+                }
+            } else if (type == 'deductible_up_to') {
+                if (!fill_course_form) {
                     @if (isset($course_details->duration))
                         $('#medical_duration').val('');
                         $('#medical_duration').val('{{$course_details->duration}}').trigger('change');
                     @else
                         fill_course_form = true;
                     @endif
+                } else {
+                    if (!$('#medical_duration').val()) {
+                        $('#medical_duration').val($($("#medical_duration option")[0]).attr('value')).trigger('change');
+                    }
                 }
             }
         }

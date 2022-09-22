@@ -21,10 +21,10 @@
                                 <td>{{ucwords($form->form_name)}}</td>
                                 <td>{{$form->created_at->diffForHumans()}}</td><td>
                                     <div class="btn-group">
-                                        <a href  = "{{route('visa.edit', $form->id)}}" class="btn btn-info btn-sm fa fa-pencil"></a>
+                                        <a href="{{route('visa.edit', $form->id)}}" class="btn btn-info btn-sm fa fa-pencil"></a>
                                         <form action="{{route('visa.destroy', $form->id)}}" method="post">
                                             @csrf
-                                            {{ method_field('delete') }}
+                                            @method('DELETE')
                                             <button type="submit" onclick="return confirmDelete()" class="btn btn-danger btn-sm fa fa-trash"></button>
                                         </form>
                                     </div>

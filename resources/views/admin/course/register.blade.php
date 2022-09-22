@@ -24,6 +24,8 @@
                     <form id="course_form_register" enctype="multipart/form-data" action="{{ auth('superadmin')->check() ? route('superadmin.course_application.register.update') : route('schooladmin.course_application.register.update') }}" method="POST">
                         {{csrf_field()}}
 
+                        <input hidden id="get_country" value="{{ $course_country }}" />
+
                         <input type="hidden" value="{{ $course_application->id }}" required name="id">
 
                         <h3>{{__('Admin/backend.personal_info')}}:</h3>
@@ -261,7 +263,7 @@
                             </div>
                         </div>
 
-                        <h3 class="best">{{__('Admin/backend.how_you_heard_about_link_for_study_abroad')}}</h3>
+                        <h3 class="best">{{str_replace("###SITE_NAME", __('Admin/backend.how_you_heard_about_site_name'), __('Admin/backend.site_name'))}}</h3>
                         <div class="study m-2">
                             <div class="form-check form-check-inline">
                                 <input name="heard_where[]" class="form-check-input" type="checkbox" id="heard_where_google" value="Google" {{ in_array('Google', $course_application->heard_where) ? 'checked' : '' }}>

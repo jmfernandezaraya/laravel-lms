@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'site_name' => 'Link For Study Abroad لينك للدراسة بالخارج',
+    'site_name' => 'لينك للدراسة بالخارج',
     
     'login' => 'Log In',
     'login_description' => 'Log In Description',
@@ -301,7 +301,10 @@ return [
     'payment_received' => 'المدفوعات المستلمة',
 
     'order_id' => 'Order Id',
+    'order_number' => 'Order Number',
+    'cart_id' => 'Cart Id',
     'description' => 'Description',
+    'image' => 'Image',
     'billing_address' => 'Billing Address',
     'billing_city' => 'Billing City',
     'billing_region' => 'Billing Region',
@@ -907,7 +910,7 @@ return [
     'emergency_contact_details' => 'Emergency Contact Details',
     'full_name' => 'Full Name',
     'relative' => 'Relative',
-    'how_you_heard_about_link_for_study_abroad' => 'How you heard about link for study abroad?',
+    'how_you_heard_about_site_name' => 'How you heard about ###SITE_NAME###?',
     'friend' => 'Friend',
     'other' => 'Other',
     'comment' => 'Comment',
@@ -943,7 +946,6 @@ return [
     'course_end' => 'Course end',
     'status' => 'Status',
     'cancelled' => 'Cancelled',
-    'payments_refunds_statement' => 'Payments / Refunds Statement',
     'date_of_payment' => 'Date of Payment',
     'transaction_reference' => 'Transaction Reference',
     'deposit_for_course' => 'Deposit for Course',
@@ -1034,6 +1036,12 @@ return [
     'registration_conditions' => 'Registration Conditions',
     'terms_and_conditions' => 'Terms And Conditions',
     'private_policy' => 'Private Policy',
+    'payments' => 'Payments',
+    'course_application_order_number_prefix' => 'Course Application Order Number Prefix',
+    'course_application_order_number_digits' => 'Course Application Order Number Digits',
+    'recaptcha' => 'reCAPTCHA',
+    'site_key' => 'Site Key',
+    'secret_key' => 'Secret Key',
 
     'front_pages' => 'Front Pages',
     'identify' => 'Identify',

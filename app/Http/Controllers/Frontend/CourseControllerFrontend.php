@@ -208,6 +208,7 @@ class CourseControllerFrontend extends Controller
                 if (!$program_start_date) $program_start_date = $course_program_start_date;
                 if (!$program_end_date) $program_end_date = $course_program_end_date;
                 if ($course_program_start_date < $program_start_date) $program_start_date = $course_program_start_date;
+                if ($course_program_end_date > $program_end_date) $program_end_date = $course_program_end_date;
             }
             $data['availale_days'] = [];
             $today_date = \Carbon\Carbon::now();
@@ -329,7 +330,7 @@ class CourseControllerFrontend extends Controller
                 }
             }
             sort($program_durations);
-            $program_duration_html = '';
+            $program_duration_html = "<option value='' selected>$select</option>";
             foreach ($program_durations as $program_duration) {
                 $selected = $request->program_duration && $program_duration == $request->program_duration ? 'selected' : '';
                 $program_duration_html .= "<option value=".$program_duration." ".$selected.">".$program_duration." ".($program_duration == 1 ? __('Frontend.week') : __('Frontend.weeks'))."</option>";
@@ -1179,7 +1180,6 @@ class CourseControllerFrontend extends Controller
 
         $select = __('Frontend.select_option');
         $data = "<option value='' selected>$select</option>";
-
         if ($lang == 'en') {
             $airport_fee_names = CourseAirportFee::whereIn('course_airport_unique_id', $airport_unique_ids)->get()->unique('name')->values()->all();
             foreach ($airport_fee_names as $airport_fee_name) {
@@ -1213,7 +1213,6 @@ class CourseControllerFrontend extends Controller
 
         $select = __('Frontend.select_option');
         $data = "<option value='' selected>$select</option>";
-
         if ($lang == 'en') {
             $airport_fee_service_names = CourseAirportFee::whereIn('course_airport_unique_id', $airport_unique_ids)
                 ->where('name', $request->name)->pluck('service_name');
@@ -1249,7 +1248,6 @@ class CourseControllerFrontend extends Controller
 
         $select = __('Frontend.select_option');
         $data = "<option value='' selected>$select</option>";
-
         foreach ($medical_deductibles as $medical_deductible) {
             $data .= "<option value='".$medical_deductible."'>".$medical_deductible."</option>";
         }
@@ -1287,7 +1285,6 @@ class CourseControllerFrontend extends Controller
         
         $select = __('Frontend.select_option');
         $data = "<option value='' selected>$select</option>";
-
         for ($duration = $min_week; $duration <= $max_week; $duration++) {
             $data .= "<option value=".$duration.">".$duration." ".($duration == 1 ? __('Frontend.week') : __('Frontend.weeks'))."</option>";
         }
@@ -1597,19 +1594,16 @@ class CourseControllerFrontend extends Controller
                     return false;
                 })->first();
             if ($coupon) {
-                $monday = strtotime('monday this week');
-                $coupon_usages = CouponUsage::where('coupon_id', $coupon->unique_id)->where('created_at', '>=', $monday)->count();
-                if ($coupon_usages >= $coupon->number_of_weeks) {
-                    $data['message'] = __('Frontend.coupon_excessed_usage_of_week');
+                if ($request->duration < $coupon->number_of_weeks) {
+                    $data['message'] = str_replace("###weeks###", $coupon->number_of_weeks, __('Frontend.please_book_weeks_more_to_activate_the_discount_code'));
                 } else {
                     $data['coupon_id'] = $coupon->unique_id;
                     $data['success'] = true;
                     
                     $coupon_discount = 0;
                     $coupon_discount_converted = 0;
-                    $total_amount = $this->calculator->TotalCalculation();
                     if ($coupon->type == 'percent') {
-                        $coupon_discount = $total_amount * $coupon->discount / 100;
+                        $coupon_discount = (readCalculationFromDB('program_cost') - readCalculationFromDB('discount_fee')) * $coupon->discount / 100;
                         $coupon_discount_converted = getCurrencyConvertedValue($request->course_unique_id, $coupon_discount);
                     } else {
                         $coupon_discount_converted = $coupon->discount;

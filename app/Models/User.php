@@ -48,9 +48,9 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $casts = [
-        'school' => 'array',
-        // 'country' => 'array',
-        // 'city' => 'array',
+        'school_ids' => 'array',
+        'country_ids' => 'array',
+        'city_ids' => 'array',
         'branch' => 'array',
         'branch_ar' => 'array',
         'email_verified_at' => 'datetime',

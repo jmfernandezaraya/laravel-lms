@@ -296,7 +296,15 @@ class CustomerController extends Controller
     
     public function payments()
     {
-        return view('frontend.customer.payments');
+        $course_applications = CourseApplication::with('transaction')->where('user_id', auth()->user()->id)->get();
+        return view('frontend.customer.payments', compact('course_applications'));
+    }
+
+    public function payment($id)
+    {
+        $course_application = CourseApplication::with('transaction')->where('id', $id)->first();
+
+        return view('frontend.customer.payment', compact('id', 'course_application'));
     }
 
     public function affiliate()
@@ -321,8 +329,7 @@ class CustomerController extends Controller
     }
 
     public function transactions()
-    {
-        
+    {        
         return view('frontend.customer.transactions');
     }
 }

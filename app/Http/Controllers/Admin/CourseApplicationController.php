@@ -768,7 +768,7 @@ class CourseApplicationController extends Controller
             $coupon = Coupon::where('unique_id', $coupon_usage->coupon_id)->first();
             if ($coupon) {
                 if ($coupon->type == 'percent') {
-                    $course_application->coupon_discount = $course_application->total_balance * $coupon->discount / 100;
+                    $course_application->coupon_discount = ($course_application->program_cost - $course_application->discount_fee) * $coupon->discount / 100;
                     $course_application->coupon_discount_converted = getCurrencyConvertedValue($course->unique_id, $course_application->coupon_discount);
                 } else {
                     $course_application->coupon_discount_converted = $coupon->discount;
@@ -798,8 +798,13 @@ class CourseApplicationController extends Controller
     public function editRegister($id)
     {
         $course_application = CourseApplication::find($id);
+        $course_country = '';
+        if ($course_application) {
+            $course = Course::with('country')->where('unique_id', '' . $course_application->course_id)->first();            
+            $course_country = $course->country ? $course->country->name : '';
+        }
 
-        return view('admin.course.register', compact('course_application'));
+        return view('admin.course.register', compact('course_application', 'course_country'));
     }
 
     /**

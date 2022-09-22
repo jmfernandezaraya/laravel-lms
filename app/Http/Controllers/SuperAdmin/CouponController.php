@@ -142,8 +142,9 @@ class CouponController extends Controller
             }
 
             if ($course->getCurrency) {
-                if (!in_array($course->getCurrency->name, $choose_fields['currencies'])) {
-                    array_push($choose_fields['currencies'], $course->getCurrency->name);
+                $course_currency_name = app()->getLocale() == 'en' ? $course->getCurrency->name : $course->getCurrency->name_ar;
+                if (!in_array($course_currency_name, $choose_fields['currencies'])) {
+                    array_push($choose_fields['currencies'], $course_currency_name);
                 }
             } else {
                 if (!in_array('-', $choose_fields['currencies'])) {

@@ -25,11 +25,11 @@
                                 <div class="review-dates">
                                     <div class="review-date">
                                         <label>{{__('Frontend.booking_date')}}</label>
-                                        <p>{{ $course_application->created_at->format('d F Y') }}</p>
+                                        <p>{{ date_format(date_create($course_application->start_date), 'd F Y') }}</p>
                                     </div>
                                     <div class="review-date">
                                         <label>{{__('Frontend.complete_date')}}</label>
-                                        <p>{{ $course_application->updated_at->format('d F Y') }}</p>
+                                        <p>{{ date_format(date_create($course_application->end_date), 'd F Y') }}</p>
                                     </div>
                                 </div>
                                 <a href="{{route('frontend.dashboard.course_application', $course_application->id)}}">

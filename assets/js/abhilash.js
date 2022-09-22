@@ -441,13 +441,13 @@ function changeSearchProgramName() {
 
 
 function changeSchoolCountry() {
-    var country = $('#country_name').val();
+    var country_ids = $('#country_ids').val();
     var nationalities = $('select[name="nationality[]"]');
     for (var nationality_index = 0; nationality_index < nationalities.length; nationality_index++) {
         var nationality_options = $(nationalities[nationality_index]).find('option');
         for (var nationality_option_index = 0; nationality_option_index < nationality_options.length; nationality_option_index++) {
-            if (country) {
-                if (country == $(nationality_options[nationality_option_index]).val()) {
+            if (country_ids) {
+                if (country_ids == $(nationality_options[nationality_option_index]).val()) {
                     $(nationality_options[nationality_option_index]).hide();
                 } else {
                     $(nationality_options[nationality_option_index]).show();
@@ -457,7 +457,7 @@ function changeSchoolCountry() {
             }
         }
     }
-    if (country != '') {
+    if (country_ids != '') {
         $.post(url_school_city_by_country_list, {_token: token, id: country}, function (data) {
             $('#city_name').html(data);
         });
@@ -465,56 +465,56 @@ function changeSchoolCountry() {
 }
 
 function changeSchool() {
-    var school = $('#school_name').val();
+    var school_ids = $('#school_ids').val();
     $.post(url_school_country_list, {
         _token: token,
-        school: school,
-        empty_value: $('#country_name').hasClass('3col') && $('#country_name').hasClass('active') ? false : true
+        school_ids: school_ids,
+        empty_value: $('#country_ids').hasClass('3col') && $('#country_ids').hasClass('active') ? false : true
     }, function (data) {
-        $('#country_name').html(data);
-        if ($('#country_name').hasClass('3col') && $('#country_name').hasClass('active')) {
-            $('#country_name').multiselect('rebuild');
+        $('#country_ids').html(data);
+        if ($('#country_ids').hasClass('3col') && $('#country_ids').hasClass('active')) {
+            $('#country_ids').multiselect('rebuild');
         }
         changeUserCountry();
     });
 }
 
 function changeUserCountry() {
-    var school = $('#school_name').val();
-    var country = $('#country_name').val();
+    var school_ids = $('#school_ids').val();
+    var country_ids = $('#country_ids').val();
     $.post(url_school_city_list, {
         _token: token,
-        school: school,
-        country: country,
-        empty_value: $('#city_name').hasClass('3col') && $('#city_name').hasClass('active') ? false : true
+        school_ids: school_ids,
+        country_ids: country_ids,
+        empty_value: $('#city_ids').hasClass('3col') && $('#city_ids').hasClass('active') ? false : true
     }, function (data) {
-        $('#city_name').html(data);
-        if ($('#city_name').hasClass('3col') && $('#city_name').hasClass('active')) {
-            $('#city_name').multiselect('rebuild');
+        $('#city_ids').html(data);
+        if ($('#city_ids').hasClass('3col') && $('#city_ids').hasClass('active')) {
+            $('#city_ids').multiselect('rebuild');
         }
         changeCity();
     });
 }
 
 function changeCountry() {
-    var country = $('#country_name').val();
+    var country_ids = $('#country_ids').val();
     $.post(url_school_city_list, {
         _token: token,
-        country: country
+        country_ids: country_ids
     }, function (data) {
         $('#city_name').html(data);
     });
 }
 
 function changeCity() {
-    var school = $('#school_name').val();
-    var country = $('#country_name').val();
-    var city = $('#city_name').val();
+    var school_ids = $('#school_ids').val();
+    var country_ids = $('#country_ids').val();
+    var city_ids = $('#city_ids').val();
     $.post(url_school_branch_list, {
         _token: token,
-        school: school,
-        country: country,
-        city: city,
+        school_ids: school_ids,
+        country_ids: country_ids,
+        city_ids: city_ids,
         empty_value: $('#branch_choose').hasClass('3col') && $('#branch_choose').hasClass('active') ? false : true
     }, function (data) {
         $('#branch_choose').html(data);
@@ -1205,12 +1205,13 @@ function applyDiscount() {
     $.post(apply_coupon_url, {
         _token: $('meta[name="csrf-token"]').attr('content'),
         code: $('#discount_code').val(),
-        course_unique_id: $('#get_program_name').val()
+        course_unique_id: $('#get_program_name').val(),
+        duration: $('#program_duration').val(),
     }).done(function (data) {
         $('#loader').hide();
+        
         if (data.success == true) {
             $('#coupon_discount_table').show();
-            
             $('#coupon_id').val(data.coupon_id);
             reloadCourseCalclulator();
         } else if (data.message) {
@@ -3024,18 +3025,20 @@ function initLanguageSection() {
 
 ///////////////////////////////////////////
 function checkFinancialGurantee() {
-    var country_name = $("#get_country").val();
-    var study_finance = $("#study_finance").val();
-
-    if ((country_name == 'USA' || country_name == 'usa' || country_name == 'united states of america')) {
-        $("#bank_statement").show();
-    } else {
-        $("#bank_statement").hide();
-    }
-    if (study_finance == 'personal') {
-        $("#financial_guarantee").hide();
-    } else {
-        $("#financial_guarantee").show();
+    if ($("#get_country") && $("#get_country").length) {
+        var country_name = $("#get_country").val();
+        var study_finance = $("#study_finance").val();
+    
+        if ((country_name == 'USA' || country_name == 'usa' || country_name == 'united states of america')) {
+            $("#bank_statement").show();
+        } else {
+            $("#bank_statement").hide();
+        }
+        if (study_finance == 'scholarship') {
+            $("#financial_guarantee").show();
+        } else {
+            $("#financial_guarantee").hide();
+        }
     }
 }
 
@@ -3081,4 +3084,5 @@ $(document).ready(function() {
     initCkeditor();
     initCkeditors();
     initLanguageSection();
+    checkFinancialGurantee();
 });

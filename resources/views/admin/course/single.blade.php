@@ -73,7 +73,7 @@
                                 <select class="form-control" id="study_mode" name="study_mode" required>
                                     <option value="" selected>{{__('Admin/backend.select_mode')}}</option>
                                     @foreach ($study_modes as $study_mode)
-                                        <option value="{{$study_mode->unique_id}}">{{$study_mode->name}}</option>
+                                        <option value="{{$study_mode->unique_id}}">{{ app()->getLocale() == 'en' ? $study_mode->name : $study_mode->name_ar }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -653,43 +653,58 @@
         }
 
         function callbackCalculateCourse(type) {
-            if (!fill_course_form) {
-                if (type == 'requested_for_under_age') {
+            if (type == 'requested_for_under_age') {
+                if (!fill_course_form) {
                     @if (isset($course_application->course_id) && $course_application->course_id)
                         $('#get_program_name').val('');
                         $('#get_program_name').val('{{$course_application->course_id}}').trigger('change');
                     @else
                         fill_course_form = true;
                     @endif
-                } else if (type == 'select_program') {
+                }
+            } else if (type == 'select_program') {
+                if (!fill_course_form) {
                     @if (isset($course_application->start_date) && $course_application->start_date)
                         $('#datepick').val('');
                         $('#datepick').val('{{ $course_application->start_date->format("d-m-Y") }}').trigger('change');
                     @else
                         fill_course_form = true;
                     @endif
-                } else if (type == 'date_selected') {
+                }
+            } else if (type == 'date_selected') {
+                if (!fill_course_form) {
                     @if (isset($course_application->program_duration) && $course_application->program_duration)
                         $('#program_duration').val('');
                         $('#program_duration').val('{{$course_application->program_duration}}').trigger('change');
                     @else
                         fill_course_form = true;
                     @endif
-                } else if (type == 'duration') {
+                } else {
+                    if (!$('#program_duration').val()) {
+                        $('#program_duration').val($($("#program_duration option")[0]).attr('value')).trigger('change');
+                        calculateCourse('duration');
+                    }
+                }
+            } else if (type == 'duration') {
+                if (!fill_course_form) {
                     @if (isset($course_application->accommodation_id) && $course_application->accommodation_id)
                         $('#accom_type').val('');
                         $('#accom_type').val('{{$course_application->accom_type}}').trigger('change');
                     @else
                         fill_course_form = true;
                     @endif
-                    calculateOtherService();
+                } else {
+                    if (!$('#accom_type').val()) {
+                        $('#accom_type').val($($("#accom_type option")[0]).attr('value')).trigger('change');
+                    }
                 }
+                calculateOtherService();
             }
         }
 
         function callbackChangeAccommodation(type) {
-            if (!fill_course_form) {
-                if (type == 'accom_type') {
+            if (type == 'accom_type') {
+                if (!fill_course_form) {
                     @if (isset($course_application->room_type))
                         @if ($course_application->room_type)
                             $('#room_type').val('');
@@ -710,7 +725,9 @@
                     @else
                         fill_course_form = true;
                     @endif
-                } else if (type == 'room_type') {
+                }
+            } else if (type == 'room_type') {
+                if (!fill_course_form) {
                     @if (isset($course_application->meal_type))
                         @if ($course_application->meal_type)
                             $('#meal_type').val('');
@@ -729,7 +746,9 @@
                             @endif
                         @endif
                     @endif
-                } else if (type == 'meal_type') {
+                }
+            } else if (type == 'meal_type') {
+                if (!fill_course_form) {
                     @if (isset($course_application->accommodation_duration) && $course_application->accommodation_duration)
                         $('#accom_duration').val('');
                         $('#accom_duration').val('{{$course_application->accommodation_duration}}').trigger('change');
@@ -746,7 +765,13 @@
                             @endif
                         @endif
                     @endif
-                } else if (type == 'calculate') {
+                } else {
+                    if (!$('#accom_duration').val()) {
+                        $('#accom_duration').val($($("#accom_duration option")[0]).attr('value')).trigger('change');
+                    }
+                }
+            } else if (type == 'calculate') {
+                if (!fill_course_form) {
                     @if (isset($course_application->airport_provider) && $course_application->airport_provider)
                         $('#airport_service_provider').val('');
                         $('#airport_service_provider').val('{{$course_application->airport_provider}}').trigger('change');
@@ -797,21 +822,27 @@
         }
 
         function callbackChangeMedical(type) {
-            if (!fill_course_form) {
-                if (type == 'company_name') {
+            if (type == 'company_name') {
+                if (!fill_course_form) {
                     @if (isset($course_application->deductible_up_to))
                         $('#medical_deductible_up_to').val('');
                         $('#medical_deductible_up_to').val('{{$course_application->deductible_up_to}}').trigger('change');
                     @else
                         fill_course_form = true;
                     @endif
-                } else if (type == 'deductible_up_to') {
+                }
+            } else if (type == 'deductible_up_to') {
+                if (!fill_course_form) {
                     @if (isset($course_application->medical_duration))
                         $('#medical_duration').val('');
                         $('#medical_duration').val('{{$course_application->medical_duration}}').trigger('change');
                     @else
                         fill_course_form = true;
                     @endif
+                } else {
+                    if (!$('#medical_duration').val()) {
+                        $('#medical_duration').val($($("#medical_duration option")[0]).attr('value')).trigger('change');
+                    }
                 }
             }
         }

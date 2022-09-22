@@ -22,6 +22,8 @@
                         <tr>
                             <th>#</th>
                             <th>{{ __("Frontend.created_on") }}</th>
+                            <th>{{ __("Frontend.order_id") }}</th>
+                            <th>{{ __("Frontend.order_number") }}</th>
                             <th>{{ __("Frontend.name") }}</th>
                             <th>{{ __("Frontend.email") }}</th>
                             <th>{{ __("Frontend.mobile") }}</th>
@@ -42,6 +44,8 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $booked_course->created_at }}</td>
+                                <td>{{ $booked_course->order_id }}</td>
+                                <td>{{ $booked_course->order_number }}</td>
                                 <td>{{ ucwords($booked_course->fname) }} {{ ucwords($booked_course->lname) }}</td>
                                 <td>{{ $booked_course->courseApplicationApprove->email ?? $booked_course->email }}</td>
                                 <td>{{ $booked_course->courseApplicationApprove->mobile ?? $booked_course->mobile }}</td>

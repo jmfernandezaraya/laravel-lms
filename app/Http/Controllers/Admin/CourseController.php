@@ -160,8 +160,9 @@ class CourseController extends Controller
             }
 
             if ($course->getCurrency) {
-                if (!in_array($course->getCurrency->name, $choose_fields['currencies'])) {
-                    array_push($choose_fields['currencies'], $course->getCurrency->name);
+                $course_currency_name = app()->getLocale() == 'en' ? $course->getCurrency->name : $course->getCurrency->name_ar;
+                if (!in_array($course_currency_name, $choose_fields['currencies'])) {
+                    array_push($choose_fields['currencies'], $course_currency_name);
                 }
             } else {
                 if (!in_array('-', $choose_fields['currencies'])) {
@@ -502,18 +503,18 @@ class CourseController extends Controller
     {
         $promotion_enable = false;
         $db = \DB::transaction(function() use ($request, $course_id) {
-            $course = Course::where('unique_id', $course_id)->first();
+            $course = Course::where('unique_id', '' . $course_id)->first();
             if ($course) {
-                $promotion_enable = $course->promotion = !$request->promotion;
+                $promotion_enable = $course->promotion = ($request->promotion == 1 ? false: true);
                 $course->save();
                 return true;
             }
         });
         if ($db) {
             if ($promotion_enable) {
-                toastr()->success(__('Admin/backend.data_enabled_promotion_successfully'));
+                toastr()->success(__('Admin/backend.course_enabled_promotion_successfully'));
             } else {
-                toastr()->success(__('Admin/backend.data_disabled_promotion_successfully'));
+                toastr()->success(__('Admin/backend.course_disabled_promotion_successfully'));
             }
         }
         return back();
@@ -527,18 +528,18 @@ class CourseController extends Controller
     {
         $link_fee_enable = false;
         $db = \DB::transaction(function() use ($request, $course_id) {
-            $course = Course::where('unique_id', $course_id)->first();
+            $course = Course::where('unique_id', '' . $course_id)->first();
             if ($course) {
-                $link_fee_enable = $course->link_fee_enable = !$request->link_fee_enable;
+                $link_fee_enable = $course->link_fee_enable = ($request->link_fee == 1 ? false: true);
                 $course->save();
                 return true;
             }
         });
         if ($db) {
             if ($link_fee_enable) {
-                toastr()->success(__('Admin/backend.data_enabled_link_fee_successfully'));
+                toastr()->success(__('Admin/backend.course_enabled_link_fee_successfully'));
             } else {
-                toastr()->success(__('Admin/backend.data_disabled_link_fee_successfully'));
+                toastr()->success(__('Admin/backend.course_disabled_link_fee_successfully'));
             }
         }
         return back();
@@ -1167,8 +1168,7 @@ class CourseController extends Controller
             $extension = $request->file('upload')->getClientOriginalExtension();
             $fileName = $fileName . '_' . time() . '.' . 'webp';
 
-            $interventionImage = Image::make($originName)->resize(150, 150, function($constrained){
-
+            $interventionImage = Image::make($originName)->resize(150, 150, function($constrained) {
               $constrained->aspectRatio();
             })->encode('webp');
             file_put_contents(public_path('images/course_images/' .$fileName), $interventionImage);

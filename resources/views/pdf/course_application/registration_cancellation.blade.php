@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title>{{__('Frontend.regsitration_form')}}</title>
+    
     <style>
         @if (app()->getLocale() != 'en')
             * { font-family: 'DejaVu Sans', sans-serif; }
@@ -13,6 +14,9 @@
         .study {
             box-shadow: 0px 0px 2px 1px #ccc;
             padding: 15px 15px;
+        }
+        .m-0 {
+            margin: 0!important;
         }
         .m-2 {
             margin: 0.5rem!important;
@@ -55,6 +59,14 @@
             align-items: top;
             vertical-align: top;
         }
+        .flex-row {
+            display: flex;
+            display: -ms-flexbox;
+            flex-wrap: wrap;
+            -ms-flex-wrap: wrap;
+            align-items: center;
+            column-gap: 15px;
+        }
     </style>
 </head>
 
@@ -69,29 +81,21 @@
                     </tr>
                 </tbody>
             </table>
-            <table class="table">
-                <tbody>
-                    <tr>
-                        <td>{!! app()->getLocale() == 'en' ? $course_application->registration_cancelation_conditions : $course_application->registration_cancelation_conditions_ar !!}</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="student_guardian_full_name" class="col-form-label"><strong>{{__('Frontend.student_guardian_full_name')}}</strong>:</label>
-                            <p>{{ $course_application->guardian_full_name }}</p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div>
+                {!! app()->getLocale() == 'en' ? $course_application->registration_cancelation_conditions : $course_application->registration_cancelation_conditions_ar !!}
+            </div>
+            <div class="flex-row">
+                <label for="student_guardian_full_name" class="col-form-label">
+                    <strong>{{__('Frontend.student_guardian_full_name')}}</strong>:
+                </label>
+                <p class="m-0">{{ $course_application->guardian_full_name }}</p>
+            </div>
             <table class="table">
                 <tbody>
                     <tr>
                         <td><strong>{{__('Frontend.date')}}:</strong></td>
                         <td colspan="3">{{ $today }}</td>
                     </tr>
-                </tbody>
-            </table>
-            <table class="table">
-                <tbody>
                     <tr>
                         <td><strong>{{__('Frontend.signature')}}:</strong></td>
                         <td colspan="3"><img src="{{ $course_application->signature }}" class="img-fluid"/></td>

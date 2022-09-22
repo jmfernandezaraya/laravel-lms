@@ -118,7 +118,6 @@ class SuperAdminEditUserCourse
                 $selected = $r->course_program_unique_id && $r->course_program_unique_id == $program->unique_id ? 'selected' : '';
                 $option .= "<option $selected  value=$program->course_unique_id data-id= $program->unique_id>$program_name </option>";
             }
-
             $data['course_program'] = $option;
         } elseif ($r->type == 'select_program') {
             $k = "<option value=''> $select</option>";
@@ -135,7 +134,6 @@ class SuperAdminEditUserCourse
             foreach ($course_program as $program) {
                 $program_duration_start[] = $program->program_duration_start;
                 $program_duration_end[] = $program->program_duration_end;
-
             }
             $minimum_duration = min($program_duration_start);
             $max_duration = max($program_duration_end);

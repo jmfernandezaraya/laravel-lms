@@ -114,7 +114,7 @@
                                         @endif
                                         <form action="{{ auth('superadmin')->check() ? route('superadmin.school.destroy', $school->id) : route('schooladmin.school.destroy', $school->id) }}" method="post">
                                             @csrf
-                                            {{ method_field('delete') }}
+                                            @method('DELETE')
                                             <button type="submit" onclick="return confirmDelete()" class="btn btn-danger btn-sm fa fa-trash"></button>
                                         </form>
                                     </div>

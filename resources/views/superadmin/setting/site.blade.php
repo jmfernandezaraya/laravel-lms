@@ -208,6 +208,38 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label><h3>{{__('Admin/backend.payments')}}</h3></label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label>{{__('Admin/backend.course_application_order_number_prefix')}}:</label>
+                            <input type="text" name="ca_order_number_prefix" class="form-control" value="{{ isset($setting_value['course_application']['order_number_prefix']) ? $setting_value['course_application']['order_number_prefix'] : '' }}" />
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>{{__('Admin/backend.course_application_order_number_digits')}}:</label>
+                            <input type="number" name="ca_order_number_digits" class="form-control" value="{{ isset($setting_value['course_application']['order_number_digits']) ? $setting_value['course_application']['order_number_digits'] : '' }}" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label><h3>{{__('Admin/backend.recaptcha')}}</h3></label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label>{{__('Admin/backend.site_key')}}:</label>
+                            <input type="text" name="recaptcha_site_key" class="form-control" value="{{ isset($setting_value['recaptcha']['site_key']) ? $setting_value['recaptcha']['site_key'] : '' }}" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>{{__('Admin/backend.secret_key')}}:</label>
+                            <input type="text" name="recaptcha_secret_key" class="form-control"value="{{ isset($setting_value['recaptcha']['secret_key']) ? $setting_value['recaptcha']['secret_key'] : '' }}" />
+                        </div>
+                    </div>
+
                     <button type="button" onclick="submitFormAction('siteForm')" class="btn btn-gradient-primary mr-2">{{__('Admin/backend.submit')}}</button>
                     <a class="btn btn-light" href="{{url()->previous()}}">{{__('Admin/backend.cancel')}}</a>
                 </form>

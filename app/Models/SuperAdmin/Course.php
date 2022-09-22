@@ -84,6 +84,11 @@ class Course extends Model
         return $this->hasMany('App\Models\SuperAdmin\CourseCustodian', 'course_unique_id')->orderBy('order', 'asc');
     }
 
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_id', 'id');
+    }
+
     public function school()
     {
         return $this->belongsTo(School::class, 'school_id', 'id');

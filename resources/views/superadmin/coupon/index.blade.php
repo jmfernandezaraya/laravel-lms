@@ -65,20 +65,6 @@
                                                 </form>
                                             @endif
 
-                                            @if (can_manage_coupon())
-                                                @if ($coupon->display)
-                                                    <form method="post" action="{{ route('superadmin.coupon.pause', $coupon->unique_id) }}">
-                                                        @csrf
-                                                        <button onclick="return confirm('{{__('Admin/backend.are_you_sure_you_wanna_pause')}}')" class="btn btn-secondary btn-sm fa fa-pause"></button>
-                                                    </form>
-                                                @else
-                                                    <form method="post" action="{{ route('superadmin.coupon.play', $coupon->unique_id) }}">
-                                                        @csrf
-                                                        <button onclick="return confirm('{{__('Admin/backend.are_you_sure_you_wanna_play')}}')" class="btn btn-success btn-sm fa fa-play"></button>
-                                                    </form>
-                                                @endif
-                                            @endif
-
                                             <a href="{{route('superadmin.coupon.usage', $coupon->unique_id)}}" class="btn btn-info btn-sm fa fa-pie-chart"></a>                                            
                                         </div>
                                     </td>

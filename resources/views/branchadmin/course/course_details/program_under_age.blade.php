@@ -35,7 +35,7 @@
                                 <td>
                                     <div class="btn-group">
                                         &nbsp;
-                                        <a href ="javascript:void(0)" data-toggle="modal" data-target="#program_under_age_edit{{$program->id}}"  type="button" class ="btn btn-primary btn-sm fa fa-pencil"></a>
+                                        <a href ="javascript:void(0)" data-toggle="modal" data-target="#program_under_age_edit{{$program->id}}"  type="button" class="btn btn-primary btn-sm fa fa-pencil"></a>
                                     </div>
                                 </td>
                             </tr>

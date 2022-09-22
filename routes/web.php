@@ -346,8 +346,8 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => [
     Route::resource('/visa', 'FormbuildController');
     Route::resource('enquiry', 'EnquiryController');
     
-    Route::post('review/approve/{id}', '\App\Http\Controllers\Admin\ReviewController@approve')->name('review.approve');
-    Route::post('review/disapprove/{id}', '\App\Http\Controllers\Admin\ReviewController@disapprove')->name('review.disapprove');
+    Route::get('review/approve/{id}', '\App\Http\Controllers\Admin\ReviewController@approve')->name('review.approve');
+    Route::get('review/disapprove/{id}', '\App\Http\Controllers\Admin\ReviewController@disapprove')->name('review.disapprove');
     Route::resource('review', '\App\Http\Controllers\Admin\ReviewController');
 
     Route::post('blog/update/{id}', 'BlogController@update')->name('blog.update');
@@ -530,8 +530,8 @@ Route::group(['prefix' => 'schooladmin', 'as' => 'schooladmin.', 'middleware' =>
     });
     Route::resource('course_application', '\App\Http\Controllers\Admin\CourseApplicationController');    
     
-    Route::post('review/approve/{id}', '\App\Http\Controllers\Admin\ReviewController@approve')->name('review.approve');
-    Route::post('review/disapprove/{id}', '\App\Http\Controllers\Admin\ReviewController@disapprove')->name('review.disapprove');
+    Route::get('review/approve/{id}', '\App\Http\Controllers\Admin\ReviewController@approve')->name('review.approve');
+    Route::get('review/disapprove/{id}', '\App\Http\Controllers\Admin\ReviewController@disapprove')->name('review.disapprove');
     Route::resource('review', '\App\Http\Controllers\Admin\ReviewController');
 
     Route::post('school/save/program/session', 'CourseControllerSchoolAdmin@programSessionSave')->name('course.session_store_for_program');

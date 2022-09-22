@@ -5,6 +5,9 @@ namespace App\Http\Controllers\SuperAdmin;
 use Image;
 
 use App\Http\Controllers\Controller;
+
+use App\Classes\ImageSaverToStorage;
+
 use App\Http\Requests\SuperAdmin\BlogRequest;
 
 use App\Models\Blog;
@@ -21,6 +24,21 @@ use Intervention\Image\Exception\NotReadableException;
  */
 class BlogController extends Controller
 {
+    /**
+     * SchoolController constructor.
+     */
+    private $storeImage;    
+
+    public function __construct()
+    {
+        ini_set('post_max_size', 99999);
+        ini_set('max_execution_time', 99999);
+        ini_set('upload_max_filesize', 99999);
+        ini_set('max_file_uploads', 444);
+
+        $this->storeImage = new ImageSaverToStorage();
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -68,12 +86,20 @@ class BlogController extends Controller
         }
 
         try {
+            $image = '';
+            if ($request->has('image')) {
+                $this->storeImage->setPath('blog_images');
+                $this->storeImage->setImage($request->image);
+                $image = $this->storeImage->saveImage();
+            }
+
             $blog = new Blog;
             $blog->title_en = $request->title_en;
             $blog->title_ar = $request->title_ar;
             $blog->description_ar = $request->description_ar;
             $blog->description_en = $request->description_en;
-            $blog->display = true;
+            $blog->description_en = $request->description_en;
+            $blog->image = $image;
             $blog->save();
             
             toastr()->success(__('Admin/backend.data_saved_successfully'));
@@ -123,9 +149,16 @@ class BlogController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()]);
         }
+        $image = '';
+        if ($request->has('image')) {
+            $image = $request->file('image');
+            $this->storeImage->setPath('blog_images');
+            $this->storeImage->setImage($image);
+            $image = $this->storeImage->saveImage();
+        }
         $save = $validator->validated();
 
-        $blog->fill($save)->save();
+        $blog->fill($save + ['image' => $image])->save();
         $saved = __('Admin/backend.data_saved_successfully');
         return response()->json(['data' => $saved]);
     }

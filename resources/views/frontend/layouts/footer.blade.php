@@ -1,4 +1,3 @@
-
         </div>
     </main><!-- End #main -->
 
@@ -177,6 +176,18 @@
         var url_course = "{{route('frontend.course')}}";
         
         var please_choose_str = "{{__('Frontend.please_choose')}}";
+        
+        $('#contact-form').submit(function(event) {
+            event.preventDefault();
+    
+            grecaptcha.ready(function() {
+                grecaptcha.execute('{{ getreCAPTCHASiteKey() }}', {action: 'contact_form'}).then(function(token) {
+                    $('#contact-form').prepend('<input type="hidden" name="token" value="' + token + '">');
+                    $('#contact-form').prepend('<input type="hidden" name="action" value="contact_form">');
+                    $('#contact-form').unbind('submit').submit();
+                });;
+            });
+        });
     </script>
 </body>
 </html>

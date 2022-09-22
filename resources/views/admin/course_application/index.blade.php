@@ -23,6 +23,7 @@
                         <tr>
                             <th>#</th>
                             <td>{{__('Admin/backend.order_id')}}</td>
+                            <td>{{__('Admin/backend.order_number')}}</td>
                             @if (auth('superadmin')->check())
                                 <th>{{__('Admin/backend.user_name')}}</th>
                                 <th>{{__('Admin/backend.user_email')}}</th>
@@ -50,6 +51,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $details->order_id }}</td>
+                                <td>{{ $details->order_number }}</td>
                                 @if (auth('superadmin')->check())
                                     <td>{{ get_language() == 'en' ? $details->User->first_name_en : $details->User->first_name_ar }} {{ get_language() == 'en' ? $details->User->last_name_en : $details->User->last_name_ar }}</td>
                                     <td>{{ $details->User->email ?? '-' }}</td>

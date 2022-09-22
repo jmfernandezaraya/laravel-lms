@@ -22,7 +22,7 @@ class TransactionCalculator implements TransactionCalculatorInterface
     /**
      * @var
      */
-    private $transactionrefundId;
+    private $transactionRefundId;
 
     /**
      * TransactionCalculator constructor.
@@ -31,7 +31,7 @@ class TransactionCalculator implements TransactionCalculatorInterface
     public function __construct(CourseApplication $courseApplicationDetails)
     {
         $this->courseApplicationDetails = $courseApplicationDetails;
-        $this->transactionrefundId = optional($courseApplicationDetails->transaction)->order_id;
+        $this->transactionRefundId = optional($courseApplicationDetails->transaction)->order_id;
     }
 
     /**
@@ -47,7 +47,7 @@ class TransactionCalculator implements TransactionCalculatorInterface
      */
     public function amountAdded()
     {
-        $transactionRefunded = TransactionRefund::where('transaction_id', $this->transactionrefundId)->first();
+        $transactionRefunded = TransactionRefund::where('transaction_id', $this->transactionRefundId)->first();
 
         if ($transactionRefunded && $transactionRefunded->getTransactionAdded()) {
             return (float)$transactionRefunded->getTransactionAdded();
@@ -60,7 +60,7 @@ class TransactionCalculator implements TransactionCalculatorInterface
      */
     public function amountRefunded()
     {
-        $transactionRefunded = TransactionRefund::where('transaction_id', $this->transactionrefundId)->first();
+        $transactionRefunded = TransactionRefund::where('transaction_id', $this->transactionRefundId)->first();
         if ($transactionRefunded &&  $transactionRefunded->getTransactionRefunded()) {
             return (float)$transactionRefunded->getTransactionRefunded();
         }

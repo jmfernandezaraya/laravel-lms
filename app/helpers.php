@@ -1130,7 +1130,7 @@ function generateRandomString($length)
 
 function generateOrderId()
 {
-    return 'linkforsa-' . generateRandomString(4) . '-' . generateRandomString(4) . '-' . generateRandomString(4) . '-' . generateRandomString(12) . '-' . generateRandomString(10);
+    return 'Link-' . generateRandomString(4) . '-' . generateRandomString(4) . '-' . generateRandomString(4) . '-' . generateRandomString(12) . '-' . generateRandomString(10);
 }
 
 function getStorageImages($path, $filename)
@@ -1439,6 +1439,86 @@ function getCourseReservationLinks()
     return $site_course_reservation_links;
 }
 
+function getCourseApplicationOrderNumberPrefix()
+{
+    $site_course_application_order_number_prefix = '';
+    $site = \App\Models\Setting::where('setting_key', 'site')->first();
+    if ($site) {
+        $content = unserialize($site->setting_value);
+        if (isset($content['course_application']['order_number_prefix'])) {
+            $site_course_application_order_number_prefix = $content['course_application']['order_number_prefix'];
+        }
+    }
+    return $site_course_application_order_number_prefix;
+}
+
+function getCourseApplicationOrderNumber()
+{
+    $site_course_application_order_number_prefix = '';
+    $site_course_application_order_number_digits = 0;
+    $site = \App\Models\Setting::where('setting_key', 'site')->first();
+    if ($site) {
+        $content = unserialize($site->setting_value);
+        if (isset($content['course_application']['order_number_prefix'])) {
+            $site_course_application_order_number_prefix = $content['course_application']['order_number_prefix'];
+        }
+        if (isset($content['course_application']['order_number_digits'])) {
+            $site_course_application_order_number_digits = $content['course_application']['order_number_digits'];
+        }
+    }
+    $max_order_number = 0;
+    $ca_max_order_number = \App\Models\CourseApplication::max('order_number');
+    if ($ca_max_order_number) {
+        $max_order_number = (int)str_replace($site_course_application_order_number_prefix . "-", "", $max_order_number);
+    }
+    $max_order_number = $max_order_number + 1;
+    $new_order_number = '';
+    for ($order_number_digit = 0; $order_number_digit < $site_course_application_order_number_digits; $order_number_digit++) {
+        $new_order_number = ($max_order_number % 10) . $new_order_number;
+        $max_order_number = (int)($max_order_number / 10);
+    }
+    return $site_course_application_order_number_prefix . "-" . $new_order_number;
+}
+
+function getreCAPTCHAKeys()
+{
+    $site_recaptcha_keys = [];
+    $site = \App\Models\Setting::where('setting_key', 'site')->first();
+    if ($site) {
+        $content = unserialize($site->setting_value);
+        if (isset($content['recaptcha'])) {
+            $site_recaptcha_keys = $content['recaptcha'];
+        }
+    }
+    return $site_recaptcha_keys;
+}
+
+function getreCAPTCHASiteKey()
+{
+    $site_recaptcha_site_key = '';
+    $site = \App\Models\Setting::where('setting_key', 'site')->first();
+    if ($site) {
+        $content = unserialize($site->setting_value);
+        if (isset($content['recaptcha']['site_key'])) {
+            $site_recaptcha_site_key = $content['recaptcha']['site_key'];
+        }
+    }
+    return $site_recaptcha_site_key;
+}
+
+function getreCAPTCHASecretKey()
+{
+    $site_recaptcha_secret_key = '';
+    $site = \App\Models\Setting::where('setting_key', 'site')->first();
+    if ($site) {
+        $content = unserialize($site->setting_value);
+        if (isset($content['recaptcha']['secret_key'])) {
+            $site_recaptcha_secret_key = $content['recaptcha']['secret_key'];
+        }
+    }
+    return $site_recaptcha_secret_key;
+}
+
 function getSiteNewsletter()
 {
     $site_newsletter = [
@@ -1510,6 +1590,31 @@ function getPageTitle($id)
     return $front_page_title;
 }
 
+// https://www.youtube.com/watch?v=5hKMYAaP9-E&feature=youtu.be
+// https://www.youtube.com/embed/5hKMYAaP9-E
+function checkYouTubeUrl($youtube_url)
+{
+    if (strpos($youtube_url, 'youtube.com') != false) {
+        if (strpos($youtube_url, 'youtube.com/watch?v=')) {
+            $youtube_url = str_replace('youtube.com/watch?v=', 'youtube.com/embed/', $youtube_url);
+        } else {
+            if (strpos($youtube_url, 'youtube.com/embed/') == false) {
+                $youtube_url = str_replace('youtube.com/', 'youtube.com/embed/', $youtube_url);
+            }
+        }
+    }
+    if (strpos($youtube_url, 'youtu.be') != false) {
+        if (strpos($youtube_url, 'youtu.be/watch?v=')) {
+            $youtube_url = str_replace('youtu.be/watch?v=', 'youtu.be/embed/', $youtube_url);
+        } else {
+            if (strpos($youtube_url, 'youtu.be/embed/') == false) {
+                $youtube_url = str_replace('youtu.be/', 'youtu.be/embed/', $youtube_url);
+            }
+        }
+    }
+
+    return $youtube_url;
+}
 /**
  ******************** Course Functions ********************
  */
@@ -1648,37 +1753,67 @@ function getCourseMinMaxAgeRange($course_id)
 
 function getCourseLanguageNames($course_language_ids)
 {
-    $course_languages = \App\Models\SuperAdmin\ChooseLanguage::whereIn('unique_id', $course_language_ids ? (is_array($course_language_ids) ? $course_language_ids : [$course_language_ids]) : [])->pluck('name')->toArray();
+    $course_languages = \App\Models\SuperAdmin\ChooseLanguage::whereIn('unique_id', $course_language_ids ? (is_array($course_language_ids) ? $course_language_ids : [$course_language_ids]) : []);
+    if (app()->getLocale() == 'en') {
+        $course_languages = $course_languages->pluck('name')->toArray();
+    } else {
+        $course_languages = $course_languages->pluck('name_ar')->toArray();
+    }
     return $course_languages;
 }
 
 function getCourseProgramTypeNames($course_program_type_ids)
 {
-    $course_program_types = \App\Models\SuperAdmin\ChooseProgramType::whereIn('unique_id', $course_program_type_ids ? (is_array($course_program_type_ids) ? $course_program_type_ids : [$course_program_type_ids]) : [])->pluck('name')->toArray();
+    $course_program_types = \App\Models\SuperAdmin\ChooseProgramType::whereIn('unique_id', $course_program_type_ids ? (is_array($course_program_type_ids) ? $course_program_type_ids : [$course_program_type_ids]) : []);
+    if (app()->getLocale() == 'en') {
+        $course_program_types = $course_program_types->pluck('name')->toArray();
+    } else {
+        $course_program_types = $course_program_types->pluck('name_ar')->toArray();
+    }
     return $course_program_types;
 }
 
 function getCourseStudyModeNames($course_study_mode_ids)
-{
-    $course_study_modes = \App\Models\SuperAdmin\ChooseStudyMode::whereIn('unique_id', $course_study_mode_ids ? (is_array($course_study_mode_ids) ? $course_study_mode_ids : [$course_study_mode_ids]) : [])->pluck('name')->toArray();
+{    
+    $course_study_modes = \App\Models\SuperAdmin\ChooseStudyMode::whereIn('unique_id', $course_study_mode_ids ? (is_array($course_study_mode_ids) ? $course_study_mode_ids : [$course_study_mode_ids]) : []);
+    if (app()->getLocale() == 'en') {
+        $course_study_modes = $course_study_modes->pluck('name')->toArray();
+    } else {
+        $course_study_modes = $course_study_modes->pluck('name_ar')->toArray();
+    }
     return $course_study_modes;
 }
 
 function getCourseBranchNames($course_branch_ids)
 {
-    $course_branches = \App\Models\SuperAdmin\ChooseBranch::whereIn('unique_id', $course_branch_ids ? (is_array($course_branch_ids) ? $course_branch_ids : [$course_branch_ids]) : [])->pluck('name')->toArray();
+    $course_branches = \App\Models\SuperAdmin\ChooseBranch::whereIn('unique_id', $course_branch_ids ? (is_array($course_branch_ids) ? $course_branch_ids : [$course_branch_ids]) : []);
+    if (app()->getLocale() == 'en') {
+        $course_branches = $course_branches->pluck('name')->toArray();
+    } else {
+        $course_branches = $course_branches->pluck('name_ar')->toArray();
+    }
     return $course_branches;
 }
 
 function getCourseStudyTimeNames($course_study_time_ids)
 {
-    $course_study_times = \App\Models\SuperAdmin\ChooseStudyTime::whereIn('unique_id', $course_study_time_ids ? (is_array($course_study_time_ids) ? $course_study_time_ids : [$course_study_time_ids]) : [])->pluck('name')->toArray();
+    $course_study_times = \App\Models\SuperAdmin\ChooseStudyTime::whereIn('unique_id', $course_study_time_ids ? (is_array($course_study_time_ids) ? $course_study_time_ids : [$course_study_time_ids]) : []);
+    if (app()->getLocale() == 'en') {
+        $course_study_times = $course_study_times->pluck('name')->toArray();
+    } else {
+        $course_study_times = $course_study_times->pluck('name_ar')->toArray();
+    }
     return $course_study_times;
 }
 
 function getCourseStartDateNames($course_start_date_ids)
 {
-    $course_start_dates = \App\Models\SuperAdmin\ChooseStartDate::whereIn('unique_id', $course_start_date_ids ? (is_array($course_start_date_ids) ? $course_start_date_ids : [$course_start_date_ids]) : [])->pluck('name')->toArray();
+    $course_start_dates = \App\Models\SuperAdmin\ChooseStartDate::whereIn('unique_id', $course_start_date_ids ? (is_array($course_start_date_ids) ? $course_start_date_ids : [$course_start_date_ids]) : []);
+    if (app()->getLocale() == 'en') {
+        $course_start_dates = $course_start_dates->pluck('name')->toArray();
+    } else {
+        $course_start_dates = $course_start_dates->pluck('name_ar')->toArray();
+    }
     return $course_start_dates;
 }
 
@@ -1872,6 +2007,7 @@ function getCourseApplicationPrintData($id, $user_id, $is_admin = false)
                 if ($value['type'] == 'to_admin' && in_array($user_id, $value['to_user'])) {
                     $message_flag = true;
                 }
+                $message_flag = true;
             } else {
                 if ($value['type'] == 'to_student' && in_array($user_id, $value['to_user'])) {
                     $message_flag = true;
@@ -1973,7 +2109,7 @@ function getUserSchools($user_id)
 function getUserSchoolNames($user_id, $is_array = true)
 {
     $user = \App\Models\User::find($user_id);
-    $user_schools = \App\Models\SuperAdmin\School::with('name')->whereIn('id', $user ? $user->school : []);
+    $user_schools = \App\Models\SuperAdmin\School::with('name')->whereIn('id', $user ? $user->school_ids : []);
     $user_school_names = $is_array ? [] : '';
     foreach ($user_schools as $user_school) {
         if ($user_school->name) {
@@ -1996,13 +2132,13 @@ function getUserSchoolNames($user_id, $is_array = true)
 function getUserCountries($user_id)
 {
     $user = \App\Models\User::find($user_id);
-    return \App\Models\SuperAdmin\Country::whereIn('id', $user ? $user->country : [])->get();
+    return \App\Models\SuperAdmin\Country::whereIn('id', $user ? $user->country_ids : [])->get();
 }
 
 function getUserCountryNames($user_id, $is_array = true)
 {
     $user = \App\Models\User::find($user_id);
-    $user_countries = \App\Models\SuperAdmin\Country::whereIn('id', $user ? $user->country : [])->get();
+    $user_countries = \App\Models\SuperAdmin\Country::whereIn('id', $user ? $user->country_ids : [])->get();
     $user_country_names = $is_array ? [] : '';
     foreach ($user_countries as $user_country) {
         if (app()->getLocale() == 'en') {
@@ -2023,13 +2159,13 @@ function getUserCountryNames($user_id, $is_array = true)
 function getUserCities($user_id)
 {
     $user = \App\Models\User::find($user_id);
-    return \App\Models\SuperAdmin\City::whereIn('id', $user ? $user->city : [])->get();
+    return \App\Models\SuperAdmin\City::whereIn('id', $user ? $user->city_ids : [])->get();
 }
 
 function getUserCityNames($user_id, $is_array = true)
 {
     $user = \App\Models\User::find($user_id);
-    $user_cities = \App\Models\SuperAdmin\City::whereIn('id', $user ? $user->city : [])->get();
+    $user_cities = \App\Models\SuperAdmin\City::whereIn('id', $user ? $user->city_ids : [])->get();
     $user_city_names = $is_array ? [] : '';
     foreach ($user_cities as $user_city) {
         if (app()->getLocale() == 'en') {

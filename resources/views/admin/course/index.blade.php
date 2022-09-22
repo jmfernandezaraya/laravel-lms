@@ -93,7 +93,8 @@
                                                 @csrf
 
                                                 <input type="hidden" name="promotion" value="{{ $course->promotion ? 1 : 0 }}" />
-                                                <button class="btn btn-{{ $course->promotion ? 'info' : 'danger' }} btn-sm fa fa-{{ $course->promotion ? 'check' : 'times' }}"></button>
+                                                <i class="fa fa-{{ $course->promotion ? 'check' : 'times' }} py-2 m-2 color-{{ $course->promotion ? 'info' : 'danger' }} cursor-default"></i>
+                                                <button class="btn btn-{{ $course->promotion ? 'danger' : 'info' }} btn-sm fa fa-{{ $course->promotion ? 'times' : 'check' }}"></button>
                                             </form>
                                         @else
                                             <i class="fa fa-times px-3 py-2 m-2 color-danger cursor-default"></i>
@@ -107,14 +108,15 @@
                                 <td>{{ $course->school && $course->school->city ? (get_language() == 'en' ? $course->school->city->name : $course->school->city->name_ar) : '-' }}</td>
                                 <td>{{ $course->school && $course->school->country ? (get_language() == 'en' ? $course->school->country->name : $course->school->country->name_ar) : '-' }}</td>
                                 <td>{{ $course->branch }}</td>
-                                <td>{{ is_null($course->getCurrency) ? '-' : $course->getCurrency->name }}</td>
+                                <td>{{ is_null($course->getCurrency) ? '-' : (app()->getLocale() == 'en' ? $course->getCurrency->name : $course->getCurrency->name_ar) }}</td>
                                 <td>
                                     @if (can_manage_course())
                                         <form method="post" action="{{ auth('superadmin')->check() ? route('superadmin.course.link_fee', $course->unique_id) : route('schooladmin.course.link_fee', $course->unique_id) }}">
                                             @csrf
 
-                                            <input type="hidden" name="link_fee" value="{{ $course->link_fee ? 1 : 0 }}" />
-                                            <button class="btn btn-{{ $course->link_fee ? 'info' : 'danger' }} btn-sm fa fa-{{ $course->link_fee ? 'play' : 'pause' }}"></button>
+                                            <input type="hidden" name="link_fee" value="{{ $course->link_fee_enable ? 1 : 0 }}" />                                            
+                                            <i class="fa fa-{{ $course->link_fee_enable ? 'play' : 'pause' }} py-2 m-2 color-{{ $course->link_fee_enable ? 'info' : 'danger' }} cursor-default"></i>
+                                            <button class="btn btn-{{ $course->link_fee_enable ? 'danger' : 'info' }} btn-sm fa fa-{{ $course->link_fee_enable ? 'pause' : 'play' }}"></button>
                                         </form>
                                     @endif
                                 </td>

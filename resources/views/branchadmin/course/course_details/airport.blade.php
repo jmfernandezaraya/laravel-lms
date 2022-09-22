@@ -27,7 +27,7 @@
                                 <td>{{$airport->week_selected_fee}}</td>
                                 <td>{{$airport->created_at->diffForHumans()}}</td>
                                 <td>
-                                    <div class ="btn-group">
+                                    <div class="btn-group">
                                         <a type="button" data-toggle="modal" data-target="#airport_modal{{$airport->unique_id}}" class="btn btn-sm btn-primary fa fa-pencil"> </a>
                                         @php $confirm = __('Admin/backend.are_you_sure_delete'); @endphp
                                         <a type="button" onclick="return confirm('<?= $confirm ?>')" href="{{route('superadmin.airport_delete', $airport->unique_id)}}" class="btn btn-sm btn-danger fa fa-trash"> </a>
