@@ -14,25 +14,25 @@ use App\Models\Calculator;
 use App\Models\CourseApplication;
 use App\Models\Message;
 
-use App\Models\SuperAdmin\ChooseAccommodationUnderAge;
-use App\Models\SuperAdmin\ChooseCustodianUnderAge;
-use App\Models\SuperAdmin\ChooseProgramAge;
-use App\Models\SuperAdmin\ChooseProgramUnderAge;
-use App\Models\SuperAdmin\ChooseStartDate;
-use App\Models\SuperAdmin\ChooseStudyMode;
-use App\Models\SuperAdmin\Course;
-use App\Models\SuperAdmin\Coupon;
-use App\Models\SuperAdmin\CouponUsage;
-use App\Models\SuperAdmin\CourseProgram;
-use App\Models\SuperAdmin\CourseAccommodation;
-use App\Models\SuperAdmin\CourseAccommodationUnderAge;
-use App\Models\SuperAdmin\CourseAirport;
-use App\Models\SuperAdmin\CourseAirportFee;
-use App\Models\SuperAdmin\CourseMedical;
-use App\Models\SuperAdmin\CourseCustodian;
-use App\Models\SuperAdmin\CourseApplicationApprove;
-use App\Models\SuperAdmin\School;
-use App\Models\SuperAdmin\TransactionRefund;
+use App\Models\ChooseAccommodationUnderAge;
+use App\Models\ChooseCustodianUnderAge;
+use App\Models\ChooseProgramAge;
+use App\Models\ChooseProgramUnderAge;
+use App\Models\ChooseStartDate;
+use App\Models\ChooseStudyMode;
+use App\Models\Course;
+use App\Models\Coupon;
+use App\Models\CouponUsage;
+use App\Models\CourseProgram;
+use App\Models\CourseAccommodation;
+use App\Models\CourseAccommodationUnderAge;
+use App\Models\CourseAirport;
+use App\Models\CourseAirportFee;
+use App\Models\CourseMedical;
+use App\Models\CourseCustodian;
+use App\Models\CourseApplicationApprove;
+use App\Models\School;
+use App\Models\TransactionRefund;
 
 use PDF;
 use Storage;
@@ -61,7 +61,7 @@ class CourseApplicationController extends Controller
                 { $query->whereNotNull('response')->where('response', '<>', ''); })
                 ->with('User', 'course', 'courseApplicationApprove')->get();
         } else if (auth('schooladmin')->check()) {
-            $data['booked_details'] = CourseApplication::whereIn('school_id', auth('schooladmin')->user()->school)->whereHas('transaction', function($query)
+            $data['booked_details'] = CourseApplication::whereIn('school_id', auth('schooladmin')->user()->school_ids)->whereHas('transaction', function($query)
                 { $query->whereNotNull('response')->where('response', '<>', ''); })
                 ->with('User', 'course', 'courseApplicationApprove')->get();
         }

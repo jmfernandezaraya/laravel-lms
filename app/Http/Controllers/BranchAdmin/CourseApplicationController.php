@@ -11,9 +11,9 @@ use App\Mail\SendMessageToSuperAdminRelatedToCourse;
 
 use App\Models\User;
 use App\Models\CourseApplication;
-use App\Models\SchoolAdmin\ReplyToSchoolAdminMessage;
+use App\Models\ReplyToSchoolAdminMessage;
 use App\Models\SuperAdmin\ToSchoolAdminMessage;
-use App\Models\SuperAdmin\CourseApplicationApprove;
+use App\Models\CourseApplicationApprove;
 
 /**
  * Class CourseApplicationController

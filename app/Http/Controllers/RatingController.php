@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SuperAdmin\School;
+use App\Models\School;
 use App\Models\User;
 use Ghanem\Rating\Models\Rating;
 use Illuminate\Http\Request;

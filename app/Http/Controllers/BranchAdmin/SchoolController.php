@@ -6,7 +6,7 @@ use App\Http\Requests\SuperAdmin\AddSchoolRequest;
 
 use App\Http\Controllers\Controller;
 
-use App\Models\SuperAdmin\School;
+use App\Models\School;
 
 use Illuminate\Http\Request;
 

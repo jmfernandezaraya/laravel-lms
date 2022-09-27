@@ -4,7 +4,7 @@ namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SuperAdmin\ApplyForVisaRequest;
-use App\Models\SuperAdmin\VisaForm;
+use App\Models\VisaForm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 

@@ -84,8 +84,8 @@
         var delete_accomm_custodian_range_url = "{{route('superadmin.accomm_custodian_age.delete')}}";
         var add_accomm_under_range_url = "{{route('superadmin.accomm_under_age.add')}}";
         var delete_accomm_under_range_url = "{{route('superadmin.accomm_under_age.delete')}}";
-        var add_school_nationality_url = "{{route('superadmin.school.nationality.add')}}";
-        var delete_school_nationality_url = "{{route('superadmin.school.nationality.delete')}}";
+        // var add_school_nationality_url = "{{route('superadmin.school.nationality.add')}}";
+        // var delete_school_nationality_url = "{{route('superadmin.school.nationality.delete')}}";
     @else
         @auth ('schooladmin')
             var url_school_city_by_country_list = "{{route('schooladmin.school.city_by_country.list')}}";
@@ -126,8 +126,8 @@
             var delete_accomm_custodian_range_url = "{{route('schooladmin.accomm_custodian_age.delete')}}";
             var add_accomm_under_range_url = "{{route('schooladmin.accomm_under_age.add')}}";
             var delete_accomm_under_range_url = "{{route('schooladmin.accomm_under_age.delete')}}";
-            var add_school_nationality_url = "{{route('schooladmin.school.nationality.add')}}";
-            var delete_school_nationality_url = "{{route('schooladmin.school.nationality.delete')}}";
+            // var add_school_nationality_url = "{{route('schooladmin.school.nationality.add')}}";
+            // var delete_school_nationality_url = "{{route('schooladmin.school.nationality.delete')}}";
         @endauth
     @endauth
     
@@ -1144,6 +1144,46 @@
         $('#school_name_increment').val(school_name_clone);
     }
     
+    var nationality_clone = 0;
+    function addNationalityForm(object) {
+        nationality_clone++;
+        var clone_nationality_form = object.closest(".clone");
+        var nationality_clone_index = parseInt($(clone_nationality_form).attr('id').replace("nationality_clone", ""));
+        $('#nationality_increment').val(nationality_clone);
+        var new_clone_form = $(clone_nationality_form).clone(true);
+        new_clone_form.attr('id', 'nationality_clone' + (nationality_clone_index + 1));
+        $(new_clone_form).find('[name="nationality_unique_id[]"]').val('');
+        var clone_nationality_forms = $(".nationality-clone");
+        for (var nationality_index = 0; nationality_index < clone_nationality_forms.length; nationality_index++) {
+            var clone_nationality_index = parseInt($(clone_nationality_forms[nationality_index]).attr('id').replace("nationality_clone", ""));
+            if (clone_nationality_index > nationality_clone_index) {
+                $(clone_nationality_forms[nationality_index]).attr('id', 'nationality_clone' + (clone_nationality_index + 1));
+                $(clone_nationality_forms[nationality_index]).find('[name="name[' + clone_nationality_index + '][]"]').attr('name', 'name[' + (clone_nationality_index + 1) + '][]');
+                $(clone_nationality_forms[nationality_index]).find('[name="name_ar[' + clone_nationality_index + '][]"]').attr('name', 'name_ar[' + (clone_nationality_index + 1) + '][]');
+            }
+        }
+
+        if (clone_clear_data) $(new_clone_form).find('[name="name[]"]').val('');
+        if (clone_clear_data) $(new_clone_form).find('[name="name_ar[]"]').val('');
+        new_clone_form.insertAfter($(clone_nationality_form));
+    }
+
+    function deleteNationalityForm(object) {
+        var clone_nationality_form = object.closest(".clone");
+        var nationality_clone_index = parseInt($(clone_nationality_form).attr('id').replace("nationality_clone", ""));
+        $(clone_nationality_form).remove();
+        var clone_nationality_forms = $(".nationality-clone");
+        for (var nationality_index = 0; nationality_index < clone_nationality_forms.length; nationality_index++) {
+            var clone_nationality_index = parseInt($(clone_nationality_forms[nationality_index]).attr('id').replace("nationality_clone", ""));
+            if (clone_nationality_index > nationality_clone_index) {
+                $(clone_nationality_forms[nationality_index]).attr('id', 'nationality_clone' + (clone_nationality_index - 1));
+                $(clone_nationality_forms[nationality_index]).find('[name="nationality_unique_id[' + clone_nationality_index + '][]"]').attr('id', 'nationality_unique_id' + (clone_nationality_index - 1));
+            }
+        }
+        nationality_clone--;
+        $('#nationality_increment').val(nationality_clone);
+    }
+    
     var school_nationality_clone = 0;
     function addSchoolNationalityForm(object) {
         if (school_nationality_clone >= 9) return;
@@ -1818,6 +1858,14 @@
             $('.currency-permissions').show();
         } else {
             $('.currency-permissions').hide();
+        }
+    });
+
+    $('#payment_method_permission').change(function() {
+        if ($('#payment_method_permission').val() == 'subscriber') {
+            $('.payment-method-permissions').show();
+        } else {
+            $('.payment-method-permissions').hide();
         }
     });
 

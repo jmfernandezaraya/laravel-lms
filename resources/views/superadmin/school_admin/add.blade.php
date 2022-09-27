@@ -95,8 +95,8 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="school_ids">{{__('Admin/backend.choose_school')}}:</label>
-                            <select onchange="changeSchool()" class="form-control" id="school_ids" name="school_ids">
+                            <label for="school_name">{{__('Admin/backend.choose_school')}}:</label>
+                            <select onchange="changeSchool()" class="form-control" id="school_name" name="school_name">
                                 <option value="">{{__('Admin/backend.select_school')}}</option>
                                 @foreach ($choose_schools as $choose_school)
                                     <option value="{{ $choose_school }}">{{ $choose_school }}</option>

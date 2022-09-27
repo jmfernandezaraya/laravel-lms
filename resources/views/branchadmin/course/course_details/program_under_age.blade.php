@@ -57,7 +57,7 @@
                                                 <div class="form-group">
                                                     <label class="">{{__('Admin/backend.program_under_age_fee')}}</label>
                                                     <select name="under_age[]" multiple="multiple" class="form-control" >
-                                                        @foreach(\App\Models\SuperAdmin\ChooseProgramAge::all() as $under_age)
+                                                        @foreach(\App\Models\ChooseProgramAge::all() as $under_age)
                                                             <option multiple="" value="{{$under_age->age}}" {{in_array($under_age->age, $program->under_age) ? 'selected' : ''}} >{{$under_age->age }}</option>
                                                         @endforeach
                                                     </select>

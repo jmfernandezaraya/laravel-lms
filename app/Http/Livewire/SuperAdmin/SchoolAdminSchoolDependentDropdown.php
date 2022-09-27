@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\SuperAdmin;
 
-use App\Models\SuperAdmin\School;
+use App\Models\School;
 use Livewire\Component;
 
 class SchoolAdminSchoolDependentDropdown extends Component

@@ -6,12 +6,12 @@ use App\Http\Controllers\Controller;
 
 use App\Classes\ImageSaverToStorage;
 
-use App\Models\SuperAdmin\Country;
+use App\Models\Country;
 use App\Models\FrontPage;
 use App\Models\Setting;
-use App\Models\SuperAdmin\Course;
-use App\Models\SuperAdmin\CourseProgram;
-use App\Models\SuperAdmin\School;
+use App\Models\Course;
+use App\Models\CourseProgram;
+use App\Models\School;
 
 use Carbon\Carbon;
 
@@ -350,6 +350,7 @@ class SettingController extends Controller
             'course_application' => [
                 'order_number_prefix' => '',
                 'order_number_digits' => '',
+                'order_number_start' => '',
             ],
             'recaptcha' => [
                 'site_key' => '',
@@ -406,6 +407,9 @@ class SettingController extends Controller
         }
         if (isset($request->ca_order_number_digits)) {
             $setting_value['course_application']['order_number_digits'] = $request->ca_order_number_digits;
+        }
+        if (isset($request->ca_order_number_start)) {
+            $setting_value['course_application']['order_number_start'] = $request->ca_order_number_start;
         }
 
         if (isset($request->recaptcha_site_key)) {

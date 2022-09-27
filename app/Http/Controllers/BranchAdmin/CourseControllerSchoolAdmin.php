@@ -4,13 +4,13 @@ namespace App\Http\Controllers\BranchAdmin;
 
 use App\Http\Controllers\Controller;
 
-use App\Models\SuperAdmin\CourseAccommodation;
-use App\Models\SuperAdmin\ChooseLanguage;
-use App\Models\SuperAdmin\CourseAirport;
-use App\Models\SuperAdmin\CourseProgram;
-use App\Models\SuperAdmin\CourseProgramUnderAgeFee;
-use App\Models\SuperAdmin\Course;
-use App\Models\SuperAdmin\School;
+use App\Models\CourseAccommodation;
+use App\Models\ChooseLanguage;
+use App\Models\CourseAirport;
+use App\Models\CourseProgram;
+use App\Models\CourseProgramUnderAgeFee;
+use App\Models\Course;
+use App\Models\School;
 
 use Illuminate\Http\Request;
 use App\Models\User;

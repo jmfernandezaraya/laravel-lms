@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
-use App\Models\SuperAdmin\School;
+use App\Models\School;
 use App\Models\User;
 
 class DashboardController extends Controller

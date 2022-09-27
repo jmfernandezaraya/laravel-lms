@@ -38,14 +38,57 @@
                         @foreach($coupon_usages as $coupon_usage)
                             <tr>
                                 <td>{{ $coupon_usage->course_application->id }}</td>
-                                <td>{{ get_language() == 'en' ? $coupon_usage->course_application->User->first_name_en : $coupon_usage->course_application->User->first_name_ar }} {{ get_language() == 'en' ? $coupon_usage->course_application->User->last_name_en : $coupon_usage->course_application->User->last_name_ar }}</td>
+                                <td>
+                                    @if (get_language() == 'en')
+                                        {{ $coupon_usage->course_application->User->first_name_en }} {{ $coupon_usage->course_application->User->last_name_en }}
+                                    @else
+                                        {{ $coupon_usage->course_application->User->first_name_ar }} {{ $coupon_usage->course_application->User->last_name_ar }}
+                                    @endif
+                                </td>
                                 <td>{{ $coupon_usage->course_application->User->email }}</td>
-                                <td>{{ $coupon_usage->course_application->school && $coupon_usage->course_application->school->name ? (get_language() == 'en' ? $coupon_usage->course_application->school->name->name : $coupon_usage->course_application->school->name->name_ar) : '' }}</td>
-                                <td>{{ $coupon_usage->course_application->school && $coupon_usage->course_application->school->city ? (get_language() == 'en' ? $coupon_usage->course_application->school->city->name : $coupon_usage->course_application->school->city->name_ar) : '' }}</td>
-                                <td>{{ $coupon_usage->course_application->school && $coupon_usage->course_application->school->country ? (get_language() == 'en' ? $coupon_usage->course_application->school->country->name : $coupon_usage->course_application->school->country->name_ar) : '' }}</td>
-                                <td>{{ $coupon_usage->course_application->course_program->program_cost }}</td>
-                                <td>{{ $coupon_usage->afflicate_user->name }}</td>
-                                <td>{{ $coupon_usage->course_application->commission }}</td>
+                                <td>
+                                    @if ($coupon_usage->course_application->school && $coupon_usage->course_application->school->name)
+                                        @if (get_language() == 'en')
+                                            {{ $coupon_usage->course_application->school->name->name }}
+                                        @else
+                                            {{ $coupon_usage->course_application->school->name->name_ar }}
+                                        @endif
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($coupon_usage->course_application->school && $coupon_usage->course_application->school->city)
+                                        @if (get_language() == 'en')
+                                            {{ $coupon_usage->course_application->school->city->name }}
+                                        @else
+                                            {{ $coupon_usage->course_application->school->city->name_ar }}
+                                        @endif
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($coupon_usage->course_application->school && $coupon_usage->course_application->school->country)
+                                        @if (get_language() == 'en')
+                                            {{ $coupon_usage->course_application->school->country->name }}
+                                        @else
+                                            {{ $coupon_usage->course_application->school->country->name_ar }}
+                                        @endif
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($coupon_usage->course_application->getCourseProgram)
+                                        {{ $coupon_usage->course_application->getCourseProgram->program_cost }}
+                                    @endif
+                                </td>
+                                <td>{{ $coupon_usage->course_application->coupon_discount_converted }}</td>
+                                <td>
+                                    @if ($coupon_usage->coupon->afflicate_user)
+                                        @if (get_language() == 'en')
+                                            {{ $coupon_usage->coupon->afflicate_user->first_name_en }} {{ $coupon_usage->coupon->afflicate_user->last_name_en }}
+                                        @else
+                                            {{ $coupon_usage->coupon->afflicate_user->first_name_ar }} {{ $coupon_usage->coupon->afflicate_user->last_name_ar }}
+                                        @endif
+                                    @endif
+                                </td>
+                                <td>{{ $coupon_usage->course_application->coupon_discount_converted }}</td>
                                 <td>{{ $coupon_usage->created_at }}</td>
                             </tr>
                         @endforeach

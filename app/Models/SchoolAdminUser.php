@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\SuperAdmin\SchoolAdminCourseEditPermissions;
-use App\Models\SuperAdmin\UserSchool;
+use App\Models\SchoolAdminCourseEditPermissions;
+use App\Models\UserSchool;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 

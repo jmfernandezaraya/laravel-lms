@@ -4,18 +4,18 @@ namespace App\Services;
 
 use App\Http\Controllers\Controller;
 
-use App\Models\SuperAdmin\Course;
-use App\Models\SuperAdmin\CourseAccommodation;
-use App\Models\SuperAdmin\CourseAccommodationUnderAge;
-use App\Models\SuperAdmin\CourseAirport;
-use App\Models\SuperAdmin\CourseAirportFee;
-use App\Models\SuperAdmin\CourseMedical;
-use App\Models\SuperAdmin\CourseMedicalFee;
-use App\Models\SuperAdmin\CourseCustodian;
-use App\Models\SuperAdmin\CourseProgram;
-use App\Models\SuperAdmin\CourseProgramTextBookFee;
-use App\Models\SuperAdmin\CourseProgramUnderAgeFee;
-use App\Models\SuperAdmin\School;
+use App\Models\Course;
+use App\Models\CourseAccommodation;
+use App\Models\CourseAccommodationUnderAge;
+use App\Models\CourseAirport;
+use App\Models\CourseAirportFee;
+use App\Models\CourseMedical;
+use App\Models\CourseMedicalFee;
+use App\Models\CourseCustodian;
+use App\Models\CourseProgram;
+use App\Models\CourseProgramTextBookFee;
+use App\Models\CourseProgramUnderAgeFee;
+use App\Models\School;
 
 use Illuminate\Http\Request;
 

@@ -45,7 +45,7 @@ class AdminEmailTemplate extends Mailable
         if ($site_setting) {
             $site_setting_value = unserialize($site_setting->setting_value);
         }
-        $email_template = \App\Models\SuperAdmin\EmailTemplate::where('template', $this->template)->first();
+        $email_template = \App\Models\EmailTemplate::where('template', $this->template)->first();
         if ($email_template) {
             $user_name = $user_no = $user_email = '';
             $from_name = $from_no = $from_email = '';

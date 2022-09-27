@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\SuperAdmin\SchoolAdminCourseEditPermissions;
+use App\Models\SchoolAdminCourseEditPermissions;
 
 use Illuminate\Http\Request;
 

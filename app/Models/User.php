@@ -4,11 +4,11 @@ namespace App\Models;
 
 use App\Classes\BindsDynamically;
 
-use App\Models\Frontend\LikedSchool;
-use App\Models\SuperAdmin\SchoolAdminCourseEditPermissions;
-use App\Models\SuperAdmin\UserSchool;
-use App\Models\SuperAdmin\UserPermission;
-use App\Models\SuperAdmin\AffiliateTransaction;
+use App\Models\LikedSchool;
+use App\Models\SchoolAdminCourseEditPermissions;
+use App\Models\UserSchool;
+use App\Models\UserPermission;
+use App\Models\AffiliateTransaction;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

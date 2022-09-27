@@ -10,31 +10,31 @@ use App\Http\Controllers\Controller;
 use App\Models\CourseApplication;
 use App\Models\User;
 
-use App\Models\SuperAdmin\Country;
-use App\Models\SuperAdmin\City;
-use App\Models\SuperAdmin\ChooseAccommodationAge;
-use App\Models\SuperAdmin\ChooseAccommodationUnderAge;
-use App\Models\SuperAdmin\ChooseBranch;
-use App\Models\SuperAdmin\ChooseClassesDay;
-use App\Models\SuperAdmin\ChooseCustodianUnderAge;
-use App\Models\SuperAdmin\ChooseLanguage;
-use App\Models\SuperAdmin\ChooseProgramAge;
-use App\Models\SuperAdmin\ChooseProgramType;
-use App\Models\SuperAdmin\ChooseProgramUnderAge;
-use App\Models\SuperAdmin\ChooseStartDate;
-use App\Models\SuperAdmin\ChooseStudyMode;
-use App\Models\SuperAdmin\ChooseStudyTime;
-use App\Models\SuperAdmin\Course;
-use App\Models\SuperAdmin\CourseAccommodation;
-use App\Models\SuperAdmin\CourseAccommodationUnderAge;
-use App\Models\SuperAdmin\CourseAirport;
-use App\Models\SuperAdmin\CourseCustodian;
-use App\Models\SuperAdmin\CourseMedical;
-use App\Models\SuperAdmin\CourseProgram;
-use App\Models\SuperAdmin\CourseProgramTextBookFee;
-use App\Models\SuperAdmin\CourseProgramUnderAgeFee;
-use App\Models\SuperAdmin\CurrencyExchangeRate;
-use App\Models\SuperAdmin\School;
+use App\Models\Country;
+use App\Models\City;
+use App\Models\ChooseAccommodationAge;
+use App\Models\ChooseAccommodationUnderAge;
+use App\Models\ChooseBranch;
+use App\Models\ChooseClassesDay;
+use App\Models\ChooseCustodianUnderAge;
+use App\Models\ChooseLanguage;
+use App\Models\ChooseProgramAge;
+use App\Models\ChooseProgramType;
+use App\Models\ChooseProgramUnderAge;
+use App\Models\ChooseStartDate;
+use App\Models\ChooseStudyMode;
+use App\Models\ChooseStudyTime;
+use App\Models\Course;
+use App\Models\CourseAccommodation;
+use App\Models\CourseAccommodationUnderAge;
+use App\Models\CourseAirport;
+use App\Models\CourseCustodian;
+use App\Models\CourseMedical;
+use App\Models\CourseProgram;
+use App\Models\CourseProgramTextBookFee;
+use App\Models\CourseProgramUnderAgeFee;
+use App\Models\CurrencyExchangeRate;
+use App\Models\School;
 
 use App\Services\CourseCreateService;
 
@@ -185,7 +185,7 @@ class CourseController extends Controller
         if (auth('superadmin')->check()) {
             $courses = Course::with('school')->where('deleted', false)->get();
         } else if (auth('schooladmin')->check()) {
-            $courses = Course::whereIn('school_id', auth('schooladmin')->user()->school)->with('school')->where('deleted', false)->get();
+            $courses = Course::whereIn('school_id', auth('schooladmin')->user()->school_ids)->with('school')->where('deleted', false)->get();
         }
         $choose_fields = self::_getChooseFields($courses);
 
@@ -200,7 +200,7 @@ class CourseController extends Controller
         if (auth('superadmin')->check()) {
             $courses = Course::with('school')->where('deleted', true)->get();
         } else if (auth('schooladmin')->check()) {
-            $courses = Course::whereIn('school_id', auth('schooladmin')->user()->school)->with('school')->where('deleted', true)->get();
+            $courses = Course::whereIn('school_id', auth('schooladmin')->user()->school_ids)->with('school')->where('deleted', true)->get();
         }
         $choose_fields = self::_getChooseFields($courses);
 
@@ -758,19 +758,19 @@ class CourseController extends Controller
         $course_choose_type = $request->course_choose_type;
         $CourseChoose = '';
         if ($course_choose_type == 'language') {
-            $CourseChoose = '\App\Models\SuperAdmin\ChooseLanguage';
+            $CourseChoose = '\App\Models\ChooseLanguage';
         } else if ($course_choose_type == 'study_mode') {
-            $CourseChoose = '\App\Models\SuperAdmin\ChooseStudyMode';
+            $CourseChoose = '\App\Models\ChooseStudyMode';
         } else if ($course_choose_type == 'program_type') {
-            $CourseChoose = '\App\Models\SuperAdmin\ChooseProgramType';
+            $CourseChoose = '\App\Models\ChooseProgramType';
         } else if ($course_choose_type == 'branch') {
-            $CourseChoose = '\App\Models\SuperAdmin\ChooseBranch';
+            $CourseChoose = '\App\Models\ChooseBranch';
         } else if ($course_choose_type == 'study_time') {
-            $CourseChoose = '\App\Models\SuperAdmin\ChooseStudyTime';
+            $CourseChoose = '\App\Models\ChooseStudyTime';
         } else if ($course_choose_type == 'classes_day') {
-            $CourseChoose = '\App\Models\SuperAdmin\ChooseClassesDay';
+            $CourseChoose = '\App\Models\ChooseClassesDay';
         } else if ($course_choose_type == 'start_date') {
-            $CourseChoose = '\App\Models\SuperAdmin\ChooseStartDate';
+            $CourseChoose = '\App\Models\ChooseStartDate';
         }
 
         for ($i = 0; $i <= $request->course_choose_increment; $i++) {
@@ -831,15 +831,15 @@ class CourseController extends Controller
         $course_choose_age_type = $request->course_choose_age_type;
         $CourseChooseAge = '';
         if ($course_choose_age_type == 'program_age') {
-            $CourseChooseAge = '\App\Models\SuperAdmin\ChooseProgramAge';
+            $CourseChooseAge = '\App\Models\ChooseProgramAge';
         } else if ($course_choose_age_type == 'program_under_age') {
-            $CourseChooseAge = '\App\Models\SuperAdmin\ChooseProgramUnderAge';
+            $CourseChooseAge = '\App\Models\ChooseProgramUnderAge';
         } else if ($course_choose_age_type == 'accommodation_age') {
-            $CourseChooseAge = '\App\Models\SuperAdmin\ChooseAccommodationAge';
+            $CourseChooseAge = '\App\Models\ChooseAccommodationAge';
         } else if ($course_choose_age_type == 'accommodation_under_age') {
-            $CourseChooseAge = '\App\Models\SuperAdmin\ChooseAccommodationUnderAge';
+            $CourseChooseAge = '\App\Models\ChooseAccommodationUnderAge';
         } else if ($course_choose_age_type == 'custodian_under_age') {
-            $CourseChooseAge = '\App\Models\SuperAdmin\ChooseCustodianUnderAge';
+            $CourseChooseAge = '\App\Models\ChooseCustodianUnderAge';
         }
 
         for ($i = 0; $i <= $request->course_choose_age_increment; $i++) {

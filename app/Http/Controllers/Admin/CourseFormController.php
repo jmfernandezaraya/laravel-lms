@@ -4,18 +4,18 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 
-use App\Models\SuperAdmin\ChooseAccommodationAge;
-use App\Models\SuperAdmin\ChooseAccommodationUnderAge;
-use App\Models\SuperAdmin\ChooseCustodianUnderAge;
-use App\Models\SuperAdmin\ChooseLanguage;
-use App\Models\SuperAdmin\ChooseProgramAge;
-use App\Models\SuperAdmin\ChooseProgramType;
-use App\Models\SuperAdmin\ChooseProgramUnderAge;
-use App\Models\SuperAdmin\ChooseStartDate;
-use App\Models\SuperAdmin\ChooseStudyMode;
-use App\Models\SuperAdmin\ChooseStudyTime;
-use App\Models\SuperAdmin\ChooseClassesDay;
-use App\Models\SuperAdmin\Course;
+use App\Models\ChooseAccommodationAge;
+use App\Models\ChooseAccommodationUnderAge;
+use App\Models\ChooseCustodianUnderAge;
+use App\Models\ChooseLanguage;
+use App\Models\ChooseProgramAge;
+use App\Models\ChooseProgramType;
+use App\Models\ChooseProgramUnderAge;
+use App\Models\ChooseStartDate;
+use App\Models\ChooseStudyMode;
+use App\Models\ChooseStudyTime;
+use App\Models\ChooseClassesDay;
+use App\Models\Course;
 
 use Illuminate\Http\Request;
 

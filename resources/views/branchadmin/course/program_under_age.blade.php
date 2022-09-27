@@ -131,7 +131,7 @@
                     <br>
                     <select class="3col active" name="program_id[]" style="width:100%" multiple="multiple">
                         @if(\Session::has('program_id'))
-                            @foreach (\App\Models\SuperAdmin\CourseProgram::whereIn('unique_id', \Session::get('program_unique_id'))->get() as $programs)
+                            @foreach (\App\Models\CourseProgram::whereIn('unique_id', \Session::get('program_unique_id'))->get() as $programs)
                                 <option value="{{$programs->unique_id}}">{{$programs->unique_id}}</option>
                             @endforeach
                         @endif
@@ -145,7 +145,7 @@
                                 <div class="col-md-4">
                                     <label for="">{{__('Admin/backend.under_age_fee_per_week')}}:<i class="fa fa-plus pl-3" data-toggle="modal" data-target="#ProgramUnderAgeModal" aria-hidden="true"></i><i class="fa fa-trash pl-3" onclick="deleteProgramUnderAgeRange()" aria-hidden="true"></i></label>
                                     <select name="program_under_age[age][0][]" id="program_under_age_range_choose0" multiple="multiple" class="3col active">
-                                        @foreach(\App\Models\SuperAdmin\ChooseProgramUnderAge::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all() as $option)
+                                        @foreach(\App\Models\ChooseProgramUnderAge::orderBy('age', 'asc')->get()->collect()->unique('age')->values()->all() as $option)
                                             <option value="{{$option->age}}">{{$option->age}}</option>
                                         @endforeach
                                     </select>

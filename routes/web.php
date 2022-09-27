@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Route;
 
 ///// Test Routes /////
 Route::get('test_school', function() {
-    $school =  \App\Models\SuperAdmin\School::find(21);
+    $school =  \App\Models\School::find(21);
     return $school->getCityCountryStatewithCommas()->branch;
 });
 Route::get('tesetCourseSend', 'Frontend\FrontendController@testCourseNotification');
@@ -230,8 +230,8 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => [
         Route::post('pause/{id}', '\App\Http\Controllers\Admin\SchoolController@pause')->name('pause');
         Route::post('play/{id}', '\App\Http\Controllers\Admin\SchoolController@play')->name('play');
         Route::post('bulk', '\App\Http\Controllers\Admin\SchoolController@bulk')->name('bulk');
-        Route::post('nationality', '\App\Http\Controllers\Admin\SchoolController@addNationality')->name('nationality.add');
-        Route::delete('nationality', '\App\Http\Controllers\Admin\SchoolController@deleteNationality')->name('nationality.delete');
+        Route::get('nationality', '\App\Http\Controllers\Admin\SchoolController@viewNationality')->name('nationality');
+        Route::post('nationality', '\App\Http\Controllers\Admin\SchoolController@updateNationality')->name('nationality.update');
         Route::get('country_city', '\App\Http\Controllers\Admin\SchoolController@viewCountryCityList')->name('country_city');
         Route::post('country_city', '\App\Http\Controllers\Admin\SchoolController@updateCoutryCityList')->name('country_city.update');
         Route::get('name', '\App\Http\Controllers\Admin\SchoolController@viewNameList')->name('name');
@@ -363,6 +363,8 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => [
     Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
         Route::resource('customer', 'CustomerController');
         Route::post('affiliate/{id}/transaction', 'AffiliateController@transaction')->name('affiliate.transaction');
+        Route::post('affiliate/active/{id}', 'AffiliateController@active')->name('affiliate.active');
+        Route::post('affiliate/deactive/{id}', 'AffiliateController@deactive')->name('affiliate.deactive');
         Route::resource('affiliate', 'AffiliateController');
         Route::resource('school_admin', 'SchoolAdminController');
         Route::resource('super_admin', 'SuperAdminController');
@@ -373,6 +375,9 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => [
 
     Route::post('currency/set_default/{id}', 'CurrencyController@setDefault')->name('currency.set_default');
     Route::resource('currency', 'CurrencyController');
+
+    Route::post('payment_method/set_default/{id}', 'PaymentMethodController@setDefault')->name('payment_method.set_default');
+    Route::resource('payment_method', 'PaymentMethodController');
 
     Route::group(['prefix' => 'coupon', 'as' => 'coupon.'], function () {
         Route::post('pause/{id}', 'CouponController@pause')->name('pause');

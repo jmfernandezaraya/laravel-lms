@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 
-use App\Models\User;
+use App\Models\Coupon;
+use App\Models\CouponUsage;
 use App\Models\CourseApplication;
-use App\Models\Review;
 use App\Models\Message;
-
-use App\Models\SuperAdmin\Coupon;
-use App\Models\SuperAdmin\School;
+use App\Models\Review;
+use App\Models\School;
+use App\Models\User;
 
 use DB;
 use PDF;
@@ -329,7 +329,17 @@ class CustomerController extends Controller
     }
 
     public function transactions()
-    {        
-        return view('frontend.customer.transactions');
+    {
+        $user = User::with('transactions')->where('user_type', 'affiliate')->where('id', auth()->user()->id)->first();
+        $transactions = [];
+        if ($user) {
+            $transactions = $user->transactions;
+            foreach ($transactions as $transaction) {
+                $course_application = CourseApplication::where('order_id', $transaction->cart_id)->first();
+                $transaction->course_application = $course_application;
+            }
+        }
+
+        return view('frontend.customer.transactions', compact('transactions'));
     }
 }

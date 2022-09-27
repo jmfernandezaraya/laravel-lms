@@ -210,17 +210,21 @@
 
                     <div class="row">
                         <div class="col-md-12">
-                            <label><h3>{{__('Admin/backend.payments')}}</h3></label>
+                            <label><h3>{{__('Admin/backend.course_application_order_number')}}</h3></label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-4">
-                            <label>{{__('Admin/backend.course_application_order_number_prefix')}}:</label>
+                            <label>{{__('Admin/backend.prefix')}}:</label>
                             <input type="text" name="ca_order_number_prefix" class="form-control" value="{{ isset($setting_value['course_application']['order_number_prefix']) ? $setting_value['course_application']['order_number_prefix'] : '' }}" />
                         </div>
                         <div class="form-group col-md-4">
-                            <label>{{__('Admin/backend.course_application_order_number_digits')}}:</label>
+                            <label>{{__('Admin/backend.digits')}}:</label>
                             <input type="number" name="ca_order_number_digits" class="form-control" value="{{ isset($setting_value['course_application']['order_number_digits']) ? $setting_value['course_application']['order_number_digits'] : '' }}" />
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>{{__('Admin/backend.start')}}:</label>
+                            <input type="number" name="ca_order_number_start" class="form-control" value="{{ isset($setting_value['course_application']['order_number_start']) ? $setting_value['course_application']['order_number_start'] : '' }}" />
                         </div>
                     </div>
 

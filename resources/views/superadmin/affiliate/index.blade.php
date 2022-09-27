@@ -47,13 +47,25 @@
                                 <td>{{ $affiliate->{'first_name_' . get_language()} }}&nbsp;{{ $affiliate->{'last_name_' . get_language()} }}</td>
                                 <td>{{ $affiliate->email }}</td>
                                 <td>{{ $affiliate->telephone }}</td>
-                                <td>{{ $affiliate->commission_rate }}</td>
-                                <td>{{ $affiliate->commission_rate }}</td>
+                                <td>{{ $affiliate->balance }}</td>
+                                <td>{{ $affiliate->commission_rate }} {{ $affiliate->commission_rate_type == 'percent' ? '%' : __('Admin/backend.fixed') }}</td>
                                 @if (can_manage_user() || can_edit_user() || can_delete_user())
                                     <td>
                                         <div class="btn-group">
                                             @if (can_manage_user() || can_edit_user())
                                                 <a href="{{route('superadmin.user.affiliate.edit', $affiliate->id)}}" class="btn btn-info btn-sm fa fa-pencil"></a>
+                                                
+                                                @if ($affiliate->account_active)
+                                                    <form method="post" action="{{route('superadmin.user.affiliate.deactive', $affiliate->id)}}">
+                                                        @csrf
+                                                        <button onclick="return confirm('{{__('Admin/backend.are_you_sure_you_wanna_deactive')}}')" class="btn btn-secondary btn-sm fa fa-pause"></button>
+                                                    </form>
+                                                @else
+                                                    <form method="post" action="{{route('superadmin.user.affiliate.active', $affiliate->id)}}">
+                                                        @csrf
+                                                        <button onclick="return confirm('{{__('Admin/backend.are_you_sure_you_wanna_active')}}')" class="btn btn-success btn-sm fa fa-play"></button>
+                                                    </form>
+                                                @endif
                                             @endif
                                             @if (can_manage_user() || can_delete_user())
                                                 <form action="{{route('superadmin.user.affiliate.destroy', $affiliate->id)}}" method="POST">

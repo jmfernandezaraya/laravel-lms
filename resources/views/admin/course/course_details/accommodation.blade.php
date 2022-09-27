@@ -144,7 +144,7 @@
                                                 <div class="form-group">
                                                     <label class="">{{__('Admin/backend.accommodation_type')}}</label>
                                                     <select name="age_range[]" class="form-control" >
-                                                        @foreach(\App\Models\SuperAdmin\ChooseAccommodationAge::all() as $ages)
+                                                        @foreach(\App\Models\ChooseAccommodationAge::all() as $ages)
                                                             <option value="{{$ages->age}}" {{in_array($ages->age, (array)$accomodation->age_range) ? 'selected' : ''}} >{{$ages->age }}</option>
                                                         @endforeach
                                                     </select>
@@ -168,7 +168,7 @@
                                                 <div class="form-group">
                                                     <label class="">{{__('Admin/backend.custodian_age_range')}}</label>
                                                     <select name="custodian_age_range[]" multiple="multiple" class="form-control" >
-                                                        @foreach(\App\Models\SuperAdmin\ChooseCustodianUnderAge::all() as $custodian)
+                                                        @foreach(\App\Models\ChooseCustodianUnderAge::all() as $custodian)
                                                             <option multiple="" value="{{$custodian->age}}" {{in_array($custodian->age , (array) $accomodation->custodian_age_range) ? 'selected' : ''}} >{{ $custodian->age}}</option>
                                                         @endforeach
                                                     </select>

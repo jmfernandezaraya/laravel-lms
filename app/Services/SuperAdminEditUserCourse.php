@@ -5,10 +5,10 @@ namespace App\Services;
 use App\Classes\AccommodationCalculator;
 
 use App\Models\Calculator;
-use App\Models\SuperAdmin\CourseAccommodation;
-use App\Models\SuperAdmin\CourseAirport;
-use App\Models\SuperAdmin\Course;
-use App\Models\SuperAdmin\CourseProgram;
+use App\Models\CourseAccommodation;
+use App\Models\CourseAirport;
+use App\Models\Course;
+use App\Models\CourseProgram;
 use App\Models\CourseApplication;
 use App\Models\CourseApplicationFee;
 

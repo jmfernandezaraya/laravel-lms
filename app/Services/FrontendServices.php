@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\SuperAdmin\Course;
-use App\Models\SuperAdmin\CourseProgram;
-use App\Models\SuperAdmin\ChooseProgramAge;
-use App\Models\SuperAdmin\ChooseStudyTime;
+use App\Models\Course;
+use App\Models\CourseProgram;
+use App\Models\ChooseProgramAge;
+use App\Models\ChooseStudyTime;
 
 use Illuminate\Http\Request;
 

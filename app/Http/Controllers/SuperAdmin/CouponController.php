@@ -5,13 +5,13 @@ namespace App\Http\Controllers\SuperAdmin;
 use App\Http\Controllers\Controller;
 
 use App\Models\User;
-use App\Models\SuperAdmin\ChooseLanguage;
-use App\Models\SuperAdmin\ChooseProgramType;
-use App\Models\SuperAdmin\ChooseStudyMode;
-use App\Models\SuperAdmin\Coupon;
-use App\Models\SuperAdmin\CouponUsage;
-use App\Models\SuperAdmin\Course;
-use App\Models\SuperAdmin\School;
+use App\Models\ChooseLanguage;
+use App\Models\ChooseProgramType;
+use App\Models\ChooseStudyMode;
+use App\Models\Coupon;
+use App\Models\CouponUsage;
+use App\Models\Course;
+use App\Models\School;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -178,7 +178,7 @@ class CouponController extends Controller
      */
     public function create()
     {
-        $affiliates = User::where('user_type', 'affiliate')->get();
+        $affiliates = User::where('user_type', 'affiliate')->where('account_active', true)->get();
         
         $courses = Course::with('school')->where('deleted', false)->get();
         $choose_fields = self::_getCourseChooseFields($courses);
@@ -244,7 +244,7 @@ class CouponController extends Controller
     public function edit($id)
     {
         $coupon = Coupon::where('unique_id', $id)->first();
-        $affiliates = User::where('user_type', 'affiliate')->get();
+        $affiliates = User::where('user_type', 'affiliate')->where('account_active', true)->get();
         
         $courses = Course::with('school')->where('deleted', false)->get();
         $choose_fields = self::_getCourseChooseFields($courses);

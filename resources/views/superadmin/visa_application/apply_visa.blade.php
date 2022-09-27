@@ -128,7 +128,7 @@
                     <label for="inputapply">I'm applying from <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#ApplyFromModal" aria-hidden="true"></i> <i class="fa fa-trash pl-3" data-url="{{route(" superadmin.delete_applying_from ")}}" onclick="deleteApplyFrom($(this))" aria-hidden="true"></i></label>
                     <select name="applying_from" class="form-control" id="applying_from">
                         <option value="">@lang('Admin/backend.select_option')</option>
-                        @foreach(\App\Models\SuperAdmin\ApplyFrom::all() as $applyform)
+                        @foreach(\App\Models\ApplyFrom::all() as $applyform)
                             <option value="{{$applyform->id}}">{{$applyform->{'apply_from_' . get_language() } }}</option>
                         @endforeach
                     </select>
@@ -142,7 +142,7 @@
 
                     <select id="application_center" name="application_center" class="form-control">
                         <option value="">@lang('Admin/backend.select_option') </option>
-                        @foreach (\App\Models\SuperAdmin\VisaApplicationCenter::all() as $visa)
+                        @foreach (\App\Models\VisaApplicationCenter::all() as $visa)
                             <option value="{{$visa->id}}">{{$visa->{'application_center_' . get_language() } }}</option>
                         @endforeach
                     </select>
@@ -158,7 +158,7 @@
 
                     <select id="nationality_select" name="nationality" class="form-control">
                         <option value=''>@lang('Admin/backend.select_option') </option>
-                        @foreach (\App\Models\SuperAdmin\addNationality::all() as $nationality)
+                        @foreach (\App\Models\AddNationality::all() as $nationality)
                             <option value='{{$nationality->id}}'>{{$nationality->{'nationality_' . get_language() } }} </option>
                         @endforeach
                     </select>
@@ -170,7 +170,7 @@
                     </label>
                     <select name="to_travel" class="form-control" id="to_travel">
                         <option value=''>@lang('Admin/backend.select_option')</option>
-                        @foreach (\App\Models\SuperAdmin\AddWhereToTravel::all() as $travel)
+                        @foreach (\App\Models\AddWhereToTravel::all() as $travel)
                             <option value='{{$travel->id}}'>{{$travel->{'travel_' . get_language() } }}</option>
                         @endforeach
                     </select>
@@ -185,7 +185,7 @@
                     </label>
                     <select name="type_of_visa" class="form-control" id="type_of_visa">
                         <option value=''>@lang('Admin/backend.select_option') </option>
-                        @foreach (\App\Models\SuperAdmin\AddTypeOfVisa::all() as $travel)
+                        @foreach (\App\Models\AddTypeOfVisa::all() as $travel)
                             <option value='{{$travel->id}}'>{{$travel->{'visa_'. get_language()} }}</option>
                         @endforeach
                     </select>

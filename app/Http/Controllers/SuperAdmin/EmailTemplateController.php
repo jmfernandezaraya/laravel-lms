@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use App\Models\CourseApplication;
 
-use App\Models\SuperAdmin\EmailTemplate;
+use App\Models\EmailTemplate;
 
 /**
  * Class EmailTemplateController

@@ -10,11 +10,11 @@ use App\Http\Requests\SuperAdmin\AddTravelRequest;
 use App\Http\Requests\SuperAdmin\AddTypeOfVisaRequest;
 use App\Http\Requests\SuperAdmin\ApplyFromRequest;
 
-use App\Models\SuperAdmin\AddNationality;
-use App\Models\SuperAdmin\AddTypeOfVisa;
-use App\Models\SuperAdmin\AddWhereToTravel;
-use App\Models\SuperAdmin\ApplyFrom;
-use App\Models\SuperAdmin\VisaApplicationCenter;
+use App\Models\AddNationality;
+use App\Models\AddTypeOfVisa;
+use App\Models\AddWhereToTravel;
+use App\Models\ApplyFrom;
+use App\Models\VisaApplicationCenter;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;

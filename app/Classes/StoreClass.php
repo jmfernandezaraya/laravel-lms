@@ -8,7 +8,7 @@ use DB;
 use Storage;
 
 use App\Models\User;
-use App\Models\SuperAdmin\School;
+use App\Models\School;
 
 class StoreClass {
 	private $image, $request, $type_of_request, $id;

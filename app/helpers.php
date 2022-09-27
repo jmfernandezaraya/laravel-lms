@@ -135,6 +135,35 @@ function can_delete_currency() {
     }
 }
 
+function can_manage_payment_method() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['payment_method_manager'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return false;
+    }
+}
+function can_add_payment_method() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['payment_method_add'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return false;
+    }
+}
+function can_edit_payment_method() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['payment_method_edit'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return false;
+    }
+}
+function can_delete_payment_method() {
+    if (auth('superadmin')->check()) {
+        return auth('superadmin')->user()->permission['payment_method_delete'] == 1 ? true : false;
+    } else if (auth('schooladmin')->check()) {
+        return false;
+    }
+}
+
 function can_manage_course_application() {
     if (auth('superadmin')->check()) {
         return auth('superadmin')->user()->permission['course_application_manager'] == 1 ? true : false;
@@ -1026,7 +1055,7 @@ function getEndDate($date, $weeks)
  */
 function getSessionCourseUniqueId()
 {
-    return \App\Models\SuperAdmin\CourseProgram::whereCourseUniqueId(\Session::get('course_unique_id'))->first()['course_unique_id'];
+    return \App\Models\CourseProgram::whereCourseUniqueId(\Session::get('course_unique_id'))->first()['course_unique_id'];
 }
 
 /**
@@ -1059,13 +1088,41 @@ function getGetDefaultCurrencyName()
 }
 
 /**
+ * @return mixed
+ */
+function getDefaultPaymentMethod()
+{
+    $payment_method = \App\Models\PaymentMethod::where('is_default', true)->first();
+    $default_payment_method = [];
+    if ($payment_method) {
+        $value['payment_method'] = app()->getLocale() == 'en' ? $payment_method->name : $payment_method->name_ar;
+    }
+
+    return $default_payment_method;
+}
+
+/**
+ * @return mixed
+ */
+function getDefaultPaymentMethodName()
+{
+    $payment_method = \App\Models\PaymentMethod::where('is_default', true)->first();
+    $payment_method_name = '';
+    if ($payment_method) {
+        $value = app()->getLocale() == 'en' ? $payment_method->name : $payment_method->name_ar;
+    }
+
+    return $payment_method_name;
+}
+
+/**
  * @param $country_id
  * @param null $which
  * @return mixed
  */
 function getCountryName($country_id)
 {
-    $country = \App\Models\SuperAdmin\Country::where('id', $country_id)->first();
+    $country = \App\Models\Country::where('id', $country_id)->first();
     if ($country) {
         if (app()->getLocale() == 'en') {
             return $country->name;
@@ -1452,10 +1509,24 @@ function getCourseApplicationOrderNumberPrefix()
     return $site_course_application_order_number_prefix;
 }
 
+function getCourseApplicationOrderNumberStart()
+{
+    $site_course_application_order_number_prefix = '';
+    $site = \App\Models\Setting::where('setting_key', 'site')->first();
+    if ($site) {
+        $content = unserialize($site->setting_value);
+        if (isset($content['course_application']['order_number_start'])) {
+            $site_course_application_order_number_prefix = $content['course_application']['order_number_start'];
+        }
+    }
+    return $site_course_application_order_number_prefix;
+}
+
 function getCourseApplicationOrderNumber()
 {
     $site_course_application_order_number_prefix = '';
     $site_course_application_order_number_digits = 0;
+    $site_course_application_order_number_start = 0;
     $site = \App\Models\Setting::where('setting_key', 'site')->first();
     if ($site) {
         $content = unserialize($site->setting_value);
@@ -1465,11 +1536,14 @@ function getCourseApplicationOrderNumber()
         if (isset($content['course_application']['order_number_digits'])) {
             $site_course_application_order_number_digits = $content['course_application']['order_number_digits'];
         }
+        if (isset($content['course_application']['order_number_start'])) {
+            $site_course_application_order_number_start = $content['course_application']['order_number_start'];
+        }
     }
-    $max_order_number = 0;
+    $max_order_number = $site_course_application_order_number_start;
     $ca_max_order_number = \App\Models\CourseApplication::max('order_number');
     if ($ca_max_order_number) {
-        $max_order_number = (int)str_replace($site_course_application_order_number_prefix . "-", "", $max_order_number);
+        $current_max_order_number = (int)str_replace($site_course_application_order_number_prefix . "-", "", $max_order_number);
     }
     $max_order_number = $max_order_number + 1;
     $new_order_number = '';
@@ -1671,7 +1745,7 @@ function getCourseProgramAgeRange($program_age_range)
 {
     $age_ranges = is_array($program_age_range) ? $program_age_range : [];
     $min_age = ''; $max_age = '';
-    $program_age_ranges = \App\Models\SuperAdmin\ChooseProgramAge::whereIn('unique_id', $age_ranges)->orderBy('age', 'asc')->pluck('age')->toArray();
+    $program_age_ranges = \App\Models\ChooseProgramAge::whereIn('unique_id', $age_ranges)->orderBy('age', 'asc')->pluck('age')->toArray();
     if (!empty($program_age_ranges) && count($program_age_ranges)) {
         $min_age = $program_age_ranges[0];
         $max_age = $program_age_ranges[count($program_age_ranges) - 1];
@@ -1691,7 +1765,7 @@ function getCourseAccommodationAgeRange($course_accommodation_age_range)
 {
     $age_ranges = is_array($course_accommodation_age_range) ? $course_accommodation_age_range : [];
     $min_age = ''; $max_age = '';
-    $course_accommodation_age_ranges = \App\Models\SuperAdmin\ChooseAccommodationAge::whereIn('unique_id', $age_ranges)->orderBy('age', 'asc')->pluck('age')->toArray();
+    $course_accommodation_age_ranges = \App\Models\ChooseAccommodationAge::whereIn('unique_id', $age_ranges)->orderBy('age', 'asc')->pluck('age')->toArray();
     if (!empty($course_accommodation_age_ranges) && count($course_accommodation_age_ranges)) {
         $min_age = $course_accommodation_age_ranges[0];
         $max_age = $course_accommodation_age_ranges[count($course_accommodation_age_ranges) - 1];
@@ -1711,7 +1785,7 @@ function getCourseCustodianAgeRange($course_custodian_age_range)
 {
     $age_ranges = is_array($course_custodian_age_range) ? $course_custodian_age_range : [];
     $min_age = ''; $max_age = '';
-    $course_custodian_age_ranges = \App\Models\SuperAdmin\ChooseCustodianUnderAge::whereIn('unique_id', $age_ranges)->orderBy('age', 'asc')->pluck('age')->toArray();
+    $course_custodian_age_ranges = \App\Models\ChooseCustodianUnderAge::whereIn('unique_id', $age_ranges)->orderBy('age', 'asc')->pluck('age')->toArray();
     if (!empty($course_custodian_age_ranges) && count($course_custodian_age_ranges)) {
         $min_age = $course_custodian_age_ranges[0];
         $max_age = $course_custodian_age_ranges[count($course_custodian_age_ranges) - 1];
@@ -1724,26 +1798,26 @@ function getCourseCustodianAgeRange($course_custodian_age_range)
 
 function getCourseAgeRanges($course_id)
 {
-    $course_programs = \App\Models\SuperAdmin\CourseProgram::where('course_unique_id', $course_id)->get();
+    $course_programs = \App\Models\CourseProgram::where('course_unique_id', $course_id)->get();
 
     $age_range_ids = [];
     foreach($course_programs as $course_program) {
         $age_range_ids = array_unique(array_merge($age_range_ids, $course_program->program_age_range ?? []));
     }
-    $age_ranges = \App\Models\SuperAdmin\ChooseProgramAge::whereIn('unique_id', $age_range_ids)->pluck('age')->toArray();
+    $age_ranges = \App\Models\ChooseProgramAge::whereIn('unique_id', $age_range_ids)->pluck('age')->toArray();
     sort($age_ranges); 
     return $age_ranges;
 }
 
 function getCourseMinMaxAgeRange($course_id)
 {
-    $course_programs = \App\Models\SuperAdmin\CourseProgram::where('course_unique_id', $course_id)->get();
+    $course_programs = \App\Models\CourseProgram::where('course_unique_id', $course_id)->get();
 
     $age_range_ids = [];
     foreach($course_programs as $course_program) {
         $age_range_ids = array_unique(array_merge($age_range_ids, $course_program->program_age_range ?? []));
     }
-    $age_ranges = \App\Models\SuperAdmin\ChooseProgramAge::whereIn('unique_id', $age_range_ids)->pluck('age')->toArray();
+    $age_ranges = \App\Models\ChooseProgramAge::whereIn('unique_id', $age_range_ids)->pluck('age')->toArray();
     sort($age_ranges); 
     return [
         'min' => min($age_ranges),
@@ -1753,7 +1827,7 @@ function getCourseMinMaxAgeRange($course_id)
 
 function getCourseLanguageNames($course_language_ids)
 {
-    $course_languages = \App\Models\SuperAdmin\ChooseLanguage::whereIn('unique_id', $course_language_ids ? (is_array($course_language_ids) ? $course_language_ids : [$course_language_ids]) : []);
+    $course_languages = \App\Models\ChooseLanguage::whereIn('unique_id', $course_language_ids ? (is_array($course_language_ids) ? $course_language_ids : [$course_language_ids]) : []);
     if (app()->getLocale() == 'en') {
         $course_languages = $course_languages->pluck('name')->toArray();
     } else {
@@ -1764,7 +1838,7 @@ function getCourseLanguageNames($course_language_ids)
 
 function getCourseProgramTypeNames($course_program_type_ids)
 {
-    $course_program_types = \App\Models\SuperAdmin\ChooseProgramType::whereIn('unique_id', $course_program_type_ids ? (is_array($course_program_type_ids) ? $course_program_type_ids : [$course_program_type_ids]) : []);
+    $course_program_types = \App\Models\ChooseProgramType::whereIn('unique_id', $course_program_type_ids ? (is_array($course_program_type_ids) ? $course_program_type_ids : [$course_program_type_ids]) : []);
     if (app()->getLocale() == 'en') {
         $course_program_types = $course_program_types->pluck('name')->toArray();
     } else {
@@ -1775,7 +1849,7 @@ function getCourseProgramTypeNames($course_program_type_ids)
 
 function getCourseStudyModeNames($course_study_mode_ids)
 {    
-    $course_study_modes = \App\Models\SuperAdmin\ChooseStudyMode::whereIn('unique_id', $course_study_mode_ids ? (is_array($course_study_mode_ids) ? $course_study_mode_ids : [$course_study_mode_ids]) : []);
+    $course_study_modes = \App\Models\ChooseStudyMode::whereIn('unique_id', $course_study_mode_ids ? (is_array($course_study_mode_ids) ? $course_study_mode_ids : [$course_study_mode_ids]) : []);
     if (app()->getLocale() == 'en') {
         $course_study_modes = $course_study_modes->pluck('name')->toArray();
     } else {
@@ -1786,7 +1860,7 @@ function getCourseStudyModeNames($course_study_mode_ids)
 
 function getCourseBranchNames($course_branch_ids)
 {
-    $course_branches = \App\Models\SuperAdmin\ChooseBranch::whereIn('unique_id', $course_branch_ids ? (is_array($course_branch_ids) ? $course_branch_ids : [$course_branch_ids]) : []);
+    $course_branches = \App\Models\ChooseBranch::whereIn('unique_id', $course_branch_ids ? (is_array($course_branch_ids) ? $course_branch_ids : [$course_branch_ids]) : []);
     if (app()->getLocale() == 'en') {
         $course_branches = $course_branches->pluck('name')->toArray();
     } else {
@@ -1797,7 +1871,7 @@ function getCourseBranchNames($course_branch_ids)
 
 function getCourseStudyTimeNames($course_study_time_ids)
 {
-    $course_study_times = \App\Models\SuperAdmin\ChooseStudyTime::whereIn('unique_id', $course_study_time_ids ? (is_array($course_study_time_ids) ? $course_study_time_ids : [$course_study_time_ids]) : []);
+    $course_study_times = \App\Models\ChooseStudyTime::whereIn('unique_id', $course_study_time_ids ? (is_array($course_study_time_ids) ? $course_study_time_ids : [$course_study_time_ids]) : []);
     if (app()->getLocale() == 'en') {
         $course_study_times = $course_study_times->pluck('name')->toArray();
     } else {
@@ -1808,7 +1882,7 @@ function getCourseStudyTimeNames($course_study_time_ids)
 
 function getCourseStartDateNames($course_start_date_ids)
 {
-    $course_start_dates = \App\Models\SuperAdmin\ChooseStartDate::whereIn('unique_id', $course_start_date_ids ? (is_array($course_start_date_ids) ? $course_start_date_ids : [$course_start_date_ids]) : []);
+    $course_start_dates = \App\Models\ChooseStartDate::whereIn('unique_id', $course_start_date_ids ? (is_array($course_start_date_ids) ? $course_start_date_ids : [$course_start_date_ids]) : []);
     if (app()->getLocale() == 'en') {
         $course_start_dates = $course_start_dates->pluck('name')->toArray();
     } else {
@@ -1820,7 +1894,7 @@ function getCourseStartDateNames($course_start_date_ids)
 function checkCoursePromotion($course_id)
 {
     $now = Carbon\Carbon::now()->format('Y-m-d');
-    $course = \App\Models\SuperAdmin\Course::with('coursePrograms')->where('unique_id', '' . $course_id)->first();
+    $course = \App\Models\Course::with('coursePrograms')->where('unique_id', '' . $course_id)->first();
     if ($course) {
         foreach ($course->coursePrograms as $course_program) {
             $course_program_discount = false;
@@ -1843,7 +1917,7 @@ function checkCoursePromotion($course_id)
 function checkCourseProgramPromotion($course_program_id)
 {
     $now = Carbon\Carbon::now()->format('Y-m-d');
-    $course_program = \App\Models\SuperAdmin\CourseProgram::where('unique_id', $course_program_id)->first();
+    $course_program = \App\Models\CourseProgram::where('unique_id', $course_program_id)->first();
     if ($course_program) {
         if ($course_program->discount_per_week != ' -' && $course_program->discount_per_week != ' %') {
             if (($course_program->discount_start_date <= $now && $course_program->discount_end_date >= $now) ||
@@ -1865,42 +1939,42 @@ function getCourseApplicationPrintData($id, $user_id, $is_admin = false)
     $data['program_end_date'] = Carbon\Carbon::create($course_application->end_date)->format('d-m-Y');
     $data['accommodation_end_date'] = Carbon\Carbon::create($data['accommodation_start_date'])->addWeeks($course_application->accommodation_duration)->subDay()->format('d-m-Y');
     $data['medical_end_date'] = Carbon\Carbon::create($data['medical_start_date'])->addWeeks($course_application->medical_duration ?? 0)->subDay()->format('d-m-Y');
-    $data['school'] = \App\Models\SuperAdmin\School::find($course_application->school_id);
-    $data['course'] = isset($course_application->course_id) ? \App\Models\SuperAdmin\Course::where('unique_id', $course_application->course_id)->first() : null;
-    $data['program'] = isset($course_application->course_program_id) ? \App\Models\SuperAdmin\CourseProgram::where('unique_id', $course_application->course_program_id)->first() : null;
+    $data['school'] = \App\Models\School::find($course_application->school_id);
+    $data['course'] = isset($course_application->course_id) ? \App\Models\Course::where('unique_id', $course_application->course_id)->first() : null;
+    $data['program'] = isset($course_application->course_program_id) ? \App\Models\CourseProgram::where('unique_id', $course_application->course_program_id)->first() : null;
     $data['min_age'] = ''; $data['max_age'] = '';
     $age_ranges = $data['program'] ? $data['program']->program_age_range : [];
-    $program_age_ranges = \App\Models\SuperAdmin\ChooseProgramAge::whereIn('unique_id', $age_ranges)->orderBy('age', 'asc')->pluck('age')->toArray();
+    $program_age_ranges = \App\Models\ChooseProgramAge::whereIn('unique_id', $age_ranges)->orderBy('age', 'asc')->pluck('age')->toArray();
     if (!empty($program_age_ranges) && count($program_age_ranges)) {
         $data['min_age'] = $program_age_ranges[0];
         $data['max_age'] = $program_age_ranges[count($program_age_ranges) - 1];
     }
-    $program_under_age = \App\Models\SuperAdmin\ChooseProgramUnderAge::whereIn('age', $program_age_ranges)->value('unique_id');
-    $data['program_text_book_fee'] = isset($course_application->course_program_id) ? \App\Models\SuperAdmin\CourseProgramTextBookFee::where('course_program_id', $course_application->course_program_id)->
+    $program_under_age = \App\Models\ChooseProgramUnderAge::whereIn('age', $program_age_ranges)->value('unique_id');
+    $data['program_text_book_fee'] = isset($course_application->course_program_id) ? \App\Models\CourseProgramTextBookFee::where('course_program_id', $course_application->course_program_id)->
         where('text_book_start_date', '<=', $course_application->course_program_id)->where('text_book_end_date', '>=', $course_application->course_program_id)->first() : null;
-    $data['program_under_age_fee'] = isset($course_application->course_program_id) ? \App\Models\SuperAdmin\CourseProgramUnderAgeFee::where('course_program_id', $course_application->course_program_id)->
+    $data['program_under_age_fee'] = isset($course_application->course_program_id) ? \App\Models\CourseProgramUnderAgeFee::where('course_program_id', $course_application->course_program_id)->
         where('under_age', 'LIKE', '%' . $program_under_age . '%')->first() : null;
-    $data['accommodation'] = isset($course_application->accommodation_id) ? \App\Models\SuperAdmin\CourseAccommodation::where('unique_id', '' . $course_application->accommodation_id)->first() : null;
+    $data['accommodation'] = isset($course_application->accommodation_id) ? \App\Models\CourseAccommodation::where('unique_id', '' . $course_application->accommodation_id)->first() : null;
     $age_ranges = $data['accommodation'] ? $data['accommodation']->age_range : [];
     $data['accommodation_min_age'] = ''; $data['accommodation_max_age'] = '';
-    $accommodation_age_ranges = \App\Models\SuperAdmin\ChooseAccommodationAge::whereIn('unique_id', $age_ranges)->orderBy('age', 'asc')->pluck('age')->toArray();
+    $accommodation_age_ranges = \App\Models\ChooseAccommodationAge::whereIn('unique_id', $age_ranges)->orderBy('age', 'asc')->pluck('age')->toArray();
     if (!empty($accommodation_age_ranges) && count($accommodation_age_ranges)) {
         $data['accommodation_min_age'] = $accommodation_age_ranges[0];
         $data['accommodation_max_age'] = $accommodation_age_ranges[count($accommodation_age_ranges) - 1];
     }
-    $data['airport'] = isset($course_application->airport_id) ? \App\Models\SuperAdmin\CourseAirport::where('unique_id', $course_application->airport_id)->first() : null;
+    $data['airport'] = isset($course_application->airport_id) ? \App\Models\CourseAirport::where('unique_id', $course_application->airport_id)->first() : null;
     $data['airport_provider'] = $data['airport'] ? (app()->getLocale() == 'en' ? $data['airport']->service_provider : $data['airport']->service_provider_ar) : '';
-    $airport_fee = isset($course_application->airport_fee_id) ? \App\Models\SuperAdmin\CourseAirportFee::where('unique_id', $course_application->airport_fee_id)->first() : null;
+    $airport_fee = isset($course_application->airport_fee_id) ? \App\Models\CourseAirportFee::where('unique_id', $course_application->airport_fee_id)->first() : null;
     $data['airport_name'] = $airport_fee ? (app()->getLocale() == 'en' ? $airport_fee->name : $airport_fee->name_ar) : '';
     $data['airport_service'] = $airport_fee ? (app()->getLocale() == 'en' ? $airport_fee->service_name : $airport_fee->service_name_ar) : '';
-    $data['medical'] = isset($course_application->medical_id) ? \App\Models\SuperAdmin\CourseMedical::where('unique_id', $course_application->medical_id)->first() : null;
+    $data['medical'] = isset($course_application->medical_id) ? \App\Models\CourseMedical::where('unique_id', $course_application->medical_id)->first() : null;
     $data['company_name'] = $data['medical'] ? (app()->getLocale() == 'en' ? $data['medical']->company_name : $data['medical']->company_name_ar) : '';
     $data['duration'] = $course_application->duration;
-    $data['custodian'] = isset($course_application->custodian_id) ? \App\Models\SuperAdmin\CourseCustodian::where('unique_id', $course_application->medical_id)->first() : null;
+    $data['custodian'] = isset($course_application->custodian_id) ? \App\Models\CourseCustodian::where('unique_id', $course_application->medical_id)->first() : null;
 
     $default_currency = getDefaultCurrency();
 
-    $currency_exchange_rate = \App\Models\SuperAdmin\CurrencyExchangeRate::where('id', $data['course'] ? $data['course']->currency : 0)->first() ?? null;
+    $currency_exchange_rate = \App\Models\CurrencyExchangeRate::where('id', $data['course'] ? $data['course']->currency : 0)->first() ?? null;
     $currency_exchange_rate_value = $currency_exchange_rate ? (float)$currency_exchange_rate->exchange_rate : 1;
     
     $program_total = $course_application->total_cost - $course_application->accommodation_total
@@ -1975,7 +2049,7 @@ function getCourseApplicationPrintData($id, $user_id, $is_admin = false)
     $amount_refunded = 0;
     $data['transaction_refunds'] = [];
     if ($course_application->transaction) {
-        $data['transaction_refunds'] = \App\Models\SuperAdmin\TransactionRefund::where('transaction_id', $course_application->transaction->order_id)->orderBy('id', 'asc')->get();
+        $data['transaction_refunds'] = \App\Models\TransactionRefund::where('transaction_id', $course_application->transaction->order_id)->orderBy('id', 'asc')->get();
         foreach ($data['transaction_refunds'] as $transaction_refund) {
             $amount_added += $transaction_refund->amount_added;
             $amount_refunded += $transaction_refund->amount_refunded;
@@ -2103,13 +2177,13 @@ function getCourseApplicationMailData($id, $user_id)
 function getUserSchools($user_id)
 {
     $user = \App\Models\User::find($user_id);
-    return \App\Models\SuperAdmin\School::whereIn('id', $user ? $user->school : [])->get();
+    return \App\Models\School::whereIn('id', $user ? $user->school_ids : [])->get();
 }
 
 function getUserSchoolNames($user_id, $is_array = true)
 {
     $user = \App\Models\User::find($user_id);
-    $user_schools = \App\Models\SuperAdmin\School::with('name')->whereIn('id', $user ? $user->school_ids : []);
+    $user_schools = \App\Models\School::with('name')->whereIn('id', $user ? $user->school_ids : []);
     $user_school_names = $is_array ? [] : '';
     foreach ($user_schools as $user_school) {
         if ($user_school->name) {
@@ -2132,13 +2206,13 @@ function getUserSchoolNames($user_id, $is_array = true)
 function getUserCountries($user_id)
 {
     $user = \App\Models\User::find($user_id);
-    return \App\Models\SuperAdmin\Country::whereIn('id', $user ? $user->country_ids : [])->get();
+    return \App\Models\Country::whereIn('id', $user ? $user->country_ids : [])->get();
 }
 
 function getUserCountryNames($user_id, $is_array = true)
 {
     $user = \App\Models\User::find($user_id);
-    $user_countries = \App\Models\SuperAdmin\Country::whereIn('id', $user ? $user->country_ids : [])->get();
+    $user_countries = \App\Models\Country::whereIn('id', $user ? $user->country_ids : [])->get();
     $user_country_names = $is_array ? [] : '';
     foreach ($user_countries as $user_country) {
         if (app()->getLocale() == 'en') {
@@ -2159,13 +2233,13 @@ function getUserCountryNames($user_id, $is_array = true)
 function getUserCities($user_id)
 {
     $user = \App\Models\User::find($user_id);
-    return \App\Models\SuperAdmin\City::whereIn('id', $user ? $user->city_ids : [])->get();
+    return \App\Models\City::whereIn('id', $user ? $user->city_ids : [])->get();
 }
 
 function getUserCityNames($user_id, $is_array = true)
 {
     $user = \App\Models\User::find($user_id);
-    $user_cities = \App\Models\SuperAdmin\City::whereIn('id', $user ? $user->city_ids : [])->get();
+    $user_cities = \App\Models\City::whereIn('id', $user ? $user->city_ids : [])->get();
     $user_city_names = $is_array ? [] : '';
     foreach ($user_cities as $user_city) {
         if (app()->getLocale() == 'en') {
@@ -2185,7 +2259,7 @@ function getUserCityNames($user_id, $is_array = true)
 
 function setEmailTemplateSMTP($template)
 {
-    $email_template = \App\Models\SuperAdmin\EmailTemplate::where('template', $template)->first();
+    $email_template = \App\Models\EmailTemplate::where('template', $template)->first();
     if ($email_template->smtp_server && $email_template->smtp_user_name && $email_template->smtp_password) {
         config('mail.mailers.smtp.host', $email_template->smtp_server);
         config('mail.mailers.smtp.username', $email_template->smtp_user_name);
@@ -2211,7 +2285,7 @@ function unsetEmailTemplateSMTP()
 
 function sendEmail($template, $receiver = '', $data, $locale, array $files = [], $subject = '')
 {
-    $email_template = \App\Models\SuperAdmin\EmailTemplate::where('template', $template)->first();
+    $email_template = \App\Models\EmailTemplate::where('template', $template)->first();
     if ($email_template->smtp_server && $email_template->smtp_user_name && $email_template->smtp_password) {
         config('mail.mailers.smtp.host', $email_template->smtp_server);
         config('mail.mailers.smtp.username', $email_template->smtp_user_name);

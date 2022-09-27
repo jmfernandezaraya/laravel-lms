@@ -42,17 +42,17 @@
                                 <td id="hours_per_week">{{$course_update->hours_per_week}}</td>
                             </tr>
                             <tr>
-                                @php $course_study_times = \App\Models\SuperAdmin\ChooseStudyTime::whereIn('unique_id', is_null($course_update->study_time) ? [] : $course_update->study_time)->pluck('name')->toArray(); @endphp
+                                @php $course_study_times = \App\Models\ChooseStudyTime::whereIn('unique_id', is_null($course_update->study_time) ? [] : $course_update->study_time)->pluck('name')->toArray(); @endphp
                                 <td>{{__('Admin/backend.study_time')}}</td>
                                 <td id="study_time">{{implode(", ", $course_study_times)}}</td>
                             </tr>
                             <tr>
-                                @php $course_classes_days = \App\Models\SuperAdmin\ChooseClassesDay::whereIn('unique_id', is_null($course_update->classes_day) ? [] : $course_update->classes_day)->pluck('name')->toArray(); @endphp
+                                @php $course_classes_days = \App\Models\ChooseClassesDay::whereIn('unique_id', is_null($course_update->classes_day) ? [] : $course_update->classes_day)->pluck('name')->toArray(); @endphp
                                 <td>{{__('Admin/backend.classes_days')}}</td>
                                 <td id="classes_day">{{implode(", ", $course_classes_days)}}</td>
                             </tr>
                             <tr>
-                                @php $course_start_days = \App\Models\SuperAdmin\ChooseStartDate::whereIn('unique_id', is_null($course_update->start_date) ? []: $course_update->start_date)->pluck('name')->toArray(); @endphp
+                                @php $course_start_days = \App\Models\ChooseStartDate::whereIn('unique_id', is_null($course_update->start_date) ? []: $course_update->start_date)->pluck('name')->toArray(); @endphp
                                 <td>{{__('Admin/backend.start_dates')}}</td>
                                 <td id="start_date">{{implode(", ", $course_start_days)}}</td>
                             </tr>

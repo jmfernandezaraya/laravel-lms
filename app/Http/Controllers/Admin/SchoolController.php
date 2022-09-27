@@ -8,15 +8,15 @@ use Session;
 
 use App\Http\Controllers\Controller;
 
-use App\Classes\ImageSaverToStorage;
-
 use App\Models\CourseApplication;
-use App\Models\SuperAdmin\Country;
-use App\Models\SuperAdmin\City;
-use App\Models\SuperAdmin\School;
-use App\Models\SuperAdmin\SchoolName;
-use App\Models\SuperAdmin\ChooseNationality;
-use App\Models\SuperAdmin\SchoolNationality;
+use App\Models\Country;
+use App\Models\City;
+use App\Models\School;
+use App\Models\SchoolName;
+use App\Models\ChooseNationality;
+use App\Models\SchoolNationality;
+
+use App\Classes\ImageSaverToStorage;
 
 use App\Http\Requests\SuperAdmin\AddSchoolRequest;
 
@@ -56,7 +56,7 @@ class SchoolController extends Controller
         if (auth('superadmin')->check()) {
             $schools = School::with('name', 'country', 'city')->get();
         } else if (auth('schooladmin')->check()) {
-            $schools = School::whereIn('id', auth('schooladmin')->user()->school)->with('name', 'country', 'city')->get();
+            $schools = School::whereIn('id', auth('schooladmin')->user()->school_ids)->with('name', 'country', 'city')->get();
         }
         foreach($schools as $school) {
             if (is_null($school->name)) {
@@ -294,7 +294,7 @@ class SchoolController extends Controller
         }
         $school_nationalities = SchoolNationality::where('id', $school->id)->get();
         foreach ($school_nationalities as $school_nationality) {
-            if (!in_array($school_nationality->id, $school_nationality_ids)) {
+            if (!in_array($school_nationality->unique_id, $school_nationality_ids)) {
                 $school_nationality->delete();
             }
         }
@@ -447,7 +447,7 @@ class SchoolController extends Controller
     {
         $language = app()->getLocale();
         $schools = School::where('is_active', true)->whereHas('name', function($query) use ($request, $language)
-            { $language =='en' ? $query->where('name', $request->school) : $query->where('name_ar', $request->school); })->get();
+            { $language =='en' ? $query->where('name', $request->school_name) : $query->where('name_ar', $request->school_name); })->get();
         $country_ids = [];
         foreach ($schools as $school) {
             if (!in_array($school->country_id, $country_ids)) {
@@ -471,24 +471,24 @@ class SchoolController extends Controller
     function getCityList(Request $request)
     {
         $language = app()->getLocale();
-        if (isset($request->school)) {
+        if (isset($request->school_name)) {
             $city_ids = [];
             $schools = School::where('is_active', true)->whereHas('name', function($query) use ($request, $language)
-                { $language =='en' ? $query->where('name', $request->school) : $query->where('name_ar', $request->school); })->get();
+                { $language =='en' ? $query->where('name', $request->school_name) : $query->where('name_ar', $request->school_name); })->get();
             foreach ($schools as $school) {
-                if (is_array($request->country)) {
-                    if (in_array($school->country_id, $request->country)) {
+                if (is_array($request->country_ids)) {
+                    if (in_array($school->country_id, $request->country_ids)) {
                         $city_ids[] = $school->city_id;
                     }
                 } else {
-                    if ($school->country_id == $request->country) {
+                    if ($school->country_id == $request->country_ids) {
                         $city_ids[] = $school->city_id;
                     }
                 }
             }
             $cities = City::whereIn('id', $city_ids)->get();
         } else {
-            $cities = City::where('country_id', $request->country)->get();
+            $cities = City::where('country_id', $request->country_ids)->get();
         }
         $city_list = "";
         if ($request->empty_value == 'true') $city_list .= "<option value=''>" . __('Admin/backend.select_option') . "</option>";
@@ -523,25 +523,25 @@ class SchoolController extends Controller
     {
         $language = app()->getLocale();
         $schools = School::where('is_active', true)->whereHas('name', function($query) use ($request, $language)
-            { $language =='en' ? $query->where('name', $request->school) : $query->where('name_ar', $request->school); })->get();
+            { $language =='en' ? $query->where('name', $request->school_name) : $query->where('name_ar', $request->school_name); })->get();
         $branch_names = [];
         foreach ($schools as $school) {
             $country_city_flag = true;
-            if (is_array($request->country)) {
-                if (!in_array($school->country_id, $request->country)) {
+            if (is_array($request->country_ids)) {
+                if (!in_array($school->country_id, $request->country_ids)) {
                     $country_city_flag = false;
                 }
             } else {
-                if ($school->country_id != $request->country) {
+                if ($school->country_id != $request->country_ids) {
                     $country_city_flag = false;
                 }
             }
-            if (is_array($request->city)) {
-                if (!in_array($school->city_id, $request->city)) {
+            if (is_array($request->city_ids)) {
+                if (!in_array($school->city_id, $request->city_ids)) {
                     $country_city_flag = false;
                 }
             } else {
-                if ($school->city_id != $request->city) {
+                if ($school->city_id != $request->city_ids) {
                     $country_city_flag = false;
                 }
             }
@@ -722,56 +722,51 @@ class SchoolController extends Controller
         }
     }
 
-    public function addNationality(Request $request)
+    public function viewNationality()
     {
-        $unique_id = $this->my_unique_id();
-
-        $get_id = \DB::transaction(function () use ($unique_id, $request) {
-            $NationalityEnTable = new ChooseNationality();
-            $NationalityEnTable->setTable('choose_nationalities_en');
-            $NationalityEnTable->unique_id = $unique_id;
-            $NationalityEnTable->name = $request->english_val;
-            $NationalityEnTable->save();
-
-            $NationalityArTable = new ChooseNationality();
-            $NationalityArTable->setTable('choose_nationalities_ar');
-            $NationalityArTable->unique_id = $unique_id;
-            $NationalityArTable->name = $request->arabic_val;
-            $NationalityArTable->save();
-
-            $get_data['id'] = get_language() == 'en' ? $NationalityEnTable->unique_id : $NationalityArTable->unique_id;
-            $get_data['name'] = get_language() == 'en' ? $NationalityEnTable->name : $NationalityArTable->age;
-            return $get_data;
-        });
-        $this->my_unique_id(1);
-
-        $data['data'] = __('Admin/backend.data_saved_successfully');
-
-        $id = $get_id['id'];
-        $opiton_name = $get_id['name'];
-        $data['result'] = "<option value=$id>$opiton_name</option>";
-
-        return response($data);
+        $nationalities = ChooseNationality::orderBy('id', 'asc')->get();
+        
+        return view('admin.school.nationality', compact('nationalities'));
     }
 
-    public function deleteNationality(Request $request)
+    public function updateNationality(Request $request)
     {
-        \DB::transaction(function () use ($request) {
-            $locale = get_language();
-            ChooseNationality::whereIn('unique_id', $request->ids)->delete();
-            $switch_locale = $locale == 'en' ? 'ar' : 'en';
-            app()->setLocale($switch_locale);
-            ChooseNationality::whereIn('unique_id', $request->ids)->delete();
-            app()->setLocale($locale);
-        });
-
-        $get_options = ChooseNationality::all();
-        $data['result'] = '<option value="">' . __('Admin/backend.select') . '</option>';
-        foreach ($get_options as $get_option) {
-            $data['result'] .= "<option value=$get_option->unique_id>$get_option->name</option>";
+        $validator = \Validator::make(
+            $request->all(),
+            [
+                'name.*' => 'required',
+                'name_ar.*' => 'required',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()]);
         }
+        
+        $choose_nationality_unique_ids = [];
+        for ($i = 0; $i <= $request->nationality_increment; $i++) {
+            $choose_nationality = null;
+            if (isset($request->nationality_unique_id[$i]) && $request->nationality_unique_id[$i]) {
+                $choose_nationality = ChooseNationality::where('unique_id', $request->nationality_unique_id[$i])->first();
+            }
+            if (!$choose_nationality) {
+                $choose_nationality = new ChooseNationality();                
+                $choose_nationality->unique_id = (new Controller())->my_unique_id();
+            }
+            $choose_nationality->name = $request->name[$i] ?? null;
+            $choose_nationality->name_ar = $request->name_ar[$i] ?? null;
+            $choose_nationality->save();
+            $choose_nationality_unique_ids[] = $choose_nationality->unique_id;
+        }
+        $choose_nationalities = ChooseNationality::all();
+        foreach ($choose_nationalities as $choose_nationality) {
+            if (!in_array($choose_nationality->unique_id, $choose_nationality_unique_ids)) {
+                $choose_nationality->delete();
+            }
+        }
+        
+        $data['success'] = true;
+        $data['data'] = __('Admin/backend.data_saved_successfully');
 
-        $data['data'] = __('Admin/backend.data_removed_successfully');
-        return response($data);
+        return response()->json($data);
     }
 }

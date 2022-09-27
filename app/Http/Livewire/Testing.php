@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\SuperAdmin\Course;
+use App\Models\Course;
 use Livewire\Component;
 
 class Testing extends Component

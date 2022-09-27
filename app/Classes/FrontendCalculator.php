@@ -7,8 +7,8 @@ use Exception;
 
 use Carbon\Carbon;
 
-use App\Models\SuperAdmin\Course;
-use App\Models\SuperAdmin\CurrencyExchangeRate;
+use App\Models\Course;
+use App\Models\CurrencyExchangeRate;
 
 class FrontendCalculator
 {

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\SchoolAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Mail\ReplyToEnquiry;
-use App\Models\Frontend\Enquiry;
+use App\Models\Enquiry;
 use Illuminate\Http\Request;
 
 class EnquiryController extends Controller

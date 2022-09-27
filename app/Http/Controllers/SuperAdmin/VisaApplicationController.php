@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Frontend\AppliedForVisa;
+use App\Models\AppliedForVisa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 

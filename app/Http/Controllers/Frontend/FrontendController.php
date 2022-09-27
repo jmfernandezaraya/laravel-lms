@@ -15,36 +15,36 @@ use App\Mail\EnquiryMail;
 use App\Mail\EmailTemplate;
 
 use App\Models\Calculator;
-use App\Models\SuperAdmin\City;
-use App\Models\SuperAdmin\Country;
+use App\Models\City;
+use App\Models\Country;
 use App\Models\FrontPage;
 use App\Models\Setting;
 use App\Models\User;
 use App\Models\CourseApplication;
 
-use App\Models\Frontend\AppliedForVisa;
-use App\Models\Frontend\Enquiry;
+use App\Models\AppliedForVisa;
+use App\Models\Enquiry;
 
-use App\Models\SuperAdmin\ChooseAccommodationAge;
-use App\Models\SuperAdmin\ChooseCustodianUnderAge;
-use App\Models\SuperAdmin\ChooseLanguage;
-use App\Models\SuperAdmin\ChooseProgramAge;
-use App\Models\SuperAdmin\ChooseProgramType;
-use App\Models\SuperAdmin\ChooseProgramUnderAge;
-use App\Models\SuperAdmin\ChooseStudyMode;
-use App\Models\SuperAdmin\Course;
-use App\Models\SuperAdmin\Coupon;
-use App\Models\SuperAdmin\CouponUsage;
-use App\Models\SuperAdmin\CourseAccommodation;
-use App\Models\SuperAdmin\CourseAirport;
-use App\Models\SuperAdmin\CourseAirportFee;
-use App\Models\SuperAdmin\CourseMedical;
-use App\Models\SuperAdmin\CourseMedicalFee;
-use App\Models\SuperAdmin\CourseCustodian;
-use App\Models\SuperAdmin\CourseProgram;
-use App\Models\SuperAdmin\CourseProgramTextBookFee;
-use App\Models\SuperAdmin\CourseProgramUnderAgeFee;
-use App\Models\SuperAdmin\School;
+use App\Models\ChooseAccommodationAge;
+use App\Models\ChooseCustodianUnderAge;
+use App\Models\ChooseLanguage;
+use App\Models\ChooseProgramAge;
+use App\Models\ChooseProgramType;
+use App\Models\ChooseProgramUnderAge;
+use App\Models\ChooseStudyMode;
+use App\Models\Course;
+use App\Models\Coupon;
+use App\Models\CouponUsage;
+use App\Models\CourseAccommodation;
+use App\Models\CourseAirport;
+use App\Models\CourseAirportFee;
+use App\Models\CourseMedical;
+use App\Models\CourseMedicalFee;
+use App\Models\CourseCustodian;
+use App\Models\CourseProgram;
+use App\Models\CourseProgramTextBookFee;
+use App\Models\CourseProgramUnderAgeFee;
+use App\Models\School;
 
 use App\Services\FrontendServices;
 
@@ -93,12 +93,14 @@ class FrontendController extends Controller
         foreach ($courses as $course) {
             $course_programs = $course->coursePrograms;
             $course_has_discount_program = false;
-            foreach ($course_programs as $course_program) {
-                $course_age_range_ids = array_merge($course_age_range_ids, $course_program->program_age_range ?? []);
-                if ($course_program->discount_per_week != ' -' && $course_program->discount_per_week != ' %' && 
-                    (($course_program->discount_start_date <= $now && $course_program->discount_end_date >= $now)
-                    || ($course_program->x_week_selected && $course_program->x_week_start_date <= $now && $course_program->x_week_end_date >= $now))) {
-                    $course_has_discount_program = true;
+            if ($course->promotion && $course->display && !$course->deleted) {
+                foreach ($course_programs as $course_program) {
+                    $course_age_range_ids = array_merge($course_age_range_ids, $course_program->program_age_range ?? []);
+                    if ($course_program->discount_per_week != ' -' && $course_program->discount_per_week != ' %' && 
+                        (($course_program->discount_start_date <= $now && $course_program->discount_end_date >= $now)
+                        || ($course_program->x_week_selected && $course_program->x_week_start_date <= $now && $course_program->x_week_end_date >= $now))) {
+                        $course_has_discount_program = true;
+                    }
                 }
             }
             $course_language_ids = array_merge($course_language_ids, $course->language ?? []);
@@ -1000,7 +1002,7 @@ class FrontendController extends Controller
 
                 if ($coupon->affiliate_id) {
                     $affilate_user = User::where('id', $coupon->affiliate_id)->first();
-                    if ($affilate_user) {
+                    if ($affilate_user && $affilate_user->account_active) {
                         sendEmail('affiliate_commission', $affilate_user->email, $mail_data, app()->getLocale());
                     }
                 }
@@ -1030,7 +1032,8 @@ class FrontendController extends Controller
             } else {
                 toastr()->success(str_replace("###SITE_NAME###", __('Frontend.site_name'), __('Frontend.user_course_booked')));
 
-                sendEmail('course_booked', auth()->user()->email, $mail_data, app()->getLocale());
+                // sendEmail('course_booked', auth()->user()->email, $mail_data, app()->getLocale());
+                sendEmail('course_booked', $mail_data->email, $mail_data, app()->getLocale());
 
                 $course_application->order_id = generateOrderId();
                 $course_application->paid_amount = getCurrencyConvertedValue($course_application->course_id, $course_application->deposit_price);
@@ -1120,7 +1123,8 @@ class FrontendController extends Controller
         $course_application = CourseApplication::where('user_id', auth()->user()->id)->where('order_id',  $cart_id)->where('paid',  1)->first();
         if ($course_application) {
             $mail_data = (object)(getCourseApplicationPrintData($course_application->id, auth()->user()->id) + getCourseApplicationMailData($course_application->id, auth()->user()->id));
-            sendEmail('course_booked', auth()->user()->email, $mail_data, app()->getLocale());
+            // sendEmail('course_booked', auth()->user()->email, $mail_data, app()->getLocale());
+            sendEmail('course_booked', $mail_data->email, $mail_data, app()->getLocale());
         }
 
         return redirect()->route('land_page');

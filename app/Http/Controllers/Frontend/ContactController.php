@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ContactUsRequest;
 
-use App\Models\Frontend\ContactUs;
+use App\Models\ContactUs;
 
 use App\Mail\AdminEmailTemplate;
 use App\Mail\EmailTemplate;

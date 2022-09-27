@@ -8,11 +8,11 @@ use App\Http\Controllers\Controller;
 
 use App\Mail\EmailTemplate;
 
-use App\Models\SuperAdmin\City;
-use App\Models\SuperAdmin\Country;
+use App\Models\City;
+use App\Models\Country;
 use App\Models\User;
-use App\Models\SuperAdmin\School;
-use App\Models\SuperAdmin\UserSchool;
+use App\Models\School;
+use App\Models\UserSchool;
 
 use Carbon\Carbon;
 
@@ -67,7 +67,7 @@ class SchoolAdminController extends Controller
             'last_name_en' => 'required',
             'last_name_ar' => 'required',
             'password' => 'required',
-            'school_ids' => 'required',
+            'school_name' => 'required',
             'email' => 'required|unique:users',
             'telephone' => 'required',
             'mobile' => 'sometimes',
@@ -86,7 +86,7 @@ class SchoolAdminController extends Controller
             'telephone.required' => __('Admin/backend.errors.telephone_required'),
             'email.required' => __('Admin/backend.errors.email_required'),
             'image.mimes' => __('Admin/backend.errors.image_must_be_in'),
-            'school_ids.required' => 'School Name is Required'
+            'school_name.required' => 'School Name is Required'
         ]);
 
         if ($validator->fails()) {
@@ -116,7 +116,7 @@ class SchoolAdminController extends Controller
         $language = app()->getLocale();
         $school_ids = School::where('is_active', true)->whereHas('name', function($query) use ($request, $language)
             { $language ? $query->where('name', $request->school_name) : $query->where('name_ar', $request->school_name); })->pluck('id')->toArray();
-        $requested_save['school'] = $school_ids;
+        $requested_save['school_ids'] = $school_ids;
         if ($language == 'en') {
             $requested_save['branch'] = $request->branch ?? [];
             $requested_save['branch_ar'] = School::whereIn('branch_name', $request->branch ?? [])->pluck('branch_name_ar')->toArray();
@@ -159,8 +159,8 @@ class SchoolAdminController extends Controller
                     'school_delete' => ($request->school_permission == 'subscriber' && $request->school_delete) ?? 0,
                 ]);
             }
-            if ($user->school && is_array($user->school)) {
-                foreach ($user->school as $user_school_id) {
+            if ($user->school_ids && is_array($user->school_ids)) {
+                foreach ($user->school_ids as $user_school_id) {
                     $user_school = UserSchool::where('user_id', $user->id)->where('school_id', $user_school_id)->first();
                     if (!$user_school) {
                         $new_user_school = new UserSchool;
@@ -172,7 +172,7 @@ class SchoolAdminController extends Controller
             }
             $user_schools = UserSchool::where('user_id', $user->id)->get();
             foreach ($user_schools as $user_school) {
-                if (!in_array($user_school->id, is_array($user->school) ? $user->school : [])) {
+                if (!in_array($user_school->id, is_array($user->school_ids) ? $user->school_ids : [])) {
                     $user_school->delete();
                 }
             }
@@ -233,7 +233,7 @@ class SchoolAdminController extends Controller
         $school_city_ids = [];
         $choose_branches = [];
         $school_name = '';
-        $schools = School::where('is_active', true)->whereIn('id', $school_admin->school ?? [])->get();
+        $schools = School::where('is_active', true)->whereIn('id', $school_admin->school_ids ?? [])->get();
         foreach ($schools as $school) {
             $school_country_ids[] = $school->country_id;
             $school_city_ids[] = $school->city_id;
@@ -273,7 +273,7 @@ class SchoolAdminController extends Controller
             'mobile' => 'sometimes',
             'another_mobile' => 'sometimes',
             'image' => 'mimes:jpg,jpeg,png,bmp',
-            'school_ids' => 'required',
+            'school_name' => 'required',
             'country_ids' => 'sometimes',
             'city_ids' => 'sometimes',
         ];
@@ -286,7 +286,7 @@ class SchoolAdminController extends Controller
             'telephone.required' => __('Admin/backend.errors.telephone_required'),
             'email.required' => __('Admin/backend.errors.email_required'),
             'image.mimes' => __('Admin/backend.errors.image_must_be_in'),
-            'school_ids.required' => 'School Name is Required'
+            'school_name.required' => 'School Name is Required'
         ]);
 
         $password = $request->has('password') ? \Hash::make($request->password) : null;
@@ -314,7 +314,7 @@ class SchoolAdminController extends Controller
         $language = app()->getLocale();
         $school_ids = School::where('is_active', true)->whereHas('name', function($query) use ($request, $language)
             { $language ? $query->where('name', $request->school_name) : $query->where('name_ar', $request->school_name); })->pluck('id')->toArray();
-        $requested_save['school'] = $school_ids;
+        $requested_save['school_ids'] = $school_ids;
         if ($language == 'en') {
             $requested_save['branch'] = $request->branch ?? [];
             $requested_save['branch_ar'] = School::whereIn('branch_name', $request->branch ?? [])->pluck('branch_name_ar')->toArray();
@@ -365,8 +365,8 @@ class SchoolAdminController extends Controller
                 'school_delete' => ($request->school_permission == 'subscriber' && $request->school_delete) ?? 0,
             ]);
         }
-        if ($user->school && is_array($user->school)) {
-            foreach ($user->school as $user_school_id) {
+        if ($user->school_ids && is_array($user->school_ids)) {
+            foreach ($user->school_ids as $user_school_id) {
                 $user_school = UserSchool::where('user_id', $user->id)->where('school_id', $user_school_id)->first();
                 if (!$user_school) {
                     $new_user_school = new UserSchool;
@@ -378,7 +378,7 @@ class SchoolAdminController extends Controller
         }
         $user_schools = UserSchool::where('user_id', $user->id)->get();
         foreach ($user_schools as $user_school) {
-            if (!in_array($user_school->school_id, is_array($user->school) ? $user->school : [])) {
+            if (!in_array($user_school->school_id, is_array($user->school_ids) ? $user->school_ids : [])) {
                 $user_school->delete();
             }
         }

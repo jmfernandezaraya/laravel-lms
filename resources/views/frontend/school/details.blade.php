@@ -39,21 +39,21 @@
                             <div id="schoolVideoCarousel" class="carousel slide" data-ride="carousel">
                                 <ol class="carousel-indicators">
                                     @foreach ((array)$school->video as $video)
-                                        <li data-target="#schoolVideoCarousel" data-slide-to="{{$loop->iteration - 1}}" class="{{$loop->iteration - 1 == 0 ? 'active' : ''}}"></li>
+                                        <li data-target="#schoolVideoCarousel{{$loop->iteration - 1}}" data-slide-to="{{$loop->iteration - 1}}" class="{{$loop->iteration - 1 == 0 ? 'active' : ''}}"></li>
                                     @endforeach
                                 </ol>
                                 <div class="carousel-inner">
                                     @foreach ((array)$school->video as $video)
-                                        <div class="carousel-item {{$loop->iteration == 1 ? 'active' : ''}}">
-                                            <iframe src="{{ $video }}" height="500"></iframe>
+                                        <div class="carousel-item active" href="#schoolVideoCarousel{{$loop->iteration - 1}}">
+                                            <iframe class="embed-responsive-item" src="{{ checkYouTubeUrl($video) }}" class="video" allowfullscreen width="400"></iframe>
                                         </div>
                                     @endforeach
                                 </div>
-                                <a class="carousel-control-prev" href="#schoolVideoCarousel" role="button" data-slide="prev">
+                                <a class="carousel-control-prev" href="#schoolVideoCarousel0" role="button" data-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                     <span class="sr-only">{{__('Frontend.previous')}}</span>
                                 </a>
-                                <a class="carousel-control-next" href="#schoolVideoCarousel" role="button" data-slide="next">
+                                <a class="carousel-control-next" href="#schoolVideoCarousel2" role="button" data-slide="next">
                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                     <span class="sr-only">{{__('Frontend.next')}}</span>
                                 </a>
@@ -142,7 +142,7 @@
                                                 <tbody>
                                                     @foreach ($school->nationalities as $school_nationality)
                                                         <tr>
-                                                            <td>{{ $school_nationality->nationality ? $school_nationality->nationality->name : '' }}</td>
+                                                            <td>{{ $school_nationality->nationality ? (app()->getLocale() == 'en' ? $school_nationality->nationality->name : $school_nationality->nationality->name_ar) : '' }}</td>
                                                             <td><div style="width: {{ $school_nationality->mix }}%"></div></td>
                                                             <td>{{ $school_nationality->mix }}%</td>
                                                         </tr>
@@ -661,7 +661,7 @@
                                                             <i class="bx bx-heart" data-school="{{ $school_branch->id }}" style="cursor:pointer" onclick="like_school($(this).attr('data-school'))">&nbsp;{{ auth()->user()->likedSchool()->count() }}</i>
                                                         @endif
                                                     @else
-                                                        <i class="bx bx-heart" data-school="{{ $school_branch->id }}" onclick="like_school($(this).attr('data-school'), true)" style="cursor:pointer">&nbsp;{{ \App\Models\Frontend\LikedSchool::count() }}</i>
+                                                        <i class="bx bx-heart" data-school="{{ $school_branch->id }}" onclick="like_school($(this).attr('data-school'), true)" style="cursor:pointer">&nbsp;{{ \App\Models\LikedSchool::count() }}</i>
                                                     @endauth
                                                 </div>
                                                 <div class="school-likes">

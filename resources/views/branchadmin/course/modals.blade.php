@@ -445,7 +445,7 @@
                         <label class="">@lang('Admin/backend.visa_form.select_visa_form_id')</label>
                         <select name="visa_id" class="form-control" id="visa_form_id_modal">
                             <option value="">@lang('Admin/backend.select_option')</option>
-                            @foreach(\App\Models\SuperAdmin\VisaForm::all() as $applyform)
+                            @foreach(\App\Models\VisaForm::all() as $applyform)
                                 <option value="{{$applyform->id}}">{{$applyform->id }}</option>
                             @endforeach
                         </select>

@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\EmailTemplate;
 
 use App\Models\User;
-use App\Models\SuperAdmin\AffiliateTransaction;
+use App\Models\AffiliateTransaction;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -24,7 +24,20 @@ class AffiliateController extends Controller
 {
     function index()
     {
-        $affiliates = User::where('user_type', 'affiliate')->get();
+        $affiliates = User::with('transactions')->where('user_type', 'affiliate')->get();
+
+        foreach ($affiliates as $affiliate) {
+            $affiliate_transaction_amount = 0;
+            foreach ($affiliate->transactions as $transaction) {
+                if ($transaction->amount_refunded) {
+                    $affiliate_transaction_amount = $affiliate_transaction_amount - $transaction->amount_refunded;
+                }
+                if ($transaction->amount_added) {
+                    $affiliate_transaction_amount = $affiliate_transaction_amount + $transaction->amount_added;
+                }
+            }
+            $affiliate->balance = $affiliate_transaction_amount;
+        }
 
         return view('superadmin.affiliate.index', compact('affiliates'));
     }
@@ -248,6 +261,46 @@ class AffiliateController extends Controller
         toastr()->success(__('Admin/backend.data_saved_successfully'));
 
         return redirect()->route('superadmin.user.affiliate.index');
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function active($id)
+    {
+        $db = \DB::transaction(function() use ($id) {
+            $user = User::where('id', $id)->first();
+            if ($user) {
+                $user->account_active = true;
+                $user->save();
+                return true;
+            }
+        });
+        if ($db) {
+            toastr()->success(__('Admin/backend.data_actived_successfully'));
+        }
+        return back();
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function deactive($id)
+    {
+        $db = \DB::transaction(function() use ($id) {
+            $user = User::where('id', $id)->first();
+            if ($user) {
+                $user->account_active = false;
+                $user->save();
+                return true;
+            }
+        });
+        if ($db) {
+            toastr()->success(__('Admin/backend.data_deactived_successfully'));
+        }
+        return back();
     }
 
     /**

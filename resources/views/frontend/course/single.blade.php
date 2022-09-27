@@ -49,17 +49,17 @@
                                 <div class="carousel-inner">
                                     @foreach((array)$school->video_url as $video_url)
                                         <div class="carousel-item active" href="#carousel-video-item{{$loop->iteration - 1}}">
-                                            <iframe class="embed-responsive-item" src="{{ checkYouTubeUrl($video_url) }}" class="video" allowfullscreen height="450"></iframe>
+                                            <iframe class="embed-responsive-item" src="{{ checkYouTubeUrl($video_url) }}" class="video" allowfullscreen width="400"></iframe>
                                         </div>
                                     @endforeach
                                 </div>
 
-                                <a class="carousel-control-prev" href="#carousel-video-item2" role="button" data-slide="prev">
+                                <a class="carousel-control-prev" href="#carousel-video-item0" role="button" data-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                     <span class="sr-only">{{__('Frontend.previous')}}</span>
                                 </a>
 
-                                <a class="carousel-control-next" href="#carousel-video-item3" role="button" data-slide="next">
+                                <a class="carousel-control-next" href="#carousel-video-item2" role="button" data-slide="next">
                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                     <span class="sr-only">{{__('Frontend.next')}}</span>
                                 </a>
@@ -127,17 +127,17 @@
                         <td id="hours_per_week">{{$course_update->hours_per_week}}</td>
                     </tr>
                     <tr>
-                        @php $course_study_times = \App\Models\SuperAdmin\ChooseStudyTime::whereIn('unique_id', is_null($course_update->study_time) ? [] : $course_update->study_time)->pluck('name')->toArray(); @endphp
+                        @php $course_study_times = \App\Models\ChooseStudyTime::whereIn('unique_id', is_null($course_update->study_time) ? [] : $course_update->study_time)->pluck('name')->toArray(); @endphp
                         <td>{{__('Frontend.study_time')}}</td>
                         <td id="study_time">{{implode(", ", $course_study_times)}}</td>
                     </tr>
                     <tr>
-                        @php $course_classes_days = \App\Models\SuperAdmin\ChooseClassesDay::whereIn('unique_id', is_null($course_update->classes_day) ? [] : $course_update->classes_day)->pluck('name')->toArray(); @endphp
+                        @php $course_classes_days = \App\Models\ChooseClassesDay::whereIn('unique_id', is_null($course_update->classes_day) ? [] : $course_update->classes_day)->pluck('name')->toArray(); @endphp
                         <td>{{__('Frontend.classes_days')}}</td>
                         <td id="classes_day">{{implode(", ", $course_classes_days)}}</td>
                     </tr>
                     <tr>
-                        @php $course_start_days = \App\Models\SuperAdmin\ChooseStartDate::whereIn('unique_id', is_null($course_update->start_date) ? []: $course_update->start_date)->pluck('name')->toArray(); @endphp
+                        @php $course_start_days = \App\Models\ChooseStartDate::whereIn('unique_id', is_null($course_update->start_date) ? []: $course_update->start_date)->pluck('name')->toArray(); @endphp
                         <td>{{__('Frontend.start_dates')}}</td>
                         <td id="start_date">{{implode(", ", $course_start_days)}}</td>
                     </tr>

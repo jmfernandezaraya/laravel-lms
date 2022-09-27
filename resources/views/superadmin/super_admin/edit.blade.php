@@ -402,6 +402,28 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-md-6">
+                                <label for="payment_method_permission">{{__('Admin/backend.payment_method')}}</label>
+                                <select name="payment_method_permission" id="payment_method_permission" class="form-control">
+                                    <option value="">{{__('Admin/backend.select_role')}}</option>
+                                    <option value="subscriber" {{ ($super_admin->permission && !$super_admin->permission->payment_method_manager && $super_admin->permission->payment_method_add && $super_admin->permission->payment_method_edit) ? 'selected' : '' }}>{{__('Admin/backend.subscriber')}}</option>
+                                    <option value="manager" {{ ($super_admin->permission && $super_admin->permission->payment_method_manager) ? 'selected' : '' }}>{{__('Admin/backend.manager')}}</option>
+                                </select>
+                                <div class="payment-method-permissions" style="display: {{ ($super_admin->permission && !$super_admin->permission->payment_method_manager && $super_admin->permission->payment_method_add) ? 'block' : 'none' }}">
+                                    <div class="form-check">
+                                        <input name="payment_method_add" type="checkbox" class="form-check-inline" value='1' {{ ($super_admin->permission && $super_admin->permission->payment_method_add) ? 'checked' : '' }}>
+                                        <label for="payment_method_add">{{__('Admin/backend.add')}}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="payment_method_edit" type="checkbox" class="form-check-inline" value='1' {{ ($super_admin->permission && $super_admin->permission->payment_method_edit) ? 'checked' : '' }}>
+                                        <label for="payment_method_edit">{{__('Admin/backend.edit')}}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input name="payment_method_delete" type="checkbox" class="form-check-inline" value='1' {{ ($super_admin->permission && $super_admin->permission->payment_method_delete) ? 'checked' : '' }}>
+                                        <label for="payment_method_delete">{{__('Admin/backend.delete')}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6">
                                 <label for="email_template_permission">{{__('Admin/backend.email_template')}}</label>
                                 <select name="email_template_permission" id="email_template_permission" class="form-control">
                                     <option value="">{{__('Admin/backend.select_role')}}</option>
@@ -423,6 +445,8 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="setting_permission">{{__('Admin/backend.setting')}}</label>
                                 <div class="setting-permissions">

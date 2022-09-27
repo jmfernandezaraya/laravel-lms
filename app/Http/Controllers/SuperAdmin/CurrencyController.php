@@ -11,10 +11,10 @@ use App\Http\Requests\SuperAdmin\CurrencyRequest;
 
 use App\Models\CourseApplication;
 
-use App\Models\SuperAdmin\CurrencyExchangeRate;
-use App\Models\SuperAdmin\ChooseLanguage;
-use App\Models\SuperAdmin\Course;
-use App\Models\SuperAdmin\TransactionRefund;
+use App\Models\CurrencyExchangeRate;
+use App\Models\ChooseLanguage;
+use App\Models\Course;
+use App\Models\TransactionRefund;
 
 use TelrGateway\Transaction;
 

@@ -32,7 +32,7 @@
                             <th>{{__('Admin/backend.exchange_rate')}}</th>
                             <th>{{__('Admin/backend.default')}}</th>
                             <th>{{__('Admin/backend.created_on')}}</th>
-                            @if (can_manage_course() || can_edit_course())
+                            @if (can_manage_currency() || can_edit_currency())
                                 <th>{{__('Admin/backend.action')}}</th>
                             @endif
                         </tr>

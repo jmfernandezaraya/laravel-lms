@@ -465,10 +465,10 @@ function changeSchoolCountry() {
 }
 
 function changeSchool() {
-    var school_ids = $('#school_ids').val();
+    var school_name = $('#school_name').val();
     $.post(url_school_country_list, {
         _token: token,
-        school_ids: school_ids,
+        school_name: school_name,
         empty_value: $('#country_ids').hasClass('3col') && $('#country_ids').hasClass('active') ? false : true
     }, function (data) {
         $('#country_ids').html(data);
@@ -480,11 +480,11 @@ function changeSchool() {
 }
 
 function changeUserCountry() {
-    var school_ids = $('#school_ids').val();
+    var school_name = $('#school_name').val();
     var country_ids = $('#country_ids').val();
     $.post(url_school_city_list, {
         _token: token,
-        school_ids: school_ids,
+        school_name: school_name,
         country_ids: country_ids,
         empty_value: $('#city_ids').hasClass('3col') && $('#city_ids').hasClass('active') ? false : true
     }, function (data) {
@@ -507,12 +507,12 @@ function changeCountry() {
 }
 
 function changeCity() {
-    var school_ids = $('#school_ids').val();
+    var school_name = $('#school_name').val();
     var country_ids = $('#country_ids').val();
     var city_ids = $('#city_ids').val();
     $.post(url_school_branch_list, {
         _token: token,
-        school_ids: school_ids,
+        school_name: school_name,
         country_ids: country_ids,
         city_ids: city_ids,
         empty_value: $('#branch_choose').hasClass('3col') && $('#branch_choose').hasClass('active') ? false : true
@@ -3020,6 +3020,15 @@ function initLanguageSection() {
         $('.arabic').hide();
     } else {
         $('.english').hide();
+    }
+}
+
+///////////////////////////////////////////
+function checkVideoSize() {
+    if ($('iframe.embed-responsive-item').length) {
+        for (let iframe_index = 0; iframe_index = 0; iframe_index++) {
+            
+        }
     }
 }
 

@@ -209,13 +209,11 @@
                                             <div class="col-md-6 nationality">
                                                 <label for="choose_nationality">
                                                     {{__('Admin/backend.choose_nationality')}}:
-                                                    <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#SchoolNationalityModal" aria-hidden="true"></i>
-                                                    <i class="fa fa-trash pl-3" onclick="deleteSchoolNationality($(this))" aria-hidden="true"></i>
                                                 </label>
                                                 <select name="nationality[]" id="school_nationality_choose{{$loop->iteration - 1}}" class="form-control" onchange="changeSchoolNationality($(this))">
                                                     <option value="">{{__('Admin/backend.select')}}</option>
                                                     @foreach ($choose_nationalities as $choose_nationality)
-                                                        <option value="{{ $choose_nationality->unique_id }}" {{$nationality->nationality_id == $choose_nationality->unique_id ? 'selected' : ''}}>{{$choose_nationality->name}}</option>
+                                                        <option value="{{ $choose_nationality->unique_id }}" {{$nationality->nationality_id == $choose_nationality->unique_id ? 'selected' : ''}}>{{ app()->getLocale() == 'en' ? $choose_nationality->name : $choose_nationality->name_ar }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -239,13 +237,11 @@
                                             <div class="col-md-6 nationality">
                                                 <label for="choose_nationality">
                                                     {{__('Admin/backend.choose_nationality')}}:
-                                                    <i class="fa fa-plus pl-3" data-toggle="modal" data-target="#SchoolNationalityModal" aria-hidden="true"></i>
-                                                    <i class="fa fa-trash pl-3" onclick="deleteSchoolNationality($(this))" aria-hidden="true"></i>
                                                 </label>
                                                 <select name="nationality[]" id="school_nationality_choose0" class="form-control" onchange="changeSchoolNationality($(this))">
                                                     <option value="">{{__('Admin/backend.select')}}</option>
                                                     @foreach ($choose_nationalities as $choose_nationality)
-                                                        <option value="{{ $choose_nationality->unique_id }}">{{$choose_nationality->name}}</option>
+                                                        <option value="{{ $choose_nationality->unique_id }}">{{ app()->getLocale() == 'en' ? $choose_nationality->name : $choose_nationality->name_ar }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>

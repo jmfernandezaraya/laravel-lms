@@ -5,13 +5,13 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 
 use App\Models\Formbuilder;
-use App\Models\Frontend\AppliedForVisa;
-use App\Models\SuperAdmin\AddNationality;
-use App\Models\SuperAdmin\AddTypeOfVisa;
-use App\Models\SuperAdmin\AddWhereToTravel;
-use App\Models\SuperAdmin\ApplyFrom;
-use App\Models\SuperAdmin\VisaApplicationCenter;
-use App\Models\SuperAdmin\VisaForm;
+use App\Models\AppliedForVisa;
+use App\Models\AddNationality;
+use App\Models\AddTypeOfVisa;
+use App\Models\AddWhereToTravel;
+use App\Models\ApplyFrom;
+use App\Models\VisaApplicationCenter;
+use App\Models\VisaForm;
 use App\Models\CourseApplication;
 
 use Illuminate\Http\Request;

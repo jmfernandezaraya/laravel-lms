@@ -28,7 +28,7 @@
                         <i class="fa fa-trash pl-3" onclick="deleteStudyMode()" aria-hidden="true"></i>
                     </label>
                     <select name="study_mode[]" id="study_mode_choose" multiple="multiple" class="3col active">
-                        @foreach(\App\Models\SuperAdmin\ChooseStudyMode::all() as $studymode)
+                        @foreach(\App\Models\ChooseStudyMode::all() as $studymode)
                             <option value="{{$studymode->unique_id}}">{{$studymode->name}}</option>
                         @endforeach
                     </select>
@@ -40,7 +40,7 @@
                         <i onclick="deleteProgramType()" class="fa fa-trash pl-3" aria-hidden="true"></i>
                     </label>
                     <select name="program_type[]" id="program_type_choose" multiple="multiple" class="3col active">
-                        @foreach(\App\Models\SuperAdmin\ChooseProgramType::all() as $program_type)
+                        @foreach(\App\Models\ChooseProgramType::all() as $program_type)
                             <option value="{{$program_type->unique_id}}">{{$program_type->name}}</option>
                         @endforeach
                     </select>
@@ -48,7 +48,7 @@
 
                 <div class="col-md-4 mt-3">
                     <label for="name">{{__('Admin/backend.choose_school')}}:</label>
-                    <select onchange="changeSchool(url_school_country_list, $(this).val())" class="form-control" id="name" name="school_id">
+                    <select onchange="changeSchool()" class="form-control" id="school_name" name="school_name">
                         <option value="">{{__('Admin/backend.select_school')}}</option>
                         @foreach($schools as $school)
                             <option value="{{$school->unique_id}}">{{$school->name}}</option>
@@ -141,7 +141,7 @@
                         <i onclick="deleteStartDay()" class="fa fa-trash pl-3" aria-hidden="true"></i>
                     </label>
                     <select name="every_day[]" id="start_dates_option" multiple="multiple" class="3col active">
-                        @foreach(\App\Models\SuperAdmin\ChooseStartDate::all() as $option)
+                        @foreach(\App\Models\ChooseStartDate::all() as $option)
                             <option value="{{$option->unique_id}}">{{$option->name}}</option>
                         @endforeach
                     </select>
@@ -186,7 +186,7 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <select name="age_range[]" id="program_age_range_choose" multiple="multiple" class="3col active">
-                                    @foreach(\App\Models\SuperAdmin\ChooseProgramAge::all() as $option)
+                                    @foreach(\App\Models\ChooseProgramAge::all() as $option)
                                         <option value="{{$option->age}}">{{$option->age}}</option>
                                     @endforeach
                                 </select>
@@ -341,7 +341,7 @@
                                     <i class="fa fa-trash pl-3" onclick="deleteProgramUnderAgeRange()" aria-hidden="true"></i>
                                 </label>
                                 <select name="under_age" id="program_under_age_range_choose0" multiple="multiple" class="3col active tobehided">
-                                    @foreach(\App\Models\SuperAdmin\ChooseProgramUnderAge::all() as $option)
+                                    @foreach(\App\Models\ChooseProgramUnderAge::all() as $option)
                                         <option value="{{$option->age}}">{{$option->age}}</option>
                                     @endforeach
                                 </select>
@@ -429,7 +429,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         <select id="accom_age_choose" name="age_range[]" multiple="multiple" class="3col active">
-                            @foreach(\App\Models\SuperAdmin\ChooseAccommodationAge::all() as $option)
+                            @foreach(\App\Models\ChooseAccommodationAge::all() as $option)
                                 <option value="{{$option->age}}">{{$option->age}}</option>
                             @endforeach
                         </select>
@@ -595,7 +595,7 @@
                             <i onclick="DeleteAccomUnderAgeRange()" class="fa fa-trash pl-3" aria-hidden="true"></i>
                         </label>
                         <select name="under_age[]" id="under_age_choose0" multiple="multiple" class="3col active">
-                            @foreach(\App\Models\SuperAdmin\ChooseAccommodationUnderAge::all() as $option)
+                            @foreach(\App\Models\ChooseAccommodationUnderAge::all() as $option)
                                 <option value="{{$option->age}}">{{$option->age}}</option>
                             @endforeach
                         </select>

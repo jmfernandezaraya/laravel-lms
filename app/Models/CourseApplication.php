@@ -4,12 +4,12 @@ namespace App\Models;
 
 use App\Models\Review;
 
-use App\Models\SuperAdmin\CourseAccommodation;
-use App\Models\SuperAdmin\CourseAirport;
-use App\Models\SuperAdmin\Course;
-use App\Models\SuperAdmin\CourseProgram;
-use App\Models\SuperAdmin\School;
-use App\Models\SuperAdmin\CourseApplicationApprove;
+use App\Models\CourseAccommodation;
+use App\Models\CourseAirport;
+use App\Models\Course;
+use App\Models\CourseProgram;
+use App\Models\School;
+use App\Models\CourseApplicationApprove;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

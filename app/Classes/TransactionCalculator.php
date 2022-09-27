@@ -2,7 +2,7 @@
 
 namespace App\Classes;
 
-use App\Models\SuperAdmin\TransactionRefund;
+use App\Models\TransactionRefund;
 use App\Models\CourseApplication;
 
 /**

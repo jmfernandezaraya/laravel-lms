@@ -104,14 +104,14 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="country_name">{{__('Admin/backend.choose_country')}}:</label>
-                                <select onchange="changeUserCountry()" class="form-control" id="country_name" name="country_id">
+                                <select onchange="changeUserCountry()" class="form-control" id="country_ids" name="country_id">
                                     <option value="">{{__('Admin/backend.select')}}</option>
                                 </select>
                             </div>
 
                             <div class="form-group col-md-4">
                                 <label for="city_name">{{__('Admin/backend.choose_city')}}:</label>
-                                <select onchange="changeCity()" class="form-control" id="city_name" name="city_id">
+                                <select onchange="changeCity()" class="form-control" id="city_ids" name="city_id">
                                     <option value="">{{__('Admin/backend.select')}}</option>
                                 </select>
                             </div>

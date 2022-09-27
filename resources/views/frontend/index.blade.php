@@ -142,7 +142,7 @@
                                                                 <i class="bx bx-heart" data-school="{{ $school->id }}" style="cursor:pointer" onclick="like_school($(this).attr('data-school'))">&nbsp;{{ auth()->user()->likedSchool()->count() }}</i>
                                                             @endif
                                                         @else
-                                                            <i class="bx bx-heart" data-school="{{ $school->id }}" onclick="like_school($(this).attr('data-school'), true)" style="cursor:pointer">&nbsp;{{ \App\Models\Frontend\LikedSchool::count() }}</i>
+                                                            <i class="bx bx-heart" data-school="{{ $school->id }}" onclick="like_school($(this).attr('data-school'), true)" style="cursor:pointer">&nbsp;{{ \App\Models\LikedSchool::count() }}</i>
                                                         @endauth
                                                     </div>
                                                     <div class="school-likes">
@@ -201,7 +201,7 @@
                                                             <i class="bx bx-heart" data-school="{{ $school->id }}" style="cursor:pointer" onclick="like_school($(this).attr('data-school'))">&nbsp;{{ auth()->user()->likedSchool()->count() }}</i>
                                                         @endif
                                                     @else
-                                                        <i class="bx bx-heart" data-school="{{ $school->id }}" onclick="like_school($(this).attr('data-school'), true)" style="cursor:pointer">&nbsp;{{ \App\Models\Frontend\LikedSchool::count() }}</i>
+                                                        <i class="bx bx-heart" data-school="{{ $school->id }}" onclick="like_school($(this).attr('data-school'), true)" style="cursor:pointer">&nbsp;{{ \App\Models\LikedSchool::count() }}</i>
                                                     @endauth
                                                 </div>
                                                 <div class="school-likes">

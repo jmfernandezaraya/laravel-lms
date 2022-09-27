@@ -52,6 +52,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('superadmin.school.name')}}">{{__('Admin/backend.names')}}</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('superadmin.school.nationality')}}">{{__('Admin/backend.nationalities')}}</a>
+                        </li>
                     </ul>
                 </div>
             </li>
@@ -222,6 +225,15 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('superadmin.currency.index') }}">
                     <span class="menu-title">{{__('Admin/backend.currency')}}</span>
+                    <i class="mdi mdi-card-bulleted menu-icon"></i>
+                </a>
+            </li>
+        @endif
+
+        @if (can_manage_payment_method() || can_add_payment_method() || can_edit_payment_method() || can_delete_payment_method())
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('superadmin.payment_method.index') }}">
+                    <span class="menu-title">{{__('Admin/backend.payment_method')}}</span>
                     <i class="mdi mdi-card-bulleted menu-icon"></i>
                 </a>
             </li>
