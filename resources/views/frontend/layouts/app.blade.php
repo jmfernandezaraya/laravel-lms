@@ -33,7 +33,7 @@
         <link rel="stylesheet" href="{{ asset('public/frontend/assets/vendor/owl.carousel/assets/owl.carousel.min.css') }}">
         <link rel="stylesheet" href="{{ asset('public/frontend/assets/vendor/animate/animate.min.css') }}">
         <link rel="stylesheet" href="{{ asset('public/frontend/assets/vendor/aos/aos.css') }}">
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css" integrity="sha512-ELV+xyi8IhEApPS/pSj66+Jiw+sOT1Mqkzlh8ExXihe4zfqbWkxPRi8wptXIO9g73FSlhmquFlUOuMSoXz5IRw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="{{ asset('assets/datatables/datatables.min.css') }}">
         
         <!-- Template Main CSS File -->

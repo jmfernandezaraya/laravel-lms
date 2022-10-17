@@ -25,7 +25,7 @@
 
                     <script>
                         window.addEventListener('load', function() {
-                            course_choose_age_clone = {{$course_choose_ages && $course_choose_ages->count() ? $course_choose_ages->count() - 1 : 0}};
+                            course_choose_age_clone = {{ $course_choose_ages && $course_choose_ages->count() ? $course_choose_ages->count() - 1 : 0 }};
                         }, false );
                     </script>
 

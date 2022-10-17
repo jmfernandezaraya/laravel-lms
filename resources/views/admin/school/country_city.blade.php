@@ -44,7 +44,7 @@
 
                     <script>
                         window.addEventListener('load', function() {
-                            school_country_clone = {{$countries && $countries->count() ? $countries->count() - 1 : 0}};
+                            school_country_clone = {{ $countries && $countries->count() ? $countries->count() - 1 : 0 }};
                         }, false );
                     </script>
 
@@ -64,7 +64,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <h3>{{__('Admin/backend.city')}}</h3>
-                                    <input hidden name="city_increment[]" value="{{$country->cities->count() ? $country->cities->count() - 1 : 0}}">
+                                    <input hidden name="city_increment[]" value="{{ $country->cities && $country->cities->count() ? $country->cities->count() - 1 : 0 }}">
                                     @forelse ($country->cities as $city)
                                         <div id="city{{$loop->parent->iteration - 1}}_clone{{$loop->iteration - 1}}" class="city-clone clone form-group">
                                             <input type="hidden" value="{{ $city->id }}" type="text" id="city{{$loop->parent->iteration - 1}}_id{{ $loop->iteration - 1 }}" name="city_id[{{$loop->parent->iteration - 1}}][]">

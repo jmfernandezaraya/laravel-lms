@@ -21,21 +21,7 @@ class Review extends Model
 
     public function rated()
     {
-        $rates = 0;
-        if ($this->quality_teaching) $rates = $rates + $this->quality_teaching;
-        if ($this->school_facilities) $rates = $rates + $this->school_facilities;
-        if ($this->social_activities) $rates = $rates + $this->social_activities;
-        if ($this->school_location) $rates = $rates + $this->school_location;
-        if ($this->satisfied_teaching) $rates = $rates + $this->satisfied_teaching;
-
-        if ($this->level_cleanliness) $rates = $rates + $this->level_cleanliness;
-        if ($this->distance_accommodation_school) $rates = $rates + $this->distance_accommodation_school;
-        if ($this->satisfied_accommodation) $rates = $rates + $this->satisfied_accommodation;
-
-        if ($this->airport_transfer) $rates = $rates + $this->airport_transfer;
-        if ($this->city_activities) $rates = $rates + $this->city_activities;
-
-        return $rates / 10;
+        return $this->average_point;
     }
 
     public function schoolTeachingRated()

@@ -40,9 +40,9 @@ Route::view('superamin/test_livewire', 'superadmin.test');
 Route::post('visa_submit', [ApplyVisaController::class, 'applyForVisaPost'])->name('frontend.visa_submit')->middleware('paymentauth:visa_form');
 Route::post('/enquiry/submit', [FrontendController::class, 'submitEnquiry'])->name('enquiry.submit');
 
-Route::get('/handle-payment/success', [FrontendController::class, 'TelrResponse']);
-Route::get('/handle-payment/cancel', [FrontendController::class, 'TelrResponseFailed']);
-Route::get('/handle-payment/declined', [FrontendController::class, 'TelrResponseFailed']);
+Route::get('/handle-payment/success', [FrontendController::class, 'PaymentResponse']);
+Route::get('/handle-payment/cancel', [FrontendController::class, 'PaymentResponseFailed']);
+Route::get('/handle-payment/declined', [FrontendController::class, 'PaymentResponseFailed']);
 
 Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
     Route::view('about-us', 'about');
@@ -343,7 +343,7 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => [
     Route::delete('delete/{visaId}', 'VisaFormController@destroy')->name('delete_visa_forms');
     Route::post('visa_submit', 'VisaFormController@applyForVisa')->name('visa_submit');
 
-    Route::resource('/visa', 'FormbuildController');
+    Route::resource('visa', 'FormbuildController');
     Route::resource('enquiry', 'EnquiryController');
     
     Route::get('review/approve/{id}', '\App\Http\Controllers\Admin\ReviewController@approve')->name('review.approve');
@@ -366,6 +366,8 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.', 'middleware' => [
         Route::post('affiliate/active/{id}', 'AffiliateController@active')->name('affiliate.active');
         Route::post('affiliate/deactive/{id}', 'AffiliateController@deactive')->name('affiliate.deactive');
         Route::resource('affiliate', 'AffiliateController');
+        Route::post('school_admin/active/{id}', 'SchoolAdminController@active')->name('school_admin.active');
+        Route::post('school_admin/deactive/{id}', 'SchoolAdminController@deactive')->name('school_admin.deactive');
         Route::resource('school_admin', 'SchoolAdminController');
         Route::resource('super_admin', 'SuperAdminController');
     });
@@ -534,7 +536,7 @@ Route::group(['prefix' => 'schooladmin', 'as' => 'schooladmin.', 'middleware' =>
         Route::get('approve/{id}/{value}', '\App\Http\Controllers\Admin\CourseApplicationController@approveCourseApplication')->name('approve');
     });
     Route::resource('course_application', '\App\Http\Controllers\Admin\CourseApplicationController');    
-    
+
     Route::get('review/approve/{id}', '\App\Http\Controllers\Admin\ReviewController@approve')->name('review.approve');
     Route::get('review/disapprove/{id}', '\App\Http\Controllers\Admin\ReviewController@disapprove')->name('review.disapprove');
     Route::resource('review', '\App\Http\Controllers\Admin\ReviewController');

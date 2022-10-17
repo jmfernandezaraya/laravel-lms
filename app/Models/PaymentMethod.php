@@ -9,5 +9,7 @@ class PaymentMethod extends Model
 {
     use HasFactory;
     
+    protected $primaryKey = 'unique_id';
+    
     protected $guarded =[];
 }

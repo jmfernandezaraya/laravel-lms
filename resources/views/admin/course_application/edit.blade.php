@@ -21,8 +21,10 @@
                 <td>{{ $course_application->mobile }}</td>
             </tr>
             <tr>
-                <td>{{__('Admin/backend.order_id')}}</td>
-                <td>{{ $course_application->order_id }}</td>
+                <!-- <td>{{__('Admin/backend.order_id')}}</td>
+                <td>{{ $course_application->order_id }}</td> -->
+                <td>{{__('Admin/backend.order_number')}}</td>
+                <td>{{ $course_application->order_number }}</td>
             </tr>
         </tbody>
     </table>
@@ -955,7 +957,7 @@
 
                                         <input hidden name="type_of_submit" value="send_message_to_school">
 
-                                        <h5 class="text-center">{{__('Admin/backend.contact_center_school')}}</h5>
+                                        <h5 class="text-center">{{ auth('schooladmin')->check() == 'superadmin' ? __('Admin/backend.contact_center_school') : __('Admin/backend.contact_center_admin') }}</h5>
                                         
                                         <div class="row">
                                             <div class="col-md-12">

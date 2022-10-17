@@ -45,7 +45,7 @@
                     
                     <script>
                         window.addEventListener('load', function() {
-                            accommodation_clone = {{$accomodations && $accomodations->count() ? $accomodations->count() - 1 : 0}};
+                            accommodation_clone = {{ $accomodations && $accomodations->count() ? $accomodations->count() - 1 : 0 }};
                         }, false );
                     </script>
 
@@ -275,13 +275,6 @@
                                 </div>
                                 <div class="form-group col-md-4"></div>
                             </div>
-
-                            <script>
-                                window.addEventListener('load', function() {
-                                    yeardatepicker_days.push("{{$accommodation->available_days ? $accommodation->available_days : ''}}".split(","));
-                                    yeardatepicker_months.push([]);
-                                }, false );
-                            </script>
                             
                             <div class="row">
                                 <div class="form-group col-md-6">
@@ -499,13 +492,6 @@
                                 </div>
                                 <div class="form-group col-md-4"></div>
                             </div>
-
-                            <script>
-                                window.addEventListener('load', function() {
-                                    yeardatepicker_days.push([]);
-                                    yeardatepicker_months.push([]);
-                                }, false );
-                            </script>
                         
                             <div class="row">
                                 <div class="form-group col-md-6">

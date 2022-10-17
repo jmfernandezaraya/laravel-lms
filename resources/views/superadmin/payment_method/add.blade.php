@@ -39,30 +39,55 @@
     <div class="page-content">
         <div class="card">
             <div class="card-body">
-                <form id="formaction" class="forms-sample" method="post" action="{{route('superadmin.payment_method.store')}}">
+                <form id="paymentMethodForm" class="forms-sample" method="post" action="{{route('superadmin.payment_method.store')}}">
                     {{csrf_field()}}
                     
-                    <div id="form1">
-                        @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="key">{{__('Admin/backend.payment_method')}}</label>
+                            <select name="key" class="form-control">
+                                @foreach ($payment_method_list as $method_key => $method_value)
+                                    <option value="{{ $method_key }}" data-logo="{{ $method_value['logo'] }}">{{ app()->getLocale() == 'en' ? $method_value['en'] : $method_value['ar'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <img class="logo img-fluid" src="" style="width: 200px" />
+                        </div>
+                    </div>
 
-                        <div class="row">
-                            <div class="form-group col-md-12">
-                                <label for="name">{{__('Admin/backend.payment_method')}}</label>
-                                <div class="english">
-                                    <input value="{{old('name')}}" name="name" type="text" class="form-control" placeholder="{{__('Admin/backend.payment_method')}}">
-                                </div>
-                                <div class="arabic">
-                                    <input  value="{{old('name_ar')}}" name="name_ar" type="text" class="form-control" placeholder="{{__('Admin/backend.payment_method')}}">
-                                </div>
-                            </div>
+                    <div class="row">
+                        <div class="form-group col-md-6 store-id">
+                            <label for="store_id">{{__('Admin/backend.store_id')}}</label>
+                            <input class="form-control" value="" type="text" name="store_id" placeholder="{{__('Admin/backend.store_id')}}">
+                        </div>
+                        <div class="form-group col-md-6 store-auth-key">
+                            <label for="store_auth_key">{{__('Admin/backend.store_auth_key')}}</label>
+                            <input class="form-control" value="" type="text" name="store_auth_key" placeholder="{{__('Admin/backend.store_auth_key')}}">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-6 store-secret-key">
+                            <label for="store_secret_key">{{__('Admin/backend.store_secret_key')}}</label>
+                            <input class="form-control" value="" type="text" name="store_secret_key" placeholder="{{__('Admin/backend.store_secret_key')}}">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="mode">{{__('Admin/backend.mode')}}</label>
+                            <select name="test_mode" class="form-control">
+                                <option value="0" selected>{{__('Admin/backend.real_mode')}}</option>
+                                <option value="1">{{__('Admin/backend.test_mode')}}</option>
+                            </select>
                         </div>
                     </div>
 

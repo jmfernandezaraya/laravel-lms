@@ -94,11 +94,11 @@
                                         <tbody>
                                             <tr>
                                                 <th class="border-none" scope="row">
-                                                    <p>{{ucfirst($school->name ? (app()->getLocale() == 'en' ? $school->name->name : $school->name->name_ar) : '-')}}{{app()->getLocale() == 'en' ? ($school->branch_name ? ' - ' . $school->branch_name : '') : ($school->branch_name_ar ? ' - ' . $school->branch_name_ar : '')}}</p>
-                                                    <span class="city">{{$school->city ? (app()->getLocale() == 'en' ? $school->city->name : $school->city->name_ar) : '-'}},</span>
-                                                    <p><span class="country">{{$school->country ? (app()->getLocale() == 'en' ? $school->country->name : $school->country->name_ar) : '-'}}</span></p>
+                                                    <p>{{ ucfirst($school->name ? (app()->getLocale() == 'en' ? $school->name->name : $school->name->name_ar) : '-')}}{{app()->getLocale() == 'en' ? ($school->branch_name ? ' - ' . $school->branch_name : '') : ($school->branch_name_ar ? ' - ' . $school->branch_name_ar : '') }}</p>
+                                                    <span class="city">{{ $school->city ? (app()->getLocale() == 'en' ? $school->city->name : $school->city->name_ar) : '-' }},</span>
+                                                    <p><span class="country">{{ $school->country ? (app()->getLocale() == 'en' ? $school->country->name : $school->country->name_ar) : '-' }}</span></p>
                                                     <ul class="custom">
-                                                        @for($i = 1; $i <=5; $i ++)
+                                                        @for ($i = 1; $i <=5; $i ++)
                                                             <li data-toggle="modal" data-target="#myModal" class="dynamic_starli" onclick="save_rating({{$i}})" onmouseover="highlightStar(this);" onClick="addRating(this);" id="rating{{$i}}">★</li>
                                                         @endfor
                                                         ({{round($school->avgRating())}})
@@ -250,21 +250,17 @@
             @endphp
             @foreach ($school_top_review_course_applications as $school_top_review_course_application)
                 @php
-                    $school_top_review_rating = ($school_top_review_course_application->review->quality_teaching + $school_top_review_course_application->review->school_facilities + $school_top_review_course_application->review->social_activities + 
-                        $school_top_review_course_application->review->school_location + $school_top_review_course_application->review->satisfied_teaching + $school_top_review_course_application->review->level_cleanliness + 
-                        $school_top_review_course_application->review->distance_accommodation_school + $school_top_review_course_application->review->satisfied_accommodation + $school_top_review_course_application->review->airport_transfer + 
-                        $school_top_review_course_application->review->city_activities) / 10;
-                    $school_top_review_ratings += $school_top_review_rating;
+                    $school_top_review_ratings += $school_top_review_course_application->review->average_point;
                     $school_top_review_quality_teachings += $school_top_review_course_application->review->quality_teaching;
                     $school_top_review_school_facilities += $school_top_review_course_application->review->school_facilities;
                     $school_top_review_social_activities += $school_top_review_course_application->review->social_activities;
                     $school_top_review_school_locations += $school_top_review_course_application->review->school_location;
                     $school_top_review_satisfied_teachings += $school_top_review_course_application->review->satisfied_teaching;
-                    if ($school_top_review_rating == 5) $school_top_review_five_scores += 1;
-                    if ($school_top_review_rating < 5 && $school_top_review_rating >= 4) $school_top_review_four_scores += 1;
-                    if ($school_top_review_rating < 4 && $school_top_review_rating >= 3) $school_top_review_three_scores += 1;
-                    if ($school_top_review_rating < 3 && $school_top_review_rating >= 2) $school_top_review_two_scores += 1;
-                    if ($school_top_review_rating < 2 && $school_top_review_rating >= 1) $school_top_review_one_scores += 1;
+                    if ($school_top_review_course_application->review->average_point == 5) $school_top_review_five_scores += 1;
+                    if ($school_top_review_course_application->review->average_point < 5 && $school_top_review_course_application->review->average_point >= 4) $school_top_review_four_scores += 1;
+                    if ($school_top_review_course_application->review->average_point < 4 && $school_top_review_course_application->review->average_point >= 3) $school_top_review_three_scores += 1;
+                    if ($school_top_review_course_application->review->average_point < 3 && $school_top_review_course_application->review->average_point >= 2) $school_top_review_two_scores += 1;
+                    if ($school_top_review_course_application->review->average_point < 2 && $school_top_review_course_application->review->average_point >= 1) $school_top_review_one_scores += 1;
                 @endphp
             @endforeach
             @if ($school_top_review_course_applications && count($school_top_review_course_applications))
@@ -292,7 +288,7 @@
                                 <i class="fa fa-star" aria-hidden="true"></i>
                             </span>
                         </div>
-                        <div>{{__('Frontend.based_on_five_reviews')}}</div>
+                        <div>&nbsp;{{__('Frontend.based_on_five_reviews')}}</div>
                     </div>
                     <div class="row">
                         <div class="col-md-3">
@@ -417,19 +413,12 @@
                 </div>
                 <div class="school-reviews mt-3">
                     @foreach ($school_top_review_course_applications as $school_top_review_course_application)
-                        @php
-                            $school_top_review_rating = ($school_top_review_course_application->review->quality_teaching + $school_top_review_course_application->review->school_facilities + $school_top_review_course_application->review->social_activities + 
-                                $school_top_review_course_application->review->school_location + $school_top_review_course_application->review->satisfied_teaching + $school_top_review_course_application->review->level_cleanliness + 
-                                $school_top_review_course_application->review->distance_accommodation_school + $school_top_review_course_application->review->satisfied_accommodation + $school_top_review_course_application->review->airport_transfer + 
-                                $school_top_review_course_application->review->city_activities) / 10;
-                        @endphp
-
                         <div class="school-review border-bottom">
                             <div class="mb-3 pb-2 border-bottom">
                                 <div class="d-flex align-items-center">
-                                    <h5 class="mr-3">{{ $school_top_review_course_application->fname }} {{ $school_top_review_course_application->mname }} {{ $school_top_review_course_application->lname }} - {{ $school_top_review_course_application->nationality }}</h5>
+                                    <h5 class="mr-3">{{ $school_top_review_course_application->fname }} {{ $school_top_review_course_application->review->use_full_name ? $school_top_review_course_application->mname : '' }} {{ $school_top_review_course_application->review->use_full_name ? $school_top_review_course_application->lname : '' }} - {{ $school_top_review_course_application->nationality }}</h5>
                                     <div class="score-wrap">
-                                        <span class="stars" style="width: {{$school_top_review_rating * 20}}%">
+                                        <span class="stars" style="width: {{$school_top_review_course_application->review->average_point * 20}}%">
                                             <i class="fa fa-star" aria-hidden="true"></i>
                                             <i class="fa fa-star" aria-hidden="true"></i>
                                             <i class="fa fa-star" aria-hidden="true"></i>

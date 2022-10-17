@@ -8867,7 +8867,6 @@ $jscomp.polyfill = function (e, r, p, m) {
     _createClass(Datepicker, [{
       key: "destroy",
 
-
       /**
        * Teardown component
        */
@@ -8992,10 +8991,9 @@ $jscomp.polyfill = function (e, r, p, m) {
         this.dateTextEl.innerHTML = day + ", " + month + " " + date;
       }
 
-      /**
-       * change view to a specific date
-       */
-
+    /**
+     * change view to a specific date
+     */
     }, {
       key: "gotoDate",
       value: function gotoDate(date) {
@@ -9260,10 +9258,9 @@ $jscomp.polyfill = function (e, r, p, m) {
         return html += '</div>';
       }
 
-      /**
-       * refresh the HTML
-       */
-
+    /**
+     * refresh the HTML
+     */
     }, {
       key: "draw",
       value: function draw(force) {
@@ -9323,10 +9320,9 @@ $jscomp.polyfill = function (e, r, p, m) {
         }
       }
 
-      /**
-       * Setup Event Handlers
-       */
-
+    /**
+     * Setup Event Handlers
+     */
     }, {
       key: "_setupEventHandlers",
       value: function _setupEventHandlers() {
@@ -9404,10 +9400,9 @@ $jscomp.polyfill = function (e, r, p, m) {
         };
       }
 
-      /**
-       * Remove Event Handlers
-       */
-
+    /**
+     * Remove Event Handlers
+     */
     }, {
       key: "_removeEventHandlers",
       value: function _removeEventHandlers() {
@@ -9468,10 +9463,9 @@ $jscomp.polyfill = function (e, r, p, m) {
         this.gotoYear(e.target.value);
       }
 
-      /**
-       * change view to a specific month (zero-index, e.g. 0: January)
-       */
-
+    /**
+     * change view to a specific month (zero-index, e.g. 0: January)
+     */
     }, {
       key: "gotoMonth",
       value: function gotoMonth(month) {
@@ -9481,10 +9475,9 @@ $jscomp.polyfill = function (e, r, p, m) {
         }
       }
 
-      /**
-       * change view to a specific full year (e.g. "2012")
-       */
-
+    /**
+     * change view to a specific full year (e.g. "2012")
+     */
     }, {
       key: "gotoYear",
       value: function gotoYear(year) {
@@ -9522,10 +9515,9 @@ $jscomp.polyfill = function (e, r, p, m) {
         return abbr ? opts.i18n.weekdaysAbbrev[day] : opts.i18n.weekdays[day];
       }
 
-      /**
-       * Set input value to the selected date and close Datepicker
-       */
-
+    /**
+     * Set input value to the selected date and close Datepicker
+     */
     }, {
       key: "_finishSelection",
       value: function _finishSelection() {
@@ -9533,10 +9525,9 @@ $jscomp.polyfill = function (e, r, p, m) {
         this.close();
       }
 
-      /**
-       * Open Datepicker
-       */
-
+    /**
+     * Open Datepicker
+     */
     }, {
       key: "open",
       value: function open() {
@@ -9553,10 +9544,9 @@ $jscomp.polyfill = function (e, r, p, m) {
         return this;
       }
 
-      /**
-       * Close Datepicker
-       */
-
+    /**
+     * Close Datepicker
+     */
     }, {
       key: "close",
       value: function close() {
@@ -9616,10 +9606,9 @@ $jscomp.polyfill = function (e, r, p, m) {
         if (Datepicker._isDate(date)) date.setHours(0, 0, 0, 0);
       }
 
-      /**
-       * Get Instance
-       */
-
+    /**
+     * Get Instance
+     */
     }, {
       key: "getInstance",
       value: function getInstance(el) {

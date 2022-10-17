@@ -46,11 +46,11 @@
 
                         <script>
                             window.addEventListener('load', function() {
-                                accommodation_under_age_clone = {{$accomodation_under_ages && $accomodation_under_ages->count() ? $accomodation_under_ages->count() - 1 : 0}};
+                                accommodation_under_age_clone = {{ $accomodation_under_ages && $accomodation_under_ages->count() ? $accomodation_under_ages->count() - 1 : 0 }};
                             }, false );
                         </script>
 
-                        <input hidden id="accomunderageincrement" name="accomunderageincrement" value="{{$accomodation_under_ages && $accomodation_under_ages->count() ? $accomodation_under_ages->count() - 1 : 0}}">
+                        <input hidden id="accomunderageincrement" name="accomunderageincrement" value="{{ $accomodation_under_ages && $accomodation_under_ages->count() ? $accomodation_under_ages->count() - 1 : 0 }}">
 
                         @forelse($accomodation_under_ages as $accomodation_under_age)
                             <div id="accommodation_under_age_clone{{ $loop->iteration - 1 }}" class="accommodation-under-age-clone clone">

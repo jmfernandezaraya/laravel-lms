@@ -21,10 +21,8 @@ use App\Models\FrontPage;
 use App\Models\Setting;
 use App\Models\User;
 use App\Models\CourseApplication;
-
 use App\Models\AppliedForVisa;
 use App\Models\Enquiry;
-
 use App\Models\ChooseAccommodationAge;
 use App\Models\ChooseCustodianUnderAge;
 use App\Models\ChooseLanguage;
@@ -84,7 +82,7 @@ class FrontendController extends Controller
         $course_program_type_ids = [];
         $course_study_mode_ids = [];
         $course_school_ids = [];
-        $course_promotion_school_ids = [];
+        $course_promotion_ids = [];
 
         $now = Carbon::now()->format('Y-m-d');
         $courses = Course::with('school', 'coursePrograms')->whereHas('school', function($query) {
@@ -108,10 +106,10 @@ class FrontendController extends Controller
             $course_program_type_ids = array_merge($course_program_type_ids, $course->program_type ?? []);
             $course_study_mode_ids = array_merge($course_study_mode_ids, $course->study_mode ?? []);
             $course_school_ids[] = $course->school_id;
-            if ($course_has_discount_program) $course_promotion_school_ids[] = $course->school_id;
+            if ($course_has_discount_program) $course_promotion_ids[] = '' . $course->unique_id;
         }
         $course_school_ids = array_unique($course_school_ids);
-        $course_promotion_school_ids = array_unique($course_promotion_school_ids);
+        $course_promotion_ids = array_unique($course_promotion_ids);
         $course_age_range_ids = array_unique($course_age_range_ids);
 
         $languages = ChooseLanguage::whereIn('unique_id', $course_language_ids)->orderBy('name', 'asc')->get();
@@ -131,24 +129,22 @@ class FrontendController extends Controller
                 }
             }
         }
-        $promotion_schools = School::with('courses.coursePrograms')->whereIn('id', $course_promotion_school_ids)->where('is_active', true)->get();
-        foreach ($promotion_schools as $promotion_school) {
-            $promotion_school->course = null;
-            $promotion_school->course_program = null;
-            $promotion_school->age_range = [ 'min_age' => 0, 'max_age' => 0 ];
-            $promotion_school->age_ranges = [];
-            foreach ($promotion_school->courses as $promotion_school_course) {
-                foreach ($promotion_school_course->coursePrograms as $promotion_school_course_program) {
-                    if ($promotion_school_course_program->discount_per_week != ' -' && $promotion_school_course_program->discount_per_week != ' %' && 
-                        (($promotion_school_course_program->discount_start_date <= $now && $promotion_school_course_program->discount_end_date >= $now)
-                        || ($promotion_school_course_program->x_week_selected && $promotion_school_course_program->x_week_start_date <= $now && $promotion_school_course_program->x_week_end_date >= $now))) {
-                        if (!$promotion_school->course) {
-                            $promotion_school->course = $promotion_school_course;
-                            $promotion_school->course_program = $promotion_school_course_program;
-                            $promotion_school->age_range = getCourseProgramAgeRange($promotion_school->course_program->program_age_range ?? []);
+        $promotion_courses = Course::with('school', 'coursePrograms')->whereIn('unique_id', $course_promotion_ids)->get();
+        foreach ($promotion_courses as $promotion_course) {
+            $promotion_course->course_program = null;
+            $promotion_course->age_range = [ 'min_age' => 0, 'max_age' => 0 ];
+            $promotion_course->age_ranges = [];
+            if ($promotion_course->promotion) {
+                foreach ($promotion_course->coursePrograms as $promotion_course_program) {
+                    if ($promotion_course_program->discount_per_week != ' -' && $promotion_course_program->discount_per_week != ' %' && 
+                        (($promotion_course_program->discount_start_date <= $now && $promotion_course_program->discount_end_date >= $now)
+                        || ($promotion_course_program->x_week_selected && $promotion_course_program->x_week_start_date <= $now && $promotion_course_program->x_week_end_date >= $now))) {
+                        if (!$promotion_course->course_program) {
+                            $promotion_course->course_program = $promotion_course_program;
+                            $promotion_course->age_range = getCourseProgramAgeRange($promotion_course_program->program_age_range ?? []);
                         }
                     }
-                    $promotion_school->age_ranges = array_unique(array_merge($promotion_school->age_ranges, ChooseProgramAge::whereIn('unique_id', $promotion_school_course_program->program_age_range ?? [])->orderBy('age', 'asc')->pluck('age')->toArray()));
+                    $promotion_course->age_ranges = array_unique(array_merge($promotion_course->age_ranges, ChooseProgramAge::whereIn('unique_id', $promotion_course_program->program_age_range ?? [])->orderBy('age', 'asc')->pluck('age')->toArray()));
                 }
             }
         }
@@ -159,7 +155,7 @@ class FrontendController extends Controller
             $setting_value = unserialize($home_page->setting_value);
         }
 
-        return view('frontend.index', compact('setting_value', 'schools', 'promotion_schools', 'languages'));
+        return view('frontend.index', compact('setting_value', 'schools', 'promotion_courses', 'languages'));
     }
 
     public function getCountryAges(Request $request)
@@ -361,6 +357,7 @@ class FrontendController extends Controller
 
         $course = Course::with('country')->where('unique_id', '' . $course_details->program_id)->first();
         $course_country = $course ? ($course->country ? $course->country->name : '') : '';
+        $course_study_finance = $course ? $course->study_finance : '';
 
         $course_program = CourseProgram::where('unique_id', '' . $course_details->program_unique_id)->first();
         $age_ranges = $course_program ? $course_program->program_age_range : [];
@@ -378,7 +375,7 @@ class FrontendController extends Controller
         $course_custodian_age_range = getCourseAccommodationAgeRange($age_ranges);
         $custodian_min_age = $course_custodian_age_range['min_age']; $custodian_max_age = $course_custodian_age_range['max_age'];
 
-        return view('frontend.course.register', compact('course_details', 'course_country', 'min_age', 'max_age', 'accommodation_min_age', 'accommodation_max_age', 'custodian_min_age', 'custodian_max_age'));
+        return view('frontend.course.register', compact('course_details', 'course_study_finance', 'course_country', 'min_age', 'max_age', 'accommodation_min_age', 'accommodation_max_age', 'custodian_min_age', 'custodian_max_age'));
     }
 
     /**
@@ -978,9 +975,12 @@ class FrontendController extends Controller
             $to_be_saved['total_cost_fixed'] = $calculator_values['values'][0];
             $deposit_price_converted = $calculator_values['values'][1];
 
+            $default_payment_method = getDefaultPaymentMethodName();
+
             $course_application = CourseApplication::updateOrCreate($to_be_saved, $to_be_saved + [
                 'user_id' => auth()->id(),
                 'order_number' => getCourseApplicationOrderNumber(),
+                'payment_method' => $default_payment_method,
                 'paid' => isset($course_reservation_details->deposit_price) ? 0 : 1,
                 'status' => 'received',
             ]);
@@ -1009,26 +1009,27 @@ class FrontendController extends Controller
             }
 
             if (isset($course_reservation_details->deposit_price)) {
-                $telrManager = new \TelrGateway\TelrManager();
-    
-                $billingParams = [
-                    'first_name' => $course_application->fname,
-                    'sur_name' => ($course_application->mname ? $course_application->mname . ' ' : '') . $course_application->lname,
-                    'address_1' => $course_application->address,
-                    'address_2' => '',
-                    'city' => $to_be_saved['city_contact'],
-                    'region' => auth()->user()->state,
-                    'zip' => auth()->user()->zip,
-                    'country' =>  $to_be_saved['country_contact'],
-                    'email' =>  $to_be_saved['email'],
-                ];
-                if ($course_application) {
-                    $data['data'] = 'Success';
-                    $data['success'] = true;
-                }
-    
-                $url = $telrManager->pay(time() . rand(00, 99), $deposit_price_converted, __('Frontend.program_registration_fee'), $billingParams)->redirect();
-                $data['url'] = $url->getTargetUrl();
+                if ($default_payment_method == 'Telr') {
+                    $telrManager = new \TelrGateway\TelrManager();
+                    $billingParams = [
+                        'first_name' => $course_application->fname,
+                        'sur_name' => ($course_application->mname ? $course_application->mname . ' ' : '') . $course_application->lname,
+                        'address_1' => $course_application->address,
+                        'address_2' => '',
+                        'city' => $to_be_saved['city_contact'],
+                        'region' => auth()->user()->state,
+                        'zip' => auth()->user()->zip,
+                        'country' =>  $to_be_saved['country_contact'],
+                        'email' =>  $to_be_saved['email'],
+                    ];
+                    if ($course_application) {
+                        $data['data'] = 'Success';
+                        $data['success'] = true;
+                    }
+        
+                    $url = $telrManager->pay(time() . rand(00, 99), $deposit_price_converted, __('Frontend.program_registration_fee'), $billingParams)->redirect();
+                    $data['url'] = $url->getTargetUrl();
+                }    
             } else {
                 toastr()->success(str_replace("###SITE_NAME###", __('Frontend.site_name'), __('Frontend.user_course_booked')));
 
@@ -1076,7 +1077,7 @@ class FrontendController extends Controller
 			$data['catch_error'] = $e->getMessage();
             $data['success'] = false;
 
-            Log::error($e->getMessage());
+            // Log::error($e->getMessage());
 
             return response()->json($data);
         }
@@ -1093,17 +1094,22 @@ class FrontendController extends Controller
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      * @throws \Exception
      */
-    public function TelrResponse()
+    public function PaymentResponse()
     {
         if (\Session::has('visa_form')) {
-            return $this->VisaTelrResponse();
+            return $this->VisaPaymentResponse();
+        }
+        
+        $cart_id = $_GET['cart_id'];
+        $course_application = CourseApplication::where('user_id', auth()->user()->id)->where('order_id',  $cart_id)->where('paid',  0)->first();
+        if ($course_application->payment_method == 'Telr') {
+            $telrManager = new \TelrGateway\TelrManager();
+            $telr = $telrManager->handleTransactionResponse(request());
         }
 
-        $telrManager = new \TelrGateway\TelrManager();
-        $telr = $telrManager->handleTransactionResponse(request());
-        $cart_id = $_GET['cart_id'];
-
-        $telr->status == 1 ? toastr()->success(str_replace("###SITE_NAME###", __('Frontend.site_name'), __('Frontend.user_course_booked'))) : toastr()->error(__('Frontend.payment.failed'));
+        if ($course_application->payment_method == 'Telr') {
+            $telr->status == 1 ? toastr()->success(str_replace("###SITE_NAME###", __('Frontend.site_name'), __('Frontend.user_course_booked'))) : toastr()->error(__('Frontend.payment.failed'));
+        }
 
         $course_applications = CourseApplication::where('user_id', auth()->user()->id)->where('order_id',  $cart_id)
             ->where('paid',  1)->get();
@@ -1134,11 +1140,14 @@ class FrontendController extends Controller
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      * @throws \Exception
      */
-    public function VisaTelrResponse()
+    public function VisaPaymentResponse()
     {
-        $telrManager = new \TelrGateway\TelrManager();
-        $telr = $telrManager->handleTransactionResponse(request());
         $cart_id = $_GET['cart_id'];
+        $course_application = CourseApplication::where('user_id', auth()->user()->id)->where('order_id',  $cart_id)->where('paid',  0)->first();
+        if ($course_application->payment_method == 'Telr') {
+            $telrManager = new \TelrGateway\TelrManager();
+            $telr = $telrManager->handleTransactionResponse(request());
+        }
 
         $save_visa = AppliedForVisa::find(\Session::get('applied_form_id'));
         $save_visa->payment_status = 1;
@@ -1146,7 +1155,9 @@ class FrontendController extends Controller
         $save_visa->paid_amount = Session::get('paid_amount');
         $save_visa->save();
 
-        $telr->status == 1 ? toastr()->success(__('Frontend.payment.success')) : toastr()->error(__('Frontend.payment.failed'));
+        if ($course_application->payment_method == 'Telr') {
+            $telr->status == 1 ? toastr()->success(__('Frontend.payment.success')) : toastr()->error(__('Frontend.payment.failed'));
+        }
         Session::forget(['visa_form', 'applied_form_id', 'paid_amount']);
 
         return redirect(route('land_page'));
@@ -1155,7 +1166,7 @@ class FrontendController extends Controller
     /**
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function TelrResponseFailed()
+    public function PaymentResponseFailed()
     {
         $cart_id = $_GET['cart_id'];
         $course_applications = CourseApplication::where('user_id', auth()->user()->id)->where('paid',  2)->get();

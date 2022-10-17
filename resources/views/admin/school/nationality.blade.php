@@ -25,7 +25,7 @@
 
                     <script>
                         window.addEventListener('load', function() {
-                            nationality_clone = {{$nationalities && $nationalities->count() ? $nationalities->count() - 1 : 0}};
+                            nationality_clone = {{ $nationalities && $nationalities->count() ? $nationalities->count() - 1 : 0 }};
                         }, false );
                     </script>
 
@@ -87,7 +87,7 @@
 
                     <div class="row mt-3">
                         <div class="col-md-12">
-                            <button type="button" onclick="submitForm($(this).parents().find('#schoolNameForm'))" class="btn btn-gradient-primary mr-2">{{__('Admin/backend.submit')}}</button>
+                            <button type="button" onclick="submitForm($(this).parents().find('#nationalityForm'))" class="btn btn-gradient-primary mr-2">{{__('Admin/backend.submit')}}</button>
                             <a class="btn btn-light" href="{{ url()->previous()}}">{{__('Admin/backend.cancel') }}</a>
                         </div>
                     </div>

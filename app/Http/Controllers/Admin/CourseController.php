@@ -49,8 +49,8 @@ class CourseController extends Controller
             'program_types' => [],
             'study_modes' => [],
             'school_names' => [],
-            'school_cities' => [],
             'school_countries' => [],
+            'school_cities' => [],
             'branch_names' => [],
             'currencies' => []
         ];
@@ -113,22 +113,6 @@ class CourseController extends Controller
                 }
             }
 
-            if (is_null($course->school->city)) {
-                if (!in_array('-', $choose_fields['school_cities'])) {
-                    array_push($choose_fields['school_cities'], '-');
-                }
-            } else {
-                if (app()->getLocale() == 'en') {
-                    if (!in_array($course->school->city->name, $choose_fields['school_cities'])) {
-                        array_push($choose_fields['school_cities'], $course->school->city->name);
-                    }
-                } else {
-                    if (!in_array($course->school->city->name_ar, $choose_fields['school_cities'])) {
-                        array_push($choose_fields['school_cities'], $course->school->city->name_ar);
-                    }
-                }
-            }
-
             if (is_null($course->school->country)) {
                 if (!in_array('-', $choose_fields['school_countries'])) {
                     array_push($choose_fields['school_countries'], '-');
@@ -141,6 +125,22 @@ class CourseController extends Controller
                 } else {
                     if (!in_array($course->school->country->name_ar, $choose_fields['school_countries'])) {
                         array_push($choose_fields['school_countries'], $course->school->country->name_ar);
+                    }
+                }
+            }
+
+            if (is_null($course->school->city)) {
+                if (!in_array('-', $choose_fields['school_cities'])) {
+                    array_push($choose_fields['school_cities'], '-');
+                }
+            } else {
+                if (app()->getLocale() == 'en') {
+                    if (!in_array($course->school->city->name, $choose_fields['school_cities'])) {
+                        array_push($choose_fields['school_cities'], $course->school->city->name);
+                    }
+                } else {
+                    if (!in_array($course->school->city->name_ar, $choose_fields['school_cities'])) {
+                        array_push($choose_fields['school_cities'], $course->school->city->name_ar);
                     }
                 }
             }
@@ -355,13 +355,16 @@ class CourseController extends Controller
             }
         }
         $country_ids = [$school->country_id];
+        $city_ids = [$school->city_id];
         $same_name_schools = School::where('name_id', $school->name_id)->get();
         foreach ($same_name_schools as $same_name_school) {
             $country_ids[] = $same_name_school->country_id;
+            $city_ids[] = $same_name_school->city_id;
         }
-        $school_countries = Country::with('cities')->whereIn('id', $country_ids)->get();
+        $school_countries = Country::whereIn('id', $country_ids)->get();
+        $school_cities = City::whereIn('id', $city_ids)->where('country_id', $course->country_id)->get();
 
-        return view('admin.course.edit', compact('course', 'choose_schools', 'school', 'school_name', 'school_countries', 'school_branches',
+        return view('admin.course.edit', compact('course', 'choose_schools', 'school', 'school_name', 'school_countries', 'school_cities', 'school_branches',
             'choose_languages', 'choose_study_times', 'choose_study_modes', 'choose_classes_days', 'choose_start_days', 'choose_program_age_ranges',
             'choose_program_types', 'choose_branches', 'currencies'));
     }

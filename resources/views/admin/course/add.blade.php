@@ -59,7 +59,21 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="form-group col-md-4"></div>
+                            <div class="form-group col-md-4">
+                                <label for="have_accommodation">
+                                    {{__('Admin/backend.study_finance')}}:
+                                </label>
+                                <div class="3col active">
+                                    <input type="radio" value="both" name="study_finance" checked>
+                                    <label for="study_finance_both">
+                                        {{__('Admin/backend.both')}}
+                                    </label>
+                                    <input type="radio" value="only_personal" name="study_finance">
+                                    <label for="study_finance_only_personal">
+                                        {{__('Admin/backend.only_personal')}}
+                                    </label>
+                                </div>
+                            </div>
                             <div class="form-group col-md-4"></div>
                         </div>
 
@@ -68,7 +82,7 @@
                                 <label for="language">{{__('Admin/backend.choose_lang')}}:</label>
                                 <select name="language[]" multiple="multiple" id="language_choose" class="3col active">
                                     @foreach ($choose_languages as $choose_language)
-                                        <option value="{{$choose_language->unique_id}}">{{$choose_language->name}}</option>
+                                        <option value="{{$choose_language->unique_id}}">{{ app()->getLocale() == 'en' ? $choose_language->name : $choose_language->name_ar }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -77,7 +91,7 @@
                                 <label for="study_mode">{{__('Admin/backend.choose_study_mode')}}:</label>
                                 <select name="study_mode[]" id="study_mode_choose" multiple="multiple" class="3col active">
                                     @foreach ($choose_study_modes as $study_mode)
-                                        <option value="{{$study_mode->unique_id}}">{{$study_mode->name}}</option>
+                                        <option value="{{$study_mode->unique_id}}">{{ app()->getLocale() == 'en' ? $study_mode->name : $study_mode->name_ar }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -86,7 +100,7 @@
                                 <label for="program_type">{{__('Admin/backend.choose_program_type')}}:</label>
                                 <select name="program_type[]" id="program_type_choose" multiple="multiple" class="3col active">
                                     @foreach ($choose_program_types as $program_type)
-                                        <option value="{{$program_type->unique_id}}">{{$program_type->name}}</option>
+                                        <option value="{{$program_type->unique_id}}">{{ app()->getLocale() == 'en' ? $program_type->name : $program_type->name_ar }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -103,14 +117,14 @@
                                 </select>  
                             </div>
                             <div class="form-group col-md-4">
-                                <label for="country_name">{{__('Admin/backend.choose_country')}}:</label>
-                                <select onchange="changeUserCountry()" class="form-control" id="country_ids" name="country_id">
+                                <label for="country_ids">{{__('Admin/backend.choose_country')}}:</label>
+                                <select onchange="changeCountry()" class="form-control" id="country_ids" name="country_id">
                                     <option value="">{{__('Admin/backend.select')}}</option>
                                 </select>
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label for="city_name">{{__('Admin/backend.choose_city')}}:</label>
+                                <label for="city_ids">{{__('Admin/backend.choose_city')}}:</label>
                                 <select onchange="changeCity()" class="form-control" id="city_ids" name="city_id">
                                     <option value="">{{__('Admin/backend.select')}}</option>
                                 </select>
@@ -129,7 +143,7 @@
                                 <select class="form-control" id="choose_currency" name="currency">
                                     <option value="">{{__('Admin/backend.select')}}</option>
                                     @foreach ($currencies as $currency)
-                                        <option value="{{$currency->id}}">{{app()->getLocale() == 'en' ? $currency->name : $currency->name_ar}}</option>
+                                        <option value="{{$currency->id}}">{{ app()->getLocale() == 'en' ? $currency->name : $currency->name_ar }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -462,13 +476,6 @@
                                     <input class="form-control" type="date" name="peak_time_end_date[]">
                                 </div>
                             </div>
-                            
-                            <script>
-                                window.addEventListener('load', function() {
-                                    yeardatepicker_days.push([]);
-                                    yeardatepicker_months.push([]);
-                                }, false );
-                            </script>
                             
                             <div class="row">
                                 <div class="form-group col-md-6">

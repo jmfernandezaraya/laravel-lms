@@ -192,7 +192,7 @@
                                     </table>
                                 @endif
                                 
-                                @if ($airport || $medical)
+                                @if ($airport || $medical || $custodian)
                                     <table class="table table-bordered table-no-drawable">
                                         <thead>
                                             <tr>

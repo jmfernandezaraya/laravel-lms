@@ -479,6 +479,18 @@ function can_set_front_page() {
 /**
  * @return string
  */
+function envUpdate($key, $value) {
+    $path = base_path('.env');
+
+    if (file_exists($path)) {
+        file_put_contents($path, str_replace($key . '=' . env($key), $key . '=' . $value, file_get_contents($path)));
+        file_put_contents($path, str_replace($key . '="' . env($key) . '"', $key . '="' . $value . '"', file_get_contents($path)));
+    }
+}
+
+/**
+ * @return string
+ */
 function get_language()
 {
     return app()->getLocale();
@@ -1087,18 +1099,15 @@ function getGetDefaultCurrencyName()
     return $default_currency_name;
 }
 
-/**
- * @return mixed
- */
-function getDefaultPaymentMethod()
+function getPaymentMethodList()
 {
-    $payment_method = \App\Models\PaymentMethod::where('is_default', true)->first();
-    $default_payment_method = [];
-    if ($payment_method) {
-        $value['payment_method'] = app()->getLocale() == 'en' ? $payment_method->name : $payment_method->name_ar;
-    }
-
-    return $default_payment_method;
+    return [
+        'Telr' => [
+            'en' => 'Telr',
+            'ar' => 'Telr',
+            'logo' => '//telr.com/ae-ar/wp-content/uploads/sites/8/2017/10/Telr-logo-green-rgb-2000w.png',
+        ]
+    ];
 }
 
 /**
@@ -1107,12 +1116,11 @@ function getDefaultPaymentMethod()
 function getDefaultPaymentMethodName()
 {
     $payment_method = \App\Models\PaymentMethod::where('is_default', true)->first();
-    $payment_method_name = '';
     if ($payment_method) {
-        $value = app()->getLocale() == 'en' ? $payment_method->name : $payment_method->name_ar;
+        return $payment_method->key;
     }
 
-    return $payment_method_name;
+    return '';
 }
 
 /**
@@ -1200,15 +1208,30 @@ function getStorageImages($path, $filename)
  */
 function getSchoolTopReviewCourseApplications($school_id, $count = 3) {
     $top_course_applications = [];
-    $school_course_applications = \App\Models\CourseApplication::with('review', 'review')->where('school_id', $school_id)->get();
+    $school_course_applications = \App\Models\CourseApplication::with('school', 'review')->where('school_id', $school_id)->get();
     foreach ($school_course_applications as $school_course_application) {
         if ($school_course_application->review) {
             $top_course_applications[] = $school_course_application;
         }
     }
     usort($top_course_applications, function($first, $second) {
-        return ($first->review->quality_teaching + $first->review->school_facilities + $first->review->social_activities + $first->review->school_location + $first->review->satisfied_teaching + $first->review->level_cleanliness + $first->review->distance_accommodation_school + $first->review->satisfied_accommodation + $first->review->airport_transfer + $first->review->city_activities)
-             < ($second->review->quality_teaching + $second->review->school_facilities + $second->review->social_activities + $second->review->school_location + $second->review->satisfied_teaching + $second->review->level_cleanliness + $second->review->distance_accommodation_school + $second->review->satisfied_accommodation + $second->review->airport_transfer + $second->review->city_activities);
+        $first_scores = $first->review->quality_teaching + $first->review->school_facilities + $first->review->social_activities + $first->review->school_location + $first->review->satisfied_teaching + $first->review->level_cleanliness + $first->review->distance_accommodation_school + $first->review->satisfied_accommodation + $first->review->airport_transfer + $first->review->city_activities;
+        $second_scores = $second->review->quality_teaching + $second->review->school_facilities + $second->review->social_activities + $second->review->school_location + $second->review->satisfied_teaching + $second->review->level_cleanliness + $second->review->distance_accommodation_school + $second->review->satisfied_accommodation + $second->review->airport_transfer + $second->review->city_activities;
+        $first_score_reviews = 6;
+        $second_score_reviews = 6;
+        if ($first->accommodation_id) {
+            $first_score_reviews = $first_score_reviews + 3;
+        }
+        if ($first->airport_id) {
+            $first_score_reviews = $first_score_reviews + 1;
+        }
+        if ($second->accommodation_id) {
+            $second_score_reviews = $second_score_reviews + 3;
+        }
+        if ($second->airport_id) {
+            $second_score_reviews = $second_score_reviews + 1;
+        }
+        return ($first_scores / $first_score_reviews) < ($second_scores / $second_score_reviews);
     });
 
     return array_slice($top_course_applications, 0, $count);
@@ -1227,6 +1250,10 @@ function getSchoolRating($school_id) {
                 if ($course_application->accommodation_id) {
                     $review_point_count = $review_point_count + 3;
                     $school_ratings += $course_application->review->level_cleanliness + $course_application->review->distance_accommodation_school + $course_application->review->satisfied_accommodation;
+                }
+                if ($course_application->airport_id) {
+                    $review_point_count = $review_point_count + 1;
+                    $school_ratings += $course_application->review->airport_transfer;
                 }
                 $school_ratings = $school_ratings / $review_point_count;
                 $school_rating_count += 1;
@@ -1929,7 +1956,7 @@ function checkCourseProgramPromotion($course_program_id)
     return false;
 }
 
-function getCourseApplicationPrintData($id, $user_id, $is_admin = false)
+function getCourseApplicationPrintData($id, $user_id, $user_type = 'user')
 {
     $course_application = \App\Models\CourseApplication::with('course', 'User', 'courseApplicationStatusus')->whereId($id)->firstOrFail();
 
@@ -2072,25 +2099,20 @@ function getCourseApplicationPrintData($id, $user_id, $is_admin = false)
     $data['today'] = Carbon\Carbon::now()->format('d-m-Y');
 
     $data['student_messages'] = \App\Models\Message::with('fromUser')->where('type_id', $course_application->id)
-        ->orderBy("id", "asc")->get()->collect()->values()->filter(function($value) use ($user_id, $is_admin) {
+        ->orderBy("id", "asc")->get()->collect()->values()->filter(function($value) use ($user_id, $user_type) {
             $message_flag = false;
-            if ($is_admin) {
-                if ($value['type'] == 'to_student' && $value['from_user'] == $user_id) {
-                    $message_flag = true;
-                }
-                if ($value['type'] == 'to_admin' && in_array($user_id, $value['to_user'])) {
-                    $message_flag = true;
-                }
-                $message_flag = true;
-            } else {
+            if ($user_type == 'user') {
                 if ($value['type'] == 'to_student' && in_array($user_id, $value['to_user'])) {
                     $message_flag = true;
                 }
-                if ($value['type'] == 'to_admin' && $value['from_user'] == $user_id) {
+                if ($value['type'] == 'to_school_admin' && $value['from_user'] == $user_id) {
+                    $message_flag = true;
+                }
+            } else if ($user_type == 'superadmin' || $user_type == 'schooladmin') {
+                if ($value['type'] == 'to_student' && $value['from_user'] == $user_id) {
                     $message_flag = true;
                 }
             }
-
             return $message_flag;
         })->all();
     $data['user_school'] = null;
@@ -2100,19 +2122,29 @@ function getCourseApplicationPrintData($id, $user_id, $is_admin = false)
         $user_schools = $course_application->course->school->userSchools;
         $school_user_ids = [];
         foreach ($user_schools as $user_school) {
-            $school_user_ids[] = $user_school->user_id;
+            if ($user_school->account_active) {
+                $school_user_ids[] = $user_school->user_id;
+            }
         }
         $school_user_ids = array_unique($school_user_ids);
         $data['school_messages'] = \App\Models\Message::with('fromUser')->where('type_id', $course_application->id)    
-            ->orderBy("id", "asc")->get()->collect()->values()->filter(function($value) use ($user_id, $school_user_ids) {
+            ->orderBy("id", "asc")->get()->collect()->values()->filter(function($value) use ($user_id, $user_type) {
                 $message_flag = false;
-                if ($value['type'] == 'to_school_admin' && $value['from_user'] == $user_id) {
-                    $message_flag = true;
+                if ($user_type == 'schooladmin') {
+                    if ($value['type'] == 'to_admin' && $value['from_user'] == $user_id) {
+                        $message_flag = true;
+                    }
+                    if ($value['type'] == 'to_school_admin' && in_array($user_id, $value['to_user'])) {
+                        $message_flag = true;
+                    }
+                } else if ($user_type == 'superadmin') {
+                    if ($value['type'] == 'to_admin' && in_array($user_id, $value['to_user'])) {
+                        $message_flag = true;
+                    }
+                    if ($value['type'] == 'to_school_admin' && $value['from_user'] == $user_id) {
+                        $message_flag = true;
+                    }
                 }
-                if ($value['type'] == 'to_admin' && in_array($value['from_user'], $school_user_ids) && in_array($user_id, $value['to_user'])) {
-                    $message_flag = true;
-                }
-
                 return $message_flag;
             })->all();
     }

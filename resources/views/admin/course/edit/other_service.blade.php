@@ -48,10 +48,10 @@
 
                     <script>
                         window.addEventListener('load', function() {
-                            airport_clone = {{$airports && $airports->count() ? $airports->count() - 1 : 0}};
+                            airport_clone = {{ $airports && $airports->count() ? $airports->count() - 1 : 0 }};
                         }, false );
                     </script>
-                    <input hidden id="airportincrement" name="airportincrement" value="{{$airports && $airports->count() ? $airports->count() - 1 : 0}}">
+                    <input hidden id="airportincrement" name="airportincrement" value="{{ $airports && $airports->count() ? $airports->count() - 1 : 0 }}">
                     @forelse ($airports as $airport)
                         <div id="airport_clone{{$loop->iteration - 1}}" class="airport-clone clone">
                             <input hidden value="{{$airport->unique_id}}" name="airport_id[]">
@@ -77,7 +77,7 @@
                                 </div>
                             </div>
 
-                            <input hidden name="airportfeeincrement[]" value="{{$airport->fees->count() ? $airport->fees->count() - 1 : 0}}">
+                            <input hidden name="airportfeeincrement[]" value="{{ $airport->fees && $airport->fees->count() ? $airport->fees->count() - 1 : 0 }}">
                             @if ($airport->fees->count())
                                 @foreach ($airport->fees as $airport_fee)
                                     <div class="row airport-fee-clone clone" id="airport{{$loop->parent->iteration - 1}}_fee_clone{{$loop->iteration - 1}}">
@@ -226,10 +226,10 @@
 
                     <script>
                         window.addEventListener('load', function() {
-                            medical_clone = {{$medicals && $medicals->count() ? $medicals->count() - 1 : 0}};
+                            medical_clone = {{ $medicals && $medicals->count() ? $medicals->count() - 1 : 0 }};
                         }, false );
                     </script>
-                    <input hidden id="medicalincrement" name="medicalincrement" value="{{$medicals && $medicals->count() ? $medicals->count() - 1 : 0}}">
+                    <input hidden id="medicalincrement" name="medicalincrement" value="{{ $medicals && $medicals->count() ? $medicals->count() - 1 : 0 }}">
                     @forelse ($medicals as $medical)
                         <div id="medical_clone{{$loop->iteration - 1}}" class="medical-clone clone">
                             <input hidden value="{{$medical->unique_id}}" name="medical_id[]">
@@ -259,7 +259,7 @@
                                 </div>
                             </div>
 
-                            <input hidden name="medicalfeeincrement[]" value="{{$medical->fees->count() ? $medical->fees->count() - 1 : 0}}">
+                            <input hidden name="medicalfeeincrement[]" value="{{ $medical->fees && $medical->fees->count() ? $medical->fees->count() - 1 : 0 }}">
                             @if ($medical->fees->count())
                                 @foreach ($medical->fees as $medical_fee)
                                     <div class="row medical-fee-clone clone" id="medical{{$loop->parent->iteration - 1}}_fee_clone{{$loop->iteration - 1}}">
@@ -397,10 +397,10 @@
                     
                     <script>
                         window.addEventListener('load', function() {
-                            custodian_clone = {{$custodians && $custodians->count() ? $custodians->count() - 1 : 0}};
+                            custodian_clone = {{ $custodians && $custodians->count() ? $custodians->count() - 1 : 0 }};
                         }, false );
                     </script>
-                    <input hidden id="custodianincrement" name="custodianincrement" value="{{$custodians && $custodians->count() ? $custodians->count() - 1 : 0}}">
+                    <input hidden id="custodianincrement" name="custodianincrement" value="{{ $custodians && $custodians->count() ? $custodians->count() - 1 : 0 }}">
                     @forelse ($custodians as $custodian)
                         <div id="custodian_clone{{$loop->iteration - 1}}" class="custodian-clone clone">
                             <input hidden value="{{$custodian->unique_id}}" name="custodian_id[]">

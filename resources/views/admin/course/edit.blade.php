@@ -46,10 +46,30 @@
                     <div class="first-form">
                         <div class="row">
                             <div class="form-group col-md-4">
+                                <label for="have_accommodation">
+                                    {{__('Admin/backend.study_finance')}}:
+                                </label>
+                                <div class="3col active">
+                                    <input type="radio" value="both" name="study_finance" {{ $course->study_finance == 'both' ? 'checked' : '' }}>
+                                    <label for="study_finance_both">
+                                        {{__('Admin/backend.both')}}
+                                    </label>
+                                    <input type="radio" value="only_personal" name="study_finance" {{ $course->study_finance == 'only_personal' ? 'checked' : '' }}>
+                                    <label for="study_finance_only_personal">
+                                        {{__('Admin/backend.only_personal')}}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4"></div>
+                            <div class="form-group col-md-4"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-md-4">
                                 <label for="program_language">{{__('Admin/backend.choose_lang')}}:</label>
                                 <select name="language[]" id="language_choose" multiple="multiple" class="3col active">
                                     @foreach ($choose_languages as $choose_language)
-                                        <option value="{{ $choose_language->unique_id }}" {{in_array($choose_language->unique_id, (array)$course->language ?? []) ? 'selected' : ''}}>{{$choose_language->name}}</option>
+                                        <option value="{{ $choose_language->unique_id }}" {{in_array($choose_language->unique_id, (array)$course->language ?? []) ? 'selected' : ''}}>{{ app()->getLocale() == 'en' ?  $choose_language->name : $choose_language->name_ar }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -57,7 +77,7 @@
                                 <label for="program_language">{{__('Admin/backend.choose_study_mode')}}:</label>
                                 <select name="study_mode[]" id="study_mode_choose" multiple="multiple" class="3col active">
                                     @foreach ($choose_study_modes as $study_mode)
-                                        <option value="{{ $study_mode->unique_id }}" {{in_array($study_mode->unique_id, (array)$course->study_mode ?? []) ? 'selected' : ''}}>{{$study_mode->name}}</option>
+                                        <option value="{{ $study_mode->unique_id }}" {{in_array($study_mode->unique_id, (array)$course->study_mode ?? []) ? 'selected' : ''}}>{{ app()->getLocale() == 'en' ?  $study_mode->name : $study_mode->name_ar }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -65,7 +85,7 @@
                                 <label for="program_language">{{__('Admin/backend.choose_program_type')}}:</label>
                                 <select name="program_type[]" id="program_type_choose" multiple="multiple" class="3col active">
                                     @foreach ($choose_program_types as $program_type)
-                                        <option value="{{ $program_type->unique_id }}" {{in_array($program_type->unique_id, (array)$course->program_type ?? []) ? 'selected' : ''}}>{{$program_type->name}}</option>
+                                        <option value="{{ $program_type->unique_id }}" {{in_array($program_type->unique_id, (array)$course->program_type ?? []) ? 'selected' : ''}}>{{ app()->getLocale() == 'en' ?  $program_type->name : $program_type->name_ar }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -82,8 +102,8 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-4">
-                                <label for="country_name">{{__('Admin/backend.choose_country')}}:</label>
-                                <select onchange="changeUserCountry()" class="form-control" id="country_name" name="country_id">
+                                <label for="country_ids">{{__('Admin/backend.choose_country')}}:</label>
+                                <select onchange="changeCountry()" class="form-control" id="country_ids" name="country_id">
                                     <option value="">{{__('Admin/backend.select')}}</option>
                                     @foreach ($school_countries as $school_country)
                                         <option value="{{ $school_country->id }}" {{ $course->country_id == $school_country->id ? 'selected' : ''}}>{{ app()->getLocale() == 'en' ?  $school_country->name : $school_country->name_ar }}</option>
@@ -91,15 +111,11 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-4">
-                                <label for="city_name">{{__('Admin/backend.choose_city')}}:</label>
-                                <select onchange="changeCity()" class="form-control" id="city_name" name="city_id">
+                                <label for="city_ids">{{__('Admin/backend.choose_city')}}:</label>
+                                <select onchange="changeCity()" class="form-control" id="city_ids" name="city_id">
                                     <option value="">{{__('Admin/backend.select')}}</option>
-                                    @foreach ($school_countries as $school_country)
-                                        @if ($school_country->id == $course->school->country_id)
-                                            @foreach ($school_country->cities as $city)
-                                                <option value="{{ $city->id }}" {{ $city->id == $course->school->city_id ? 'selected' : ''}}>{{ app()->getLocale() == 'en' ? $city->name : $city->name_ar }}</option>
-                                            @endforeach
-                                        @endif
+                                    @foreach ($school_cities as $school_city)
+                                        <option value="{{ $school_city->id }}" {{ $school_city->id == $course->school->city_id ? 'selected' : ''}}>{{ app()->getLocale() == 'en' ? $school_city->name : $school_city->name_ar }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -111,7 +127,7 @@
                                 <select class="form-control" name="branch" id="branch_choose">
                                     <option value="">{{__('Admin/backend.select')}}</option>
                                     @foreach ($school_branches as $school_branch)
-                                        <option value="{{ $school_branch }}" {{$course->branch == $school_branch ? 'selected' : ''}}>{{$school_branch}}</option>
+                                        <option value="{{ $school_branch }}" {{ $course->branch == $school_branch ? 'selected' : '' }}>{{ $school_branch }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -120,7 +136,7 @@
                                 <select class="form-control" id="choose_currency" name="currency">
                                     <option value="">{{__('Admin/backend.select')}}</option>
                                     @foreach ($currencies as $currency)
-                                        <option value="{{ $currency->id }}" {{$currency->id == $course->currency ? 'selected' : ''}}>{{app()->getLocale() == 'en' ? $currency->name : $currency->name_ar}}</option>
+                                        <option value="{{ $currency->id }}" {{ $currency->id == $course->currency ? 'selected' : '' }}>{{ app()->getLocale() == 'en' ? $currency->name : $currency->name_ar }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -209,11 +225,11 @@
 
                         <script>
                             window.addEventListener('load', function() {
-                                course_program_clone = {{$course && $course->coursePrograms->count() ? $course->coursePrograms->count() - 1 : 0}};
+                                course_program_clone = {{ $course && $course->coursePrograms->count() ? $course->coursePrograms->count() - 1 : 0 }};
                             }, false );
                         </script>
 
-                        <input hidden id="program_increment" name="program_increment" value="{{$course->coursePrograms && $course->coursePrograms->count() ? $course->coursePrograms->count() - 1 : 0}}">
+                        <input hidden id="program_increment" name="program_increment" value="{{ $course->coursePrograms && $course->coursePrograms->count() ? $course->coursePrograms->count() - 1 : 0 }}">
 
                         @forelse ($course->coursePrograms as $course_program)
                             <div id="course_program_clone{{$loop->iteration - 1}}" class="course-program-clone clone">
@@ -455,13 +471,6 @@
                                         <input value="{{$course_program->peak_time_end_date}}" class="form-control" type="date" name="peak_time_end_date[]">
                                     </div>
                                 </div>
-
-                                <script>
-                                    window.addEventListener('load', function() {
-                                        yeardatepicker_days.push("{{$course_program->available_days ? $course_program->available_days : ''}}".split(","));
-                                        yeardatepicker_months.push([]);
-                                    }, false );
-                                </script>
                                 
                                 <div class="row">
                                     <div class="form-group col-md-6">
@@ -709,14 +718,7 @@
                                         <input class="form-control" type="date" name="peak_time_end_date[]">
                                     </div>
                                 </div>
-
-                                <script>
-                                    window.addEventListener('load', function() {
-                                        yeardatepicker_days.push([]);
-                                        yeardatepicker_months.push([]);
-                                    }, false );
-                                </script>
-
+                                
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <button class="btn btn-primary fa fa-plus" type="button" onclick="addCourseProgram($(this))"></button>

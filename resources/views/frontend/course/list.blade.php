@@ -111,30 +111,49 @@
                 @endif
             }
             
+            let searchCourseCalled = {'age': false, 'country': false, 'program-type': false, 'study-mode': false, 'city': false, 'program-name': false};
             function callbackSearchCourse(type) {
                 if (type == 'age') {
                     @if (isset($course_search->age) && $course_search->age)
-                        $('#choose-age').val('').val('{{$course_search->age}}').trigger('change');
+                        if (searchCourseCalled['age']) {
+                            searchCourseCalled['age'] = true;
+                            $('#choose-age').val('').val('{{$course_search->age}}').trigger('change');
+                        }
                     @endif
                 } else if (type == 'country') {
                     @if (isset($course_search->country) && $course_search->country)
-                        $('#choose-country').val('').val('{{$course_search->country}}').trigger('change');
+                        if (searchCourseCalled['country']) {
+                            searchCourseCalled['country'] = true;
+                            $('#choose-country').val('').val('{{$course_search->country}}').trigger('change');
+                        }
                     @endif
                 } else if (type == 'program-type') {
                     @if (isset($course_search->program_type) && $course_search->program_type)
-                        $('#choose-program-type').val('').val('{{$course_search->program_type}}').trigger('change');
+                        if (searchCourseCalled['program-type']) {
+                            searchCourseCalled['program-type'] = true;
+                            $('#choose-program-type').val('').val('{{$course_search->program_type}}').trigger('change');
+                        }
                     @endif
                 } else if (type == 'study-mode') {
                     @if (isset($course_search->study_mode) && $course_search->study_mode)
-                        $('#choose-study-mode').val('').val('{{$course_search->study_mode}}').trigger('change');
+                        if (searchCourseCalled['study-mode']) {
+                            searchCourseCalled['study-mode'] = true;
+                            $('#choose-study-mode').val('').val('{{$course_search->study_mode}}').trigger('change');
+                        }
                     @endif
                 } else if (type == 'city') {
                     @if (isset($course_search->city) && $course_search->city)
-                        $('#choose-city').val('').val('{{$course_search->city}}').trigger('change');
+                        if (searchCourseCalled['city']) {
+                            searchCourseCalled['city'] = true;
+                            $('#choose-city').val('').val('{{$course_search->city}}').trigger('change');
+                        }
                     @endif
                 } else if (type == 'program-name') {
                     @if (isset($course_search->program_name) && $course_search->program_name)
-                        $('#choose-program-name').val('').val('{{$course_search->program_name}}').trigger('change');
+                        if (searchCourseCalled['program-name']) {
+                            searchCourseCalled['program-name'] = true;
+                            $('#choose-program-name').val('').val('{{$course_search->program_name}}').trigger('change');
+                        }
                     @endif
                 }
             }

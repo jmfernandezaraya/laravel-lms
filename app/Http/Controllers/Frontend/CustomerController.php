@@ -194,15 +194,17 @@ class CustomerController extends Controller
             $request_save['to_user'] = [];
             $school_admins = User::where('user_type', 'school_admin')->get();
             foreach ($school_admins as $school_admin) {
-                $request_save['to_user'][] = $school_admin->id;
-
-                $mail_pdf_data = array();
-                $mail_pdf_data['subject'] = $request_save['subject'];
-                $mail_pdf_data['message'] = $request_save['message'];
-                $mail_pdf_data['user'] = $mail_pdf_data['to_user'] = \App\Models\User::find($school_admin->id);
-                $mail_pdf_data['from_user'] = \App\Models\User::find(auth()->user()->id);
-                $mail_pdf_data['locale'] = app()->getLocale();
-                sendEmail('send_to_school_admin', $school_admin->email, $request_save, app()->getLocale(), $send_files);
+                if ($school_admin->account_active) {
+                    $request_save['to_user'][] = $school_admin->id;
+    
+                    $mail_pdf_data = array();
+                    $mail_pdf_data['subject'] = $request_save['subject'];
+                    $mail_pdf_data['message'] = $request_save['message'];
+                    $mail_pdf_data['user'] = $mail_pdf_data['to_user'] = \App\Models\User::find($school_admin->id);
+                    $mail_pdf_data['from_user'] = \App\Models\User::find(auth()->user()->id);
+                    $mail_pdf_data['locale'] = app()->getLocale();
+                    sendEmail('send_to_school_admin', $school_admin->email, $request_save, app()->getLocale(), $send_files);
+                }
             }
             Message::create($request_save);
 

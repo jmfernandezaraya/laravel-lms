@@ -265,13 +265,6 @@
                             <div class="form-group col-md-4"></div>
                         </div>
 
-                        <script>
-                            window.addEventListener('load', function() {
-                                yeardatepicker_days.push([]);
-                                yeardatepicker_months.push([]);
-                            }, false );
-                        </script>
-
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <button class="btn btn-primary fa fa-plus" type="button" onclick="addAccommodation($(this))"></button>

@@ -82,15 +82,19 @@
         <tbody>
             <tr>
                 <td>{{__('Frontend.name')}}</td>
-                <td>{{ $school->name ? (app()->getLocale() == 'en' ? ($school->name->name ?? '-') : ($school->name->name_ar ?? '-')) : '-' }} {{ app()->getLocale() == 'en' ? ($school->branch_name ?? '-') : ($school->branch_name_ar ?? '-') }}</td>
+                <td>
+                    {{ $school->name ? (app()->getLocale() == 'en' ? $school->name->name : $school->name->name_ar) : ''}}
+                    &nbsp;
+                    {{ app()->getLocale() == 'en' ? ($school->branch_name ?? '') : ($school->branch_name_ar ?? '') }}
+                </td>
             </tr>
             <tr>
                 <td>{{__('Frontend.city')}}</td>
-                <td>{{ $school->city ? (app()->getLocale() == 'en' ? ($school->city->name ?? '-') : ($school->city->name_ar ?? '-')) : '-' }}</td>
+                <td>{{ $school->city ? (app()->getLocale() == 'en' ? $school->city->name : $school->city->name_ar) : '' }}</td>
             </tr>
             <tr>
                 <td>{{__('Frontend.country')}}</td>
-                <td>{{ $school->country ? (app()->getLocale() == 'en' ? ($school->country->name ?? '-') : ($school->country->name_ar ?? '-')) : '-' }}</td>
+                <td>{{ $school->country ? (app()->getLocale() == 'en' ? $school->country->name : $school->country->name_ar) : '' }}</td>
             </tr>
         </tbody>
     </table>
@@ -129,6 +133,13 @@
                     <td>{{__('Frontend.summer_fees')}}</td>
                     <td>{{ toFixedNumber($program_summer_fees['value']) }}</td>
                     <td>{{ toFixedNumber($program_summer_fees['converted_value']) }}</td>
+                </tr>
+            @endif
+            @if ($program_peak_time_fees['value'])
+                <tr>
+                    <td>{{__('Frontend.peak_time_fees')}}</td>
+                    <td>{{ toFixedNumber($program_peak_time_fees['value']) }}</td>
+                    <td>{{ toFixedNumber($program_peak_time_fees['converted_value']) }}</td>
                 </tr>
             @endif
             @if ($program_peak_time_fees['value'])
@@ -246,7 +257,7 @@
         </table>
     @endif
     
-    @if ($airport || $medical)
+    @if ($airport || $medical || $custodian)
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -282,7 +293,6 @@
                     <tr>
                         <td>
                             {{__('Frontend.custodian_fee')}}<br />
-                            {{__('Frontend.age_range')}}: {{ $custodian_min_age ?? ''}} - {{ $custodian_max_age ?? ''}} {{__('Frontend.years')}}<br />
                         </td>
                         <td>{{ toFixedNumber($custodian_fee['value']) }}</td>
                         <td>{{ toFixedNumber($custodian_fee['converted_value']) }}</td>
@@ -324,14 +334,21 @@
             @if (!isset($course_register_details->financial_guarantee))
                 <tr>
                     <th>{{__('Frontend.total_amount_paid')}}</th>
-                    <th>{{ toFixedNumber($deposit_price['value']) }} {{ $currency['cost'] }}</th>
-                    <th>{{ toFixedNumber($deposit_price['converted_value']) }} {{ $currency['converted'] }}</th>
+                    <th>{{ toFixedNumber($amount_paid['value']) }} {{ $currency['cost'] }}</th>
+                    <th>{{ toFixedNumber($amount_paid['converted_value']) }} {{ $currency['converted'] }}</th>
+                </tr>
+            @endif
+            @if ($coupon_discount['value'])
+                <tr>
+                    <th>{{__('Frontend.discount')}}</th>
+                    <th class="highlight-value">-{{ toFixedNumber($coupon_discount['value']) }} {{ $currency['cost'] }}</th>
+                    <th class="highlight-value">-{{ toFixedNumber($coupon_discount['converted_value']) }} {{ $currency['converted'] }}</th>
                 </tr>
             @endif
             <tr>
                 <th>{{__('Frontend.total_balance_due')}}</th>
-                <th class="highlight-value">{{ toFixedNumber($total_balance['value']) }} {{ $currency['cost'] }}</th>
-                <th class="highlight-value">{{ toFixedNumber($total_balance['converted_value']) }} {{ $currency['converted'] }}</th>
+                <th class="highlight-value">{{ toFixedNumber($amount_balance['value']) }} {{ $currency['cost'] }}</th>
+                <th class="highlight-value">{{ toFixedNumber($amount_balance['converted_value']) }} {{ $currency['converted'] }}</th>
             </tr>
         </thead>
     </table>

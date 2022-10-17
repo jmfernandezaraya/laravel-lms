@@ -45,10 +45,10 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="name_id">{{__('Admin/backend.name')}}</label>
-                            <select name="name_id" id="school_name" class="form-control">
+                            <select onchange="changeSchool()" name="name_id" id="school_name" class="form-control">
                                 <option value="">{{__('Admin/backend.select')}}</option>
                                 @foreach ($school_names as $school_name)
-                                    <option value="{{$school_name->id}}">{{app()->getLocale() == 'en' ? $school_name->name : $school_name->name_ar}}</option>
+                                    <option value="{{app()->getLocale() == 'en' ? $school_name->name : $school_name->name_ar}}">{{app()->getLocale() == 'en' ? $school_name->name : $school_name->name_ar}}</option>
                                 @endforeach
                             </select>
                             @if ($errors->has('name'))
@@ -57,7 +57,7 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label for="country_id">{{__('Admin/backend.country')}}</label>
-                            <select onchange="changeSchoolCountry()" name="country_id" id="country_name" class="form-control">
+                            <select onchange="changeSchoolCountry()" name="country_id" id="country_ids" class="form-control">
                                 <option value="">{{__('Admin/backend.select')}}</option>
                                 @foreach ($countries as $country)
                                     <option value="{{$country->id}}">{{app()->getLocale() == 'en' ? $country->name : $country->name_ar}}</option>
@@ -72,7 +72,7 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="city_id">{{__('Admin/backend.city')}}</label>
-                            <select name="city_id" id="city_name" class="form-control">
+                            <select name="city_id" id="city_ids" class="form-control">
                                 <option value="">{{__('Admin/backend.select')}}</option>
                             </select>
                             @if ($errors->has('city'))

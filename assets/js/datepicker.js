@@ -15,6 +15,5 @@ $.filterDates = function( filterDay ) {
             dates.push( date );
         }
     }
-    console.log(dates);
     return dates;
 };

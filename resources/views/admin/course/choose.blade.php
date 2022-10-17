@@ -25,7 +25,7 @@
 
                     <script>
                         window.addEventListener('load', function() {
-                            course_choose_clone = {{$course_chooses && $course_chooses->count() ? $course_chooses->count() - 1 : 0}};
+                            course_choose_clone = {{ $course_chooses && $course_chooses->count() ? $course_chooses->count() - 1 : 0 }};
                         }, false );
                     </script>
 

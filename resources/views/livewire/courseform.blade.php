@@ -61,13 +61,13 @@
             <div class="row">
                 <div class="col-md-6">
                     <label for="country_name">{{__('Admin/backend.choose_country')}}:</label>
-                    <select class="form-control" id="country_name" name="">
+                    <select class="form-control" id="country_ids" name="">
                         <option>{{__('Admin/backend.select')}}</option>
                     </select>
                 </div>
                 <div class="col-md-6">
                     <label for="city_name">{{__('Admin/backend.choose_city')}}:</label>
-                    <select class="form-control" id="city_name" name="">
+                    <select class="form-control" id="city_ids" name="">
                         <option>{{__('Admin/backend.select')}}</option>
                     </select>
                 </div>

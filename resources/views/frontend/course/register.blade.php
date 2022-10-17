@@ -81,7 +81,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="nationality" class="col-form-label">{{__('Frontend.nationality')}}*</label>
-                            <select required name="nationality" class="form-control" id="nationality">                                
+                            <select required name="nationality" class="form-control" id="nationality">
                                 @foreach (getNationalityList() as $nationality)
                                     <option value="{{ $nationality }}">{{ $nationality }}</option>
                                 @endforeach
@@ -142,7 +142,9 @@
                             <select name="study_finance" class="form-control" id="study_finance" onchange="checkFinancialGurantee()">
                                 <option value="">{{__('Frontend.please_select')}}</option>
                                 <option value="personal">{{__('Frontend.personal')}}</option>
-                                <option value="scholarship">{{__('Frontend.scholarship')}}</option>
+                                @if ($course_study_finance == 'both')
+                                    <option value="scholarship">{{__('Frontend.scholarship')}}</option>
+                                @endif
                             </select>
                         </div>
                     </div>

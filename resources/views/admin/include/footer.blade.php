@@ -12,7 +12,8 @@
 
 @livewireScripts
 
-<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js" integrity="sha256-eTyxS0rkjpLEo16uXTS0uVCS4815lc40K2iVpWDvdSY=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-multidatespicker/1.6.6/jquery-ui.multidatespicker.min.js" integrity="sha512-mMP7O0G5Vv01th+kpYux7RbD89Mx/iQnIvxcKdctiPyADgJzacfQJ8k2AsB8695AAuR2uPuxk7dawb1eehjcuQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.7.1/tinymce.min.js" integrity="sha512-RnlQJaTEHoOCt5dUTV0Oi0vOBMI9PjCU7m+VHoJ4xmhuUNcwnB5Iox1es+skLril1C3gHTLbeRepHs1RpSCLoQ==" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 
@@ -84,8 +85,6 @@
         var delete_accomm_custodian_range_url = "{{route('superadmin.accomm_custodian_age.delete')}}";
         var add_accomm_under_range_url = "{{route('superadmin.accomm_under_age.add')}}";
         var delete_accomm_under_range_url = "{{route('superadmin.accomm_under_age.delete')}}";
-        // var add_school_nationality_url = "{{route('superadmin.school.nationality.add')}}";
-        // var delete_school_nationality_url = "{{route('superadmin.school.nationality.delete')}}";
     @else
         @auth ('schooladmin')
             var url_school_city_by_country_list = "{{route('schooladmin.school.city_by_country.list')}}";
@@ -126,8 +125,6 @@
             var delete_accomm_custodian_range_url = "{{route('schooladmin.accomm_custodian_age.delete')}}";
             var add_accomm_under_range_url = "{{route('schooladmin.accomm_under_age.add')}}";
             var delete_accomm_under_range_url = "{{route('schooladmin.accomm_under_age.delete')}}";
-            // var add_school_nationality_url = "{{route('schooladmin.school.nationality.add')}}";
-            // var delete_school_nationality_url = "{{route('schooladmin.school.nationality.delete')}}";
         @endauth
     @endauth
     
@@ -259,8 +256,11 @@
         var clone_course_program_form = object.closest(".clone");
         var course_program_clone_index = parseInt($(clone_course_program_form).attr('id').replace("course_program_clone", ""));
         var new_clone_form = $(clone_course_program_form).clone(true);
-        new_clone_form.attr('id', 'course_program_clone' + course_program_clone);
+        new_clone_form.attr('id', 'course_program_clone' + (course_program_clone_index + 1));
         $('#program_increment').val(course_program_clone);
+
+        if ('about_courier' + (course_program_clone_index + 1) in CKEDITOR.instances) removeCkeditor('about_courier' + (course_program_clone_index + 1));
+        if ('about_courier_ar' + (course_program_clone_index + 1) in CKEDITOR.instances) removeCkeditor('about_courier_ar' + (course_program_clone_index + 1));
 
         var clone_course_program_forms = $(".course-program-clone");
         for (var course_program_index = 0; course_program_index < clone_course_program_forms.length; course_program_index++) {
@@ -270,9 +270,12 @@
                 $(clone_course_program_forms[course_program_index]).find('[name="age_range[' + clone_course_program_index + '][]"]').attr('name', 'age_range[' + (clone_course_program_index + 1) + '][]');
                 $(clone_course_program_forms[course_program_index]).find('[name="available_days[]"]').attr('id', '').data('index', clone_course_program_index + 1);
                 $(clone_course_program_forms[course_program_index]).find('[name="about_courier[]"]').attr('id', 'about_courier' + (clone_course_program_index + 1));
-                $(clone_course_program_forms[course_program_index]).find('#cke_about_courier' + clone_course_program_index).attr('id', 'cke_about_courier' + (clone_course_program_index + 1));
                 $(clone_course_program_forms[course_program_index]).find('[name="about_courier_ar[]"]').attr('id', 'about_courier_ar' + (clone_course_program_index + 1));
-                $(clone_course_program_forms[course_program_index]).find('#cke_about_courier_ar' + clone_course_program_index).attr('id', 'cke_about_courier_ar' + (clone_course_program_index + 1));
+                
+                if ('about_courier' + (clone_course_program_index + 1) in CKEDITOR.instances) removeCkeditor('about_courier' + (clone_course_program_index + 1));
+                if ('about_courier_ar' + (clone_course_program_index + 1) in CKEDITOR.instances) removeCkeditor('about_courier_ar' + (clone_course_program_index + 1));
+                initCkeditor('about_courier' + (clone_course_program_index + 1));
+                initCkeditor('about_courier_ar' + (clone_course_program_index + 1));
             }
             $(clone_course_program_forms[course_program_index]).find('[name="available_days[]"]').attr('id', '');
         }
@@ -291,7 +294,7 @@
         $(new_clone_form).find('[name="age_range[' + course_program_clone_index + '][]"]').parent().remove();
         $(new_clone_form).find('.age_range').append(age_range_html);
         if (clone_clear_data) $(new_clone_form).find('[name="age_range[' + (course_program_clone_index + 1) + '][]"]').val('');
-        $(new_clone_form).find('[name="age_range[' + (course_program_clone_index + 1) + '][]"]').multiselect({ includeSelectAllOption: true });
+        $(new_clone_form).find('[name="age_range[' + (course_program_clone_index + 1) + '][]"]').multiselect({ includeSelectAllOption: true, enableFiltering: true });
         if (clone_clear_data) $(new_clone_form).find('[name="courier_fee[]"]').val('');
         $(new_clone_form).find('[name="about_courier[]"]').attr('id', 'about_courier' + (course_program_clone_index + 1));
         if (clone_clear_data) $(new_clone_form).find('[name="about_courier[]"]').text('');
@@ -318,21 +321,6 @@
         $(new_clone_form).find('[name="available_days[]"]').attr('id', '').data('index', course_program_clone_index + 1);
         if (clone_clear_data) $(new_clone_form).find('[name="available_days[]"]').val('');
         if (clone_clear_data) $(new_clone_form).find('.available_days').hide();
-        if (yeardatepicker_days.length <= course_program_clone_index + 1) {
-            yeardatepicker_days.push([]);
-            yeardatepicker_months.push([]);
-        } else {
-            yeardatepicker_days.splice(course_program_clone_index + 1, 0, []);
-            yeardatepicker_months.splice(course_program_clone_index + 1, 0, []);
-        }
-        if (!clone_clear_data) {
-            for (var yeardate_day_index = 0; yeardate_day_index < yeardatepicker_days[course_program_clone_index].length; yeardate_day_index++) {
-                yeardatepicker_days[course_program_clone_index + 1].push(yeardatepicker_days[course_program_clone_index][yeardate_day_index]);
-            }
-            for (var yeardate_month_index = 0; yeardate_month_index < yeardatepicker_months[course_program_clone_index].length; yeardate_month_index++) {
-                yeardatepicker_months[course_program_clone_index + 1].push(yeardatepicker_months[course_program_clone_index][yeardate_month_index]);
-            }
-        }
         if (clone_clear_data) $(new_clone_form).find('[name="discount_per_week[]"]').val('');
         if (clone_clear_data) {
             $(new_clone_form).find('[name="discount_symbol[]"]').val('%');
@@ -371,23 +359,30 @@
         var clone_course_program_form = object.closest(".clone");
         var course_program_clone_index = parseInt($(clone_course_program_form).attr('id').replace("course_program_clone", ""));
         $(clone_course_program_form).remove();
+       
+        removeCkeditor('about_courier' + course_program_clone_index);
+        removeCkeditor('about_courier_ar' + course_program_clone_index);
+
         var clone_course_program_forms = $(".course-program-clone");
         for (var course_program_index = 0; course_program_index < clone_course_program_forms.length; course_program_index++) {
             var clone_course_program_index = parseInt($(clone_course_program_forms[course_program_index]).attr('id').replace("course_program_clone", ""));
             if (clone_course_program_index > course_program_clone_index) {
-                $(clone_course_program_forms[clone_course_program_index]).attr('id', 'course_program_clone' + (clone_course_program_index - 1));
-                $(clone_course_program_forms[clone_course_program_index]).find('[name="age_range[' + clone_course_program_index + '][]"]').attr('name', 'age_range[' + (clone_course_program_index - 1) + '][]');
-                $(clone_course_program_forms[clone_course_program_index]).find('[name="available_days[]"]').attr('id', '').data('index', clone_course_program_index - 1);
-                yeardatepicker_days.splice(clone_course_program_index, 1);
-                yeardatepicker_months.splice(clone_course_program_index, 1);
-                $(clone_course_program_forms[clone_course_program_index]).find$(new_clone_form).find('[name="about_courier[]"]').attr('id', 'about_courier' + (clone_course_program_index - 1));
-                $(clone_course_program_forms[clone_course_program_index]).find$(new_clone_form).find('[name="about_courier_ar[]"]').attr('id', 'about_courier_ar' + (clone_course_program_index - 1));
+                $(clone_course_program_forms[course_program_index]).attr('id', 'course_program_clone' + (clone_course_program_index - 1));
+                $(clone_course_program_forms[course_program_index]).find('[name="age_range[' + clone_course_program_index + '][]"]').attr('name', 'age_range[' + (clone_course_program_index - 1) + '][]');
+                $(clone_course_program_forms[course_program_index]).find('[name="available_days[]"]').attr('id', '').data('index', clone_course_program_index - 1);
+                $(clone_course_program_forms[course_program_index]).find('[name="about_courier[]"]').attr('id', 'about_courier' + (clone_course_program_index - 1));
+                $(clone_course_program_forms[course_program_index]).find('[name="about_courier_ar[]"]').attr('id', 'about_courier_ar' + (clone_course_program_index - 1));
+                
+                if ('about_courier' + clone_course_program_index in CKEDITOR.instances) removeCkeditor('about_courier' + clone_course_program_index);
+                if ('about_courier_ar' + clone_course_program_index in CKEDITOR.instances) removeCkeditor('about_courier_ar' + clone_course_program_index);
+                initCkeditor('about_courier' + (clone_course_program_index - 1));
+                initCkeditor('about_courier_ar' + (clone_course_program_index - 1));
             }
         }
         course_program_clone--;
         $('#program_increment').val(course_program_clone);
 
-        // initYearDatePicker();
+        initYearDatePicker();
     }
 
     /*
@@ -419,7 +414,7 @@
         $(new_clone_form).find('[name="under_age[' + program_under_age_clone_index + '][]"]').parent().remove();
         $(new_clone_form).find('.under_age').append(under_age_html);
         if (clone_clear_data) $(new_clone_form).find('[name="under_age[' + program_under_age_clone + '][]"]').val('');
-        $(new_clone_form).find('[name="under_age[' + program_under_age_clone + '][]"]').multiselect({ includeSelectAllOption: true });
+        $(new_clone_form).find('[name="under_age[' + program_under_age_clone + '][]"]').multiselect({ includeSelectAllOption: true, enableFiltering: true });
         if (clone_clear_data) $(new_clone_form).find('[name="under_age_fee_per_week[]"]').val('');
 
         new_clone_form.insertAfter($(clone_program_under_age_form));
@@ -496,6 +491,9 @@
         var clone_accommodation_form = object.closest(".clone");
         var accommodation_clone_index = parseInt($(clone_accommodation_form).attr('id').replace("accommodation_clone", ""));
 
+        if ('special_diet_note' + (accommodation_clone_index + 1) in CKEDITOR.instances) removeCkeditor('special_diet_note' + (accommodation_clone_index + 1));
+        if ('special_diet_note_ar' + (accommodation_clone_index + 1) in CKEDITOR.instances) removeCkeditor('special_diet_note_ar' + (accommodation_clone_index + 1));
+
         var clone_accommodation_forms = $(".accommodation-clone");
         for (var accommodation_index = 0; accommodation_index < clone_accommodation_forms.length; accommodation_index++) {
             var clone_accommodation_index = parseInt($(clone_accommodation_forms[accommodation_index]).attr('id').replace("accommodation_clone", ""));
@@ -504,9 +502,12 @@
                 $(clone_accommodation_forms[accommodation_index]).find('[name="age_range[' + clone_accommodation_index + '][]"]').attr('name', 'age_range[' + (clone_accommodation_index + 1) + '][]');
                 $(clone_accommodation_forms[accommodation_index]).find('[name="available_days[]"]').attr('id', '').data('index', clone_accommodation_index + 1);
                 $(clone_accommodation_forms[accommodation_index]).find('[name="special_diet_note[]]').attr('id', 'special_diet_note' + (clone_accommodation_index + 1));
-                $(clone_accommodation_forms[accommodation_index]).find('#cke_special_diet_note' + clone_accommodation_index).attr('id', 'cke_special_diet_note' + (clone_accommodation_index + 1));
                 $(clone_accommodation_forms[accommodation_index]).find('[name="special_diet_note_ar[]]').attr('id', 'special_diet_note_ar' + (clone_accommodation_index + 1));
-                $(clone_accommodation_forms[accommodation_index]).find('#cke_special_diet_note_ar' + clone_accommodation_index).attr('id', 'cke_special_diet_note_ar' + (clone_accommodation_index + 1));
+                
+                if ('special_diet_note' + (clone_accommodation_index + 1) in CKEDITOR.instances) removeCkeditor('special_diet_note' + (clone_accommodation_index + 1));
+                if ('special_diet_note_ar' + (clone_accommodation_index + 1) in CKEDITOR.instances) removeCkeditor('special_diet_note_ar' + (clone_accommodation_index + 1));
+                initCkeditor('special_diet_note' + (clone_accommodation_index + 1));
+                initCkeditor('special_diet_note_ar' + (clone_accommodation_index + 1));
             }
         }
 
@@ -522,7 +523,7 @@
         $(new_clone_form).find('[name="age_range[' + accommodation_clone_index + '][]"]').parent().remove();
         $(new_clone_form).find('.age_range').append(age_range_html);
         if (clone_clear_data) $(new_clone_form).find('[name="age_range[' + (accommodation_clone_index + 1) + '][]"]').val('');
-        $(new_clone_form).find('[name="age_range[' + (accommodation_clone_index + 1) + '][]"]').multiselect({ includeSelectAllOption: true });
+        $(new_clone_form).find('[name="age_range[' + (accommodation_clone_index + 1) + '][]"]').multiselect({ includeSelectAllOption: true, enableFiltering: true });
         if (clone_clear_data) $(new_clone_form).find('[name="placement_fee[]"]').val('');
         if (clone_clear_data) $(new_clone_form).find('[name="program_duration[]"]').val('');
         if (clone_clear_data) $(new_clone_form).find('[name="deposit[]"]').val('');
@@ -544,21 +545,6 @@
         if (clone_clear_data) $(new_clone_form).find('[name="available_days[]"]').val('');
         $(new_clone_form).find('[name="available_days[]"]').attr('id', '').data('index', accommodation_clone_index + 1);
         if (clone_clear_data) $(new_clone_form).find('.available_days').hide();
-        if (yeardatepicker_days.length <= accommodation_clone_index + 1) {
-            yeardatepicker_days.push([]);
-            yeardatepicker_months.push([]);
-        } else {
-            yeardatepicker_days.splice(accommodation_clone_index + 1, 0, []);
-            yeardatepicker_months.splice(accommodation_clone_index + 1, 0, []);
-        }
-        if (!clone_clear_data) {
-            for (var yeardate_day_index = 0; yeardate_day_index < yeardatepicker_days[accommodation_clone_index].length; yeardate_day_index++) {
-                yeardatepicker_days[accommodation_clone_index + 1].push(yeardatepicker_days[accommodation_clone_index][yeardate_day_index]);
-            }
-            for (var yeardate_month_index = 0; yeardate_month_index < yeardatepicker_months[accommodation_clone_index].length; yeardate_month_index++) {
-                yeardatepicker_months[accommodation_clone_index + 1].push(yeardatepicker_months[accommodation_clone_index][yeardate_month_index]);
-            }
-        }
         if (clone_clear_data) $(new_clone_form).find('[name="discount_per_week[]"]').val('');
         if (clone_clear_data) $(new_clone_form).find('[name="discount_per_week_symbol[]"]').val('%');
         if (clone_clear_data) $(new_clone_form).find('[name="discount_start_date[]"]').val('');
@@ -589,6 +575,10 @@
         var clone_accommodation_form = object.closest(".clone");
         var accommodation_clone_index = parseInt($(clone_accommodation_form).attr('id').replace("accommodation_clone", ""));
         $(clone_accommodation_form).remove();
+        
+        removeCkeditor('special_diet_note' + accommodation_clone);
+        removeCkeditor('special_diet_note_ar' + accommodation_clone);
+
         var clone_accommodation_forms = $(".accommodation-clone");
         for (var accommodation_index = 0; accommodation_index < clone_accommodation_forms.length; accommodation_index++) {
             var clone_accommodation_index = parseInt($(clone_accommodation_forms[accommodation_index]).attr('id').replace("accommodation_clone", ""));
@@ -597,15 +587,18 @@
                 $(clone_accommodation_forms[accommodation_index]).find('[name="age_range[' + clone_accommodation_index + '][]"]').attr('name', 'age_range[' + (clone_accommodation_index - 1) + '][]');
                 $(clone_accommodation_forms[accommodation_index]).find('[name="custodian_condition[' + clone_accommodation_index + ']"]').attr('name', 'custodian_condition[' + (clone_accommodation_index - 1) + ']');
                 $(clone_accommodation_forms[accommodation_index]).find('[name="available_days[]"]').attr('id', '').data('index', clone_accommodation_index - 1);
-                yeardatepicker_days.splice(clone_accommodation_index, 1);
-                yeardatepicker_months.splice(clone_accommodation_index, 1);
                 $(clone_accommodation_forms[accommodation_index]).find('[name="special_diet_note[]]').attr('id', 'special_diet_note' + (clone_accommodation_index - 1));
                 $(clone_accommodation_forms[accommodation_index]).find('[name="special_diet_note_ar[]]').attr('id', 'special_diet_note_ar' + (clone_accommodation_index - 1));
+                
+                if ('special_diet_note' + clone_accommodation_index in CKEDITOR.instances) removeCkeditor('special_diet_note' + clone_accommodation_index);
+                if ('special_diet_note_ar' + clone_accommodation_index in CKEDITOR.instances) removeCkeditor('special_diet_note_ar' + clone_accommodation_index);
+                initCkeditor('special_diet_note' + (clone_accommodation_index - 1));
+                initCkeditor('special_diet_note_ar' + (clone_accommodation_index - 1));
             }
         }
         accommodation_clone--;
         
-        // initYearDatePicker();
+        initYearDatePicker();
     }
 
     /*
@@ -637,7 +630,7 @@
         $(new_clone_form).find('[name="under_age[' + accommodation_under_age_clone_index + '][]"]').parent().remove();
         $(new_clone_form).find('.under_age').append(under_age_html);
         if (clone_clear_data) $(new_clone_form).find('[name="under_age[' + (accommodation_under_age_clone_index + 1) + '][]"]').val('');
-        $(new_clone_form).find('[name="under_age[' + (accommodation_under_age_clone_index + 1) + '][]"]').multiselect({ includeSelectAllOption: true });
+        $(new_clone_form).find('[name="under_age[' + (accommodation_under_age_clone_index + 1) + '][]"]').multiselect({ includeSelectAllOption: true, enableFiltering: true });
         if (clone_clear_data) $(new_clone_form).find('[name="under_age_fee_per_week[]"]').val('');
 
         new_clone_form.insertAfter($(clone_accommodation_under_age_form));
@@ -673,6 +666,10 @@
         new_clone_form.attr('id', 'airport_clone' + (airport_clone_index + 1));
         if (clone_clear_data) $(new_clone_form).find('[name="airportfeeincrement[]"]').val(0);
         $(new_clone_form).find('[name="airport_id[]"]').val('');
+
+        if ('airport_note' + (airport_clone_index + 1) in CKEDITOR.instances) removeCkeditor('airport_note' + (airport_clone_index + 1));
+        if ('airport_note_ar' + (airport_clone_index + 1) in CKEDITOR.instances) removeCkeditor('airport_note_ar' + (airport_clone_index + 1));
+
         var clone_airport_forms = $(".airport-clone");
         for (var airport_index = 0; airport_index < clone_airport_forms.length; airport_index++) {
             var clone_airport_index = parseInt($(clone_airport_forms[airport_index]).attr('id').replace("airport_clone", ""));
@@ -689,9 +686,12 @@
                 $(clone_airport_forms[airport_index]).find('[name="airport_service_name_ar[' + clone_airport_index + '][]"]').attr('name', 'airport_service_name_ar[' + (clone_airport_index + 1) + '][]');
                 $(clone_airport_forms[airport_index]).find('[name="airport_service_fee[' + clone_airport_index + '][]"]').attr('name', 'airport_service_fee[' + (clone_airport_index + 1) + '][]');
                 $(clone_airport_forms[airport_index]).find('[name="airport_note[]]').attr('id', 'airport_note' + (clone_airport_index + 1));
-                $(clone_airport_forms[airport_index]).find('#cke_airport_note' + clone_airport_index).attr('id', 'cke_airport_note' + (clone_airport_index + 1));
                 $(clone_airport_forms[airport_index]).find('[name="airport_note_ar[]]').attr('id', 'airport_note_ar' + (clone_airport_index + 1));
-                $(clone_airport_forms[airport_index]).find('#cke_airport_note_ar' + clone_airport_index).attr('id', 'cke_airport_note_ar' + (clone_airport_index + 1));
+                
+                if ('airport_note' + (clone_airport_index + 1) in CKEDITOR.instances) removeCkeditor('airport_note' + (clone_airport_index + 1));
+                if ('airport_note_ar' + (clone_airport_index + 1) in CKEDITOR.instances) removeCkeditor('airport_note_ar' + (clone_airport_index + 1));
+                initCkeditor('airport_note' + (clone_airport_index + 1));
+                initCkeditor('airport_note_ar' + (clone_airport_index + 1));
             }
         }
         var airport_fees = $(new_clone_form).find('.airport-fee-clone');
@@ -738,6 +738,10 @@
         var clone_airport_form = object.closest(".clone");
         var airport_clone_index = parseInt($(clone_airport_form).attr('id').replace("airport_clone", ""));
         $(clone_airport_form).remove();
+        
+        removeCkeditor('airport_note' + airport_clone_index);
+        removeCkeditor('airport_note_ar' + airport_clone_index);
+
         var clone_airport_forms = $(".airport-clone");
         for (var airport_index = 0; airport_index < clone_airport_forms.length; airport_index++) {
             var clone_airport_index = parseInt($(clone_airport_forms[airport_index]).attr('id').replace("airport_clone", ""));
@@ -751,6 +755,11 @@
                 $(clone_airport_forms[airport_index]).find('[name="airport_service_fee[' + clone_airport_index + '][]"]').attr('name', 'airport_service_fee[' + (clone_airport_index - 1) + '][]');
                 $(clone_airport_forms[airport_index]).find('[name="airport_note[]]').attr('id', 'airport_note' + (clone_airport_index - 1));
                 $(clone_airport_forms[airport_index]).find('[name="airport_note_ar[]]').attr('id', 'airport_note_ar' + (clone_airport_index - 1));
+
+                if ('airport_note' + clone_airport_index in CKEDITOR.instances) removeCkeditor('airport_note' + clone_airport_index);
+                if ('airport_note_ar' + clone_airport_index in CKEDITOR.instances) removeCkeditor('airport_note_ar' + clone_airport_index);
+                initCkeditor('airport_note' + (clone_airport_index - 1));
+                initCkeditor('airport_note_ar' + (clone_airport_index - 1));
             }
         }
         airport_clone--;
@@ -810,6 +819,10 @@
         new_clone_form.attr('id', 'medical_clone' + (medical_clone_index + 1));
         if (clone_clear_data) $(new_clone_form).find('[name="medicalfeeincrement[]"]').val(0);
         $(new_clone_form).find('[name="medical_id[]"]').val('');
+
+        if ('medical_note' + (medical_clone_index + 1) in CKEDITOR.instances) removeCkeditor('medical_note' + (medical_clone_index + 1));
+        if ('medical_note_ar' + (medical_clone_index + 1) in CKEDITOR.instances) removeCkeditor('medical_note_ar' + (medical_clone_index + 1));
+
         var clone_medical_forms = $(".medical-clone");
         for (var medical_index = 0; medical_index < clone_medical_forms.length; medical_index++) {
             var clone_medical_index = parseInt($(clone_medical_forms[medical_index]).attr('id').replace("medical_clone", ""));
@@ -824,9 +837,12 @@
                 $(clone_medical_forms[medical_index]).find('[name="medical_start_date[' + clone_medical_index + '][]"]').attr('name', 'medical_start_date[' + (clone_medical_index + 1) + '][]');
                 $(clone_medical_forms[medical_index]).find('[name="medical_end_date[' + clone_medical_index + '][]"]').attr('name', 'medical_end_date[' + (clone_medical_index + 1) + '][]');
                 $(clone_medical_forms[medical_index]).find('[name="medical_note[]]').attr('id', 'medical_note' + (clone_medical_index + 1));
-                $(clone_medical_forms[medical_index]).find('#cke_medical_note' + clone_medical_index).attr('id', 'cke_medical_note' + (clone_medical_index + 1));
                 $(clone_medical_forms[medical_index]).find('[name="medical_note_ar[]]').attr('id', 'medical_note_ar' + (clone_medical_index + 1));
-                $(clone_medical_forms[medical_index]).find('#cke_medical_note_ar' + clone_medical_index).attr('id', 'cke_medical_note_ar' + (clone_medical_index + 1));
+                
+                if ('medical_note' + (clone_medical_index + 1) in CKEDITOR.instances) removeCkeditor('medical_note' + (clone_medical_index + 1));
+                if ('medical_note_ar' + (clone_medical_index + 1) in CKEDITOR.instances) removeCkeditor('medical_note_ar' + (clone_medical_index + 1));
+                initCkeditor('medical_note' + (clone_medical_index + 1));
+                initCkeditor('medical_note_ar' + (clone_medical_index + 1));
             }
         }
         var medical_fees = $(new_clone_form).find('.medical-fee-clone');
@@ -871,6 +887,10 @@
         var clone_medical_form = object.closest(".clone");
         var medical_clone_index = parseInt($(clone_medical_form).attr('id').replace("medical_clone", ""));
         $(clone_medical_form).remove();
+        
+        removeCkeditor('medical_note' + medical_clone_index);
+        removeCkeditor('medical_note_ar' + medical_clone_index);
+
         var clone_medical_forms = $(".medical-clone");
         for (var medical_index = 0; medical_index < clone_medical_forms.length; medical_index++) {
             var clone_medical_index = parseInt($(clone_medical_forms[medical_index]).attr('id').replace("medical_clone", ""));
@@ -882,6 +902,11 @@
                 $(clone_medical_forms[medical_index]).find('[name="medical_end_date[' + clone_medical_index + '][]"]').attr('name', 'medical_end_date[' + (clone_medical_index - 1) + '][]');
                 $(clone_medical_forms[medical_index]).find('[name="medical_note[]]').attr('id', 'medical_note' + (clone_medical_index - 1));
                 $(clone_medical_forms[medical_index]).find('[name="medical_note_ar[]]').attr('id', 'medical_note_ar' + (clone_medical_index - 1));
+
+                if ('medical_note' + clone_medical_index in CKEDITOR.instances) removeCkeditor('medical_note' + clone_medical_index);
+                if ('medical_note_ar' + clone_medical_index in CKEDITOR.instances) removeCkeditor('medical_note_ar' + clone_medical_index);
+                initCkeditor('medical_note' + (clone_medical_index - 1));
+                initCkeditor('medical_note_ar' + (clone_medical_index - 1));
             }
         }
         medical_clone--;
@@ -954,7 +979,7 @@
         $(new_clone_form).find('[name="custodian_age_range[' + custodian_clone_index + '][]"]').parent().remove();
         $(new_clone_form).find('.custodian_age_range').append(custodian_age_range_html);
         if (clone_clear_data) $(new_clone_form).find('[name="custodian_age_range[' + (custodian_clone_index + 1) + '][]"]').val('');
-        $(new_clone_form).find('[name="custodian_age_range[' + (custodian_clone_index + 1) + '][]"]').multiselect({ includeSelectAllOption: true });
+        $(new_clone_form).find('[name="custodian_age_range[' + (custodian_clone_index + 1) + '][]"]').multiselect({ includeSelectAllOption: true, enableFiltering: true });
         $(new_clone_form).find('[name="custodian_condition[' + custodian_clone_index + ']"]').attr('name', 'custodian_condition[' + (custodian_clone_index + 1) + ']');
         $(new_clone_form).find('[name="custodian_condition[' + (custodian_clone_index + 1) + ']"][value="invisible"]').prop("checked", true);
 
@@ -1289,6 +1314,33 @@
         $('#home_hero_increment').val(home_hero_clone);
         var new_clone_form = $(clone_home_hero_form).clone(true);
         new_clone_form.attr('id', 'home_hero_clone' + (home_hero_clone_index  + 1));
+        
+        if ('hero_title' + (home_hero_clone_index + 1) in CKEDITOR.instances) removeCkeditor('hero_title' + (home_hero_clone_index + 1));
+        if ('hero_title_ar' + (home_hero_clone_index + 1) in CKEDITOR.instances) removeCkeditor('hero_title_ar' + (home_hero_clone_index + 1));
+        if ('hero_text' + (home_hero_clone_index + 1) in CKEDITOR.instances) removeCkeditor('hero_text' + (home_hero_clone_index + 1));
+        if ('hero_text_ar' + (home_hero_clone_index + 1) in CKEDITOR.instances) removeCkeditor('hero_text_ar' + (home_hero_clone_index + 1));
+        
+        var clone_home_hero_forms = $(".home-hero-clone");  
+        for (var home_hero_index = 0; home_hero_index < clone_home_hero_forms.length; home_hero_index++) {
+            var clone_home_hero_index = parseInt($(clone_home_hero_forms[home_hero_index]).attr('id').replace("home_hero_clone", ""));
+            if (clone_home_hero_index > home_hero_clone_index) {
+                $(clone_home_hero_forms[home_hero_index]).attr('id', 'home_hero_clone' + (clone_home_hero_index + 1));
+                $(clone_home_hero_forms[home_hero_index]).find('[name="hero_title[]]').attr('id', 'hero_title' + (clone_home_hero_index + 1));
+                $(clone_home_hero_forms[home_hero_index]).find('[name="hero_title_ar[]]').attr('id', 'hero_title_ar' + (clone_home_hero_index + 1));
+                $(clone_home_hero_forms[home_hero_index]).find('[name="hero_text[]]').attr('id', 'hero_text' + (clone_home_hero_index + 1));
+                $(clone_home_hero_forms[home_hero_index]).find('[name="hero_text_ar[]]').attr('id', 'hero_text_ar' + (clone_home_hero_index + 1));
+
+                if ('hero_title' + (clone_home_hero_index + 1) in CKEDITOR.instances) removeCkeditor('hero_title' + (clone_home_hero_index + 1));
+                if ('hero_title_ar' + (clone_home_hero_index + 1) in CKEDITOR.instances) removeCkeditor('hero_title_ar' + (clone_home_hero_index + 1));
+                if ('hero_text' + (clone_home_hero_index + 1) in CKEDITOR.instances) removeCkeditor('hero_text' + (clone_home_hero_index + 1));
+                if ('hero_text_ar' + (clone_home_hero_index + 1) in CKEDITOR.instances) removeCkeditor('hero_text_ar' + (clone_home_hero_index + 1));
+                initCkeditor('hero_title' + (clone_home_hero_index + 1));
+                initCkeditor('hero_title_ar' + (clone_home_hero_index + 1));
+                initCkeditor('hero_text' + (clone_home_hero_index + 1));
+                initCkeditor('hero_text_ar' + (clone_home_hero_index + 1));
+            }
+        }
+
         if (clone_clear_data) $(new_clone_form).find('[name="hero_background[]"]').val('');
         $(new_clone_form).find('[name="hero_title[]"]').attr('id', 'hero_title' + (home_hero_clone_index + 1));
         if (clone_clear_data) $(new_clone_form).find('[name="hero_title[]"]').text('');
@@ -1315,6 +1367,12 @@
         var clone_home_hero_form = object.closest(".clone");
         var home_hero_clone_index = parseInt($(clone_home_hero_form).attr('id').replace("home_hero_clone", ""));
         $(clone_home_hero_form).remove();
+        
+        removeCkeditor('hero_title' + home_hero_clone_index);
+        removeCkeditor('hero_title_ar' + home_hero_clone_index);
+        removeCkeditor('hero_text' + home_hero_clone_index);
+        removeCkeditor('hero_text_ar' + home_hero_clone_index);
+
         var clone_home_hero_forms = $(".home-hero-clone");
         for (var home_hero_index = 0; home_hero_index < clone_home_hero_forms.length; home_hero_index++) {
             var clone_home_hero_index = parseInt($(clone_home_hero_forms[home_hero_index]).attr('id').replace("home_hero_clone", ""));
@@ -1324,6 +1382,15 @@
                 $(clone_home_hero_forms[home_hero_index]).find('[name="hero_title_ar[]]').attr('id', 'hero_title_ar' + (clone_home_hero_index - 1));
                 $(clone_home_hero_forms[home_hero_index]).find('[name="hero_text[]]').attr('id', 'hero_text' + (clone_home_hero_index - 1));
                 $(clone_home_hero_forms[home_hero_index]).find('[name="hero_text_ar[]]').attr('id', 'hero_text_ar' + (clone_home_hero_index - 1));
+
+                if ('hero_title' + clone_home_hero_index in CKEDITOR.instances) removeCkeditor('hero_title' + clone_home_hero_index);
+                if ('hero_title_ar' + clone_home_hero_index in CKEDITOR.instances) removeCkeditor('hero_title_ar' + clone_home_hero_index);
+                if ('hero_text' + clone_home_hero_index in CKEDITOR.instances) removeCkeditor('hero_text' + clone_home_hero_index);
+                if ('hero_text_ar' + clone_home_hero_index in CKEDITOR.instances) removeCkeditor('hero_text_ar' + clone_home_hero_index);
+                initCkeditor('hero_title' + (clone_home_hero_index - 1));
+                initCkeditor('hero_title_ar' + (clone_home_hero_index - 1));
+                initCkeditor('hero_text' + (clone_home_hero_index - 1));
+                initCkeditor('hero_text_ar' + (clone_home_hero_index - 1));
             }
         }
         school_home_hero_clone--;
@@ -1488,6 +1555,9 @@
         var new_clone_form = $(clone_footer_menu_section_form).clone(true);
         new_clone_form.attr('id', 'footer_menu_section_clone' + (footer_menu_section_clone_index + 1));
 
+        if ('footer_menu_title' + (footer_menu_section_clone_index + 1) in CKEDITOR.instances) removeCkeditor('footer_menu_title' + (footer_menu_section_clone_index + 1));
+        if ('footer_menu_title_ar' + (footer_menu_section_clone_index + 1) in CKEDITOR.instances) removeCkeditor('footer_menu_title_ar' + (footer_menu_section_clone_index + 1));
+        
         var clone_footer_menu_section_forms = $(".footer-menu-section-clone");
         for (var footer_menu_section_index = 0; footer_menu_section_index < clone_footer_menu_section_forms.length; footer_menu_section_index++) {
             var clone_footer_menu_section_index = parseInt($(clone_footer_menu_section_forms[footer_menu_section_index]).attr('id').replace("footer_menu_section_clone", ""));
@@ -1513,9 +1583,12 @@
                 $(clone_footer_menu_section_forms[footer_menu_section_index]).attr('id', 'footer_menu_section_clone' + (clone_footer_menu_section_index + 1));
                 $(clone_footer_menu_section_forms[footer_menu_section_index]).find('[name="footermenuincrement[]"]').attr('id', 'footer_menu_increment' + (clone_footer_menu_section_index + 1));
                 $(clone_footer_menu_section_forms[footer_menu_section_index]).find('[name="footer_menu_title[]"]').attr('id', 'footer_menu_title' + (clone_footer_menu_section_index + 1));
-                $(clone_footer_menu_section_forms[footer_menu_section_index]).find('#cke_footer_menu_title' + clone_footer_menu_section_index).attr('id', 'cke_footer_menu_title' + (clone_footer_menu_section_index + 1));
                 $(clone_footer_menu_section_forms[footer_menu_section_index]).find('[name="footer_menu_title_ar[]"]').attr('id', 'footer_menu_title_ar' + (clone_footer_menu_section_index + 1));
-                $(clone_footer_menu_section_forms[footer_menu_section_index]).find('#cke_footer_menu_title_ar' + clone_footer_menu_section_index).attr('id', 'cke_footer_menu_title_ar' + (clone_footer_menu_section_index + 1));
+                
+                if ('footer_menu_title' + (clone_footer_menu_section_index + 1) in CKEDITOR.instances) removeCkeditor('footer_menu_title' + (clone_footer_menu_section_index + 1));
+                if ('footer_menu_title_ar' + (clone_footer_menu_section_index + 1) in CKEDITOR.instances) removeCkeditor('footer_menu_title_ar' + (clone_footer_menu_section_index + 1));
+                initCkeditor('footer_menu_title' + (clone_footer_menu_section_index + 1));
+                initCkeditor('footer_menu_title_ar' + (clone_footer_menu_section_index + 1));
             }
         }
 
@@ -1583,6 +1656,10 @@
         var clone_footer_menu_section_form = object.closest(".clone");
         var footer_menu_section_clone_index = parseInt($(clone_footer_menu_section_form).attr('id').replace("footer_menu_section_clone", ""));
         $(clone_footer_menu_section_form).remove();
+        
+        removeCkeditor('footer_menu_title' + footer_menu_section_clone_index);
+        removeCkeditor('footer_menu_title_ar' + footer_menu_section_clone_index);
+
         var clone_footer_menu_section_forms = $(".footer-menu-section-clone");
         for (var footer_menu_section_index = 0; footer_menu_section_index < clone_footer_menu_section_forms.length; footer_menu_section_index++) {
             var clone_footer_menu_section_index = parseInt($(clone_footer_menu_section_forms[footer_menu_section_index]).attr('id').replace("footer_menu_section_clone", ""));
@@ -1608,9 +1685,12 @@
                 $(clone_footer_menu_section_forms[footer_menu_section_index]).attr('id', 'footer_menu_section_clone' + (clone_footer_menu_section_index - 1));
                 $(clone_footer_menu_section_forms[footer_menu_section_index]).find('[name="footermenuincrement[]"]').attr('id', 'footer_menu_increment' + (clone_footer_menu_section_index - 1));
                 $(clone_footer_menu_section_forms[footer_menu_section_index]).find('[name="footer_menu_title[]"]').attr('id', 'footer_menu_title' + (clone_footer_menu_section_index - 1));
-                $(clone_footer_menu_section_forms[footer_menu_section_index]).find('#cke_footer_menu_title' + clone_footer_menu_section_index).attr('id', 'cke_footer_menu_title' + (clone_footer_menu_section_index - 1));
                 $(clone_footer_menu_section_forms[footer_menu_section_index]).find('[name="footer_menu_title_ar[]"]').attr('id', 'footer_menu_title_ar' + (clone_footer_menu_section_index - 1));
-                $(clone_footer_menu_section_forms[footer_menu_section_index]).find('#cke_footer_menu_title_ar' + clone_footer_menu_section_index).attr('id', 'cke_footer_menu_title_ar' + (clone_footer_menu_section_index - 1));
+                
+                if ('footer_menu_title' + clone_footer_menu_section_index in CKEDITOR.instances) removeCkeditor('footer_menu_title' + clone_footer_menu_section_index);
+                if ('footer_menu_title_ar' + clone_footer_menu_section_index in CKEDITOR.instances) removeCkeditor('footer_menu_title_ar' + clone_footer_menu_section_index);
+                initCkeditor('footer_menu_title' + (clone_footer_menu_section_index - 1));
+                initCkeditor('footer_menu_title_ar' + (clone_footer_menu_section_index - 1));
             }
         }
         footer_menu_section_clone--;
@@ -1933,16 +2013,33 @@
         }
     });
 
+    function checkPaymentMethod() {
+        let payment_method_key = $('#paymentMethodForm select[name="key"]').val();
+        let payment_method_options = $('#paymentMethodForm select[name="key"] option');
+        for (let payment_method_index = 0; payment_method_index < payment_method_options.length; payment_method_index++) {
+            if (payment_method_key == $(payment_method_options[payment_method_index]).val()) {
+                $('#paymentMethodForm img.logo').attr("src", $(payment_method_options[payment_method_index]).data('logo'));
+            }
+        }
+        if (payment_method_key == 'Telr') {
+            $('#paymentMethodForm .store-id').show();
+            $('#paymentMethodForm .store-auth-key').show();
+            $('#paymentMethodForm .store-secret-key').hide();
+        }
+    }
+
     $(document).ready(function () {
         airport_clone = $('#airportincrement').val();
         medical_clone = $('#medicalincrement').val();
         custodian_clone = $('#custodianincrement').val();
 
         $('select[multiple].active2.3col').multiselect({
-            includeSelectAllOption: true
+            includeSelectAllOption: true,
+            enableFiltering: true,
         });
         $('select[multiple].active.3col').multiselect({
-            includeSelectAllOption: true
+            includeSelectAllOption: true,
+            enableFiltering: true,
         });
 
         if ($('table') && $('table').length) {
@@ -2076,6 +2173,13 @@
 
         if ($('.page-body-wrapper .content-wrapper').length) {
             handleResizePageContent();
+        }
+
+        if ($('#paymentMethodForm').length) {
+            checkPaymentMethod();
+            $('#paymentMethodForm select[name="key"]').change(function() {
+                checkPaymentMethod();
+            });
         }
     });
 

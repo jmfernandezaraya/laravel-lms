@@ -120,10 +120,12 @@
 <script>
     $(document).ready(function() {
         $('select[multiple].active2.3col').multiselect({
-            includeSelectAllOption: true
+            includeSelectAllOption: true,
+            enableFiltering: true,
         })
         $('select[multiple].active.3col').multiselect({
-            includeSelectAllOption: true
+            includeSelectAllOption: true,
+            enableFiltering: true,
         })
     });
 </script>

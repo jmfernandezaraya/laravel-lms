@@ -4,17 +4,12 @@ namespace App\Http\Controllers\SuperAdmin;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Config;
 
 use App\Http\Controllers\Controller;
 
-use App\Http\Requests\SuperAdmin\PaymentMethodRequest;
-
-use App\Models\CourseApplication;
-
 use App\Models\PaymentMethod;
-use App\Models\ChooseLanguage;
 use App\Models\Course;
-use App\Models\TransactionRefund;
 
 use TelrGateway\Transaction;
 
@@ -32,8 +27,9 @@ class PaymentMethodController extends Controller
     public function index()
     {
         $payment_methods = PaymentMethod::all();
+        $payment_method_list = getPaymentMethodList();
 
-        return view('superadmin.payment_method.index', compact('payment_methods'));
+        return view('superadmin.payment_method.index', compact('payment_methods', 'payment_method_list'));
     }
 
     /**
@@ -43,7 +39,22 @@ class PaymentMethodController extends Controller
      */
     public function create()
     {
-        return view('superadmin.payment_method.add');
+        $payment_method_list = getPaymentMethodList();
+
+        return view('superadmin.payment_method.add', compact('payment_method_list'));
+    }
+
+    private function checkEnvSetting($request)
+    {
+        if ($request->key == 'Telr') {
+            Config::set('telr.test_mode', $request->test_mode ? true : false);
+            Config::set('telr.create.ivp_store', $request->store_id);
+            Config::set('telr.create.ivp_authkey', $request->store_auth_key);
+
+            envUpdate('TELR_TEST_MODE', $request->test_mode ? true : false);
+            envUpdate('TELR_STORE_ID', $request->store_id);
+            envUpdate('TELR_STORE_AUTH_KEY', $request->store_auth_key);
+        }
     }
 
     /**
@@ -52,9 +63,34 @@ class PaymentMethodController extends Controller
      * @param \Illuminate\Http\PaymentMethodRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(PaymentMethodRequest $request, PaymentMethod $payment_method)
+    public function store(Request $request)
     {
-        $payment_method->fill($request->validated())->save();
+        $validator = \Validator::make(
+            $request->all(),
+            [
+                'key' => 'required',
+                'store_id' => 'required',
+                'store_auth_key' => 'required',
+                'store_secret_key' => 'sometimes',
+                'test_mode' => 'required',
+            ]
+        );
+        if ($validator->fails()) {
+            return back()->withErrors($validator->errors());
+        }
+
+        $payment_method = new PaymentMethod($validator->validated());
+        $payment_method_id = (new Controller())->my_unique_id();
+        $exist_payment_method = PaymentMethod::where('unique_id', $payment_method_id)->get();
+        while (count($exist_payment_method)) {
+            (new Controller())->my_unique_id(1);
+            $payment_method_id = (new Controller())->my_unique_id();
+            $exist_payment_method = PaymentMethod::where('unique_id', $payment_method_id)->get();
+        }
+        $payment_method->unique_id = $payment_method_id;
+        $payment_method->save();
+
+        $this->checkEnvSetting($request);
 
         toastr()->success(__('Admin/backend.data_saved_successfully'));
 
@@ -81,9 +117,11 @@ class PaymentMethodController extends Controller
      */
     public function edit($id)
     {
-        $payment_method = PaymentMethod::find($id);
+        $payment_method = PaymentMethod::where('unique_id', $id)->first();
 
-        return view('superadmin.payment_method.edit', compact('payment_method'));
+        $payment_method_list = getPaymentMethodList();
+
+        return view('superadmin.payment_method.edit', compact('payment_method', 'payment_method_list'));
     }
 
     /**
@@ -93,11 +131,28 @@ class PaymentMethodController extends Controller
      * @param $id
      * @return \Illuminate\Http\Response
      */
-    public function update(PaymentMethodRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        $payment_method = PaymentMethod::find($id);
+        $validator = \Validator::make(
+            $request->all(),
+            [
+                'key' => 'required',
+                'store_id' => 'required',
+                'store_auth_key' => 'required',
+                'store_secret_key' => 'sometimes',
+                'test_mode' => 'required',
+            ]
+        );
+        if ($validator->fails()) {
+            return back()->withErrors($validator->errors());
+        }
+        
+        $payment_method = PaymentMethod::where('unique_id', $id)->first();
+        $payment_method->fill($validator->validated())->save();
 
-        $payment_method->fill($request->validated())->save();
+        $this->checkEnvSetting($request);
+
+        toastr()->success(__('Admin/backend.data_updated_successfully'));
 
         return redirect()->route('superadmin.payment_method.index');
     }
@@ -110,7 +165,7 @@ class PaymentMethodController extends Controller
             $payment_method->save();
         }
 
-        $payment_method = PaymentMethod::find($id);
+        $payment_method = PaymentMethod::where('unique_id', $id)->first();
         $payment_method->is_default = true;
         $payment_method->save();
 
@@ -125,7 +180,7 @@ class PaymentMethodController extends Controller
      */
     public function destroy($id)
     {
-        $payment_method = PaymentMethod::find($id);
+        $payment_method = PaymentMethod::where('unique_id', $id)->first();
 
         $course_ids = Course::where('payment_method', $id)->pluck('unique_id')->toArray();
         if (count($course_ids)) {

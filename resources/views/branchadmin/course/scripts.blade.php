@@ -138,7 +138,8 @@
             select_form_full = '<select name="age_range[' + remove_program_clone + '][]" id="program_age_range_choose' + (remove_program_clone) + '" multiple="multiple" class="3col active tobehided">' + select_form + '</select>';
             $(select_form_full).insertAfter($("#to_be_inserted_age" + remove_program_clone));
             $("#program_age_range_choose" + (remove_program_clone)).multiselect({
-                includeSelectAllOption: true
+                includeSelectAllOption: true,
+                enableFiltering: true,
             });
         }
 
@@ -169,7 +170,8 @@
             $(select_form_full).insertBefore('#clone_under_age' + (rowNum) + ' #under_age_program_increment');
 
             $("#program_under_age_range_choose" + (rowNum)).multiselect({
-                includeSelectAllOption: true
+                includeSelectAllOption: true,
+                enableFiltering: true,
             });
             $('#clone_under_age' + (rowNum - 1)).find('#program_under_age_add').attr('data-id', (rowNum));
             $('#clone_under_age' + (rowNum - 1)).find('#clone_under_age_increment').attr('value', (rowNum + 1));
@@ -177,10 +179,12 @@
 
         $(document).ready(function () {
             $('select[multiple].active2.3col').multiselect({
-                includeSelectAllOption: true
+                includeSelectAllOption: true,
+                enableFiltering: true,
             });
             $('select[multiple].active.3col').multiselect({
-                includeSelectAllOption: true
+                includeSelectAllOption: true,
+                enableFiltering: true,
             });
 
             $('#menu ul li a').click(function (ev) {
@@ -245,7 +249,8 @@
 
                 $(select_form_full).appendTo($("#remove_custodian" + accom_button));
                 $('#custodian_age_range_choose' + accom_button).multiselect({
-                    includeSelectAllOption: true
+                    includeSelectAllOption: true,
+                    enableFiltering: true,
                 });
 
                 select_form_accom_full = '<select name="age_range[' + accom_button + '][]" id="accom_age_choose' + (accom_button) + '" multiple="multiple" class="3col active tobehided">' + select_form_accom + '</select>';
@@ -253,7 +258,8 @@
                 var beforeInsert = $("#remove_accom_accom" + accom_button);
                 $(select_form_accom_full).insertBefore(beforeInsert);
                 $('#accom_age_choose' + accom_button).multiselect({
-                    includeSelectAllOption: true
+                    includeSelectAllOption: true,
+                    enableFiltering: true,
                 });
             });
         });

@@ -45,6 +45,11 @@ class LoginController extends Controller
         $credentials['email'] = strtolower($credentials['email']);
 
         if (Auth::attempt($credentials)) {
+            if (auth()->user()->user_type == 'affiliate' && !auth()->user()->account_active) {
+                return back()->withErrors([
+                    'email' => __('Frontend.account_deactive'),
+                ])->withInput();
+            }
             $reroute = \Session::has('program_unique_id') ? route('frontend.course.register.detail') : $route;
             $route = \Session::has('visa_form') ? route('frontend.visa') : $reroute;
             
@@ -287,12 +292,18 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
         $credentials['email'] = strtolower($credentials['email']);
         if (auth('schooladmin')->attempt($credentials)) {
-            if (auth('schooladmin')->user()->user_type == 'school_admin') {
-                $request->session()->regenerate();
-                return redirect()->route('schooladmin.dashboard');
+            if (auth('schooladmin')->user()->account_active) {
+                if (auth('schooladmin')->user()->user_type == 'school_admin') {
+                    $request->session()->regenerate();
+                    return redirect()->route('schooladmin.dashboard');
+                } else {
+                    return back()->withErrors([
+                        'email' => __('Frontend.credentials_error'),
+                    ])->withInput();
+                }
             } else {
                 return back()->withErrors([
-                    'email' => __('Frontend.credentials_error'),
+                    'email' => __('Frontend.account_deactive'),
                 ])->withInput();
             }
         }

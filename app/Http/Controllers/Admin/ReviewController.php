@@ -23,7 +23,7 @@ class ReviewController extends Controller
         if (auth('superadmin')->check()) {
             $reviews = Review::with('user', 'course_applications.school')->get();
         } else if (auth('schooladmin')->check()) {
-            $school_ids = auth('schooladmin')->user()->school;
+            $school_ids = auth('schooladmin')->user()->school_ids;
             $reviews = Review::with('user', 'course_applications.school')
                 ->whereHas('course_applications.school', function ($query) use ($school_ids)
                     { $query->whereIn('id', $school_ids); }

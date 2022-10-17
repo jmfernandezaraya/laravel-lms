@@ -54,7 +54,8 @@ class CourseCreateService
             'program_level' => 'required',
             'lessons_per_week' => 'required',
             'hours_per_week' => 'required',
-            'program_information' => 'required'
+            'program_information' => 'required',
+            'study_finance' => 'required'
         ];
 
         /*
@@ -97,7 +98,7 @@ class CourseCreateService
         $course['school_id'] = 0;
         $language = app()->getLocale();
         $course_school = School::whereHas('name', function($query) use ($request, $language)
-            { $language ? $query->where('name', $request->school_name) : $query->where('name_ar', $request->school_name); })
+            { $language == 'en' ? $query->where('name', $request->school_name) : $query->where('name_ar', $request->school_name); })
             ->where('country_id', $request->country_id)->where('city_id', $request->city_id)->first();
         if ($course_school) {
             $course['school_id'] = $course_school->id;
@@ -117,6 +118,7 @@ class CourseCreateService
         $course['start_date'] = $request->start_date;
         $course['program_information'] = $request->program_information;
         $course['program_information_ar'] = $request->program_information_ar;
+        $course['study_finance'] = $request->study_finance;
         Course::create($course);
 
         \Session::put('course_id', '' . $course_id);
@@ -215,6 +217,7 @@ class CourseCreateService
         $new_course['start_date'] = $course->start_date ?? [];
         $new_course['program_information'] = $course->program_information;
         $new_course['program_information_ar'] = $course->program_information_ar;
+        $new_course['study_finance'] = $course->study_finance;
         $new_course['display'] = 0;
         Course::create($new_course);
 
@@ -769,6 +772,7 @@ class CourseCreateService
                 'hours_per_week' => ['required',],
                 'study_time' => ['required',],
                 'program_information' => ['required',],
+                'study_finance' => ['required',],
                 'program_cost.*' => 'required',
                 'program_start_date.*' => 'required',
                 'program_end_date.*' => 'required',
@@ -794,7 +798,7 @@ class CourseCreateService
             $course->school_id = 0;
             $language = app()->getLocale();
             $course_school = School::whereHas('name', function($query) use ($request, $language)
-                { $language ? $query->where('name', $request->school_name) : $query->where('name_ar', $request->school_name); })
+                { $language == 'en' ? $query->where('name', $request->school_name) : $query->where('name_ar', $request->school_name); })
                 ->where('country_id', $request->country_id)->where('city_id', $request->city_id)->first();
             if ($course_school) {
                 $course->school_id = $course_school->id;
@@ -814,6 +818,7 @@ class CourseCreateService
             $course->start_date = $request->start_date ?? [];
             $course->program_information = $request->program_information;
             $course->program_information_ar = $request->program_information_ar;
+            $course->study_finance = $request->study_finance;
             $course->save();
 
             $course_id = $course->unique_id;

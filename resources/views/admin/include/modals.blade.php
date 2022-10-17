@@ -483,7 +483,7 @@
 <div class="modal fade" id="formsaveModal" tabindex="-1" role="dialog" aria-labelledby="VisaModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form method="POST" action="{{ auth('superadmin')->check() ? route('superadmin.visa.store') : route('schooladmin.visa.store') }}">
+            <form method="POST" action="{{ route('superadmin.visa.store') }}">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="VisaModalLabel">{{__('Admin/backend.save_form_name')}}</h5>
@@ -517,6 +517,7 @@
 </div>
 
 {{--School Nationality Modal--}}
+{{--
 <div class="modal fade" id="SchoolNationalityModal" tabindex="-1" role="dialog" aria-labelledby="SchoolNationalityModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -545,3 +546,4 @@
         </div>
     </div>
 </div>
+--}}

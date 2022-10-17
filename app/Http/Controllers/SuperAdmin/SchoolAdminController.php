@@ -28,8 +28,77 @@ class SchoolAdminController extends Controller
     function index()
     {
         $school_admins = User::with('userSchool')->where('user_type', 'school_admin')->orWhere('user_type', 'branch_admin')->get();
+        
+        $choose_fields = [
+            'school_names' => [],
+            'countries' => [],
+            'cities' => []
+        ];
+        foreach($school_admins as $school_admin) {
+            if (is_null($school_admin->userSchool->school)) {
+                if (!in_array('-', $choose_fields['school_names'])) {
+                    array_push($choose_fields['school_names'], '-');
+                }
+            } else {
+                if (app()->getLocale() == 'en') {
+                    if (!in_array($school_admin->userSchool->school->name->name, $choose_fields['school_names'])) {
+                        array_push($choose_fields['school_names'], $school_admin->userSchool->school->name->name);
+                    }
+                } else {
+                    if (!in_array($school_admin->userSchool->school->name->name_ar, $choose_fields['school_names'])) {
+                        array_push($choose_fields['school_names'], $school_admin->userSchool->school->name->name_ar);
+                    }
+                }
+            }
 
-        return view('superadmin.school_admin.index', compact('school_admins'));
+            if (is_null($school_admin->country_ids)) {
+                if (!in_array('-', $choose_fields['countries'])) {
+                    array_push($choose_fields['countries'], '-');
+                }
+            } else {
+                $admin_countries = Country::whereIn('id', $school_admin->country_ids ?? [])->get();
+                foreach ($admin_countries as $admin_country) {
+                    if (app()->getLocale() == 'en') {
+                        if ($admin_country->name) {
+                            if (!in_array($admin_country->name, $choose_fields['countries'])) {
+                                array_push($choose_fields['countries'], $admin_country->name);
+                            }
+                        }
+                    } else {
+                        if ($admin_country->name_ar) {
+                            if (!in_array($admin_country->name_ar, $choose_fields['countries'])) {
+                                array_push($choose_fields['countries'], $admin_country->name_ar);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (is_null($school_admin->city_ids)) {
+                if (!in_array('-', $choose_fields['cities'])) {
+                    array_push($choose_fields['cities'], '-');
+                }
+            } else {
+                $admin_cities = City::whereIn('id', $school_admin->city_ids ?? [])->get();
+                foreach ($admin_cities as $admin_city) {
+                    if (app()->getLocale() == 'en') {
+                        if ($admin_city->name) {
+                            if (!in_array($admin_city->name, $choose_fields['cities'])) {
+                                array_push($choose_fields['cities'], $admin_city->name);
+                            }
+                        }
+                    } else {
+                        if ($admin_city->name_ar) {
+                            if (!in_array($admin_city->name_ar, $choose_fields['cities'])) {
+                                array_push($choose_fields['cities'], $admin_city->name_ar);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return view('superadmin.school_admin.index', compact('school_admins', 'choose_fields'));
     }
 
     function create()
@@ -187,26 +256,6 @@ class SchoolAdminController extends Controller
 
         $saved = __('Admin/backend.data_saved_successfully');
         return response()->json(['success' => true, 'data' => $saved]);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    function destroy($id)
-    {
-        $deleted = User::find($id);
-        if (file_exists($deleted->image)) {
-            unlink($deleted->image);
-        }
-
-        $deleted = $deleted->delete();
-        if ($deleted) {
-            toastr()->success('Deleted Successfully');
-            return back();
-        }
     }
 
     function edit($id)
@@ -384,5 +433,65 @@ class SchoolAdminController extends Controller
         }
         $saved = __('Admin/backend.data_saved_successfully');
         return response()->json(['success' => true, 'data' => $saved]);
+    }    
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function active($id)
+    {
+        $db = \DB::transaction(function() use ($id) {
+            $user = User::where('id', $id)->first();
+            if ($user) {
+                $user->account_active = true;
+                $user->save();
+                return true;
+            }
+        });
+        if ($db) {
+            toastr()->success(__('Admin/backend.data_actived_successfully'));
+        }
+        return back();
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function deactive($id)
+    {
+        $db = \DB::transaction(function() use ($id) {
+            $user = User::where('id', $id)->first();
+            if ($user) {
+                $user->account_active = false;
+                $user->save();
+                return true;
+            }
+        });
+        if ($db) {
+            toastr()->success(__('Admin/backend.data_deactived_successfully'));
+        }
+        return back();
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    function destroy($id)
+    {
+        $deleted = User::find($id);
+        if (file_exists($deleted->image)) {
+            unlink($deleted->image);
+        }
+
+        $deleted = $deleted->delete();
+        if ($deleted) {
+            toastr()->success('Deleted Successfully');
+            return back();
+        }
     }
 }

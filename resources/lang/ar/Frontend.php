@@ -108,6 +108,7 @@ return [
     'more_branches' => 'More Branches',
 
     'credentials_error' => 'The provided credentials do not match our records.',
+    'account_deactive' => 'Your account was deactivated',
     'forgot_password' => 'هل نسيت كلمة المرور؟',
     'forgot_password_description' => 'هل نسيت كلمة المرور؟',
     'email_phone' => 'البريد الالكتروني',

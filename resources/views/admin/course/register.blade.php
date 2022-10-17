@@ -142,7 +142,9 @@
                                         <select name="study_finance" class="form-control" id="study_finance" onchange="checkFinancialGurantee()">
                                             <option value="">{{__('Admin/backend.please_select')}}</option>
                                             <option value="personal" {{ $course_application->study_finance == 'personal' ? 'selected' : '' }}>{{__('Admin/backend.personal')}}</option>
-                                            <option value="scholarship" {{ $course_application->study_finance == 'scholarship' ? 'selected' : '' }}>{{__('Admin/backend.scholarship')}}</option>
+                                            @if ($course_study_finance == 'both')
+                                                <option value="scholarship" {{ $course_application->study_finance == 'scholarship' ? 'selected' : '' }}>{{__('Admin/backend.scholarship')}}</option>
+                                            @endif
                                         </select>
                                     </div>
                                 </div>

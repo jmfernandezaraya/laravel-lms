@@ -95,22 +95,6 @@ class CouponController extends Controller
                 }
             }
 
-            if (is_null($course->school->city)) {
-                if (!in_array('-', $choose_fields['school_cities'])) {
-                    array_push($choose_fields['school_cities'], '-');
-                }
-            } else {
-                if (app()->getLocale() == 'en') {
-                    if (!in_array($course->school->city->name, $choose_fields['school_cities'])) {
-                        array_push($choose_fields['school_cities'], $course->school->city->name);
-                    }
-                } else {
-                    if (!in_array($course->school->city->name_ar, $choose_fields['school_cities'])) {
-                        array_push($choose_fields['school_cities'], $course->school->city->name_ar);
-                    }
-                }
-            }
-
             if (is_null($course->school->country)) {
                 if (!in_array('-', $choose_fields['school_countries'])) {
                     array_push($choose_fields['school_countries'], '-');
@@ -123,6 +107,22 @@ class CouponController extends Controller
                 } else {
                     if (!in_array($course->school->country->name_ar, $choose_fields['school_countries'])) {
                         array_push($choose_fields['school_countries'], $course->school->country->name_ar);
+                    }
+                }
+            }
+
+            if (is_null($course->school->city)) {
+                if (!in_array('-', $choose_fields['school_cities'])) {
+                    array_push($choose_fields['school_cities'], '-');
+                }
+            } else {
+                if (app()->getLocale() == 'en') {
+                    if (!in_array($course->school->city->name, $choose_fields['school_cities'])) {
+                        array_push($choose_fields['school_cities'], $course->school->city->name);
+                    }
+                } else {
+                    if (!in_array($course->school->city->name_ar, $choose_fields['school_cities'])) {
+                        array_push($choose_fields['school_cities'], $course->school->city->name_ar);
                     }
                 }
             }

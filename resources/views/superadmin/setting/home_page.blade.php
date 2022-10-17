@@ -147,20 +147,6 @@
                     
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label><h3>{{__('Admin/backend.school_promotion')}}</h3></label>
-
-                            <select name="school_promotion[]" id="school_promotion_choose" multiple="multiple" class="3col active">
-                                @foreach ($promotion_schools as $school)
-                                    <option value="{{ $school->id }}" {{in_array($school->id, isset($setting_value['school_promotions']) ? $setting_value['school_promotions'] : []) ? 'selected' : ''}}>
-                                        {{ app()->getLocale() == 'en' ? ($school->name ? $school->name->name : '-') . ' / ' . ($school->city ? $school->city->name : '-') . ' / ' . ($school->country ? $school->country->name : '-') : ($school->name ? $school->name->name_ar : '-') . ' / ' . ($school->city ? $school->city->name_ar : '-') . ' / ' . ($school->country ? $school->country->name_ar : '-') }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="form-group col-md-6">
                             <label><h3>{{__('Admin/backend.popular_school')}}</h3></label>
 
                             <select name="popular_school[]" id="popular_school_choose" multiple="multiple" class="3col active">

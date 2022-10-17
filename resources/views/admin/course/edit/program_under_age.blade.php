@@ -58,11 +58,11 @@
 
                     <script>
                         window.addEventListener('load', function() {
-                            program_under_age_clone = {{$program_under_age_fees && $program_under_age_fees->count() ? $program_under_age_fees->count() - 1 : 0}};
+                            program_under_age_clone = {{ $program_under_age_fees && $program_under_age_fees->count() ? $program_under_age_fees->count() - 1 : 0 }};
                         }, false );
                     </script>
 
-                    <input name="underagefeeincrement" id="underagefeeincrement" value="{{$program_under_age_fees && $program_under_age_fees->count() ? $program_under_age_fees->count() - 1 : 0}}" hidden>
+                    <input name="underagefeeincrement" id="underagefeeincrement" value="{{ $program_under_age_fees && $program_under_age_fees->count() ? $program_under_age_fees->count() - 1 : 0 }}" hidden>
                     @forelse ($program_under_age_fees as $program_under_age_fee)
                         <div id="under_age_fee_clone{{ $loop->iteration - 1 }}" class="under-age-fee-clone clone">
                             <input type="hidden" value="{{$program_under_age_fee->id}}" name="under_age_id[]">
@@ -124,9 +124,16 @@
                         </div>
                     @endforelse
 
-                    <input name="textbookfeeincrement" id="textbookfeeincrement" value="{{$program_text_book_fees ? $program_text_book_fees->count() - 1 : 0}}" hidden>
+
+                    <script>
+                        window.addEventListener('load', function() {
+                            program_text_book_clone = {{ $program_text_book_fees && $program_text_book_fees->count() ? $program_text_book_fees->count() - 1 : 0 }};
+                        }, false );
+                    </script>
+
+                    <input name="textbookfeeincrement" id="textbookfeeincrement" value="{{ $program_text_book_fees && $program_text_book_fees->count() ? $program_text_book_fees->count() - 1 : 0 }}" hidden>
                     @forelse ($program_text_book_fees as $program_text_book_fee)
-                        <div id="text_book_fee_clone{{ $loop->iteration - 1 }}" class="text-book-fee-clone clone">
+                        <div id="text_book_fee_clone{{ $loop->iteration - 1 }}" class="text-book-fee-clone clone text-book-fee-first">
                             <input type="hidden" name="textbook_id[]" value="{{$program_text_book_fee->id}}">
                             <div class="row">
                                 <div class="form-group col-md-4">

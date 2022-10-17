@@ -25,7 +25,7 @@
 
                     <script>
                         window.addEventListener('load', function() {
-                            school_name_clone = {{$school_names && $school_names->count() ? $school_names->count() - 1 : 0}};
+                            school_name_clone = {{ $school_names && $school_names->count() ? $school_names->count() - 1 : 0 }};
                         }, false );
                     </script>
 

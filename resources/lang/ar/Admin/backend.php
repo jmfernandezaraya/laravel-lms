@@ -218,6 +218,8 @@ return [
     
     'names' => 'Names',
     'school_names' => 'School Names',
+    
+    'nationalities' => 'Nationalities',
 
     'study_mode' => 'نظام الدراسة',
     'your_age' => 'Your Age',
@@ -734,6 +736,9 @@ return [
     'program_level' => 'مستوى الدورة',
     'about_program' => 'عن الدورة',
     'program_information' => 'تفاصيل الدورة',
+    'study_finance' => 'Study Finance',
+    'both' => 'Both',
+    'only_personal' => 'Only Personal',
     'accommodation' => 'السكن',
     'program' => 'الدورة',
     'airport' => 'المطار',
@@ -853,6 +858,12 @@ return [
     'payment_methods' => 'Payment Methods',
     'add_payment_method' => 'Add Payment Method',
     'update_payment_method' => 'Update Payment Method',
+    'store_id' => 'Store Id',
+    'store_auth_key' => 'Store Auth Key',
+    'store_secret_key' => 'Store Secret Key',
+    'mode' => 'Mode',
+    'real_mode' => 'Real Mode',
+    'test_mode' => 'Test Mode',
     
     'course_application' => 'ادارة طلبات الدورات',
     'course_application_details' => 'Course Application Details',

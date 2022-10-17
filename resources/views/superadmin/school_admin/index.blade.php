@@ -24,7 +24,7 @@
     <div class="page-content">
         <div class="card">
             <div class="card-body table table-responsive">
-                <table class="table table-hover table-bordered">
+                <table class="table table-hover table-bordered table-filtered">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -32,9 +32,9 @@
                             <th>{{__('Admin/backend.last_name')}}</th>
                             <th>{{__('Admin/backend.email')}}</th>
                             <th>{{__('Admin/backend.telephone')}}</th>
-                            <th>{{__('Admin/backend.school_name')}}</th>
-                            <th>{{__('Admin/backend.country')}}</th>
-                            <th>{{__('Admin/backend.city')}}</th>
+                            <th data-filter="select" data-select="{{implode(",", $choose_fields["school_names"])}}">{{__('Admin/backend.school_name')}}</th>
+                            <th data-filter="select" data-select="{{implode(",", $choose_fields["countries"])}}">{{__('Admin/backend.country')}}</th>
+                            <th data-filter="select" data-select="{{implode(",", $choose_fields["cities"])}}">{{__('Admin/backend.city')}}</th>
                             <th>{{__('Admin/backend.created_on')}}</th>
                             @if (can_manage_user() || can_edit_user() || can_delete_user())
                                 <th>{{__('Admin/backend.action')}}</th>
@@ -58,6 +58,18 @@
                                         <div class="btn-group">
                                             @if (can_manage_user() || can_edit_user())
                                                 <a href="{{route('superadmin.user.school_admin.edit', $school_admin->id)}}" class="btn btn-info btn-sm fa fa-pencil"></a>
+                                                                                            
+                                                @if ($school_admin->account_active)
+                                                    <form method="post" action="{{route('superadmin.user.school_admin.deactive', $school_admin->id)}}">
+                                                        @csrf
+                                                        <button onclick="return confirm('{{__('Admin/backend.are_you_sure_you_wanna_deactive')}}')" class="btn btn-secondary btn-sm fa fa-pause"></button>
+                                                    </form>
+                                                @else
+                                                    <form method="post" action="{{route('superadmin.user.school_admin.active', $school_admin->id)}}">
+                                                        @csrf
+                                                        <button onclick="return confirm('{{__('Admin/backend.are_you_sure_you_wanna_active')}}')" class="btn btn-success btn-sm fa fa-play"></button>
+                                                    </form>
+                                                @endif
                                             @endif
                                             
                                             @if (can_manage_user() || can_delete_user())

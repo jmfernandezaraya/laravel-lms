@@ -136,6 +136,15 @@ class SchoolController extends Controller
             unset($save_to['nationality_increment']);
             unset($save_to['nationality']);
             unset($save_to['nationality_mix']);
+            unset($save_to['name_id']);
+            
+            $school_name = null;
+            if (app()->getLocale() =='en') {
+                $school_name = SchoolName::where('name', $request->name_id)->first();
+            } else {
+                $school_name = SchoolName::where('name_ar', $request->name_id)->first();
+            }
+            $save_to['name_id'] = $school_name ? $school_name->id : 0;
 
             ini_set('max_execution_time', 400000);
             ini_set('post_max_size', 5000000);
@@ -166,12 +175,12 @@ class SchoolController extends Controller
             }
 
             $school = new School();
-            if ($save['address']) {
-                if ($save['address'][0] == '"') {
-                    $save['address'] = substr($save['address'], 1);
+            if ($save_to['address']) {
+                if ($save_to['address'][0] == '"') {
+                    $save_to['address'] = substr($save_to['address'], 1);
                 }
-                if ($save['address'][strlen($save['address']) - 1] == '"') {
-                    $save['address'] = substr($save['address'], 0, strlen($save['address']) - 1);
+                if ($save_to['address'][strlen($save_to['address']) - 1] == '"') {
+                    $save_to['address'] = substr($save_to['address'], 0, strlen($save_to['address']) - 1);
                 }
             }
             $school->fill($save_to + $input)->save();
@@ -248,26 +257,34 @@ class SchoolController extends Controller
             $this->storeImage->setImage($logo);
             $input['logo'] = $this->storeImage->saveImage();
         }
-        $save = $request->validated();
+        $save_to = $request->validated();
 
-        unset($save['logo']);
-        unset($save['logos']);
-        unset($save['multiple_photos']);
-        unset($save['video_url']);
-        unset($save['nationality_increment']);
-        unset($save['nationality']);
-        unset($save['nationality_mix']);
+        unset($save_to['logo']);
+        unset($save_to['logos']);
+        unset($save_to['multiple_photos']);
+        unset($save_to['video_url']);
+        unset($save_to['nationality_increment']);
+        unset($save_to['nationality']);
+        unset($save_to['nationality_mix']);
+            
+        $school_name = null;
+        if (app()->getLocale() =='en') {
+            $school_name = SchoolName::where('name', $request->name_id)->first();
+        } else {
+            $school_name = SchoolName::where('name_ar', $request->name_id)->first();
+        }
+        $save_to['name_id'] = $school_name ? $school_name->id : 0;
 
         $input['video'] = $request->video_url;
-        if ($save['address']) {
-            if ($save['address'][0] == '"') {
-                $save['address'] = substr($save['address'], 1);
+        if ($save_to['address']) {
+            if ($save_to['address'][0] == '"') {
+                $save_to['address'] = substr($save_to['address'], 1);
             }
-            if ($save['address'][strlen($save['address']) - 1] == '"') {
-                $save['address'] = substr($save['address'], 0, strlen($save['address']) - 1);
+            if ($save_to['address'][strlen($save_to['address']) - 1] == '"') {
+                $save_to['address'] = substr($save_to['address'], 0, strlen($save_to['address']) - 1);
             }
         }
-        $school->fill($save + $input)->save();
+        $school->fill($save_to + $input)->save();
         
         $school_nationality_ids = [];
         if (isset($request->nationality_increment)) {
@@ -553,6 +570,7 @@ class SchoolController extends Controller
                 }
             }
         }
+
         $branch_list = "";
         if ($request->empty_value == 'true') $branch_list .= "<option value=''>" . __('Admin/backend.select_option') . "</option>";
         foreach ($branch_names as $branch_name) {
@@ -724,7 +742,7 @@ class SchoolController extends Controller
 
     public function viewNationality()
     {
-        $nationalities = ChooseNationality::orderBy('id', 'asc')->get();
+        $nationalities = ChooseNationality::all();
         
         return view('admin.school.nationality', compact('nationalities'));
     }
@@ -750,7 +768,7 @@ class SchoolController extends Controller
             }
             if (!$choose_nationality) {
                 $choose_nationality = new ChooseNationality();                
-                $choose_nationality->unique_id = (new Controller())->my_unique_id();
+                $choose_nationality->unique_id = (new Controller())->my_unique_id(1);
             }
             $choose_nationality->name = $request->name[$i] ?? null;
             $choose_nationality->name_ar = $request->name_ar[$i] ?? null;

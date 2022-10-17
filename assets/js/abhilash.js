@@ -16,6 +16,14 @@ function initCkeditor(editor_id) {
     }
 }
 
+function removeCkeditor(editor_id) {
+    if (editor_id) {
+        if (editor_id in CKEDITOR.instances) {
+            CKEDITOR.instances[editor_id].destroy();
+        }
+    }
+}
+
 function initCkeditors() {
     var option = {};
     if (typeof uploadFileOption != 'undefined') {
@@ -77,19 +85,20 @@ function reloadTinymceEditor() {
     }
 }
 
-var datepicker_available_days = [];
-var datepicker_format = 'dd-mm-yy';
-
-var yeardatepicker_days = [];
-var yeardatepicker_months = [];
+let datepicker_available_days = [];
+let datepicker_format = 'dd-mm-yy';
 
 function detectDatePickerMonthClick(datepickerEl) {
-    var datepicker_index = $(datepickerEl).data('index');
-    var datepickerObj = $($(datepickerEl).data('datepicker').dpDiv);
+    let datepickerObj = $($(datepickerEl).data('datepicker').dpDiv);
     datepickerObj.find('.ui-datepicker-group .ui-datepicker-header .ui-datepicker-title').click(function() {
-        var click_year = $(this).find('.ui-datepicker-year').html();
-        var click_month_str = $(this).find('.ui-datepicker-month').html();
-        var click_month = 1;
+        console.log("detectDatePickerMonthClick 01");
+        let yeardatepicker_div = $(this).parent().parent().parent();
+        yeardatepicker_div.addClass('ui-datepicker-loading');
+        let datepicker_value = $(datepickerEl).multiDatesPicker('value');
+        let year_datepicker_days = datepicker_value ? datepicker_value.split(",") : [];
+        let click_year = $(this).find('.ui-datepicker-year').html();
+        let click_month_str = $(this).find('.ui-datepicker-month').html();
+        let click_month = 1;
         if (click_month_str == 'January') click_month = '01';
         else if (click_month_str == 'February') click_month = '02';
         else if (click_month_str == 'March') click_month = '03';
@@ -102,43 +111,46 @@ function detectDatePickerMonthClick(datepickerEl) {
         else if (click_month_str == 'October') click_month = '10';
         else if (click_month_str == 'November') click_month = '11';
         else if (click_month_str == 'December') click_month = '12';
-        var month_days = $(this).parent().parent().find('.ui-datepicker-calendar td');
-        var month_index = $.inArray(click_month + "/" + click_year, yeardatepicker_months[datepicker_index]);
-        if (month_index == -1) {
-            if (click_year && click_month) {
-                yeardatepicker_months[datepicker_index].push(click_month + "/" + click_year);
-            }
-        } else {
-            yeardatepicker_months[datepicker_index].splice(month_index, 1);
-        }
-        for (var month_day_index = 0; month_day_index < month_days.length; month_day_index++) {
+        let month_days = $(this).parent().parent().find('.ui-datepicker-calendar td');
+        let month_fill = true;
+        for (let month_day_index = 0; month_day_index < month_days.length; month_day_index++) {
             if (!$(month_days[month_day_index]).hasClass('ui-datepicker-other-month')) {
-                var click_day = $(month_days[month_day_index]).find('a').html();
+                let click_day = $(month_days[month_day_index]).find('a').html();
                 if (click_day) {
                     if (parseInt(click_day) < 10) click_day = '0' + click_day;
-                    var click_date = click_month + "/" + click_day + "/" + click_year;
+                    let click_date = click_month + "/" + click_day + "/" + click_year;
                     if (click_date) {
-                        if (month_index == -1) {
-                            var date_index = $.inArray(click_date, yeardatepicker_days[datepicker_index]);
-                            if (date_index == -1) {
-                                yeardatepicker_days[datepicker_index].push(click_date);
-                            }
+                        let date_index = $.inArray(click_date, year_datepicker_days);
+                        if (date_index != -1) {
+                            month_fill = false;
+                        }
+                    }
+                }
+            }
+        }
+        for (let month_day_index = 0; month_day_index < month_days.length; month_day_index++) {
+            if (!$(month_days[month_day_index]).hasClass('ui-datepicker-other-month')) {
+                let click_day = $(month_days[month_day_index]).find('a').html();
+                if (click_day) {
+                    if (parseInt(click_day) < 10) click_day = '0' + click_day;
+                    let click_date = click_month + "/" + click_day + "/" + click_year;
+                    if (click_date) {
+                        if (month_fill) {
+                            $(datepickerEl).multiDatesPicker('toggleDate', click_date);
                         } else {
-                            var date_index = $.inArray(click_date, yeardatepicker_days[datepicker_index]);
+                            let date_index = $.inArray(click_date, year_datepicker_days);
                             if (date_index != -1) {
-                                yeardatepicker_days[datepicker_index].splice(date_index, 1);
+                                $(datepickerEl).multiDatesPicker('toggleDate', click_date);
                             }
                         }
                     }
                 }
             }
         }
-        
-        $(datepickerEl).val(yeardatepicker_days[datepicker_index].join(","));
-        datepickerObj.find('.ui-datepicker-today').click();
         setTimeout(function() {
-            datepickerObj.find('.ui-datepicker-today').click();
-        }, 300);
+            console.log("detectDatePickerMonthClick 02");
+            yeardatepicker_div.removeClass('ui-datepicker-loading');
+        }, 1000);
     });
 }
 
@@ -147,84 +159,25 @@ function initYearDatePicker() {
         $(this).attr('id', 'year-date-picker-' + $(this).data('index'));
         $(this).removeClass('hasDatepicker');
         var todayDate = new Date();
-        $(this).datepicker({
+        $(this).multiDatesPicker({
             dateFormat: 'mm/dd/yy',
-            showCurrentAtPos: todayDate.getMonth(),
-            showOtherMonths: true,
+            separator: ",",
+            minDate: new Date(),
             selectOtherMonths: true,
             numberOfMonths: [4,3],
             yearRange: (todayDate.getYear() + 1900) + ":" + (todayDate.getYear() + 1901),
-            changeYear: true,
-            selectMultiple: true,
-            closeOnSelect: false,
             showButtonPanel: true,
-            onSelect: function(d) {
-                $(this).data('datepicker').inline = true;
-                $(this).data('datepicker').settings.showCurrentAtPos = 0;
-
-                var datepicker_index = parseInt($(this).data('index'));
-                var i = $.inArray(d, yeardatepicker_days[datepicker_index]);
-                if (i == -1) {
-                    if (d != '' && d != 'df') {
-                        yeardatepicker_days[datepicker_index].push(d);
-                    }
-                } else {
-                    yeardatepicker_days[datepicker_index].splice(i, 1);
-                }
-                for (let day_index = 0; day_index < yeardatepicker_days[datepicker_index].length; day_index++) {
-                    if (!yeardatepicker_days[datepicker_index][day_index]) {
-                        yeardatepicker_days[datepicker_index].splice(day_index, 1);
-                    }
-                }
-                yeardatepicker_days[datepicker_index].sort(function (first, second) {
-                    var firstDates = first.split('/');
-                    var secondDates = second.split('/');
-                    if (parseInt(firstDates[2]) > parseInt(secondDates[2])) {
-                        return 1;
-                    } else if (parseInt(firstDates[2]) < parseInt(secondDates[2])) {
-                        return -1;
-                    } else {
-                        if (parseInt(firstDates[0]) > parseInt(secondDates[0])) {
-                            return 1;
-                        } else if (parseInt(firstDates[0]) < parseInt(secondDates[0])) {
-                            return -1;
-                        } else {
-                            if (parseInt(firstDates[1]) > parseInt(secondDates[1])) {
-                                return 1;
-                            } else if (parseInt(firstDates[1]) < parseInt(secondDates[1])) {
-                                return -1;
-                            }
-                        }
-                    }
-                    return 0;
-                });
-                $(this).val(yeardatepicker_days[datepicker_index].join(","));
-                $(this).data('datepicker').dpDiv.addClass('ui-datepicker-selected');
-            },
-            onClose: function() {
-                $(this).data('datepicker').inline = false;
-                $(this).data('datepicker').settings.showCurrentAtPos = todayDate.getMonth();
-            },
-            beforeShow: function() {
-                var datepickerEl = this;
-                setTimeout(function() {
-                    detectDatePickerMonthClick(datepickerEl);
-                }, 300);
-            },
-            beforeShowDay: function(d) {
-                var datepickerEl = this;
-                var datepicker_index = $(this).data('index');
-                var datepickerObj = $($(datepickerEl).data('datepicker').dpDiv);
-                if (datepickerObj.hasClass('ui-datepicker-selected')) {
-                    datepickerObj.removeClass('ui-datepicker-selected');
+            onUpdateDatepicker: function() {
+                let that = this;
+                if (!$(this).datepicker( "widget" ).hasClass('ui-datepicker-fired')) {
+                    console.log("onUpdateDatepicker 01");
+                    $(this).datepicker( "widget" ).addClass('ui-datepicker-fired');
                     setTimeout(function() {
-                        detectDatePickerMonthClick(datepickerEl);
-                    }, 300);
+                        console.log("onUpdateDatepicker 02");
+                        $(this).datepicker( "widget" ).removeClass('ui-datepicker-fired');
+                        detectDatePickerMonthClick(that);
+                    }, 200);
                 }
-                
-                var dateavailable = true;
-                if ($.datepicker.formatDate('yymmdd', d) < $.datepicker.formatDate('yymmdd', todayDate)) dateavailable = false;
-                return ([dateavailable, $.inArray($.datepicker.formatDate('mm/dd/yy', d), yeardatepicker_days[datepicker_index]) == -1 ? 'ui-state-free' : 'ui-state-busy']);
             }
         });
     });
@@ -439,7 +392,6 @@ function changeSearchProgramName() {
     });
 }
 
-
 function changeSchoolCountry() {
     var country_ids = $('#country_ids').val();
     var nationalities = $('select[name="nationality[]"]');
@@ -458,69 +410,79 @@ function changeSchoolCountry() {
         }
     }
     if (country_ids != '') {
-        $.post(url_school_city_by_country_list, {_token: token, id: country}, function (data) {
-            $('#city_name').html(data);
+        $.post(url_school_city_by_country_list, {_token: token, id: country_ids}, function (data) {
+            $('#city_ids').html(data);
         });
     }
 }
 
 function changeSchool() {
-    var school_name = $('#school_name').val();
     $.post(url_school_country_list, {
         _token: token,
-        school_name: school_name,
+        school_name: $('#school_name').val(),
         empty_value: $('#country_ids').hasClass('3col') && $('#country_ids').hasClass('active') ? false : true
     }, function (data) {
         $('#country_ids').html(data);
-        if ($('#country_ids').hasClass('3col') && $('#country_ids').hasClass('active')) {
-            $('#country_ids').multiselect('rebuild');
+        if ($('#country_ids').attr('name') == "city_ids[]") {
+            if ($('#country_ids').hasClass('3col') && $('#country_ids').hasClass('active')) {
+                $('#country_ids').multiselect('rebuild');
+            }
+            changeCountries();
+        } else if ($('#country_ids').attr('name') == "city_id") {
+            changeCountry();
         }
-        changeUserCountry();
     });
 }
 
-function changeUserCountry() {
-    var school_name = $('#school_name').val();
-    var country_ids = $('#country_ids').val();
+function changeCountries() {
     $.post(url_school_city_list, {
         _token: token,
-        school_name: school_name,
-        country_ids: country_ids,
+        school_name: $('#school_name').val(),
+        country_ids: $('#country_ids').val(),
         empty_value: $('#city_ids').hasClass('3col') && $('#city_ids').hasClass('active') ? false : true
     }, function (data) {
         $('#city_ids').html(data);
         if ($('#city_ids').hasClass('3col') && $('#city_ids').hasClass('active')) {
             $('#city_ids').multiselect('rebuild');
         }
-        changeCity();
+        changeCities();
     });
 }
 
 function changeCountry() {
-    var country_ids = $('#country_ids').val();
     $.post(url_school_city_list, {
         _token: token,
-        country_ids: country_ids
+        school_name: $('#school_name').val(),
+        country_ids: $('#country_ids').val()
     }, function (data) {
-        $('#city_name').html(data);
+        $('#city_ids').html(data);
+        changeCity();
     });
 }
 
-function changeCity() {
-    var school_name = $('#school_name').val();
-    var country_ids = $('#country_ids').val();
-    var city_ids = $('#city_ids').val();
+function changeCities() {
     $.post(url_school_branch_list, {
         _token: token,
-        school_name: school_name,
-        country_ids: country_ids,
-        city_ids: city_ids,
+        school_name: $('#school_name').val(),
+        country_ids: $('#country_ids').val(),
+        city_ids: $('#city_ids').val(),
         empty_value: $('#branch_choose').hasClass('3col') && $('#branch_choose').hasClass('active') ? false : true
     }, function (data) {
         $('#branch_choose').html(data);
         if ($('#branch_choose').hasClass('3col') && $('#branch_choose').hasClass('active')) {
             $('#branch_choose').multiselect('rebuild');
         }
+    });
+}
+
+function changeCity() {
+    $.post(url_school_branch_list, {
+        _token: token,
+        school_name: $('#school_name').val(),
+        country_ids: $('#country_ids').val(),
+        city_ids: $('#city_ids').val()
+    }, function (data) {
+        $('#branch_choose').html(data);
     });
 }
 
@@ -3037,6 +2999,7 @@ function checkFinancialGurantee() {
     if ($("#get_country") && $("#get_country").length) {
         var country_name = $("#get_country").val();
         var study_finance = $("#study_finance").val();
+        var study_finance_data = $("#study_finance").data('study-finance');
     
         if ((country_name == 'USA' || country_name == 'usa' || country_name == 'united states of america')) {
             $("#bank_statement").show();

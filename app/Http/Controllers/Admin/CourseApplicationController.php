@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 
 use App\Mail\EmailTemplate;
 use App\Mail\UpdatedCourseApplication;
-use App\Services\SuperAdminEditUserCourse;
 
 use App\Models\Calculator;
 use App\Models\CourseApplication;
@@ -83,7 +82,7 @@ class CourseApplicationController extends Controller
             'message' => ''
         ];
 
-        //try {
+        try {
             $send_files = [];
             if ($request->type_of_submit == 'send_message_to_school') {
                 $rules = [
@@ -119,21 +118,42 @@ class CourseApplicationController extends Controller
 
                     $course_application = CourseApplication::with('course.school.userSchools')->whereId($request->type_id)->first();
                     if ($course_application->course->school->userSchools) {
-                        $request_save['from_user'] = auth('superadmin')->user()->id;
-                        $request_save['to_user'] = [];
-                        foreach ($course_application->course->school->userSchools as $user_school) {
-                            $request_save['to_user'][] = $user_school->user_id;
-
-                            $mail_pdf_data = array();
-                            $mail_pdf_data['subject'] = $request_save['subject'];
-                            $mail_pdf_data['message'] = $request_save['message'];
-                            $mail_pdf_data['user'] = $mail_pdf_data['to_user'] = \App\Models\User::find($user_school->user_id);
-                            $mail_pdf_data['from_user'] = \App\Models\User::find(auth('superadmin')->user()->id);
-                            $mail_pdf_data['locale'] = app()->getLocale();
+                        if (auth('superadmin')->check()) {
+                            $request_save['from_user'] = auth('superadmin')->user()->id;
+                            $request_save['to_user'] = [];
+                            foreach ($course_application->course->school->userSchools as $user_school) {
+                                if ($user_school->account_active) {
+                                    $request_save['to_user'][] = $user_school->user_id;
+        
+                                    $mail_pdf_data = array();
+                                    $mail_pdf_data['subject'] = $request_save['subject'];
+                                    $mail_pdf_data['message'] = $request_save['message'];
+                                    $mail_pdf_data['user'] = $mail_pdf_data['to_user'] = \App\Models\User::find($user_school->user_id);
+                                    $mail_pdf_data['from_user'] = \App\Models\User::find(auth('superadmin')->user()->id);
+                                    $mail_pdf_data['locale'] = app()->getLocale();
+            
+                                    sendEmail('send_to_school_admin', $mail_pdf_data['user']->email, (object)$mail_pdf_data, app()->getLocale(), $send_files);
+                                }
+                            }
+                            Message::create($request_save);
+                        } else if (auth('schooladmin')->check()) {
+                            $request_save['from_user'] = auth('schooladmin')->user()->id;
+                            $request_save['to_user'] = [];
+                            $admin_users = User::where('user_type', 'super_admin')->get();
+                            foreach ($admin_users as $admin_user) {
+                                $request_save['to_user'][] = $admin_user->id;
     
-                            sendEmail('send_to_school_admin', $mail_pdf_data['user']->email, (object)$mail_pdf_data, app()->getLocale(), $send_files);
+                                $mail_pdf_data = array();
+                                $mail_pdf_data['subject'] = $request_save['subject'];
+                                $mail_pdf_data['message'] = $request_save['message'];
+                                $mail_pdf_data['user'] = $mail_pdf_data['to_user'] = \App\Models\User::find($admin_user->id);
+                                $mail_pdf_data['from_user'] = \App\Models\User::find(auth('schooladmin')->user()->id);
+                                $mail_pdf_data['locale'] = app()->getLocale();
+        
+                                sendEmail('send_to_school_admin', $mail_pdf_data['user']->email, (object)$mail_pdf_data, app()->getLocale(), $send_files);
+                            }
+                            Message::create($request_save);
                         }
-                        Message::create($request_save);
                     }
 
                     $data['message'] = __('Admin/backend.message_sent_thank_you');
@@ -179,14 +199,22 @@ class CourseApplicationController extends Controller
                     }
 
                     $course_application = CourseApplication::whereId($request->type_id)->first();
-                    $request_save['from_user'] = auth('superadmin')->user()->id;
+                    if (auth('superadmin')->check()) {
+                        $request_save['from_user'] = auth('superadmin')->user()->id;
+                    } else if (auth('schooladmin')->check()) {
+                        $request_save['from_user'] = auth('schooladmin')->user()->id;
+                    }
                     $request_save['to_user'] = [$course_application->user_id];
                     Message::create($request_save);
     
                     $mail_pdf_data = array();
                     $mail_pdf_data['subject'] = $request_save['subject'];
                     $mail_pdf_data['message'] = $request_save['message'];
-                    $mail_pdf_data['from_user'] = \App\Models\User::find(auth('superadmin')->user()->id);
+                    if (auth('superadmin')->check()) {
+                        $mail_pdf_data['from_user'] = \App\Models\User::find(auth('superadmin')->user()->id);
+                    } else if (auth('schooladmin')->check()) {
+                        $mail_pdf_data['from_user'] = \App\Models\User::find(auth('schooladmin')->user()->id);
+                    }
                     $mail_pdf_data['user'] = $mail_pdf_data['to_user'] = \App\Models\User::find($course_application->user_id);
                     $mail_pdf_data['locale'] = app()->getLocale();
 
@@ -244,10 +272,10 @@ class CourseApplicationController extends Controller
 
                 $data['message'] = __('Admin/backend.data_updated_successfully');
             }
-        //} catch (\Exception $e) {
-        //    $data['success'] = false;
-        //    $data['message'] = $e->getMessage();
-        //}
+        } catch (\Exception $e) {
+            $data['success'] = false;
+            $data['message'] = $e->getMessage();
+        }
         
         return response($data);
     }
@@ -261,9 +289,9 @@ class CourseApplicationController extends Controller
     public function edit($id)
     {
         if (auth('superadmin')->check()) {
-            $data = getCourseApplicationPrintData($id, auth('superadmin')->user()->id, true);
+            $data = getCourseApplicationPrintData($id, auth('superadmin')->user()->id, 'superadmin');
         } else if (auth('schooladmin')->check()) {
-            $data = getCourseApplicationPrintData($id, auth('schooladmin')->user()->id, true);
+            $data = getCourseApplicationPrintData($id, auth('schooladmin')->user()->id, 'schooladmin');
         }
         $test = '';
 
@@ -398,6 +426,15 @@ class CourseApplicationController extends Controller
     {
         $lang = app()->getLocale();
         $course_application = CourseApplication::find($request->id);
+        $course_program_start_date = Carbon::now()->format('Y-m-d');
+        $course_program_end_date = Carbon::now()->format('Y-m-d');
+        if ($request->date_selected != null) {
+            $date_set = substr($request->date_selected, 6, 4) . "-" . substr($request->date_selected, 3, 2) . "-" . substr($request->date_selected, 0, 2);
+            $course_program_start_date = Carbon::create($date_set)->format('Y-m-d');
+            if (isset($request->program_duration)) {
+                $course_program_end_date = Carbon::create($date_set)->addWeeks((int)$request->program_duration)->format('Y-m-d');
+            }
+        }
         $paid_amount = $amount_added = $amount_refunded = 0;
         if ($course_application->transaction) {
             $paid_amount = $course_application->transaction->amount;
@@ -410,8 +447,8 @@ class CourseApplicationController extends Controller
         $amount_paid = $course_application->paid_amount + $amount_added - $amount_refunded;
         $amount_due = $course_application->total_cost_fixed - $amount_paid;
         if ($course_application->status == 'application_cancelled' || $course_application->status == 'completed' || $amount_due == 0) {
-            //toastSuccess(__('Admin/backend.course_application_can_not_update'));
-            //return redirect()->route('admin.course_application.index');
+            // toastSuccess(__('Admin/backend.course_application_can_not_update'));
+            // return redirect()->route('admin.course_application.index');
         }
 
         $course = Course::where('unique_id', $request->program_id)->first();
@@ -423,7 +460,7 @@ class CourseApplicationController extends Controller
         $course_application->end_date = (isset($request->date_selected) && isset($request->program_duration)) ? Carbon::create($request->date_selected)->addWeeks($request->program_duration)->format('Y-m-d') : null;
         $course_application->study_mode = $request->study_mode;
         $course_application->age_selected = $request->age_selected;
-        $course_application->program_duration = $request->program_duration ?? null;        
+        $course_application->program_duration = $request->program_duration ?? null;
         $accommodation_query = CourseAccommodation::where('course_unique_id', $request->program_id);
         if ($lang == 'en') {
             $accommodation_query->whereType($request->accom_type);
@@ -502,10 +539,6 @@ class CourseApplicationController extends Controller
         $program_age_ranges = ChooseProgramAge::whereIn('unique_id', $under_age)->pluck('age')->toArray();
         $program_under_age = ChooseProgramUnderAge::whereIn('age', $program_age_ranges)->value('unique_id');
         $program_under_age_fee_per_week = 0;
-        if ($request->date_selected != null) {
-            $date_set = substr($request->date_selected, 6, 4) . "-" . substr($request->date_selected, 3, 2) . "-" . substr($request->date_selected, 0, 2);
-            $start_date = Carbon::create($date_set)->format('Y-m-d');
-        }
         if ($course_program) {
             foreach ($course_program->courseUnderAges as $program_course_under_age) {
                 if (in_array($program_under_age, is_array($program_course_under_age->under_age) ? $program_course_under_age->under_age : [])) {
@@ -532,38 +565,36 @@ class CourseApplicationController extends Controller
             $course_application->program_cost = (int)$request->program_duration * $course_program->program_cost;
             $dates_and_get_result['summer_date_program'] = $dates_and_get_result['peak_date_program'] = 0;
             if ($request->date_selected != null) {
-                $front_end_date = getEndDate($date_set, (int)$request->program_duration);
-
                 // Taking this from summer start date from db
-                $dates_and_get_result['front_end_date_check'] = $front_end_date;
-                $dates_and_get_result['front_end_date_exact'] = $front_end_date;
+                $dates_and_get_result['front_end_date_check'] = $course_program_end_date;
+                $dates_and_get_result['front_end_date_exact'] = $course_program_end_date;
                 $dates_and_get_result['summer_date_check'] = $course_program->summer_start_date_program;
                 $dates_and_get_result['summer_date_program'] = 0;
-                if (!($start_date > $course_program->summer_fee_end_date) && !($front_end_date < $course_program->summer_start_date_program)) {
-                    if ($front_end_date >= $course_program->summer_fee_end_date && $start_date <= $course_program->summer_start_date_program ) {
+                if (!($course_program_start_date > $course_program->summer_fee_end_date) && !($course_program_end_date < $course_program->summer_start_date_program)) {
+                    if ($course_program_end_date >= $course_program->summer_fee_end_date && $course_program_start_date <= $course_program->summer_start_date_program ) {
                         $dates_and_get_result['summer_date_program'] = compareBetweenTwoDates($course_program->summer_start_date_program, $course_program->summer_fee_end_date);
-                    } elseif (($front_end_date < $course_program->summer_fee_end_date && $course_program->summer_start_date_program > $start_date)) {
-                        $dates_and_get_result['summer_date_program'] = $front_end_date < $course_program->summer_fee_end_date ?
-                            compareBetweenTwoDates($front_end_date, $course_program->summer_start_date_program) :
-                            compareBetweenTwoDates($front_end_date, $course_program->summer_fee_end_date);
-                    } elseif ($front_end_date <= $course_program->summer_fee_end_date && $front_end_date >= $course_program->summer_start_date_program) {
-                        $dates_and_get_result['summer_date_program'] = compareBetweenTwoDates($start_date, $front_end_date);
-                    } elseif ($front_end_date >= $course_program->summer_fee_end_date && $start_date >= $course_program->summer_start_date_program) {
-                        $dates_and_get_result['summer_date_program'] = compareBetweenTwoDates($start_date, $course_program->summer_fee_end_date);
+                    } elseif (($course_program_end_date < $course_program->summer_fee_end_date && $course_program->summer_start_date_program > $course_program_start_date)) {
+                        $dates_and_get_result['summer_date_program'] = $course_program_end_date < $course_program->summer_fee_end_date ?
+                            compareBetweenTwoDates($course_program_end_date, $course_program->summer_start_date_program) :
+                            compareBetweenTwoDates($course_program_end_date, $course_program->summer_fee_end_date);
+                    } elseif ($course_program_end_date <= $course_program->summer_fee_end_date && $course_program_end_date >= $course_program->summer_start_date_program) {
+                        $dates_and_get_result['summer_date_program'] = compareBetweenTwoDates($course_program_start_date, $course_program_end_date);
+                    } elseif ($course_program_end_date >= $course_program->summer_fee_end_date && $course_program_start_date >= $course_program->summer_start_date_program) {
+                        $dates_and_get_result['summer_date_program'] = compareBetweenTwoDates($course_program_start_date, $course_program->summer_fee_end_date);
                     }
                 }
                 $dates_and_get_result['peak_date_program'] = 0;
-                if (!($start_date > $course_program->peak_end_date) && !($front_end_date < $course_program->peak_start_date)) {
-                    if ($front_end_date >= $course_program->peak_end_date && $start_date <= $course_program->peak_start_date) {
+                if (!($course_program_start_date > $course_program->peak_end_date) && !($course_program_end_date < $course_program->peak_start_date)) {
+                    if ($course_program_end_date >= $course_program->peak_end_date && $course_program_start_date <= $course_program->peak_start_date) {
                         $dates_and_get_result['peak_date_program'] = compareBetweenTwoDates($course_program->peak_start_date, $course_program->peak_end_date);
-                    } elseif (($front_end_date < $course_program->peak_end_date && $course_program->peak_start_date > $start_date)) {
-                        $dates_and_get_result['peak_date_program'] = $front_end_date < $course_program->peak_end_date ?
-                            compareBetweenTwoDates($front_end_date, $course_program->peak_start_date) :
-                            compareBetweenTwoDates($front_end_date, $course_program->peak_end_date);
-                    } elseif ($front_end_date <= $course_program->peak_end_date && $front_end_date >= $course_program->peak_start_date) {
-                        $dates_and_get_result['peak_date_program'] = compareBetweenTwoDates($start_date, $front_end_date);
-                    } elseif ($front_end_date >= $course_program->peak_end_date && $start_date >= $course_program->peak_start_date) {
-                        $dates_and_get_result['peak_date_program'] = compareBetweenTwoDates($start_date, $course_program->peak_end_date);
+                    } elseif (($course_program_end_date < $course_program->peak_end_date && $course_program->peak_start_date > $course_program_start_date)) {
+                        $dates_and_get_result['peak_date_program'] = $course_program_end_date < $course_program->peak_end_date ?
+                            compareBetweenTwoDates($course_program_end_date, $course_program->peak_start_date) :
+                            compareBetweenTwoDates($course_program_end_date, $course_program->peak_end_date);
+                    } elseif ($course_program_end_date <= $course_program->peak_end_date && $course_program_end_date >= $course_program->peak_start_date) {
+                        $dates_and_get_result['peak_date_program'] = compareBetweenTwoDates($course_program_start_date, $course_program_end_date);
+                    } elseif ($course_program_end_date >= $course_program->peak_end_date && $course_program_start_date >= $course_program->peak_start_date) {
+                        $dates_and_get_result['peak_date_program'] = compareBetweenTwoDates($course_program_start_date, $course_program->peak_end_date);
                     }
                 }
                 
@@ -646,39 +677,39 @@ class CourseApplicationController extends Controller
             
             $accommodation_front_end_date = getEndDate($date_set, (int)$request->accommodation_duration);
             $dates_and_get_weeks_accommodation['summer'] = 0 ;
-            if (!($start_date > $accommodation->summer_fee_end_date) && !($accommodation_front_end_date < $accommodation->summer_fee_start_date)) {
-                if ($start_date <= $accommodation->summer_fee_start_date && $accommodation_front_end_date >= $accommodation->summer_fee_end_date) {
+            if (!($course_program_start_date > $accommodation->summer_fee_end_date) && !($accommodation_front_end_date < $accommodation->summer_fee_start_date)) {
+                if ($course_program_start_date <= $accommodation->summer_fee_start_date && $accommodation_front_end_date >= $accommodation->summer_fee_end_date) {
                     $dates_and_get_weeks_accommodation['summer'] = compareBetweenTwoDates($accommodation->summer_fee_start_date, $accommodation->summer_fee_end_date);
-                } elseif ($start_date <= $accommodation->summer_fee_start_date && $accommodation_front_end_date <= $accommodation->summer_fee_end_date) {
+                } elseif ($course_program_start_date <= $accommodation->summer_fee_start_date && $accommodation_front_end_date <= $accommodation->summer_fee_end_date) {
                     $dates_and_get_weeks_accommodation['summer'] = compareBetweenTwoDates($accommodation->summer_fee_start_date, $accommodation_front_end_date);
-                } elseif ($start_date >= $accommodation->summer_fee_start_date && $accommodation_front_end_date <= $accommodation->summer_fee_end_date) { 
-                    $dates_and_get_weeks_accommodation['summer'] = compareBetweenTwoDates($start_date, $accommodation_front_end_date);
-                } elseif ($start_date >= $accommodation->summer_fee_start_date && $accommodation_front_end_date >= $accommodation->summer_fee_end_date) {
-                    $dates_and_get_weeks_accommodation['summer'] = compareBetweenTwoDates($start_date, $accommodation->summer_fee_end_date);
+                } elseif ($course_program_start_date >= $accommodation->summer_fee_start_date && $accommodation_front_end_date <= $accommodation->summer_fee_end_date) { 
+                    $dates_and_get_weeks_accommodation['summer'] = compareBetweenTwoDates($course_program_start_date, $accommodation_front_end_date);
+                } elseif ($course_program_start_date >= $accommodation->summer_fee_start_date && $accommodation_front_end_date >= $accommodation->summer_fee_end_date) {
+                    $dates_and_get_weeks_accommodation['summer'] = compareBetweenTwoDates($course_program_start_date, $accommodation->summer_fee_end_date);
                 }
             }
             $dates_and_get_weeks_accommodation['peak'] = 0;
-            if (!($start_date > $accommodation->peak_time_fee_end_date) && !($accommodation_front_end_date < $accommodation->peak_time_fee_start_date)) {
-                if ($start_date <= $accommodation->peak_time_fee_start_date && $accommodation_front_end_date >= $accommodation->peak_time_fee_end_date) {
+            if (!($course_program_start_date > $accommodation->peak_time_fee_end_date) && !($accommodation_front_end_date < $accommodation->peak_time_fee_start_date)) {
+                if ($course_program_start_date <= $accommodation->peak_time_fee_start_date && $accommodation_front_end_date >= $accommodation->peak_time_fee_end_date) {
                     $dates_and_get_weeks_accommodation['peak'] = compareBetweenTwoDates($accommodation->peak_time_fee_start_date, $accommodation->peak_time_fee_end_date);
-                } elseif ($start_date <= $accommodation->peak_time_fee_start_date && $accommodation_front_end_date <= $accommodation->peak_time_fee_end_date) {
+                } elseif ($course_program_start_date <= $accommodation->peak_time_fee_start_date && $accommodation_front_end_date <= $accommodation->peak_time_fee_end_date) {
                     $dates_and_get_weeks_accommodation['peak'] = compareBetweenTwoDates($accommodation->peak_time_fee_start_date, $accommodation_front_end_date);
-                } elseif ($start_date >= $accommodation->peak_time_fee_start_date && $accommodation_front_end_date <= $accommodation->peak_time_fee_end_date) { 
-                    $dates_and_get_weeks_accommodation['peak'] = compareBetweenTwoDates($start_date, $accommodation_front_end_date);
-                } elseif ($start_date >= $accommodation->peak_time_fee_start_date && $accommodation_front_end_date >= $accommodation->peak_time_fee_end_date) {
-                    $dates_and_get_weeks_accommodation['peak'] = compareBetweenTwoDates($start_date, $accommodation->peak_time_fee_end_date);
+                } elseif ($course_program_start_date >= $accommodation->peak_time_fee_start_date && $accommodation_front_end_date <= $accommodation->peak_time_fee_end_date) { 
+                    $dates_and_get_weeks_accommodation['peak'] = compareBetweenTwoDates($course_program_start_date, $accommodation_front_end_date);
+                } elseif ($course_program_start_date >= $accommodation->peak_time_fee_start_date && $accommodation_front_end_date >= $accommodation->peak_time_fee_end_date) {
+                    $dates_and_get_weeks_accommodation['peak'] = compareBetweenTwoDates($course_program_start_date, $accommodation->peak_time_fee_end_date);
                 }
             }
             $dates_and_get_weeks_accommodation['christmas'] = 0;
-            if (!($start_date > $accommodation->christmas_fee_end_date) && !($accommodation_front_end_date < $accommodation->christmas_fee_start_date)) {
-                if ($start_date <= $accommodation->christmas_fee_start_date && $accommodation_front_end_date >= $accommodation->christmas_fee_end_date) {
+            if (!($course_program_start_date > $accommodation->christmas_fee_end_date) && !($accommodation_front_end_date < $accommodation->christmas_fee_start_date)) {
+                if ($course_program_start_date <= $accommodation->christmas_fee_start_date && $accommodation_front_end_date >= $accommodation->christmas_fee_end_date) {
                     $dates_and_get_weeks_accommodation['christmas'] = compareBetweenTwoDates($accommodation->christmas_fee_start_date, $accommodation->christmas_fee_end_date);
-                } elseif ($start_date <= $accommodation->christmas_fee_start_date && $accommodation_front_end_date <= $accommodation->christmas_fee_end_date) {
+                } elseif ($course_program_start_date <= $accommodation->christmas_fee_start_date && $accommodation_front_end_date <= $accommodation->christmas_fee_end_date) {
                     $dates_and_get_weeks_accommodation['christmas'] = compareBetweenTwoDates($accommodation->christmas_fee_start_date, $accommodation_front_end_date);
-                } elseif ($start_date >= $accommodation->christmas_fee_start_date && $accommodation_front_end_date <= $accommodation->christmas_fee_end_date) {
-                    $dates_and_get_weeks_accommodation['christmas'] = compareBetweenTwoDates($start_date, $accommodation_front_end_date);
-                } elseif ($start_date >= $accommodation->christmas_fee_start_date && $accommodation_front_end_date >= $accommodation->christmas_fee_end_date) {
-                    $dates_and_get_weeks_accommodation['christmas'] = compareBetweenTwoDates($start_date, $accommodation->christmas_fee_end_date);
+                } elseif ($course_program_start_date >= $accommodation->christmas_fee_start_date && $accommodation_front_end_date <= $accommodation->christmas_fee_end_date) {
+                    $dates_and_get_weeks_accommodation['christmas'] = compareBetweenTwoDates($course_program_start_date, $accommodation_front_end_date);
+                } elseif ($course_program_start_date >= $accommodation->christmas_fee_start_date && $accommodation_front_end_date >= $accommodation->christmas_fee_end_date) {
+                    $dates_and_get_weeks_accommodation['christmas'] = compareBetweenTwoDates($course_program_start_date, $accommodation->christmas_fee_end_date);
                 }
             }
             $course_application->accommodation_under_age_fee = $under_age_fee_per_week * (int)$request->accommodation_duration;
@@ -802,9 +833,10 @@ class CourseApplicationController extends Controller
         if ($course_application) {
             $course = Course::with('country')->where('unique_id', '' . $course_application->course_id)->first();            
             $course_country = $course->country ? $course->country->name : '';
+            $course_study_finance = $course ? $course->study_finance : '';
         }
 
-        return view('admin.course.register', compact('course_application', 'course_country'));
+        return view('admin.course.register', compact('course_application', 'course_study_finance', 'course_country'));
     }
 
     /**
@@ -886,9 +918,9 @@ class CourseApplicationController extends Controller
             return response($data);
         } else {
             if (auth('superadmin')->check()) {
-                $pdf_data = getCourseApplicationPrintData($request->id, auth('superadmin')->user()->id, true);
+                $pdf_data = getCourseApplicationPrintData($request->id, auth('superadmin')->user()->id, 'superadmin');
             } else if (auth('schooladmin')->check()) {
-                $pdf_data = getCourseApplicationPrintData($request->id, auth('schooladmin')->user()->id, true);
+                $pdf_data = getCourseApplicationPrintData($request->id, auth('schooladmin')->user()->id, 'schooladmin');
             }
             $pdf_data['logo'] = asset('public/frontend/assets/img/logo.png');
             

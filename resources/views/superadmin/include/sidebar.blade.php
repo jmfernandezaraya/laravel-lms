@@ -86,9 +86,6 @@
                                 <a class="nav-link" href="{{ route('superadmin.course.program_type') }}">{{__('Admin/dashboard.program_type')}}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('superadmin.course.branch') }}">{{__('Admin/dashboard.branch')}}</a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link" href="{{ route('superadmin.course.study_time') }}">{{__('Admin/dashboard.study_time')}}</a>
                             </li>
                             <li class="nav-item">

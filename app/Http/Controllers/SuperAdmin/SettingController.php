@@ -82,14 +82,12 @@ class SettingController extends Controller
         //             $sub_query->whereNotNull('x_week_selected')->where('x_week_start_date', '<=', $now)->where('x_week_end_date', '>=', $now);
         //         });
         //     })->pluck('course_unique_id')->toArray());
-        $promotion_school_ids = array_unique(Course::where('promotion', true)->where('display', true)->where('deleted', false)->pluck('school_id')->toArray());
-        $promotion_schools = School::whereIn('id', $promotion_school_ids)->where('is_active', true)->get();
         $school_ids = array_unique(Course::where('display', true)->where('deleted', false)->pluck('school_id')->toArray());
         $schools = School::whereIn('id', $school_ids)->where('is_active', true)->get();
         
         $countries = Country::with('cities')->get();
         
-        return view('superadmin.setting.home_page', compact('setting_value', 'promotion_schools', 'schools', 'countries'));
+        return view('superadmin.setting.home_page', compact('setting_value', 'schools', 'countries'));
     }
 
     public function updateHomePage(Request $request)
@@ -104,7 +102,6 @@ class SettingController extends Controller
         }
         $setting_value = [
             'heros' => [],
-            'school_promotions' => [],
             'popular_schools' => [],
             'popular_countries' => [],
         ];
@@ -121,13 +118,6 @@ class SettingController extends Controller
                 'background' => isset($request->hero_background[$hero_index]) && $request->hero_background[$hero_index] ? $this->storeImage->saveImage() : 
                     (isset($home_page_setting_value['heros']) && isset($home_page_setting_value['heros'][$hero_index]) ? $home_page_setting_value['heros'][$hero_index]['background'] : ''),
             ];
-        }
-        if (isset($request->school_promotion)) {
-            for ($school_index = 0; $school_index < count($request->school_promotion); $school_index++) {
-                if ($request->school_promotion[$school_index]) {
-                    $setting_value['school_promotions'][] = $request->school_promotion[$school_index];
-                }
-            }
         }
         if (isset($request->popular_school)) {
             for ($school_index = 0; $school_index < count($request->popular_school); $school_index++) {
@@ -362,7 +352,13 @@ class SettingController extends Controller
         Config::set('mail.mailers.smtp.username', $setting_value['smtp']['user_name']);
         Config::set('mail.mailers.smtp.password', $setting_value['smtp']['password']);
         Config::set('mail.mailers.smtp.port', $setting_value['smtp']['port']);
-        Config::set('mail.mailers.smtp.encryption', $setting_value['smtp']['crypto']);        
+        Config::set('mail.mailers.smtp.encryption', $setting_value['smtp']['crypto']);
+
+        envUpdate('MAIL_HOST', $setting_value['smtp']['server']);
+        envUpdate('MAIL_USERNAME', $setting_value['smtp']['user_name']);
+        envUpdate('MAIL_PASSWORD', $setting_value['smtp']['password']);
+        envUpdate('MAIL_PORT', $setting_value['smtp']['port']);
+        envUpdate('MAIL_ENCRYPTION', $setting_value['smtp']['crypto']);
 
         if (isset($request->social_twitter)) {
             $setting_value['social']['twitter'] = $request->social_twitter;
