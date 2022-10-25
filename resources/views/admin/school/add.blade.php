@@ -45,7 +45,7 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="name_id">{{__('Admin/backend.name')}}</label>
-                            <select onchange="changeSchool()" name="name_id" id="school_name" class="form-control">
+                            <select name="name_id" id="school_name" class="form-control">
                                 <option value="">{{__('Admin/backend.select')}}</option>
                                 @foreach ($school_names as $school_name)
                                     <option value="{{app()->getLocale() == 'en' ? $school_name->name : $school_name->name_ar}}">{{app()->getLocale() == 'en' ? $school_name->name : $school_name->name_ar}}</option>

@@ -103,8 +103,10 @@
         <thead>
             <tr>
                 <th>{{__('Frontend.course_details')}}</th>
-                <th>{{__('Frontend.amount')}} / <span class="cost_currency">{{ $currency['cost'] }}</span></th>
-                <th>{{__('Frontend.amount')}} / <span class="converted_currency">{{ $currency['converted'] }}</span></th>
+                @if (!auth('schooladmin')->check())
+                    <th>{{__('Frontend.amount')}} / <span class="cost_currency">{{ $currency['cost'] }}</span></th>
+                    <th>{{__('Frontend.amount')}} / <span class="converted_currency">{{ $currency['converted'] }}</span></th>
+                @endif
             </tr>
         </thead>
         <tbody>
@@ -113,62 +115,70 @@
                     {{ app()->getLocale() == 'en' ? $course->program_name : $course->program_name_ar }}, {{ $course->lessons_per_week }} {{__('Frontend.lessons')}} / {{ $course->hours_per_week }} {{__('Frontend.hours_per_week')}}<br />
                     {{ $program_start_date }} {{__('Frontend.to')}} {{ $program_end_date }} ( {{ $course_application->program_duration }} {{__('Frontend.weeks')}} )
                 </td>
-                <td>{{ toFixedNumber($program_cost['value']) }}</td>
-                <td>{{ toFixedNumber($program_cost['converted_value']) }}</td>
+                @if (!auth('schooladmin')->check())
+                    <td>{{ toFixedNumber($program_cost['value']) }}</td>
+                    <td>{{ toFixedNumber($program_cost['converted_value']) }}</td>
+                @endif
             </tr>
             <tr>
                 <td>{{__('Frontend.registraion_fees')}}</td>
-                <td>{{ toFixedNumber($program_registration_fee['value']) }}</td>
-                <td>{{ toFixedNumber($program_registration_fee['converted_value']) }}</td>
+                @if (!auth('schooladmin')->check())
+                    <td>{{ toFixedNumber($program_registration_fee['value']) }}</td>
+                    <td>{{ toFixedNumber($program_registration_fee['converted_value']) }}</td>
+                @endif
             </tr>
             <tr>
                 <td>
                     {{__('Frontend.text_book_fees')}}
                 </td>
-                <td>{{ toFixedNumber($program_text_book_fee['value']) }}</td>
-                <td>{{ toFixedNumber($program_text_book_fee['converted_value']) }}</td>
+                @if (!auth('schooladmin')->check())
+                    <td>{{ toFixedNumber($program_text_book_fee['value']) }}</td>
+                    <td>{{ toFixedNumber($program_text_book_fee['converted_value']) }}</td>
+                @endif
             </tr>
-            @if ($program_summer_fees['value'])
-                <tr>
-                    <td>{{__('Frontend.summer_fees')}}</td>
-                    <td>{{ toFixedNumber($program_summer_fees['value']) }}</td>
-                    <td>{{ toFixedNumber($program_summer_fees['converted_value']) }}</td>
-                </tr>
-            @endif
-            @if ($program_peak_time_fees['value'])
-                <tr>
-                    <td>{{__('Frontend.peak_time_fees')}}</td>
-                    <td>{{ toFixedNumber($program_peak_time_fees['value']) }}</td>
-                    <td>{{ toFixedNumber($program_peak_time_fees['converted_value']) }}</td>
-                </tr>
-            @endif
-            @if ($program_peak_time_fees['value'])
-                <tr>
-                    <td>{{__('Frontend.peak_time_fees')}}</td>
-                    <td>{{ toFixedNumber($program_peak_time_fees['value']) }}</td>
-                    <td>{{ toFixedNumber($program_peak_time_fees['converted_value']) }}</td>
-                </tr>
-            @endif
-            @if ($program_under_age_fees['value'])
-                <tr>
-                    <td>{{__('Frontend.under_age_fees')}}</td>
-                    <td>{{ toFixedNumber($program_under_age_fees['value']) }}</td>
-                    <td>{{ toFixedNumber($program_under_age_fees['converted_value']) }}</td>
-                </tr>
-            @endif
-            @if ($program_express_mail_fee['value'])
-                <tr>
-                    <td>{{__('Frontend.express_mail_fee')}}</td>
-                    <td>{{ toFixedNumber($program_express_mail_fee['value']) }}</td>
-                    <td>{{ toFixedNumber($program_express_mail_fee['converted_value']) }}</td>
-                </tr>
-            @endif
-            @if ($program_discount_fee['value'])
-                <tr>
-                    <td>{{__('Frontend.discount')}}</td>
-                    <td class="highlight-value">-{{ toFixedNumber($program_discount_fee['value']) }}</td>
-                    <td class="highlight-value">-{{ toFixedNumber($program_discount_fee['converted_value']) }}</td>
-                </tr>
+            @if (!auth('schooladmin')->check())
+                @if ($program_summer_fees['value'])
+                    <tr>
+                        <td>{{__('Frontend.summer_fees')}}</td>
+                        <td>{{ toFixedNumber($program_summer_fees['value']) }}</td>
+                        <td>{{ toFixedNumber($program_summer_fees['converted_value']) }}</td>
+                    </tr>
+                @endif
+                @if ($program_peak_time_fees['value'])
+                    <tr>
+                        <td>{{__('Frontend.peak_time_fees')}}</td>
+                        <td>{{ toFixedNumber($program_peak_time_fees['value']) }}</td>
+                        <td>{{ toFixedNumber($program_peak_time_fees['converted_value']) }}</td>
+                    </tr>
+                @endif
+                @if ($program_peak_time_fees['value'])
+                    <tr>
+                        <td>{{__('Frontend.peak_time_fees')}}</td>
+                        <td>{{ toFixedNumber($program_peak_time_fees['value']) }}</td>
+                        <td>{{ toFixedNumber($program_peak_time_fees['converted_value']) }}</td>
+                    </tr>
+                @endif
+                @if ($program_under_age_fees['value'])
+                    <tr>
+                        <td>{{__('Frontend.under_age_fees')}}</td>
+                        <td>{{ toFixedNumber($program_under_age_fees['value']) }}</td>
+                        <td>{{ toFixedNumber($program_under_age_fees['converted_value']) }}</td>
+                    </tr>
+                @endif
+                @if ($program_express_mail_fee['value'])
+                    <tr>
+                        <td>{{__('Frontend.express_mail_fee')}}</td>
+                        <td>{{ toFixedNumber($program_express_mail_fee['value']) }}</td>
+                        <td>{{ toFixedNumber($program_express_mail_fee['converted_value']) }}</td>
+                    </tr>
+                @endif
+                @if ($program_discount_fee['value'])
+                    <tr>
+                        <td>{{__('Frontend.discount')}}</td>
+                        <td class="highlight-value">-{{ toFixedNumber($program_discount_fee['value']) }}</td>
+                        <td class="highlight-value">-{{ toFixedNumber($program_discount_fee['converted_value']) }}</td>
+                    </tr>
+                @endif
             @endif
             <tr>
                 <td>{{__('Frontend.age_range')}}</td>
@@ -182,8 +192,10 @@
             <thead>
                 <tr>
                     <th>{{__('Frontend.accommodation_details')}}</th>
-                    <th>{{__('Frontend.amount')}} / <span class="cost_currency">{{ $currency['cost'] }}</span></th>
-                    <th>{{__('Frontend.amount')}} / <span class="converted_currency">{{ $currency['converted'] }}</span></th>
+                    @if (!auth('schooladmin')->check())
+                        <th>{{__('Frontend.amount')}} / <span class="cost_currency">{{ $currency['cost'] }}</span></th>
+                        <th>{{__('Frontend.amount')}} / <span class="converted_currency">{{ $currency['converted'] }}</span></th>
+                    @endif
                 </tr>
             </thead>
             <tbody>
@@ -192,62 +204,66 @@
                         {{app()->getLocale() == 'en' ? $accommodation->type : $accommodation->type_ar}} - {{app()->getLocale() == 'en' ? $accommodation->room_type : $accommodation->room_type_ar}} - {{app()->getLocale() == 'en' ? $accommodation->meal : $accommodation->meal_ar}}<br />
                         {{$accommodation_start_date}} to {{$accommodation_end_date}} ( {{$course_application->accommodation_duration}} {{__('Frontend.weeks')}} )
                     </td>
-                    <td>{{ toFixedNumber($accommodation_fee['value']) }}</td>
-                    <td>{{ toFixedNumber($accommodation_fee['converted_value']) }}</td>
+                    @if (!auth('schooladmin')->check())
+                        <td>{{ toFixedNumber($accommodation_fee['value']) }}</td>
+                        <td>{{ toFixedNumber($accommodation_fee['converted_value']) }}</td>
+                    @endif
                 </tr>
-                <tr>
-                    <td>{{__('Frontend.placement_fee')}}</td>
-                    <td>{{ toFixedNumber($accommodation_placement_fee['value']) }}</td>
-                    <td>{{ toFixedNumber($accommodation_placement_fee['converted_value']) }}</td>
-                </tr>
-                @if ($accommodation_special_diet_fee['value'])
+                @if (!auth('schooladmin')->check())
                     <tr>
-                        <td>{{__('Frontend.special_diet_fee')}}</td>
-                        <td>{{ toFixedNumber($accommodation_special_diet_fee['value']) }}</td>
-                        <td>{{ toFixedNumber($accommodation_special_diet_fee['converted_value']) }}</td>
+                        <td>{{__('Frontend.placement_fee')}}</td>
+                        <td>{{ toFixedNumber($accommodation_placement_fee['value']) }}</td>
+                        <td>{{ toFixedNumber($accommodation_placement_fee['converted_value']) }}</td>
                     </tr>
-                @endif
-                @if ($accommodation_deposit_fee['value'])
-                    <tr>
-                        <td>{{__('Frontend.deposit_fee')}}</td>
-                        <td>{{ toFixedNumber($accommodation_deposit_fee['value']) }}</td>
-                        <td>{{ toFixedNumber($accommodation_deposit_fee['converted_value']) }}</td>
-                    </tr>
-                @endif
-                @if ($accommodation_summer_fee['value'])
-                    <tr>
-                        <td>{{__('Frontend.summer_fees')}}</td>
-                        <td>{{ toFixedNumber($accommodation_summer_fee['value']) }}</td>
-                        <td>{{ toFixedNumber($accommodation_summer_fee['converted_value']) }}</td>
-                    </tr>
-                @endif
-                @if ($accommodation_peak_fee['value'])
-                    <tr>
-                        <td>{{__('Frontend.peak_time_fees')}}</td>
-                        <td>{{ toFixedNumber($accommodation_peak_fee['value']) }}</td>
-                        <td>{{ toFixedNumber($accommodation_peak_fee['converted_value']) }}</td>
-                    </tr>
-                @endif
-                @if ($accommodation_christmas_fee['value'])
-                    <tr>
-                        <td>{{__('Frontend.christmas_fees')}}</td>
-                        <td>{{ toFixedNumber($accommodation_christmas_fee['value']) }}</td>
-                        <td>{{ toFixedNumber($accommodation_christmas_fee['converted_value']) }}</td>
-                    </tr>
-                @endif
-                @if ($accommodation_under_age_fee['value'])
-                    <tr>
-                        <td>{{__('Frontend.under_age_fees')}}</td>
-                        <td>{{ toFixedNumber($accommodation_under_age_fee['value']) }}</td>
-                        <td>{{ toFixedNumber($accommodation_under_age_fee['converted_value']) }}</td>
-                    </tr>
-                @endif
-                @if ($accommodation_discount_fee['value'])
-                    <tr>
-                        <td>{{__('Frontend.discount')}}</td>
-                        <td class="highlight-value">-{{ toFixedNumber($accommodation_discount_fee['value']) }}</td>
-                        <td class="highlight-value">-{{ toFixedNumber($accommodation_discount_fee['converted_value']) }}</td>
-                    </tr>
+                    @if ($accommodation_special_diet_fee['value'])
+                        <tr>
+                            <td>{{__('Frontend.special_diet_fee')}}</td>
+                            <td>{{ toFixedNumber($accommodation_special_diet_fee['value']) }}</td>
+                            <td>{{ toFixedNumber($accommodation_special_diet_fee['converted_value']) }}</td>
+                        </tr>
+                    @endif
+                    @if ($accommodation_deposit_fee['value'])
+                        <tr>
+                            <td>{{__('Frontend.deposit_fee')}}</td>
+                            <td>{{ toFixedNumber($accommodation_deposit_fee['value']) }}</td>
+                            <td>{{ toFixedNumber($accommodation_deposit_fee['converted_value']) }}</td>
+                        </tr>
+                    @endif
+                    @if ($accommodation_summer_fee['value'])
+                        <tr>
+                            <td>{{__('Frontend.summer_fees')}}</td>
+                            <td>{{ toFixedNumber($accommodation_summer_fee['value']) }}</td>
+                            <td>{{ toFixedNumber($accommodation_summer_fee['converted_value']) }}</td>
+                        </tr>
+                    @endif
+                    @if ($accommodation_peak_fee['value'])
+                        <tr>
+                            <td>{{__('Frontend.peak_time_fees')}}</td>
+                            <td>{{ toFixedNumber($accommodation_peak_fee['value']) }}</td>
+                            <td>{{ toFixedNumber($accommodation_peak_fee['converted_value']) }}</td>
+                        </tr>
+                    @endif
+                    @if ($accommodation_christmas_fee['value'])
+                        <tr>
+                            <td>{{__('Frontend.christmas_fees')}}</td>
+                            <td>{{ toFixedNumber($accommodation_christmas_fee['value']) }}</td>
+                            <td>{{ toFixedNumber($accommodation_christmas_fee['converted_value']) }}</td>
+                        </tr>
+                    @endif
+                    @if ($accommodation_under_age_fee['value'])
+                        <tr>
+                            <td>{{__('Frontend.under_age_fees')}}</td>
+                            <td>{{ toFixedNumber($accommodation_under_age_fee['value']) }}</td>
+                            <td>{{ toFixedNumber($accommodation_under_age_fee['converted_value']) }}</td>
+                        </tr>
+                    @endif
+                    @if ($accommodation_discount_fee['value'])
+                        <tr>
+                            <td>{{__('Frontend.discount')}}</td>
+                            <td class="highlight-value">-{{ toFixedNumber($accommodation_discount_fee['value']) }}</td>
+                            <td class="highlight-value">-{{ toFixedNumber($accommodation_discount_fee['converted_value']) }}</td>
+                        </tr>
+                    @endif
                 @endif
                 <tr>
                     <td>{{__('Frontend.age_range')}}</td>
@@ -262,8 +278,10 @@
             <thead>
                 <tr>
                     <th>{{__('Frontend.other_services')}}</th>
-                    <th>{{__('Frontend.amount')}} / <span class="cost_currency">{{ $currency['cost'] }}</span></th>
-                    <th>{{__('Frontend.amount')}} / <span class="converted_currency">{{ $currency['converted'] }}</span></th>
+                    @if (!auth('schooladmin')->check())
+                        <th>{{__('Frontend.amount')}} / <span class="cost_currency">{{ $currency['cost'] }}</span></th>
+                        <th>{{__('Frontend.amount')}} / <span class="converted_currency">{{ $currency['converted'] }}</span></th>
+                    @endif
                 </tr>
             </thead>
             <tbody>
@@ -274,8 +292,10 @@
                             {{__('Frontend.service_provider')}}: {{ $airport_provider }}<br />
                             {{ $airport_name }} - {{ $airport_service }}<br />
                         </td>
-                        <td>{{ toFixedNumber($airport_pickup_fee['value']) }}</td>
-                        <td>{{ toFixedNumber($airport_pickup_fee['converted_value']) }}</td>
+                        @if (!auth('schooladmin')->check())
+                            <td>{{ toFixedNumber($airport_pickup_fee['value']) }}</td>
+                            <td>{{ toFixedNumber($airport_pickup_fee['converted_value']) }}</td>
+                        @endif
                     </tr>
                 @endif
                 @if ($medical)
@@ -285,8 +305,10 @@
                             {{__('Frontend.company_name')}}: {{ $company_name }}<br />
                             {{ $medical_start_date }} - {{ $medical_end_date }} ( {{ $course_application->medical_duration }} {{__('Frontend.weeks')}} )<br />
                         </td>
-                        <td>{{ toFixedNumber($medical_insurance_fee['value']) }}</td>
-                        <td>{{ toFixedNumber($medical_insurance_fee['converted_value']) }}</td>
+                        @if (!auth('schooladmin')->check())
+                            <td>{{ toFixedNumber($medical_insurance_fee['value']) }}</td>
+                            <td>{{ toFixedNumber($medical_insurance_fee['converted_value']) }}</td>
+                        @endif
                     </tr>
                 @endif
                 @if ($custodian)
@@ -340,7 +362,7 @@
             @endif
             @if ($coupon_discount['value'])
                 <tr>
-                    <th>{{__('Frontend.discount')}}</th>
+                    <th>{{__('Frontend.discount_code')}}</th>
                     <th class="highlight-value">-{{ toFixedNumber($coupon_discount['value']) }} {{ $currency['cost'] }}</th>
                     <th class="highlight-value">-{{ toFixedNumber($coupon_discount['converted_value']) }} {{ $currency['converted'] }}</th>
                 </tr>

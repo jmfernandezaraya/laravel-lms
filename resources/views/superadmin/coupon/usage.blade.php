@@ -21,14 +21,14 @@
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr>
-                            <th>{{__('Admin/backend.order_no')}}</th>
+                            <th>{{__('Admin/backend.order_number')}}</th>
                             <th>{{__('Admin/backend.customer_name')}}</th>
                             <th>{{__('Admin/backend.email')}}</th>
                             <th>{{__('Admin/backend.school_name')}}</th>
                             <th>{{__('Admin/backend.city')}}</th>
                             <th>{{__('Admin/backend.country')}}</th>
                             <th>{{__('Admin/backend.course_cost')}}</th>
-                            <th>{{__('Admin/backend.discount')}}</th>
+                            <th>{{__('Admin/backend.discount_code')}}</th>
                             <th>{{__('Admin/backend.afflicate_user')}}</th>
                             <th>{{__('Admin/backend.commission')}}</th>
                             <th>{{__('Admin/backend.date_of_use')}}</th>
@@ -37,7 +37,7 @@
                     <tbody>
                         @foreach($coupon_usages as $coupon_usage)
                             <tr>
-                                <td>{{ $coupon_usage->course_application->id }}</td>
+                                <td>{{ $coupon_usage->course_application->order_number }}</td>
                                 <td>
                                     @if (get_language() == 'en')
                                         {{ $coupon_usage->course_application->User->first_name_en }} {{ $coupon_usage->course_application->User->last_name_en }}

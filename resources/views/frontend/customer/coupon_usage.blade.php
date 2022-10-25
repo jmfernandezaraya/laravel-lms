@@ -21,7 +21,7 @@
                     <table class="table table-hover table-bordered table-filtered" width="100%">
                         <thead>
                             <tr>
-                                <th>{{ __("Frontend.order_no") }}</th>
+                                <th>{{ __("Frontend.order_number") }}</th>
                                 <th>{{ __("Frontend.school_name") }}</th>
                                 <th>{{ __("Frontend.city") }}</th>
                                 <th>{{ __("Frontend.country") }}</th>
@@ -33,7 +33,7 @@
                         <tbody>
                             @foreach($coupon_usages as $coupon_usage)
                                 <tr>
-                                    <td>{{ $coupon_usage->course_application->id }}</td>
+                                    <td>{{ $coupon_usage->course_application->order_number }}</td>
                                     <td>{{ $coupon_usage->course_application->course->school->name ? (app()->getLocale() == 'en' ? ($coupon_usage->course_application->course->school->name->name ?? '-') : ($coupon_usage->course_application->course->school->name->name_ar ?? '-')) : '-' }} {{ app()->getLocale() == 'en' ? ($coupon_usage->course_application->course->school->branch_name ?? '') : ($coupon_usage->course_application->course->school->branch_name_ar ?? '') }}</td>
                                     <td>{{ $coupon_usage->course_application->course->school->city ? (app()->getLocale() == 'en' ? ($coupon_usage->course_application->course->school->city->name ?? '-') : ($coupon_usage->course_application->course->school->city->name_ar ?? '-')) : '-' }}</td>
                                     <td>{{ $coupon_usage->course_application->course->school->country ? (app()->getLocale() == 'en' ? ($coupon_usage->course_application->course->school->country->name ?? '-') : ($coupon_usage->course_application->course->school->country->name_ar ?? '-')) : '-' }}</td>

@@ -57,36 +57,42 @@
                             </tbody>
                         </table>
 
-                        @if (auth('superadmin')->check())
-                            <table class="table table-bordered table-no-drawable">
-                                <thead>
-                                    <tr>
-                                        <th>{{__('Admin/backend.course_details')}}</th>
+                        <table class="table table-bordered table-no-drawable">
+                            <thead>
+                                <tr>
+                                    <th>{{__('Admin/backend.course_details')}}</th>
+                                    @if (auth('superadmin')->check())
                                         <th>{{__('Admin/backend.amount')}} / <span class="cost_currency">{{ $currency['cost'] }}</span></th>
                                         <th>{{__('Admin/backend.amount')}} / <span class="converted_currency">{{ $currency['converted'] }}</span></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            {{ app()->getLocale() == 'en' ? $course->program_name : $course->program_name_ar }}, {{ $course->lessons_per_week }} {{__('Admin/backend.lessons')}} / {{ $course->hours_per_week }} {{__('Admin/backend.hours_per_week')}}<br />
-                                            {{ $program_start_date }} {{__('Admin/backend.to')}} {{ $program_end_date }} ( {{ $course_application->program_duration }} {{__('Admin/backend.weeks')}} )
-                                        </td>
+                                    @endif
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        {{ app()->getLocale() == 'en' ? $course->program_name : $course->program_name_ar }}, {{ $course->lessons_per_week }} {{__('Admin/backend.lessons')}} / {{ $course->hours_per_week }} {{__('Admin/backend.hours_per_week')}}<br />
+                                        {{ $program_start_date }} {{__('Admin/backend.to')}} {{ $program_end_date }} ( {{ $course_application->program_duration }} {{__('Admin/backend.weeks')}} )
+                                    </td>
+                                    @if (auth('superadmin')->check())
                                         <td>{{ toFixedNumber($program_cost['value']) }}</td>
                                         <td>{{ toFixedNumber($program_cost['converted_value']) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>{{__('Admin/backend.registraion_fees')}}</td>
+                                    @endif
+                                </tr>
+                                <tr>
+                                    <td>{{__('Admin/backend.registraion_fees')}}</td>
+                                    @if (auth('superadmin')->check())
                                         <td>{{ toFixedNumber($program_registration_fee['value']) }}</td>
                                         <td>{{ toFixedNumber($program_registration_fee['converted_value']) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            {{__('Admin/backend.text_book_fees')}}
-                                        </td>
+                                    @endif
+                                </tr>
+                                <tr>
+                                    <td>{{__('Admin/backend.text_book_fees')}}</td>
+                                    @if (auth('superadmin')->check())
                                         <td>{{ toFixedNumber($program_text_book_fee['value']) }}</td>
                                         <td>{{ toFixedNumber($program_text_book_fee['converted_value']) }}</td>
-                                    </tr>
+                                    @endif
+                                </tr>
+                                @if (auth('superadmin')->check())
                                     @if ($program_summer_fees['value'])
                                         <tr>
                                             <td>{{__('Admin/backend.summer_fees')}}</td>
@@ -122,31 +128,39 @@
                                             <td class="highlight-value">-{{ toFixedNumber($program_discount_fee['converted_value']) }}</td>
                                         </tr>
                                     @endif
-                                    <tr>
-                                        <td>{{__('Admin/backend.age_range')}}</td>
-                                        <td colspan="2">{{ $min_age ?? ''}} - {{ $max_age ?? ''}} {{__('Admin/backend.years')}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                            @if ($accommodation)
-                                <table class="table table-bordered table-no-drawable">
-                                    <thead>
+                                    @if (auth('superadmin')->check())
                                         <tr>
-                                            <th>{{__('Admin/backend.accommodation_details')}}</th>
+                                            <td>{{__('Admin/backend.age_range')}}</td>
+                                            <td colspan="2">{{ $min_age ?? ''}} - {{ $max_age ?? ''}} {{__('Admin/backend.years')}}</td>
+                                        </tr>
+                                    @endif
+                                @endif
+                            </tbody>
+                        </table>
+
+                        @if ($accommodation)
+                            <table class="table table-bordered table-no-drawable">
+                                <thead>
+                                    <tr>
+                                        <th>{{__('Admin/backend.accommodation_details')}}</th>
+                                        @if (auth('superadmin')->check())
                                             <th>{{__('Admin/backend.amount')}} / <span class="cost_currency">{{ $currency['cost'] }}</span></th>
                                             <th>{{__('Admin/backend.amount')}} / <span class="converted_currency">{{ $currency['converted'] }}</span></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                {{app()->getLocale() == 'en' ? $accommodation->type : $accommodation->type_ar}} - {{app()->getLocale() == 'en' ? $accommodation->room_type : $accommodation->room_type_ar}} - {{app()->getLocale() == 'en' ? $accommodation->meal : $accommodation->meal_ar}}<br />
-                                                {{$accommodation_start_date}} to {{$accommodation_end_date}} ( {{$course_application->accommodation_duration}} {{__('Admin/backend.weeks')}} )
-                                            </td>
+                                        @endif
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            {{app()->getLocale() == 'en' ? $accommodation->type : $accommodation->type_ar}} - {{app()->getLocale() == 'en' ? $accommodation->room_type : $accommodation->room_type_ar}} - {{app()->getLocale() == 'en' ? $accommodation->meal : $accommodation->meal_ar}}<br />
+                                            {{$accommodation_start_date}} to {{$accommodation_end_date}} ( {{$course_application->accommodation_duration}} {{__('Admin/backend.weeks')}} )
+                                        </td>
+                                        @if (auth('superadmin')->check())
                                             <td>{{ toFixedNumber($accommodation_fee['value']) }}</td>
                                             <td>{{ toFixedNumber($accommodation_fee['converted_value']) }}</td>
-                                        </tr>
+                                        @endif
+                                    </tr>
+                                    @if (auth('superadmin')->check())
                                         <tr>
                                             <td>{{__('Admin/backend.placement_fee')}}</td>
                                             <td>{{ toFixedNumber($accommodation_placement_fee['value']) }}</td>
@@ -201,59 +215,67 @@
                                                 <td class="highlight-value">-{{ toFixedNumber($accommodation_discount_fee['converted_value']) }}</td>
                                             </tr>
                                         @endif
-                                        <tr>
-                                            <td>{{__('Admin/backend.age_range')}}</td>
-                                            <td colspan="2">{{ $accommodation_min_age ?? ''}} - {{ $accommodation_max_age ?? ''}} {{__('Admin/backend.years')}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            @endif
-                            
-                            @if ($airport || $medical || $custodian)
-                                <table class="table table-bordered table-no-drawable">
-                                    <thead>
-                                        <tr>
-                                            <th>{{__('Admin/backend.other_services')}}</th>
+                                    @endif
+                                    <tr>
+                                        <td>{{__('Admin/backend.age_range')}}</td>
+                                        <td colspan="2">{{ $accommodation_min_age ?? ''}} - {{ $accommodation_max_age ?? ''}} {{__('Admin/backend.years')}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        @endif
+                        
+                        @if ($airport || $medical || $custodian)
+                            <table class="table table-bordered table-no-drawable">
+                                <thead>
+                                    <tr>
+                                        <th>{{__('Admin/backend.other_services')}}</th>
+                                        @if (auth('superadmin')->check())
                                             <th>{{__('Admin/backend.amount')}} / <span class="cost_currency">{{ $currency['cost'] }}</span></th>
                                             <th>{{__('Admin/backend.amount')}} / <span class="converted_currency">{{ $currency['converted'] }}</span></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @if ($airport)
-                                            <tr>
-                                                <td>
-                                                    {{__('Admin/backend.transport')}}<br />
-                                                    {{__('Admin/backend.service_provider')}}: {{ $airport_provider }}<br />
-                                                    {{ $airport_name }} - {{ $airport_service }}<br />
-                                                </td>
+                                        @endif
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if ($airport)
+                                        <tr>
+                                            <td>
+                                                {{__('Admin/backend.transport')}}<br />
+                                                {{__('Admin/backend.service_provider')}}: {{ $airport_provider }}<br />
+                                                {{ $airport_name }} - {{ $airport_service }}<br />
+                                            </td>
+                                            @if (auth('superadmin')->check())
                                                 <td>{{ toFixedNumber($airport_pickup_fee['value']) }}</td>
                                                 <td>{{ toFixedNumber($airport_pickup_fee['converted_value']) }}</td>
-                                            </tr>
-                                        @endif
-                                        @if ($medical)
-                                            <tr>
-                                                <td>
-                                                    {{__('Admin/backend.medical_insurance')}}<br />
-                                                    {{__('Admin/backend.company_name')}}: {{ $company_name }}<br />
-                                                    {{ $medical_start_date }} - {{ $medical_end_date }} ( {{ $course_application->medical_duration }} {{__('Admin/backend.weeks')}} )<br />
-                                                </td>
+                                            @endif
+                                        </tr>
+                                    @endif
+                                    @if ($medical)
+                                        <tr>
+                                            <td>
+                                                {{__('Admin/backend.medical_insurance')}}<br />
+                                                {{__('Admin/backend.company_name')}}: {{ $company_name }}<br />
+                                                {{ $medical_start_date }} - {{ $medical_end_date }} ( {{ $course_application->medical_duration }} {{__('Admin/backend.weeks')}} )<br />
+                                            </td>
+                                            @if (auth('superadmin')->check())
                                                 <td>{{ toFixedNumber($medical_insurance_fee['value']) }}</td>
                                                 <td>{{ toFixedNumber($medical_insurance_fee['converted_value']) }}</td>
-                                            </tr>
-                                        @endif
-                                        @if ($custodian)
-                                            <tr>
-                                                <td>
-                                                    {{__('Admin/backend.custodian_fee')}}<br />
-                                                </td>
-                                                <td>{{ toFixedNumber($custodian_fee['value']) }}</td>
-                                                <td>{{ toFixedNumber($custodian_fee['converted_value']) }}</td>
-                                            </tr>
-                                        @endif
-                                    </tbody>
-                                </table>
-                            @endif
-                            
+                                            @endif
+                                        </tr>
+                                    @endif
+                                    @if ($custodian)
+                                        <tr>
+                                            <td>
+                                                {{__('Admin/backend.custodian_fee')}}<br />
+                                            </td>
+                                            <td>{{ toFixedNumber($custodian_fee['value']) }}</td>
+                                            <td>{{ toFixedNumber($custodian_fee['converted_value']) }}</td>
+                                        </tr>
+                                    @endif
+                                </tbody>
+                            </table>
+                        @endif
+                        
+                        @if (auth('superadmin')->check())
                             <table class="table table-bordered table-no-drawable mb-3">
                                 <thead>
                                     <tr>
@@ -304,7 +326,9 @@
                                     </tr>
                                 </thead>
                             </table>
-                            
+                        @endif
+                        
+                        @if (auth('superadmin')->check())
                             @if (can_edit_course_application())
                                 <a href="{{ auth('superadmin')->check() ? route('superadmin.course_application.course.edit', ['id' => $course_application->id]) : route('schooladmin.course_application.course.edit', ['id' => $course_application->id]) }}" class="btn btn-primary px-5">{{__('Admin/backend.edit')}}</a>
                             @endif

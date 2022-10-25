@@ -30,7 +30,7 @@
                             <th>#</th>
                             <th>{{__('Admin/backend.coupon_name')}}</th>
                             <th>{{__('Admin/backend.code')}}</th>
-                            <th>{{__('Admin/backend.discount')}}</th>
+                            <th>{{__('Admin/backend.discount_code')}}</th>
                             <th>{{__('Admin/backend.start_date')}}</th>
                             <th>{{__('Admin/backend.end_date')}}</th>
                             <th>{{__('Admin/backend.type')}}</th>

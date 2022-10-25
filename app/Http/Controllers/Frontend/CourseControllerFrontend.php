@@ -411,7 +411,7 @@ class CourseControllerFrontend extends Controller
                     ->get()->collect()->values()->filter(function($value) use ($accommodation_under_ages, $r_date_set, $program_start_date, $program_end_date, $r_duration) {
                         $under_age_flag = in_array($accommodation_under_ages[0], $value['age_range'] ?? []);
                         $week_flag = $value['start_week'] <= (int)$r_duration && $value['end_week'] >= (int)$r_duration;
-                        $date_flag = false;
+                        $date_flag = true; // $date_flag = false;
                         if ($r_date_set) {
                             if ($value['start_date'] <= $program_start_date || $value['end_date'] >= $program_end_date) {
                                 if ($value['available_date'] == 'all_year_round') {
@@ -836,7 +836,7 @@ class CourseControllerFrontend extends Controller
             $under_age_fee_per_week = 0;
             $first_accommodation_under_age = ChooseAccommodationUnderAge::where('age', $request_age)->first();
             $course_accommodation_under_ages = CourseAccommodationUnderAge::where('accom_id', '' . $first_accommodation->unique_id)->get();
-            if ($accommodation_under_age && $course_accommodation_under_ages) {
+            if ($first_accommodation_under_age && $course_accommodation_under_ages) {
                 foreach ($course_accommodation_under_ages as $course_accommodation_under_age) {
                     if (in_array($accommodation_under_age->unique_id, is_array($course_accommodation_under_age->under_age) ? $course_accommodation_under_age->under_age : [])) {
                         $under_age_fee_per_week += $course_accommodation_under_age->under_age_fee_per_week;
@@ -1007,7 +1007,7 @@ class CourseControllerFrontend extends Controller
         $course_accommodations = CourseAccommodation::where('course_unique_id', \Session::get('course_unique_id'))
             ->get()->collect()->values()->filter(function($value) use ($request, $accommodation_under_age, $r_date_set, $program_duration_start, $r_duration) {
                 $under_age_flag = in_array($accommodation_under_age, $value['age_range'] ?? []);
-                $date_flag = false;
+                $date_flag = true; // $date_flag = false;
                 if ($r_date_set) {
                     if ($value['available_date'] == 'all_year_round') {
                         $program_start_date = Carbon::create($r_date_set)->format('Y-m-d');
@@ -1043,15 +1043,53 @@ class CourseControllerFrontend extends Controller
         $room_types = array_unique($room_types);
         $meal_types = array_unique($meal_types);
 
+        $program_start_date = Carbon::create($r_date_set)->format('Y-m-d');
+        $room_type_names = $meal_type_names = [];
+        foreach ($room_types as $room_type) {
+            $room_type_flag = true;
+            $meal_type_sub_names = [];
+            for ($accmmodation_duration = $program_duration_start; $accmmodation_duration <= $r_duration; $accmmodation_duration++) {
+                $accommodation_duration_date = Carbon::create($r_date_set)->addWeeks($accmmodation_duration)->format('Y-m-d');
+                $accmmodation_flag = false;
+                foreach ($course_accommodations as $course_accommodation) {
+                    if ((app()->getLocale() == 'en' && $room_type == $course_accommodation->room_type) || (app()->getLocale() != 'en' && $room_type == $course_accommodation->room_type_ar)) {
+                        if ($course_accommodation->available_date == 'all_year_round') {
+                            if ($course_accommodation->start_date <= $accommodation_duration_date && $course_accommodation->end_date >= $accommodation_duration_date) {
+                                $accmmodation_flag = true;
+                                $meal_type_sub_names[] = app()->getLocale() == 'en' ? $course_accommodation->meal : $course_accommodation->meal_ar;
+                            }
+                        } else if ($course_accommodation->available_date == 'selected_dates') {
+                            if ($course_accommodation->available_days) {
+                                if (strpos($course_accommodation->available_days, $accommodation_duration_date) != false) {
+                                    $accmmodation_flag = true;
+                                    $meal_type_sub_names[] = app()->getLocale() == 'en' ? $course_accommodation->meal : $course_accommodation->meal_ar;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (!$accmmodation_flag) {
+                    $room_type_flag = false;
+                }
+            }
+            $meal_type_sub_names = array_unique($meal_type_sub_names);
+            if ($room_type_flag) {
+                $room_type_names[] = $room_type;
+                $meal_type_names = array_merge($meal_type_names, $meal_type_sub_names);
+            }
+        }
+
         $select = __('Frontend.select_option');
         $data['room_type'] = "<option value='' selected>$select</option>";
         $data['meal_type'] = "<option value='' selected>$select</option>";
 
-        foreach ($room_types as $room_type) {
-            $data['room_type'] .= "<option value='" . $room_type . "'>" . $room_type . "</option>";
+        $room_type_names = array_unique($room_type_names);
+        $meal_type_names = array_unique($meal_type_names);
+        foreach ($room_type_names as $room_type_name) {
+            $data['room_type'] .= "<option value='" . $room_type_name . "'>" . $room_type_name . "</option>";
         }
-        foreach ($meal_types as $meal_type) {
-            $data['meal_type'] .= "<option value='" . $meal_type . "'>" . $meal_type . "</option>";
+        foreach ($meal_type_names as $meal_type_name) {
+            $data['meal_type'] .= "<option value='" . $meal_type_name . "'>" . $meal_type_name . "</option>";
         }
         $data['session'] = \Session::all();
 
@@ -1074,7 +1112,7 @@ class CourseControllerFrontend extends Controller
         $course_accommodations = CourseAccommodation::where('course_unique_id', \Session::get('course_unique_id'))
             ->get()->collect()->values()->filter(function($value) use ($request, $accommodation_under_age, $r_date_set, $program_duration_start, $r_duration) {
                 $under_age_flag = in_array($accommodation_under_age, $value['age_range'] ?? []);
-                $date_flag = false;
+                $date_flag = true; // $date_flag = false;
                 if ($r_date_set) {
                     if ($value['available_date'] == 'all_year_round') {
                         $program_start_date = Carbon::create($r_date_set)->format('Y-m-d');
@@ -1106,16 +1144,44 @@ class CourseControllerFrontend extends Controller
                 return $under_age_flag && $date_flag && $type_flag && $room_flag;
             })->all();
 
-        $meal_types = [];
+        $meal_type_names = [];
         foreach ($course_accommodations as $course_accommodation) {
             $meal_types[] = app()->getLocale() == 'en' ? $course_accommodation->meal : $course_accommodation->meal_ar;
         }
-        $meal_types = array_unique($meal_types);
+        foreach ($meal_types as $meal_type) {
+            $meal_type_flag = true;
+            for ($accmmodation_duration = $program_duration_start; $accmmodation_duration <= $r_duration; $accmmodation_duration++) {
+                $accommodation_duration_date = Carbon::create($r_date_set)->addWeeks($accmmodation_duration)->format('Y-m-d');
+                $accmmodation_flag = false;
+                foreach ($course_accommodations as $course_accommodation) {
+                    if ((app()->getLocale() == 'en' && $meal_type == $course_accommodation->meal) || (app()->getLocale() != 'en' && $meal_type == $course_accommodation->meal_ar)) {
+                        if ($course_accommodation->available_date == 'all_year_round') {
+                            if ($course_accommodation->start_date <= $accommodation_duration_date && $course_accommodation->end_date >= $accommodation_duration_date) {
+                                $accmmodation_flag = true;
+                            }
+                        } else if ($course_accommodation->available_date == 'selected_dates') {
+                            if ($course_accommodation->available_days) {
+                                if (strpos($course_accommodation->available_days, $accommodation_duration_date) != false) {
+                                    $accmmodation_flag = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (!$accmmodation_flag) {
+                    $meal_type_flag = false;
+                }
+            }
+            if ($meal_type_flag) {
+                $meal_type_names[] = $meal_type;
+            }
+        }
+        $meal_type_names = array_unique($meal_type_names);
 
         $select = __('Frontend.select_option');
         $data['meal_type'] = "<option value='' selected>$select</option>";
-        foreach ($meal_types as $meal_type) {
-            $data['meal_type'] .= "<option value='".$meal_type."'>".$meal_type."</option>";
+        foreach ($meal_type_names as $meal_type_name) {
+            $data['meal_type'] .= "<option value='".$meal_type_name."'>".$meal_type_name."</option>";
         }
         $data['session'] = \Session::all();
 

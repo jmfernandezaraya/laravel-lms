@@ -67,7 +67,7 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="discount">{{__('Admin/backend.discount_value')}} <span class="text-danger">*</span></label>
-                            <input value="{{ $coupon->discount }}" name="discount" type="text" class="form-control" placeholder="{{__('Admin/backend.discount')}}">
+                            <input value="{{ $coupon->discount }}" name="discount" type="text" class="form-control" placeholder="{{__('Admin/backend.discount_code')}}">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="type">{{__('Admin/backend.discount_type')}} <span class="text-danger">*</span></label>

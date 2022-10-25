@@ -647,7 +647,7 @@ class CourseController extends Controller
     {
         $title = '';
         $course_choose_ages = [];
-        if ($course_choose_age_type == 'program_age') {
+        if ($type == 'program_age') {
             $title = __('Admin/backend.course_program_ages');
             $course_choose_ages = ChooseProgramAge::orderBy('unique_id', 'asc')->get();
             foreach ($course_choose_ages as $course_choose_age) {
@@ -660,7 +660,7 @@ class CourseController extends Controller
                     $course_choose_age->can_delete = true;
                 }
             }
-        } else if ($course_choose_age_type == 'program_under_age') {
+        } else if ($type == 'program_under_age') {
             $title = __('Admin/backend.course_program_under_ages');
             $course_choose_ages = ChooseProgramUnderAge::orderBy('unique_id', 'asc')->get();
             foreach ($course_choose_ages as $course_choose_age) {
@@ -673,7 +673,7 @@ class CourseController extends Controller
                     $course_choose_age->can_delete = true;
                 }
             }
-        } else if ($course_choose_age_type == 'accommodation_age') {
+        } else if ($type == 'accommodation_age') {
             $title = __('Admin/backend.accommodation_ages');
             $course_choose_ages = ChooseAccommodationAge::orderBy('unique_id', 'asc')->get();
             foreach ($course_choose_ages as $course_choose_age) {
@@ -686,7 +686,7 @@ class CourseController extends Controller
                     $course_choose_age->can_delete = true;
                 }
             }
-        } else if ($course_choose_age_type == 'accommodation_under_age') {
+        } else if ($type == 'accommodation_under_age') {
             $title = __('Admin/backend.accommodation_under_ages');
             $course_choose_ages = ChooseAccommodationUnderAge::orderBy('unique_id', 'asc')->get();
             foreach ($course_choose_ages as $course_choose_age) {
@@ -699,7 +699,7 @@ class CourseController extends Controller
                     $course_choose_age->can_delete = true;
                 }
             }
-        } else if ($course_choose_age_type == 'custodian_under_age') {
+        } else if ($type == 'custodian_under_age') {
             $title = __('Admin/backend.custodian_under_ages');
             $course_choose_ages = ChooseCustodianUnderAge::orderBy('unique_id', 'asc')->get();
             foreach ($course_choose_ages as $course_choose_age) {

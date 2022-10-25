@@ -664,7 +664,7 @@
                         <table class="table table-bordered table-no-drawable" id="coupon_discount_table" style="display: none">
                             <tbody>
                                 <tr>
-                                    <td>{{__('Frontend.discount')}}</td>
+                                    <td>{{__('Frontend.discount_code')}}</td>
                                     <td><span class="cost_value"></span> <span class="cost_value_currency"></span></td>
                                     <td><span class="converted_value"></span> <span class="converted_value_currency"></span></td>
                                 </tr>
@@ -682,7 +682,9 @@
                         </table>
 
                         <input hidden id="total_fees" name="total_fees">
-                        <button type="submit" class="btn btn-primary px-5 py-3 pull-right">{{__('Frontend.register_now')}}</button>
+                        @if (auth()->user()->user_type != 'affiliate')
+                            <button type="submit" class="btn btn-primary px-5 py-3 pull-right">{{__('Frontend.register_now')}}</button>
+                        @endif
                     </div>
                 </div>
             </div>

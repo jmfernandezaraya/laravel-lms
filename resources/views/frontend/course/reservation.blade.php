@@ -314,7 +314,7 @@
                         @endif
                         @if ($coupon_discount['value'])
                             <tr>
-                                <td>{{__('Frontend.discount')}}</td>
+                                <td>{{__('Frontend.discount_code')}}</td>
                                 <td>{{ toFixedNumber($coupon_discount['value']) }} {{ $currency['cost'] }}</td>
                                 <td>{{ toFixedNumber($coupon_discount['converted_value']) }} {{ $currency['converted'] }}</td>
                                 <input type="hidden" value="{{$coupon_discount['value']}}" name="coupon_discount" />

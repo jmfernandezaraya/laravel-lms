@@ -1101,14 +1101,17 @@ class FrontendController extends Controller
         }
         
         $cart_id = $_GET['cart_id'];
-        $course_application = CourseApplication::where('user_id', auth()->user()->id)->where('order_id',  $cart_id)->where('paid',  0)->first();
-        if ($course_application->payment_method == 'Telr') {
-            $telrManager = new \TelrGateway\TelrManager();
-            $telr = $telrManager->handleTransactionResponse(request());
-        }
-
-        if ($course_application->payment_method == 'Telr') {
-            $telr->status == 1 ? toastr()->success(str_replace("###SITE_NAME###", __('Frontend.site_name'), __('Frontend.user_course_booked'))) : toastr()->error(__('Frontend.payment.failed'));
+        $course_application = CourseApplication::where('user_id', auth()->user()->id)->where('order_id',  $cart_id)
+            ->where(function($query) { $query->where('paid',  0)->orWhere('paid', 2); })->first();
+        if ($course_application) {
+            if ($course_application->payment_method == 'Telr') {
+                $telrManager = new \TelrGateway\TelrManager();
+                $telr = $telrManager->handleTransactionResponse(request());
+            }
+    
+            if ($course_application->payment_method == 'Telr') {
+                $telr->status == 1 ? toastr()->success(str_replace("###SITE_NAME###", __('Frontend.site_name'), __('Frontend.user_course_booked'))) : toastr()->error(__('Frontend.payment.failed'));
+            }
         }
 
         $course_applications = CourseApplication::where('user_id', auth()->user()->id)->where('order_id',  $cart_id)

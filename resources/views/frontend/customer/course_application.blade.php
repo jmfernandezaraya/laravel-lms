@@ -277,7 +277,7 @@
                                         @endif
                                         @if ($coupon_discount['value'])
                                             <tr>
-                                                <th>{{__('Frontend.discount')}}</th>
+                                                <th>{{__('Frontend.discount_code')}}</th>
                                                 <th class="highlight-value">-{{ toFixedNumber($coupon_discount['value']) }} {{ $currency['cost'] }}</th>
                                                 <th class="highlight-value">-{{ toFixedNumber($coupon_discount['converted_value']) }} {{ $currency['converted'] }}</th>
                                             </tr>

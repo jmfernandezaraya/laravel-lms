@@ -231,7 +231,7 @@ return [
 
     'express_mail' => 'البريد',
     'express_mail_fee' => 'رسوم البريد',
-    'discount' => 'الخصم',
+    'discount' => 'كود خصم',
 
     'accommodation' => 'السكن',
     'accommodation_details' => 'تفاصيل السكن',
@@ -418,7 +418,7 @@ return [
     'login_password' => 'تسجيل الدخول و كلمة السر',
     'course_application' => 'طلبات التسجيل',
     'order_id' => 'Order ID',
-    'order_number' => 'Order Number',
+    'order_number' => 'رقم الطلب',
     'your_review' => 'التقيمات',
     'your_payments' => 'مدفوعاتك',
     'affiliate_information' => 'Affiliate Information',
